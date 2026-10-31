@@ -72,6 +72,11 @@ class Module(C.Structure):
                 ("name", C.c_wchar * 256), ("path", C.c_wchar * 260)]
 
 
+# v1.5 default-allow/reserved build; definition must precede main().
+REVIEWED_DLL_HASHES.add("29005423ccc42cc7c55990b214f258dfba51c6c135d3ae70daf67d6eca59d2c1")
+# v1.5 T6 reserved senate fix; takes effect after manual restart only.
+REVIEWED_DLL_HASHES.add("4271ce99b3048e54beb1e002f6e055523d60117ac7f77209f697e72d31778261")
+
 def find_module(kernel, pid, name):
     kernel.Module32FirstW.argtypes = [C.c_void_p, C.POINTER(Module)]
     kernel.Module32NextW.argtypes = [C.c_void_p, C.POINTER(Module)]
@@ -231,4 +236,4 @@ if __name__ == "__main__":
     print(json.dumps(result, ensure_ascii=True))
 
 # v1.5 default-allow/reserved gate; compiled for one consolidated T6, not live acceptance.
-REVIEWED_DLL_HASHES.add("29005423ccc42cc7c55990b214f258dfba51c6c135d3ae70daf67d6eca59d2c1")
+

@@ -7,6 +7,7 @@ export const MOD_NAME = 'cyberfish_observer_v1'
 const modSource = name => fileURLToPath(new URL(`../mod/${name}/`, import.meta.url))
 const inspect = async path => { try { return await lstat(path) } catch (error) { if (error.code === 'ENOENT') return null; throw error } }
 const digest = value => createHash('sha256').update(value).digest('hex')
+const previousSteeringFiles={'common/economic_plans/cfsteer_plans.txt':'4b5eb5508d6735b6581d0f06c90294afcd2b2880867844bf6eba59bfbd1f1702'}
 
 async function checkedParents(root, path) {
   const part = relative(root, path)
@@ -46,15 +47,31 @@ export async function installLocalMod({ documentsPath, dryRun = false, modName=M
   for (const plan of plans) {
     await checkedParents(modRoot, plan.path)
     const entry = await inspect(plan.path)
-    if (entry && (!entry.isFile() || entry.isSymbolicLink() || !(await readFile(plan.path)).equals(plan.content))) throw new Error('同名观测 Mod 文件已存在且内容不同，未覆盖；请保留它并另行核对。')
-    plan.existing = !!entry
+    if(entry&&(!entry.isFile()||entry.isSymbolicLink()))throw new Error('同名Mod目标不是普通文件，未覆盖');
+    const current=entry?await readFile(plan.path):null;
+    // Paradox rewrites the external descriptor to absolute paths and its own
+    // formatting. Preserve it when it still points to this exact local mod.
+    if(current&&plan.path===join(modRoot,`${modName}.mod`)){
+      const text=current.toString('utf8'),sourceText=descriptor;
+      const field=(body,key)=>body.match(new RegExp('(?:^|\n)'+key+'\s*=\s*"([^"\n]*)"'))?.[1];
+      const path=field(text,'path');
+      if(path&&resolve(documents,path)===resolve(target)&&field(text,'name')===field(sourceText,'name')&&
+          field(text,'version')===field(sourceText,'version')&&field(text,'supported_version')===field(sourceText,'supported_version')){
+        plan.existing=true;continue;
+      }
+    }
+
+    plan.upgrade=!!current&&!current.equals(plan.content)&&modName==='cyberfish_steering_v1'&&
+      previousSteeringFiles[relative(target,plan.path).split(sep).join('/')]==digest(current);
+    if(current&&!current.equals(plan.content)&&!plan.upgrade)throw new Error('同名观测 Mod 文件已存在且内容不同，未覆盖；请保留它并另行核对。');
+    plan.existing=!!entry&&!plan.upgrade
   }
   const created = []
   if (!dryRun) for (const plan of plans) {
     if (plan.existing) continue
     await mkdir(resolve(plan.path, '..'), { recursive: true })
     // wx handles races without ever overwriting another process's new file.
-    await writeFile(plan.path, plan.content, { flag: 'wx' }); created.push(plan.path)
+    await writeFile(plan.path, plan.content, { flag: plan.upgrade?'w':'wx' }); created.push(plan.path)
   }
   return { ok: true, dryRun, documentsPath: realDocuments, modName, modPath: target, created, files: plans.map(plan => ({ path: plan.path, sha256: digest(plan.content), existing: plan.existing })), enabledByInstaller: false, message: dryRun ? '安装计划已检查，没有写入文件。' : '观测 Mod 已就位；请在启动器的单独测试播放集中启用。未修改原播放集或启用列表。' }
 }

@@ -145,6 +145,8 @@ v1.4 的干预方式是：暂停 → 关 AI → 模型亲自下命令 → 回读
 | `diplo_action_propose_command` | 宣战、结盟、联邦、附庸等外交提议，留给大肥鱼 |
 | `diplo_action_respond_command` | 接受或拒绝他国提议（包括议和），留给大肥鱼 |
 | `diplo_action_vote_command` | 银河议会投票，留给大肥鱼 |
+| `cast_vote_command`、`support_proposed_resolution_command`、`oppose_proposed_resolution_command`、`remove_support_for_proposed_resolution_command`、`propose_resolution_command`、`withdraw_proposed_resolution_command`、`veto_resolution_command`、`borrow_diplo_weight_for_resolution_command` | T6发现的独立议会决定路径，同属保留决定 |
+| `join_community_command`、`leave_community_command` | T6发现的独立共同体外交决定 |
 | `diplo_action_start_proxy_war_command` | 代理战争 |
 | 针对引导 mod 方针的 `add_policy_command` / `add_edict_command` / `remove_edict_command` | 防止 AI 改掉大肥鱼的方针 |
 | 命中 `protected_targets` 的命令 | 沿用现有保护 |

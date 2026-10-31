@@ -8,7 +8,7 @@ int main(){
  for(auto name:{"research_technology_command","add_buildable_to_queue_command","prepare_war_command","update_strat_war_data_command","ai_add_strategy_command","ai_remove_diplo_action_command","queue_fleet_order_command","unknown"}){
   r.name=name;Check(AllowNativeRoutine(r,0));
  }
- for(auto name:{"diplo_action_propose_command","diplo_action_respond_command","diplo_action_vote_command","diplo_action_start_proxy_war_command"}){
+ for(auto name:{"diplo_action_propose_command","diplo_action_respond_command","diplo_action_vote_command","diplo_action_start_proxy_war_command","cast_vote_command","support_proposed_resolution_command","oppose_proposed_resolution_command","remove_support_for_proposed_resolution_command","propose_resolution_command","withdraw_proposed_resolution_command","veto_resolution_command","borrow_diplo_weight_for_resolution_command","join_community_command","leave_community_command"}){
   r.name=name;Check(!AllowNativeRoutine(r,0));r.actor=1;Check(AllowNativeRoutine(r,0));r.actor=0;
  }
  for(auto name:{"add_policy_command","add_edict_command","remove_edict_command"}){

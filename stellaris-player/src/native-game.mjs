@@ -233,7 +233,7 @@ export class NativeGame {
     try{
     if((this.stoppingRequested||this.stopped)&&(['set_paused','set_survey_automation','set_monthly_trade','get_fleet_automation','get_market'].includes(method)||method==='country_ai_lease'&&params.action==='stop')){
       const scope=await this.cleanupScope();
-      if(method!=='set_paused'&&scope.status.is_paused!==true)throw Error('收权前未确认原会话暂停');
+      if(method!=='set_paused'&&!(method==='country_ai_lease'&&params.action==='stop')&&scope.status.is_paused!==true)throw Error('收权前未确认原会话暂停');
       this.assertRpcAllowed(method,params);
       context={cleanupSessionId:this.sessionId,connectionEpoch:scope.connectionEpoch};
     }else if(rpcEvidenceCategory(method,params)!=='read'){
