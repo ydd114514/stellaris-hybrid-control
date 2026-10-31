@@ -1,8 +1,9 @@
 import {readFile} from 'node:fs/promises';
 import {join} from 'node:path';
 
-// Generate only selected, modified mod entries from the user's installed game.
-// Vanilla game text is never copied into the repository or game installation.
+// Generate derived candidates only in the user's mod, never in the game files
+// or repository. Costs, jobs and building sets remain those of the base zone.
+const names=['zone_research','zone_research_physics','zone_research_society','zone_research_engineering'];
 function closingBrace(text,start){
  let depth=0,quoted=false,escaped=false,comment=false;
  for(let i=start;i<text.length;i++){
@@ -16,22 +17,30 @@ function closingBrace(text,start){
 }
 export function researchZoneOverrides(text){
  if(typeof text!=='string'||text.length>4_000_000)throw Error('区域脚本过大或无效');
- const names=['zone_research','zone_research_physics','zone_research_society','zone_research_engineering'];
- const additions='\n\t\tmodifier = { add = 250 owner = { has_edict = cfsteer_economy_research } }\n';
+ const condition='\n\t\towner = { has_edict = cfsteer_economy_research is_wilderness_empire = no }\n';
  const entries=names.map(name=>{
   const match=new RegExp('^'+name+'\\s*=\\s*\\{','m').exec(text);
   if(!match)throw Error('4.5.2区域定义缺失：'+name);
   const open=text.indexOf('{',match.index),close=closingBrace(text,open);
-  let entry=text.slice(match.index,close+1);
-  const weight=/\badditional_ai_weight\s*=\s*\{/.exec(entry);
-  if(weight){const at=entry.indexOf('{',weight.index)+1;entry=entry.slice(0,at)+additions+entry.slice(at);}
-  else entry=entry.slice(0,-1)+'\n\tadditional_ai_weight = {'+additions+'\t}\n}';
+  let entry=text.slice(match.index,close+1).replace(new RegExp('^'+name),'cfsteer_'+name);
+  // The actual 4.5.2 parser requires a scalar additional_ai_weight. A separate
+  // candidate's potential supplies the edict condition without altering NPCs.
+  const potential=/\bpotential\s*=\s*\{/.exec(entry);
+  if(potential){const at=entry.indexOf('{',potential.index)+1;entry=entry.slice(0,at)+condition+entry.slice(at);}
+  else entry=entry.slice(0,-1)+'\n\tpotential = {'+condition+'\t}\n}';
+  if(/\badditional_ai_weight\s*=\s*\{/.test(entry))throw Error('4.5.2 additional_ai_weight必须是数值');
+  entry=entry.replace(/\badditional_ai_weight\s*=\s*[-+0-9.eE]+/g,'additional_ai_weight = 250');
+  if(!/\badditional_ai_weight\s*=/.test(entry))entry=entry.slice(0,-1)+'\n\tadditional_ai_weight = 250\n}';
   return entry;
  });
  const variables=text.match(/^\s*@\w+\s*=\s*[^\r\n#]+/gm)??[];
- return '# Generated locally from installed 4.5.2; only research-edict AI weights change.\n'+variables.join('\n')+'\n'+entries.join('\n\n')+'\n';
+ return '# Generated locally from installed 4.5.2; player-edict candidates retain vanilla costs and jobs.\n'+variables.join('\n')+'\n'+entries.join('\n\n')+'\n';
 }
 export async function generateSteeringZoneOverrides(gameDirectory){
  const text=await readFile(join(gameDirectory,'common/zones/00_zones.txt'),'utf8');
- return {path:'common/zones/zz_cfsteer_research_weights.txt',content:Buffer.from(researchZoneOverrides(text),'utf8')};
+ return {path:'common/zones/zz_cfsteer_research_weights.txt',content:Buffer.from(researchZoneOverrides(text),'utf8'),extraFiles:[{
+  path:'common/scripted_triggers/zz_cfsteer_research_zone_trigger.txt',
+  content:Buffer.from('has_any_research_zone = { OR = { has_any_unspecialized_research_zone = yes has_any_specialized_research_zone = yes '+
+    names.map(name=>'has_zone = { zone = cfsteer_'+name+' }').join(' ')+' } }\n','utf8')
+ }]};
 }

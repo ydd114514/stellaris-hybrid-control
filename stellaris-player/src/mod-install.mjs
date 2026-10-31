@@ -8,7 +8,7 @@ export const MOD_NAME = 'cyberfish_observer_v1'
 const modSource = name => fileURLToPath(new URL(`../mod/${name}/`, import.meta.url))
 const inspect = async path => { try { return await lstat(path) } catch (error) { if (error.code === 'ENOENT') return null; throw error } }
 const digest = value => createHash('sha256').update(value).digest('hex')
-const previousSteeringFiles={'common/economic_plans/cfsteer_plans.txt':'4b5eb5508d6735b6581d0f06c90294afcd2b2880867844bf6eba59bfbd1f1702'}
+const previousSteeringFiles={'localisation/english/cfsteer_l_english.yml':'6ea827c27e4345901cb24d55b1191804d87a7b9ba74072cbffe9fe6e126d8317','localisation/simp_chinese/cfsteer_l_simp_chinese.yml':'b88b334f5f8ecc4e9f34e6ef25d3d8bdd7125aaa7055f4991467ec9c93dd8c24','common/zones/zz_cfsteer_research_weights.txt':'c33c8bca91d4146d06dfed1ef50bdcadf2c1752c090f5efff399e05e68c6329f','common/economic_plans/cfsteer_plans.txt':'4b5eb5508d6735b6581d0f06c90294afcd2b2880867844bf6eba59bfbd1f1702'}
 
 async function checkedParents(root, path) {
   const part = relative(root, path)
@@ -46,6 +46,7 @@ export async function installLocalMod({ documentsPath, dryRun = false, modName=M
   if(modName==='cyberfish_steering_v1'&&gameDirectory){
     const generated=await generateSteeringZoneOverrides(gameDirectory);
     plans.push({path:resolve(target,generated.path),content:generated.content});
+    for(const file of generated.extraFiles??[])plans.push({path:resolve(target,file.path),content:file.content});
   }
   const descriptor = (await readFile(join(source, 'descriptor.mod'), 'utf8')) + `path="mod/${modName}"\n`
   plans.push({ path: join(modRoot, `${modName}.mod`), content: Buffer.from(descriptor, 'utf8') })
