@@ -8,7 +8,7 @@
 
 - `stellaris-player/`：Node控制器、MCP、模型接入、桥加载器、测试与实施记录。
 - `赛博肥鱼-全套-v0.3.7-95dfaa6/`：现有Electron/Vue/TypeScript DSH源码。保留目录名和同级关系，避免破坏相对导入。
-- `.local/research/stellaris-mcp-native/`：当前C++桥源码，经济候选WIP；这个路径有意纳入版本控制。
+- `.local/research/stellaris-mcp-native/`：当前C++桥源码，v1.5默认放行门控；这个路径有意纳入版本控制。
 - `evidence/`：原始成功/失败报告、独立回读、r2源码对照和离线研究。
 - `HANDOFF_INVENTORY.json`：复制源文件SHA256；不是功能验收证明。
 
@@ -35,7 +35,7 @@ cmake --build stellaris-player/.local/native-country-ai-receipts --config Releas
 ctest --test-dir stellaris-player/.local/native-country-ai-receipts -C Release --output-on-failure
 ```
 
-新DLL未在加载白名单；不能为了运行改哈希或版本伪装已验收。r2 DLL不随源码分发，对照源码在evidence/r2-source-snapshot。跨机器重新编译不能假定DLL哈希一致。
+v1.5新桥0.6.18已编译、加入本机加载白名单并成为默认，等待一次T6；白名单不等于实机验收。r2 DLL不随源码分发，对照源码在evidence/r2-source-snapshot。跨机器重新编译不能假定DLL哈希一致。
 
 桌面在对应目录按pnpm-lock.yaml安装依赖；缺生成语音时可用 `node scripts/build-dsh.mjs --basic` 构建。鲸鱼贴图须由用户本机补齐/替换。
 

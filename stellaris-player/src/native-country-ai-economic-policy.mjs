@@ -1,8 +1,8 @@
-// This candidate is NOT a loader admission or a change of the DSH default.
+// Legacy strategy names remain for rollback; v1.5 defaults to full_with_reserved.
 export const COUNTRY_AI_ECONOMY_CANDIDATE_VERSION='cyberfish-0.6.17-country-ai-economy-wip';
 export const COUNTRY_AI_ECONOMY_FEATURES=['country_ai_economic_administration_candidate',
  'country_ai_administration_effect_readback','country_ai_protected_economic_targets','country_ai_ship_production_candidate','country_ai_ship_queue_effect_readback'];
-export const COUNTRY_AI_POLICIES={research:['research'],planet_construction:['planet_construction'],
+export const COUNTRY_AI_POLICIES={full_with_reserved:['native_country_operations'],research:['research'],planet_construction:['planet_construction'],
  research_and_planet_construction:['research','planet_construction'],
  economy:['research','planet_construction','workforce','colony_designation'],
  economy_and_ship_production:['research','planet_construction','workforce','colony_designation','ship_production']};

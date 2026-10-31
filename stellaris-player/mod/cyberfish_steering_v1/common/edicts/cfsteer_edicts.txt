@@ -1,0 +1,71 @@
+cfsteer_economy_balanced = {
+ length = -1
+ icon = "GFX_edict_type_policy"
+ resources = { category = edicts cost = { unity = 0 } upkeep = { unity = 0 } }
+ potential = { is_ai = no }
+ allow = { always = yes }
+ ai_weight = { weight = 0 }
+}
+
+cfsteer_economy_consumer_stability = {
+ length = -1
+ icon = "GFX_edict_type_policy"
+ resources = { category = edicts cost = { unity = 0 } upkeep = { unity = 0 } }
+ potential = { is_ai = no }
+ allow = { always = yes }
+ ai_weight = { weight = 0 }
+}
+
+cfsteer_economy_alloys_military = {
+ length = -1
+ icon = "GFX_edict_type_policy"
+ resources = { category = edicts cost = { unity = 0 } upkeep = { unity = 0 } }
+ potential = { is_ai = no }
+ allow = { always = yes }
+ ai_weight = { weight = 0 }
+}
+
+cfsteer_economy_research = {
+ length = -1
+ icon = "GFX_edict_type_policy"
+ resources = { category = edicts cost = { unity = 0 } upkeep = { unity = 0 } }
+ potential = { is_ai = no }
+ allow = { always = yes }
+ ai_weight = { weight = 0 }
+}
+
+cfsteer_expansion_aggressive = {
+ length = -1
+ icon = "GFX_edict_type_policy"
+ resources = { category = edicts cost = { unity = 0 } upkeep = { unity = 0 } }
+ potential = { is_ai = no }
+ allow = { always = yes }
+ ai_weight = { weight = 0 }
+}
+
+cfsteer_expansion_consolidate = {
+ length = -1
+ icon = "GFX_edict_type_policy"
+ resources = { category = edicts cost = { unity = 0 } upkeep = { unity = 0 } }
+ potential = { is_ai = no }
+ allow = { always = yes }
+ ai_weight = { weight = 0 }
+}
+
+cfsteer_military_peaceful = {
+ length = -1
+ icon = "GFX_edict_type_policy"
+ resources = { category = edicts cost = { unity = 0 } upkeep = { unity = 0 } }
+ potential = { is_ai = no }
+ allow = { always = yes }
+ ai_weight = { weight = 0 }
+}
+
+cfsteer_military_prepare_war = {
+ length = -1
+ icon = "GFX_edict_type_policy"
+ resources = { category = edicts cost = { unity = 0 } upkeep = { unity = 0 } }
+ potential = { is_ai = no }
+ allow = { always = yes }
+ ai_weight = { weight = 0 }
+}

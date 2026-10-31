@@ -153,7 +153,7 @@ Json CountryAILease(const Json& params) {
         const auto wall=params.value("max_wall_ms",uint64_t(120000));
         if(wall<1000||wall>3600000)return {{"success",false},{"error","country_ai_wall_limit_out_of_range"}};
         if(!InstallCountryAIWorldHooks())return {{"success",false},{"error","country_ai_world_start_hooks_unverified"}};
-        lastGate=CountryAIRoutineGate({{"action","arm"},{"policy",params.value("policy",std::string("research"))},{"expected",state["precondition"]},{"protected_targets",params.value("protected_targets",Json::object())}});
+        lastGate=CountryAIRoutineGate({{"action","arm"},{"policy",params.value("policy",std::string("full_with_reserved"))},{"expected",state["precondition"]},{"protected_targets",params.value("protected_targets",Json::object())}});
         if(!lastGate.value("success",false))return lastGate;
         lastObservation=CountryAIObservation({{"action","start"},{"expected",state["precondition"]}});
         if(!lastObservation.value("success",false)) {
@@ -195,7 +195,7 @@ Json CountryAILease(const Json& params) {
         } else if(action=="run") {
             if(phase!="ready_paused"||!Receipt(lastState)||!lastState.value("paused",false))
                 return {{"success",false},{"error","country_ai_run_requires_confirmed_control"}};
-            if(!params.value("limited_domain_pilot",false))return {{"success",false},{"error","country_ai_limited_domain_pilot_required"}};
+            // v1.5 full native operation; explicit lease is the authority.
             auto current=CountryAIState();
             if(!SameWorld(current)||!current.value("paused",false)||!On(current)||!Receipt(current)||
                 !EventManager::Get().GetActiveEvents().empty()||Wars().value("warGoalsWindow",false))

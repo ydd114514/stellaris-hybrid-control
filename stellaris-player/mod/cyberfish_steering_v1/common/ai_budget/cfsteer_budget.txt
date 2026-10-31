@@ -1,0 +1,79 @@
+cfsteer_budget_consumer_planets = {
+ resource = minerals
+ type = expenditure
+ category = planets
+ potential = { has_edict = cfsteer_economy_consumer_stability }
+ weight = { weight = 1.5 }
+}
+
+cfsteer_budget_research_planets = {
+ resource = minerals
+ type = expenditure
+ category = planets
+ potential = { has_edict = cfsteer_economy_research }
+ weight = { weight = 1.5 }
+}
+
+cfsteer_budget_industry_planets = {
+ resource = minerals
+ type = expenditure
+ category = planets
+ potential = { has_edict = cfsteer_economy_alloys_military }
+ weight = { weight = 1.2 }
+}
+
+cfsteer_budget_expand_stations = {
+ resource = alloys
+ type = expenditure
+ category = stations
+ potential = { has_edict = cfsteer_expansion_aggressive }
+ weight = { weight = 0.9 }
+}
+
+cfsteer_budget_expand_influence = {
+ resource = influence
+ type = expenditure
+ category = stations
+ potential = { has_edict = cfsteer_expansion_aggressive }
+ weight = { weight = 1.5 }
+}
+
+cfsteer_budget_expand_colonies = {
+ resource = alloys
+ type = expenditure
+ category = colonies
+ potential = { has_edict = cfsteer_expansion_aggressive }
+ weight = { weight = 0.6 }
+}
+
+cfsteer_budget_consolidate_planets = {
+ resource = minerals
+ type = expenditure
+ category = planets
+ potential = { has_edict = cfsteer_expansion_consolidate }
+ weight = { weight = 2 }
+}
+
+cfsteer_budget_prepare_ships = {
+ resource = alloys
+ type = expenditure
+ category = ships
+ potential = { has_edict = cfsteer_military_prepare_war }
+ weight = { weight = 2 }
+}
+
+cfsteer_budget_prepare_upgrades = {
+ resource = alloys
+ type = expenditure
+ category = ship_upgrades
+ potential = { has_edict = cfsteer_military_prepare_war }
+ weight = { weight = 0.8 }
+}
+
+cfsteer_budget_peace_planets = {
+ resource = minerals
+ type = expenditure
+ category = planets
+ potential = { has_edict = cfsteer_military_peaceful }
+ weight = { weight = 0.8 }
+}

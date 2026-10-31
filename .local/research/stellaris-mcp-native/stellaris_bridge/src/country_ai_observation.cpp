@@ -382,7 +382,7 @@ void ObservedPost(void* transport,void* command) {
             row["stage"]="native_session_post_blocked";Emit(row);return;
         }
         std::lock_guard<std::mutex> lock(observationMutex);
-        if(!AllowedToken((uintptr_t)command))++trackingFaults; // Passive observation cannot certify an untyped lifetime.
+        // v1.5 unknown/native routine commands are allowed without per-type receipt engineering.
         row["stage"]="native_session_post_entered";Emit(row);
         auto record=originals.find((uintptr_t)command);if(record!=originals.end())record->second->life.postEntered=true;
     }

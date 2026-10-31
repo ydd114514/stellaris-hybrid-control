@@ -6,10 +6,9 @@ export const UPGRADE_PATH_BRIDGE_VERSION='cyberfish-0.6.11-upgrade-paths-r1';
 export const TRADE_BUDGET_BRIDGE_VERSION='cyberfish-0.6.12-trade-budget-r1';
 export const CLAIM_BUDGET_BRIDGE_VERSION='cyberfish-0.6.14-claim-budget-r1';
 const required=['building_upgrade_candidates','building_upgrade_queue_identity','ship_design_naval_size','zone_building_membership','owned_shipyard_queues','engine_market_transaction_quotes','normal_war_actions'];
-export function assertBridgeCapabilities(ping,{hybridSurvey=false,upgradePaths=false,tradeBudget=false,claimBudget=false,nativeCountryAI=false,nativeCountryAIEconomyCandidate=false}={}){
+export function assertBridgeCapabilities(ping,{hybridSurvey=false,upgradePaths=false,tradeBudget=false,claimBudget=false,nativeCountryAI=false}={}){
  if(nativeCountryAI){
-  const candidate=nativeCountryAIEconomyCandidate&&ping?.bridge_version===COUNTRY_AI_ECONOMY_CANDIDATE_VERSION&&COUNTRY_AI_ECONOMY_FEATURES.every(f=>ping.features?.includes(f));
-  if((nativeCountryAIEconomyCandidate?!candidate:ping?.bridge_version!==COUNTRY_AI_P1_BRIDGE_VERSION)||!Array.isArray(ping.features)||[...required,...COUNTRY_AI_P1_FEATURES].some(f=>!ping.features.includes(f)))throw Error('国家 AI 试点需要完整的提交限制、心跳收权和世界代次桥；旧桥不允许降级托管');
+  if(ping?.bridge_version!==COUNTRY_AI_P1_BRIDGE_VERSION||!Array.isArray(ping.features)||[...required,...COUNTRY_AI_P1_FEATURES,'country_ai_full_with_reserved'].some(f=>!ping.features.includes(f)))throw Error('国家 AI 需要 v1.5 默认放行和保留决定门控桥；请手动重启后加载新桥');
   return true;
  }
  if([MONTHLY_QUOTE_BRIDGE_VERSION,UPGRADE_PATH_BRIDGE_VERSION,TRADE_BUDGET_BRIDGE_VERSION,CLAIM_BUDGET_BRIDGE_VERSION].includes(ping?.bridge_version)&&(!Array.isArray(ping.features)||!ping.features.includes('engine_monthly_trade_quotes')||!ping.features.includes('monthly_trade_read_coverage_candidate')))throw Error('月度报价桥缺少对应功能标记，拒绝降级为未核对的接口');
@@ -21,4 +20,3 @@ export function assertBridgeCapabilities(ping,{hybridSurvey=false,upgradePaths=f
  return true;
 }
 import {COUNTRY_AI_P1_BRIDGE_VERSION,COUNTRY_AI_P1_FEATURES} from './native-country-ai.mjs';
-import {COUNTRY_AI_ECONOMY_CANDIDATE_VERSION,COUNTRY_AI_ECONOMY_FEATURES} from './native-country-ai-economic-policy.mjs';

@@ -93,8 +93,8 @@ onUnmounted(() => { mounted = false; clearInterval(timer) })
             <button class="refresh" :disabled="busy || loading || !api" aria-label="刷新运行状态" title="刷新运行状态" @click="refresh"><Icon name="refresh" :size="18"/></button>
           </div>
           <div class="hybrid-mode" data-testid="hybrid-settings">
-            <label><input type="checkbox" :checked="status.hybrid?.nativeCountryAIEnabled === true" :disabled="busy || active || !api?.setNativeCountryAI || status.localTest" @change="changeCountryAI">原生国家 AI 托管：科研与建设</label>
-            <p v-if="status.hybrid?.nativeCountryAIEnabled">原生国家 AI 自己安排科研和殖民地建设，大肥鱼决定方向、接管关键操作并交还。当前是两个领域的试点；停止会收回国家 AI 并核对暂停。</p>
+            <label><input type="checkbox" :checked="status.hybrid?.nativeCountryAIEnabled === true" :disabled="busy || active || !api?.setNativeCountryAI || status.localTest" @change="changeCountryAI">原生国家 AI 托管：全面日常运营</label>
+            <p v-if="status.hybrid?.nativeCountryAIEnabled">原生AI自己经营、扩张和调兵；大肥鱼用方针引导，仅决定宣战、议和和外交。停止会关闭原生AI。</p>
             <template v-else>
               <label><input type="checkbox" :checked="status.hybrid?.surveyEnabled === true" :disabled="busy || active || !api?.setHybridSurvey || status.localTest" @change="changeSurvey">旧模式：混合调查</label>
               <p>{{ status.hybrid?.configurationKnown ? (status.hybrid.surveyEnabled ? '仅把调查交给原生自动调查，其他操作由大肥鱼安排。' : '普通模式：操作由大肥鱼逐项安排。') : '控制模式配置尚未确认。' }}运行前可更改。</p>
@@ -125,8 +125,11 @@ onUnmounted(() => { mounted = false; clearInterval(timer) })
       <section v-if="status.snapshot?.countryAI" class="snapshot-panel" aria-label="国家 AI 控制权" data-testid="country-ai-control">
         <div class="section-heading"><h3>国家 AI 控制权</h3><span>{{ status.snapshot.countryAI.historical ? '上轮记录' : ({native:'原生持权',human:'已接管',unconfirmed:'待核对'}[status.snapshot.countryAI.owner]) }}</span></div>
         <p>{{ status.snapshot.countryAI.message }}</p>
-        <p>托管范围：{{ status.snapshot.countryAI.domains.map(d=>d==='research'?'科研':'殖民地建设').join('、') || '等待委派' }}</p>
-        <p v-if="status.snapshot.countryAI.reviewDue">已到战略复查点；大肥鱼可保持方向继续经营，或先接管再干预。</p>
+        <p>托管范围：{{ status.snapshot.countryAI.domains.map(d=>d==='native_country_operations'?'全部日常运营（保留外交决定）':d==='research'?'科研':'殖民地建设').join('、') || '等待委派' }}</p>
+        <p v-if="status.snapshot.countryAI.steering">当前方针：{{ status.snapshot.countryAI.steering.economyFocus }} / {{ status.snapshot.countryAI.steering.expansionStance }} / {{ status.snapshot.countryAI.steering.militaryStance }}</p>
+        <p v-if="status.snapshot.countryAI.lastStrategyReason">最近战略：{{ status.snapshot.countryAI.lastStrategyReason }}</p>
+        <p>保留命令拦截：{{ status.snapshot.countryAI.blockedCommands ?? 0 }}</p>
+        <p v-if="status.snapshot.countryAI.reviewDue">已到战略复查点；大肥鱼可调整方针或做保留决定，原生AI继续运营。</p>
       </section>
       <section v-if="status.snapshot?.survey" class="snapshot-panel" aria-label="调查分工" data-testid="survey-control">
         <div class="section-heading"><h3>调查分工</h3><span>最近一次回读</span></div>

@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import { callWindowsBridge, createWindowsDriver } from './driver.mjs'
 import { createAgent } from './agent.mjs'
-import { installObserverMod, MOD_NAME } from './mod-install.mjs'
+import { installObserverMod,installSteeringMod, MOD_NAME } from './mod-install.mjs'
 import { createModObserver } from './mod-observer.mjs'
 import { loadDeepSeekKey, credentialStatus } from './credentials.mjs'
 
@@ -54,8 +54,8 @@ try {
     await writeFile(join(local, 'deepseek-connection-check.json'), JSON.stringify(result, null, 2), { mode: 0o600 })
     console.log(JSON.stringify(result, null, 2))
     if (!result.ok) process.exitCode = 1
-  } else if (command === 'install-mod') {
-    const installation = await installObserverMod({ documentsPath, dryRun: flag('--dry-run') })
+  } else if (command === 'install-mod' || command === 'install-steering-mod') {
+    const installation = await (command==='install-steering-mod'?installSteeringMod:installObserverMod)({ documentsPath, dryRun: flag('--dry-run') })
     if (!installation.dryRun) { await mkdir(local, { recursive: true }); await writeFile(join(local, 'mod-installation.json'), JSON.stringify(installation, null, 2), { mode: 0o600 }) }
     console.log(JSON.stringify(installation, null, 2))
   } else if (command === 'observe') {

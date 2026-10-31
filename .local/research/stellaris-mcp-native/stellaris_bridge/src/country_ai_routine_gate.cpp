@@ -16,12 +16,22 @@ using AddAI=void (*)(void*,void*);
 AddAI originalAddAI=nullptr;
 std::atomic<uint32_t> gatedCountry{0xffffffffu};
 std::atomic<uintptr_t> gatedCountryObject{0};
-std::atomic<bool> researchAllowed{false},constructionAllowed{false};
-std::atomic<bool> administrationAllowed{false},shipProductionAllowed{false};
+std::atomic<ReservedPolicy> reservedPolicy{ReservedPolicy::Suspended};
 std::atomic<uint64_t> admitted{0},blocked{0},faults{0};
 std::atomic<uint64_t> postAdmitted{0},postBlocked{0},protectedRejected{0};
 std::mutex countMutex;
 std::map<uintptr_t,uint64_t> blockedVtables;
+struct CommandCounts {uint64_t admitted=0,blocked=0;};
+std::map<std::string,CommandCounts> commandCounts;
+const sdk::CmdSpec* const specs[]{
+#include "country_ai_command_specs.inc"
+};
+std::string CommandName(uintptr_t vt) {
+    for(auto* spec:specs)if(vt==CommandBuilder::Get().Base()+spec->vtable_rva)return spec->name;
+    return "unknown";
+}
+void Count(uintptr_t vt,bool allowed){std::lock_guard<std::mutex> lock(countMutex);auto& row=commandCounts[CommandName(vt)];if(allowed)++row.admitted;else ++row.blocked;}
+
 Json boundSnapshot=nullptr;
 bool installed=false;
 uint64_t generation=0;
@@ -31,6 +41,13 @@ std::shared_ptr<const ProtectedTargets> protections=std::make_shared<const Prote
 std::atomic<uint64_t> boundWorld{0};
 template<class T> bool Read(uintptr_t p,T& v){SIZE_T n=0;
     return p>=0x10000&&ReadProcessMemory(GetCurrentProcess(),(void*)p,&v,sizeof v,&n)&&n==sizeof v;
+}
+bool SafeReadPdxString(const void* address,std::string& out) {
+    const auto at=(uintptr_t)address;uint64_t size=0,capacity=0;uintptr_t data=at;
+    if(!Read(at+0x10,size)||!Read(at+0x18,capacity)||size>160||capacity<size)return false;
+    if(capacity>=16&&!Read(at,data))return false;
+    char bytes[161]{};SIZE_T n=0;if(size&&(!ReadProcessMemory(GetCurrentProcess(),(void*)data,bytes,size,&n)||n!=size))return false;
+    out.assign(bytes,size);return true;
 }
 bool OwnIdentity(uintptr_t base,uint32_t id) {
     uintptr_t db=0,slots=0,country=0;uint32_t capacity=0,actual=0xffffffffu;
@@ -81,6 +98,14 @@ void DescribeShipTarget(NativeRoutineRequest& request,uintptr_t buildable,uintpt
 }
 NativeRoutineRequest Describe(uintptr_t command,uintptr_t vt,uintptr_t base) {
     NativeRoutineRequest request;
+    request.actor=gatedCountry.load(); // Natural producer/own-pending provenance, not guessed payload offsets.
+    for(auto* spec:specs)if(vt==base+spec->vtable_rva){request.name=spec->name;break;}
+    if(request.name=="add_policy_command") {
+        uintptr_t definition=0;std::string key;
+        if(Read(command+0x20,definition)&&SafeReadPdxString((void*)(definition+0x20),key))request.steeringSetting=key.rfind("cfsteer_",0)==0;
+    } else if(request.name=="add_edict_command"||request.name=="remove_edict_command") {
+        std::string key;if(SafeReadPdxString((void*)(command+0x30),key))request.steeringSetting=key.rfind("cfsteer_",0)==0;
+    }
     if(vt==base+sdk::cmd::research_technology_command::kVtableRva) {
         uintptr_t technology=0;
         request.command=NativeRoutineCommand::ResearchTechnology;
@@ -122,6 +147,7 @@ void Reject(void* command,uintptr_t vt,bool beforeQueue=true) {
     // invoke this engine-owned command's deleting destructor once, flags=1.
     // This runs in the original producer's natural thread, not a remote call.
     if(beforeQueue)++blocked;
+    Count(vt,false);
     try {std::lock_guard<std::mutex> lock(countMutex);++blockedVtables[vt];}catch(...){++faults;}
     auto destroy=*(void* (**)(void*,unsigned))vt;
     destroy(command,1);
@@ -148,11 +174,11 @@ void GuardedAddAI(void* ai,void* command) {
     }
     if(owner!=own){originalAddAI(ai,command);return;}
     const auto request=Describe(reinterpret_cast<uintptr_t>(command),vt,base);
-    if(!OwnIdentity(base,own)||!AllowNativeRoutine(request,own,researchAllowed.load(),constructionAllowed.load(),administrationAllowed.load(),shipProductionAllowed.load())) {
+    if(!OwnIdentity(base,own)||!AllowNativeRoutine(request,own,reservedPolicy.load())) {
         if(request.targetProtected)++protectedRejected;
         Reject(command,vt);return;
     }
-    ++admitted;originalAddAI(ai,command);
+    ++admitted;Count(vt,true);originalAddAI(ai,command);
 }
 bool Install() {
     if(installed)return true;
@@ -166,20 +192,20 @@ bool Install() {
     installed=true;return true;
 }
 }
-void SuspendCountryAIRoutineGate(){researchAllowed=false;constructionAllowed=false;administrationAllowed=false;shipProductionAllowed=false;}
+void SuspendCountryAIRoutineGate(){reservedPolicy=ReservedPolicy::Suspended;}
 bool CountryAIRoutineGateArmed(){return gatedCountry.load()!=0xffffffffu;}
 bool AdmitCountryAIRoutinePost(void* command,uint32_t sourceCountry) {
     // Starting a passive observer must never enable command filtering.
-    const auto own=gatedCountry.load();if(own==0xffffffffu)return true;
+    const auto own=gatedCountry.load();if(own==0xffffffffu||sourceCountry!=own)return true;
     uintptr_t vt=0;const auto base=CommandBuilder::Get().Base();
     if(!Read(reinterpret_cast<uintptr_t>(command),vt)){++faults;return false;}
     const auto request=Describe(reinterpret_cast<uintptr_t>(command),vt,base);
     if(sourceCountry!=own||CountryAIWorldGeneration()!=boundWorld.load()||
-        !OwnIdentity(base,own)||!AllowNativeRoutine(request,own,researchAllowed.load(),constructionAllowed.load(),administrationAllowed.load(),shipProductionAllowed.load())) {
+        !OwnIdentity(base,own)||!AllowNativeRoutine(request,own,reservedPolicy.load())) {
         if(request.targetProtected)++protectedRejected;
         ++postBlocked;Reject(command,vt,false);return false;
     }
-    ++postAdmitted;return true;
+    ++postAdmitted;Count(vt,true);return true;
 }
 Json CountryAIRoutineGate(const Json& params) {
     const auto action=params.value("action",std::string("status"));
@@ -194,8 +220,8 @@ Json CountryAIRoutineGate(const Json& params) {
         if(action!="release_after_world_change"&&!EmptyOwnQueue(object,own))return {{"success",false},{"error","routine_gate_existing_native_queue_not_proven_empty"}};
         if(action=="arm") {
             if(gatedCountry.load()!=0xffffffffu)return {{"success",false},{"error","routine_gate_already_armed"}};
-            const auto policy=params.value("policy",std::string());
-            if(policy!="research"&&policy!="planet_construction"&&policy!="research_and_planet_construction"&&policy!="economy"&&policy!="economy_and_ship_production")return {{"success",false},{"error","routine_gate_policy_unsupported"}};
+            const auto policy=params.value("policy",std::string("full_with_reserved"));
+            if(policy!="full_with_reserved"&&policy!="research"&&policy!="planet_construction"&&policy!="research_and_planet_construction"&&policy!="economy"&&policy!="economy_and_ship_production")return {{"success",false},{"error","routine_gate_policy_unsupported"}};
             auto nextProtections=std::make_shared<ProtectedTargets>();
             // Immutable within a lease. Only fresh, owned full refs can be
             // protected; malformed or stale constraints reject the whole arm.
@@ -223,8 +249,8 @@ Json CountryAIRoutineGate(const Json& params) {
             if(!Install())return {{"success",false},{"error","routine_gate_abi_unverified"}};
             std::atomic_store(&protections,std::shared_ptr<const ProtectedTargets>(nextProtections));
             boundSnapshot=state["precondition"];++generation;admitted=0;blocked=0;faults=0;postAdmitted=0;postBlocked=0;protectedRejected=0;
-            {std::lock_guard<std::mutex> lock(countMutex);blockedVtables.clear();}
-            researchAllowed=policy!="planet_construction";constructionAllowed=policy!="research";administrationAllowed=policy=="economy"||policy=="economy_and_ship_production";shipProductionAllowed=policy=="economy_and_ship_production";
+            {std::lock_guard<std::mutex> lock(countMutex);blockedVtables.clear();commandCounts.clear();}
+            reservedPolicy=ReservedPolicy::FullWithReserved;
             boundWorld=CountryAIWorldGeneration();gatedCountryObject=object;gatedCountry=own;
         } else {
             if(action=="release_after_world_change"&&CountryAIWorldGeneration()==boundWorld.load())
@@ -232,16 +258,18 @@ Json CountryAIRoutineGate(const Json& params) {
             if(action!="release_after_world_change"&&(gatedCountry.load()!=own||gatedCountryObject.load()!=object))
                 return {{"success",false},{"error","routine_gate_binding_changed"}};
             gatedCountry=0xffffffffu;gatedCountryObject=0;
-            std::atomic_store(&protections,std::make_shared<const ProtectedTargets>());researchAllowed=false;constructionAllowed=false;administrationAllowed=false;shipProductionAllowed=false;
+            std::atomic_store(&protections,std::make_shared<const ProtectedTargets>());reservedPolicy=ReservedPolicy::Suspended;
         }
     } else if(action!="status")return {{"success",false},{"error","unknown_routine_gate_action"}};
-    Json counts=Json::array();{std::lock_guard<std::mutex> lock(countMutex);
-        for(const auto& row:blockedVtables)counts.push_back({{"vtable_rva",row.first-CommandBuilder::Get().Base()},{"count",row.second}});}
+    Json counts=Json::array(),named=Json::object();{std::lock_guard<std::mutex> lock(countMutex);
+        for(const auto& row:blockedVtables)counts.push_back({{"vtable_rva",row.first-CommandBuilder::Get().Base()},{"count",row.second}});
+        for(const auto& row:commandCounts)named[row.first]={{"admitted",row.second.admitted},{"blocked",row.second.blocked}};
+    }
     const auto protectedRefs=std::atomic_load(&protections);
     return {{"success",true},{"protected_targets",{{"jobs",protectedRefs->jobs},{"colonies",protectedRefs->colonies},{"shipyards",protectedRefs->shipyards}}},{"armed",gatedCountry.load()!=0xffffffffu},{"generation",generation},
-        {"binding",boundSnapshot},{"research_allowed",researchAllowed.load()},
-        {"planet_construction_allowed",constructionAllowed.load()},{"admitted_to_native_validation",admitted.load()},
-        {"protected_target_commands_blocked",protectedRejected.load()},{"economic_administration_allowed",administrationAllowed.load()},{"ship_production_allowed",shipProductionAllowed.load()},
+        {"binding",boundSnapshot},{"reserved_policy","full_with_reserved"},{"suspended",reservedPolicy.load()==ReservedPolicy::Suspended},{"command_counts",named},
+        {"admitted_to_native_validation",admitted.load()},
+        {"protected_target_commands_blocked",protectedRejected.load()},
         {"blocked_before_native_queue",blocked.load()},{"blocked_vtables",counts},{"coverage_faults",faults.load()},
         {"admitted_at_own_session_post",postAdmitted.load()},{"blocked_at_own_session_post",postBlocked.load()},
         {"enables_ai",false},{"unpauses_game",false},{"native_budget_hard_limit",false},

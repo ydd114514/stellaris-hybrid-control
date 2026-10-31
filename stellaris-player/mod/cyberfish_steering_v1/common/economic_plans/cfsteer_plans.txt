@@ -1,0 +1,161 @@
+basic_economy_plan = {
+ subplan = {
+  set_name = "cfsteer_focus_consumer_stability"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_consumer_stability NOT = { has_ethic = ethic_gestalt_consciousness } }
+  focus = { consumer_goods = 30 unity = 30 }
+ }
+ subplan = {
+  set_name = "cfsteer_focus_alloys_military"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_alloys_military }
+  focus = { alloys = 80 }
+ }
+ subplan = {
+  set_name = "cfsteer_focus_research"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_research }
+  focus = { physics_research = 200 society_research = 200 engineering_research = 200 }
+ }
+ subplan = {
+ set_name = "cfsteer_gestalt_stability"
+ optional = yes
+ potential = { has_edict = cfsteer_economy_consumer_stability has_ethic = ethic_gestalt_consciousness }
+ focus = { energy = 60 unity = 30 }
+}
+}
+
+intermediate_economy_plan = {
+ subplan = {
+  set_name = "cfsteer_focus_consumer_stability"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_consumer_stability NOT = { has_ethic = ethic_gestalt_consciousness } }
+  focus = { consumer_goods = 30 unity = 30 }
+ }
+ subplan = {
+  set_name = "cfsteer_focus_alloys_military"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_alloys_military }
+  focus = { alloys = 80 }
+ }
+ subplan = {
+  set_name = "cfsteer_focus_research"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_research }
+  focus = { physics_research = 200 society_research = 200 engineering_research = 200 }
+ }
+ subplan = {
+ set_name = "cfsteer_gestalt_stability"
+ optional = yes
+ potential = { has_edict = cfsteer_economy_consumer_stability has_ethic = ethic_gestalt_consciousness }
+ focus = { energy = 60 unity = 30 }
+}
+}
+
+advanced_economy_plan = {
+ subplan = {
+  set_name = "cfsteer_focus_consumer_stability"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_consumer_stability NOT = { has_ethic = ethic_gestalt_consciousness } }
+  focus = { consumer_goods = 30 unity = 30 }
+ }
+ subplan = {
+  set_name = "cfsteer_focus_alloys_military"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_alloys_military }
+  focus = { alloys = 80 }
+ }
+ subplan = {
+  set_name = "cfsteer_focus_research"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_research }
+  focus = { physics_research = 200 society_research = 200 engineering_research = 200 }
+ }
+ subplan = {
+ set_name = "cfsteer_gestalt_stability"
+ optional = yes
+ potential = { has_edict = cfsteer_economy_consumer_stability has_ethic = ethic_gestalt_consciousness }
+ focus = { energy = 60 unity = 30 }
+}
+}
+
+mature_economy_plan = {
+ subplan = {
+  set_name = "cfsteer_focus_consumer_stability"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_consumer_stability NOT = { has_ethic = ethic_gestalt_consciousness } }
+  focus = { consumer_goods = 30 unity = 30 }
+ }
+ subplan = {
+  set_name = "cfsteer_focus_alloys_military"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_alloys_military }
+  focus = { alloys = 80 }
+ }
+ subplan = {
+  set_name = "cfsteer_focus_research"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_research }
+  focus = { physics_research = 200 society_research = 200 engineering_research = 200 }
+ }
+ subplan = {
+ set_name = "cfsteer_gestalt_stability"
+ optional = yes
+ potential = { has_edict = cfsteer_economy_consumer_stability has_ethic = ethic_gestalt_consciousness }
+ focus = { energy = 60 unity = 30 }
+}
+}
+
+endgame_economy_plan = {
+ subplan = {
+  set_name = "cfsteer_focus_consumer_stability"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_consumer_stability NOT = { has_ethic = ethic_gestalt_consciousness } }
+  focus = { consumer_goods = 30 unity = 30 }
+ }
+ subplan = {
+  set_name = "cfsteer_focus_alloys_military"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_alloys_military }
+  focus = { alloys = 80 }
+ }
+ subplan = {
+  set_name = "cfsteer_focus_research"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_research }
+  focus = { physics_research = 200 society_research = 200 engineering_research = 200 }
+ }
+ subplan = {
+ set_name = "cfsteer_gestalt_stability"
+ optional = yes
+ potential = { has_edict = cfsteer_economy_consumer_stability has_ethic = ethic_gestalt_consciousness }
+ focus = { energy = 60 unity = 30 }
+}
+}
+
+beyond_endgame_economy_plan = {
+ subplan = {
+  set_name = "cfsteer_focus_consumer_stability"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_consumer_stability NOT = { has_ethic = ethic_gestalt_consciousness } }
+  focus = { consumer_goods = 30 unity = 30 }
+ }
+ subplan = {
+  set_name = "cfsteer_focus_alloys_military"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_alloys_military }
+  focus = { alloys = 80 }
+ }
+ subplan = {
+  set_name = "cfsteer_focus_research"
+  optional = yes
+  potential = { has_edict = cfsteer_economy_research }
+  focus = { physics_research = 200 society_research = 200 engineering_research = 200 }
+ }
+ subplan = {
+ set_name = "cfsteer_gestalt_stability"
+ optional = yes
+ potential = { has_edict = cfsteer_economy_consumer_stability has_ethic = ethic_gestalt_consciousness }
+ focus = { energy = 60 unity = 30 }
+}
+}

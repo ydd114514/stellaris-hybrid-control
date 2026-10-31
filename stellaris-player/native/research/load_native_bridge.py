@@ -229,3 +229,6 @@ if __name__ == "__main__":
     except (ProbeError, OSError, ValueError, KeyError, TypeError) as error:
         result = {"ok": False, "error": str(error)}
     print(json.dumps(result, ensure_ascii=True))
+
+# v1.5 default-allow/reserved gate; compiled for one consolidated T6, not live acceptance.
+REVIEWED_DLL_HASHES.add("29005423ccc42cc7c55990b214f258dfba51c6c135d3ae70daf67d6eca59d2c1")

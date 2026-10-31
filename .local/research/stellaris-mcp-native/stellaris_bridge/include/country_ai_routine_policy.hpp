@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <string_view>
 namespace bridge::cyberfish {
 enum class NativeRoutineCommand { Unknown, ResearchTechnology, AddBuildable, WorkforceLimit, ColonyDesignation };
 enum class NativeRoutineBuildable { Unknown, Building, District, BuildingUpgrade, Zone, Ship, ColonyShip };
@@ -13,19 +14,18 @@ struct NativeRoutineRequest {
     bool definitionPresent=false;
     bool queueOwned=false;
     bool targetProtected=false;
+    std::string_view name="unknown";
+    bool steeringSetting=false;
 };
+enum class ReservedPolicy { FullWithReserved, Suspended };
 inline bool AllowNativeRoutine(const NativeRoutineRequest& request,uint32_t own,
-    bool research,bool planetConstruction,bool economicAdministration=false,bool shipProduction=false) {
-    if(own==0xffffffffu||request.actor!=own||request.targetProtected)return false;
-    if(request.command==NativeRoutineCommand::ResearchTechnology)
-        return research&&request.technologyPresent;
-    if(request.command==NativeRoutineCommand::WorkforceLimit)return economicAdministration&&request.targetOwned;
-    if(request.command==NativeRoutineCommand::ColonyDesignation)return economicAdministration&&request.targetOwned&&request.definitionPresent;
-    if(request.command!=NativeRoutineCommand::AddBuildable||request.queue==0xffffffffu)return false;
-    if(request.buildable==NativeRoutineBuildable::Ship||request.buildable==NativeRoutineBuildable::ColonyShip)
-        return shipProduction&&request.targetOwned&&request.queueOwned&&request.definitionPresent;
-    if(!planetConstruction)return false;
-    return request.buildable==NativeRoutineBuildable::Building||request.buildable==NativeRoutineBuildable::District||
-        request.buildable==NativeRoutineBuildable::BuildingUpgrade||request.buildable==NativeRoutineBuildable::Zone;
+    ReservedPolicy policy=ReservedPolicy::FullWithReserved) {
+    if(request.actor!=own)return true;
+    if(policy==ReservedPolicy::Suspended||request.targetProtected)return false;
+    const auto name=request.name;
+    if(name=="diplo_action_propose_command"||name=="diplo_action_respond_command"||
+       name=="diplo_action_vote_command"||name=="diplo_action_start_proxy_war_command")return false;
+    if(request.steeringSetting&&(name=="add_policy_command"||name=="add_edict_command"||name=="remove_edict_command"))return false;
+    return true; // Unknown commands and native internal maintenance run normally.
 }
 }
