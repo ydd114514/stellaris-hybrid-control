@@ -1,0 +1,116 @@
+{
+  "source": "actual_DSH_r2_blocked_commands",
+  "rows": [
+    {
+      "command": "toggle_restricted_system_command",
+      "vtableRva": "0x23446e0",
+      "blocked": 6
+    },
+    {
+      "command": "change_job_priority_command",
+      "vtableRva": "0x2391208",
+      "blocked": 6
+    },
+    {
+      "command": "set_colony_type_command",
+      "vtableRva": "0x2391938",
+      "blocked": 13
+    },
+    {
+      "command": "ai_remove_diplo_action_command",
+      "vtableRva": "0x2392838",
+      "blocked": 1288
+    },
+    {
+      "command": "update_strat_war_data_command",
+      "vtableRva": "0x2393600",
+      "blocked": 12
+    },
+    {
+      "command": "ai_add_strategy_command",
+      "vtableRva": "0x2393d30",
+      "blocked": 156
+    },
+    {
+      "command": "add_edict_command",
+      "vtableRva": "0x23943a8",
+      "blocked": 2
+    },
+    {
+      "command": "research_project_command",
+      "vtableRva": "0x2395038",
+      "blocked": 368
+    },
+    {
+      "command": "set_home_base_command",
+      "vtableRva": "0x23a7b98",
+      "blocked": 1
+    },
+    {
+      "command": "diplo_action_propose_command",
+      "vtableRva": "0x23b4138",
+      "blocked": 6
+    },
+    {
+      "command": "diplo_action_respond_command",
+      "vtableRva": "0x23b41f0",
+      "blocked": 60
+    },
+    {
+      "command": "queue_fleets_order_command",
+      "vtableRva": "0x23b9c68",
+      "blocked": 26
+    },
+    {
+      "command": "queue_fleet_order_command",
+      "vtableRva": "0x23b9d20",
+      "blocked": 52
+    },
+    {
+      "command": "collect_data_fleet_order_command",
+      "vtableRva": "0x23ba000",
+      "blocked": 26
+    },
+    {
+      "command": "set_fleet_ground_support_stance_command",
+      "vtableRva": "0x23baba0",
+      "blocked": 22
+    },
+    {
+      "command": "survey_planet_order",
+      "vtableRva": "0x23bad10",
+      "blocked": 26
+    },
+    {
+      "command": "build_orbital_station_order",
+      "vtableRva": "0x23baf38",
+      "blocked": 12
+    },
+    {
+      "command": "add_buildable_to_queue_command",
+      "vtableRva": "0x23c1b60",
+      "blocked": 266
+    },
+    {
+      "command": "create_species_mod_and_start_special_project",
+      "vtableRva": "0x23ca0c0",
+      "blocked": 1
+    },
+    {
+      "command": "assign_leader_command",
+      "vtableRva": "0x23cae08",
+      "blocked": 103
+    },
+    {
+      "command": "auto_ship_design_command",
+      "vtableRva": "0x23cb838",
+      "blocked": 52
+    },
+    {
+      "command": "create_espionage_operation_command",
+      "vtableRva": "0x24318b8",
+      "blocked": 12
+    }
+  ],
+  "enables_new_actions": false
+}

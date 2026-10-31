@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-10-26",
+  "targetModel": "qwen-audio-3.1-tts-flash",
+  "text": "哼，本店长才没有偷偷等你呢！快坐好，给你留了热乎乎的小点心。今天想听什么歌呀？",
+  "sources": [
+    "https://help.aliyun.com/en/model-studio/voice-design-user-guide",
+    "https://help.aliyun.com/en/model-studio/voice-design-api-references",
+    "https://help.aliyun.com/zh/model-studio/qwen-audio-tts-voice-list"
+  ],
+  "stockAlternatives": [
+    { "name": "龙铃", "voice": "longling_v3.1", "model": "qwen-audio-3.1-tts-flash", "description": "稚气呆板女，童声" },
+    { "name": "龙泡泡", "voice": "longpaopao_v3.1", "model": "qwen-audio-3.1-tts-flash", "description": "飞天泡泡音，儿童陪伴" }
+  ],
+  "directions": [
+    {
+      "id": "01",
+      "name": "俏皮小店长",
+      "prefix": "fishcute1",
+      "prompt": "Q版鲸鱼娘，清脆稚气的可爱动漫小女孩女声，轻盈明亮，稍高音区，带软糯鼻音和俏皮活力，自然聊天，有一点小傲娇。语速略活泼，中文清晰。声音应有明显幼态与童声质感，不需要气声、成熟播音腔或刻意装嗲。"
+    },
+    {
+      "id": "02",
+      "name": "软糯小团子",
+      "prefix": "fishcute2",
+      "prompt": "二次元Q版小女孩角色，可爱而稚气的女童声质感，音区偏高，声线细小圆润，带一点奶声奶气和柔软鼻音，轻松自然地聊天。中文清晰，语速中等偏轻快，句尾有好奇和一点害羞的小倔强。不要成人温柔姐姐感，不要气声低语，不要尖叫、夸张装嗲或播音腔。"
+    },
+    {
+      "id": "03",
+      "name": "元气小鲸鱼",
+      "prefix": "fishcute3",
+      "prompt": "活泼可爱的动漫小女孩女声，清亮明快、童声稚气明显，偏高音区而不尖锐，轻巧有弹性，元气十足，像认真招呼客人的Q版鲸鱼娘小店长。语速略快但中文咬字清楚，自然对话，带一点俏皮小傲娇。不要成人知性或成熟温柔声线，不要气声、机械朗诵或过度卖萌。"
+    }
+  ]
+}

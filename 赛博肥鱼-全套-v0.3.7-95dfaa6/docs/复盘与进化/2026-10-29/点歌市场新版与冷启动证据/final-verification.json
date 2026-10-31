@@ -1,0 +1,53 @@
+{
+  "newModelRequests": 0,
+  "newTtsRequests": 0,
+  "source": "replay-new-real-voice-in-installed-app",
+  "desktopInput": false,
+  "livehimeRecordingVerified": false,
+  "actualVoiceMedia": {
+    "startedAt": 1793247220496,
+    "endedAt": 1793247233296,
+    "duration": 12.8,
+    "audioContextState": "running",
+    "gain": 0.8,
+    "decodedRealWav": true
+  },
+  "voiceOnlyMeters": {
+    "群星 · 实时游戏与声音": {
+      "frames": 254,
+      "nonzero": 254,
+      "peak": 0.11132826656103134
+    },
+    "大肥鱼 · 蓝白框面与字幕": {
+      "frames": 254,
+      "nonzero": 0,
+      "peak": 0
+    },
+    "大肥鱼 · QQ音乐": {
+      "frames": 254,
+      "nonzero": 250,
+      "peak": 0.6677235960960388
+    }
+  },
+  "musicStart": {
+    "ok": true,
+    "message": "背景音乐已开启，收到“点歌 歌名 歌手”会进入点歌队列。"
+  },
+  "actualMusic": {
+    "status": "playing",
+    "title": "0.0000%",
+    "maxQueue": 100
+  },
+  "screenshot": {},
+  "captionLayout": {
+    "captionBottom": 1037.796875,
+    "panelBottom": 1064,
+    "captionTop": 989.203125,
+    "panelTop": 940,
+    "fullyInside": true
+  },
+  "passed": true,
+  "recording": {
+    "outputPath": "E:/肥鱼直播/赛博肥鱼-全套-v0.3.7-95dfaa6/.local/artifacts/live-rehearsal/Cyberfish-2026-10-29-12-13-40.mkv"
+  }
+}

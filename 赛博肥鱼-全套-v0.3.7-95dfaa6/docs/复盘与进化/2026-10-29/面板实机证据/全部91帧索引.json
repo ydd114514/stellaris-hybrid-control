@@ -1,0 +1,1553 @@
+{
+  "count": 91,
+  "frames": [
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\001-setup-baseline.png",
+      "bytes": 3525335,
+      "sha256": "44d42371289f2694651d1e4227626f2d490db0906dc730b1386802615c05d3d7",
+      "label": "setup",
+      "stage": "baseline",
+      "at": 2200.0003,
+      "picture": {
+        "foreground": true,
+        "frames": 4688,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\002-tour-research-opened.png",
+      "bytes": 3430591,
+      "sha256": "eb6146ec5fe5f3fcfb4f41188586c0a69023dfb57133b639407653b8180e52cb",
+      "label": "tour-research",
+      "stage": "opened",
+      "at": 2645.3766,
+      "picture": {
+        "foreground": true,
+        "frames": 4696,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\003-tour-research-hold-1000.png",
+      "bytes": 3431516,
+      "sha256": "acd639721e265955804e72bc1caa39b6be73325b943e6bcf1258efda91457b22",
+      "label": "tour-research",
+      "stage": "hold-1000",
+      "at": 4408.5001,
+      "picture": {
+        "foreground": true,
+        "frames": 4732,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\004-tour-research-hold-3500.png",
+      "bytes": 3426458,
+      "sha256": "7228ef2dcd3834d0289538d821e58709163a3ca3877d2beee08f24118c661e0b",
+      "label": "tour-research",
+      "stage": "hold-3500",
+      "at": 6641.9375,
+      "picture": {
+        "foreground": true,
+        "frames": 4778,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\005-tour-research-hold-6500.png",
+      "bytes": 3428206,
+      "sha256": "a2aaef5e8194ea3ebf947d30fbde0002e1942b5fec675c5cfaed296d44bd4427",
+      "label": "tour-research",
+      "stage": "hold-6500",
+      "at": 9597.922,
+      "picture": {
+        "foreground": true,
+        "frames": 4839,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\006-tour-research-hold-9000.png",
+      "bytes": 3425959,
+      "sha256": "862bc9f8c1f18629a61cc6ae75ab2d857054d38d77cfeeeb65ee978a26a4406d",
+      "label": "tour-research",
+      "stage": "hold-9000",
+      "at": 11835.4835,
+      "picture": {
+        "foreground": true,
+        "frames": 4885,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\007-tour-research-closed.png",
+      "bytes": 3518997,
+      "sha256": "23c4f191685c79fc5b20030f8105f3eaf6547cc3290b025c10d4e0602a6dc7a8",
+      "label": "tour-research",
+      "stage": "closed",
+      "at": 13206.2164,
+      "picture": {
+        "foreground": true,
+        "frames": 4913,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\008-tour-fleets-opened.png",
+      "bytes": 3102098,
+      "sha256": "f2c6a4925dd9ace1fc6106596d3a7ff7ba8b5b565e4c9e352863d8b1c18b259f",
+      "label": "tour-fleets",
+      "stage": "opened",
+      "at": 13618.6197,
+      "picture": {
+        "foreground": true,
+        "frames": 4921,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\009-tour-fleets-hold-1000.png",
+      "bytes": 3063780,
+      "sha256": "2e998ec8d283f2d515bab287d832b3fd1369de5a12309226be8ce05f213b2793",
+      "label": "tour-fleets",
+      "stage": "hold-1000",
+      "at": 15387.7306,
+      "picture": {
+        "foreground": true,
+        "frames": 4957,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\010-tour-fleets-hold-3500.png",
+      "bytes": 3070839,
+      "sha256": "dfd2331718efa6626706c216d8135060b811cbd5b09295c3da488cbf839f9078",
+      "label": "tour-fleets",
+      "stage": "hold-3500",
+      "at": 17602.0138,
+      "picture": {
+        "foreground": true,
+        "frames": 5002,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\011-tour-fleets-hold-6500.png",
+      "bytes": 3064227,
+      "sha256": "28e119a740e427e326bea4749a8014df14e55b1f9baf26007caf8fb4d26376ef",
+      "label": "tour-fleets",
+      "stage": "hold-6500",
+      "at": 20579.6375,
+      "picture": {
+        "foreground": true,
+        "frames": 5063,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\012-tour-fleets-hold-9000.png",
+      "bytes": 3074342,
+      "sha256": "19a0f5de1058995d1da8cf9db1e016b1fd6eb4a28add6e68eca6f424d23b662d",
+      "label": "tour-fleets",
+      "stage": "hold-9000",
+      "at": 22830.6069,
+      "picture": {
+        "foreground": true,
+        "frames": 5109,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\013-tour-fleets-closed.png",
+      "bytes": 3517962,
+      "sha256": "a9976b9403626b10beb37862743509c8ae0eb6a64b1125bc66e12c7d4e84503d",
+      "label": "tour-fleets",
+      "stage": "closed",
+      "at": 24203.4015,
+      "picture": {
+        "foreground": true,
+        "frames": 5137,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\014-tour-market-opened.png",
+      "bytes": 3205942,
+      "sha256": "b55e27c29657876c0c3fbf404b5f9a120fbf0e682fdb8330a173675a8b407ed5",
+      "label": "tour-market",
+      "stage": "opened",
+      "at": 24611.7627,
+      "picture": {
+        "foreground": true,
+        "frames": 5145,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\015-tour-market-hold-1000.png",
+      "bytes": 3171393,
+      "sha256": "620d0d3f01a453e254aa28e85218dde4d46bd2792854cba097ab12b40e5f696e",
+      "label": "tour-market",
+      "stage": "hold-1000",
+      "at": 26370.6654,
+      "picture": {
+        "foreground": true,
+        "frames": 5181,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\016-tour-market-hold-3500.png",
+      "bytes": 3172360,
+      "sha256": "3a27608993d6a1302d6cce100068e4bb6cccc1b60b9a141597dcc1a641051c5c",
+      "label": "tour-market",
+      "stage": "hold-3500",
+      "at": 28606.2093,
+      "picture": {
+        "foreground": true,
+        "frames": 5227,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\017-tour-market-hold-6500.png",
+      "bytes": 3175165,
+      "sha256": "68d634569753c49d862026e2e1a8824b0d14494e7ce581f95a57d5fa818a9660",
+      "label": "tour-market",
+      "stage": "hold-6500",
+      "at": 31555.4363,
+      "picture": {
+        "foreground": true,
+        "frames": 5288,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\018-tour-market-hold-9000.png",
+      "bytes": 3170356,
+      "sha256": "fb82f967875d7f9651ff499c231c795e077cbceb1c671d068a35173e06b8d3ac",
+      "label": "tour-market",
+      "stage": "hold-9000",
+      "at": 33783.0316,
+      "picture": {
+        "foreground": true,
+        "frames": 5334,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\019-tour-market-closed.png",
+      "bytes": 3383952,
+      "sha256": "3f3a3080cd818b743ca1dec605c6002343522322f851a5e1360f4683be4b7b26",
+      "label": "tour-market",
+      "stage": "closed",
+      "at": 35195.7265,
+      "picture": {
+        "foreground": true,
+        "frames": 5363,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\020-tour-traditions-opened.png",
+      "bytes": 3211153,
+      "sha256": "d77d3523a2486126e8a91dd989097ceb4bb170f4b33aae6df779c24b3a535717",
+      "label": "tour-traditions",
+      "stage": "opened",
+      "at": 35599.0739,
+      "picture": {
+        "foreground": true,
+        "frames": 5371,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\021-tour-traditions-hold-1000.png",
+      "bytes": 3322598,
+      "sha256": "3f156cb03eab007294333b86c11c303d4a42e98de510117ba4a5be027a5d976f",
+      "label": "tour-traditions",
+      "stage": "hold-1000",
+      "at": 37344.0487,
+      "picture": {
+        "foreground": true,
+        "frames": 5407,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\022-tour-traditions-hold-3500.png",
+      "bytes": 3316685,
+      "sha256": "3a95260cd1f40ab5f4220153ab537d23e1e60f2d69c310f2bd4d294c1b55c2aa",
+      "label": "tour-traditions",
+      "stage": "hold-3500",
+      "at": 39621.9529,
+      "picture": {
+        "foreground": true,
+        "frames": 5453,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\023-tour-traditions-hold-6500.png",
+      "bytes": 3320386,
+      "sha256": "d04cfc82f4b79742d8b266d90b3549db0a93e485a21f1140dbbee528ffd07211",
+      "label": "tour-traditions",
+      "stage": "hold-6500",
+      "at": 42561.8986,
+      "picture": {
+        "foreground": true,
+        "frames": 5515,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\024-tour-traditions-hold-9000.png",
+      "bytes": 3312851,
+      "sha256": "98e661b5d14df8b0c3e2cd78ee2f52addd80807cd17901e007bf031431c303b5",
+      "label": "tour-traditions",
+      "stage": "hold-9000",
+      "at": 44785.5041,
+      "picture": {
+        "foreground": true,
+        "frames": 5561,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\025-tour-traditions-closed.png",
+      "bytes": 3362314,
+      "sha256": "2af1b997ccfa2d105012eedb39dc0ff6890984cee7a41ba3c8de46f82af5208b",
+      "label": "tour-traditions",
+      "stage": "closed",
+      "at": 46200.6984,
+      "picture": {
+        "foreground": true,
+        "frames": 5590,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\026-tour-contacts-opened.png",
+      "bytes": 3272785,
+      "sha256": "95d156f03470d1b32e40dbee69feb010dd810cd7c19c5f1f86e391f5ec95b62c",
+      "label": "tour-contacts",
+      "stage": "opened",
+      "at": 46638.7222,
+      "picture": {
+        "foreground": true,
+        "frames": 5598,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\027-tour-contacts-hold-1000.png",
+      "bytes": 3274282,
+      "sha256": "ff05cd83ca567c954474de3b8ee6ecf5dc2d87432432173aeb74c44d78bab716",
+      "label": "tour-contacts",
+      "stage": "hold-1000",
+      "at": 48435.0483,
+      "picture": {
+        "foreground": true,
+        "frames": 5634,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\028-tour-contacts-hold-3500.png",
+      "bytes": 3268960,
+      "sha256": "9a988a995904e48bb6042163e7fb44eb45e95e5743a7b03d3dc1301d24e7f435",
+      "label": "tour-contacts",
+      "stage": "hold-3500",
+      "at": 50641.52,
+      "picture": {
+        "foreground": true,
+        "frames": 5679,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\029-tour-contacts-hold-6500.png",
+      "bytes": 3268685,
+      "sha256": "8a008ce1862b335062e9ac3d9723fa48498ef55331ee47cd8ac2fa409cbdb1f3",
+      "label": "tour-contacts",
+      "stage": "hold-6500",
+      "at": 53607.0941,
+      "picture": {
+        "foreground": true,
+        "frames": 5740,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\030-tour-contacts-hold-9000.png",
+      "bytes": 3279026,
+      "sha256": "ecfda6d950cef5c64025c2dc7ee9c0e6ee5ccec5d3c29a9a073804fc6c0eb221",
+      "label": "tour-contacts",
+      "stage": "hold-9000",
+      "at": 55855.6589,
+      "picture": {
+        "foreground": true,
+        "frames": 5786,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\031-tour-contacts-closed.png",
+      "bytes": 3351848,
+      "sha256": "4b490e9bdf2aa8a6d5764de3fbe9f33d65400e505930572af69c15cb72461b8f",
+      "label": "tour-contacts",
+      "stage": "closed",
+      "at": 57240.2629,
+      "picture": {
+        "foreground": true,
+        "frames": 5814,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\032-tour-leaders-opened.png",
+      "bytes": 3415116,
+      "sha256": "1bcc6ab41c2208ce109046abb92451f63997801b4bea7a8526b18690488dff22",
+      "label": "tour-leaders",
+      "stage": "opened",
+      "at": 57850.9146,
+      "picture": {
+        "foreground": true,
+        "frames": 5822,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\033-tour-leaders-hold-1000.png",
+      "bytes": 3407396,
+      "sha256": "4ac7aded79e30109b8de127baa7b6e6215260f5abc11b02f22d132d2b65ea3da",
+      "label": "tour-leaders",
+      "stage": "hold-1000",
+      "at": 59633.113,
+      "picture": {
+        "foreground": true,
+        "frames": 5858,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\034-tour-leaders-hold-3500.png",
+      "bytes": 3417007,
+      "sha256": "bab9f35ebd4eea0a25146c7aedffbfcf75f7584304600edc6b7be95328fd01b0",
+      "label": "tour-leaders",
+      "stage": "hold-3500",
+      "at": 61859.2438,
+      "picture": {
+        "foreground": true,
+        "frames": 5903,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\035-tour-leaders-hold-6500.png",
+      "bytes": 3418563,
+      "sha256": "2f20c77ffb422ba3837afba5620a2a1cb3911e55dc5687e9bf910ddbabe1664f",
+      "label": "tour-leaders",
+      "stage": "hold-6500",
+      "at": 64855.0537,
+      "picture": {
+        "foreground": true,
+        "frames": 5964,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\036-tour-leaders-hold-9000.png",
+      "bytes": 3413405,
+      "sha256": "fbf9c9f9d223087b3f818e5b076bf35903ed51efb0a603dd6f2c0e6cc2bc300b",
+      "label": "tour-leaders",
+      "stage": "hold-9000",
+      "at": 67123.0965,
+      "picture": {
+        "foreground": true,
+        "frames": 6010,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\037-tour-leaders-closed.png",
+      "bytes": 3508718,
+      "sha256": "0740125b62647bb54c19eeb58657c1d32451baf6266a38211d34a8d5a2062a77",
+      "label": "tour-leaders",
+      "stage": "closed",
+      "at": 68455.9327,
+      "picture": {
+        "foreground": true,
+        "frames": 6037,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\038-tour-government-opened.png",
+      "bytes": 4088536,
+      "sha256": "f3666f5e82e1795fa5638cb23077edd8c10257c52cb31b90a6585a4a467cd47d",
+      "label": "tour-government",
+      "stage": "opened",
+      "at": 68862.4461,
+      "picture": {
+        "foreground": true,
+        "frames": 6045,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\039-tour-government-hold-1000.png",
+      "bytes": 4096908,
+      "sha256": "8a2e04b484512d09645a596404c5c4740ec67380509d237c4ce2caab3829d1a7",
+      "label": "tour-government",
+      "stage": "hold-1000",
+      "at": 70621.3078,
+      "picture": {
+        "foreground": true,
+        "frames": 6081,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\040-tour-government-hold-3500.png",
+      "bytes": 4095158,
+      "sha256": "767f574bee2a280107b612db9835db59037eec6064d6f696d8053a4ea9c1fd09",
+      "label": "tour-government",
+      "stage": "hold-3500",
+      "at": 72867.3242,
+      "picture": {
+        "foreground": true,
+        "frames": 6127,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\041-tour-government-hold-6500.png",
+      "bytes": 4088359,
+      "sha256": "569bd4afff07e4b5ae8eaf5a5d57f4486e884f480e598fce528f5291b45685ca",
+      "label": "tour-government",
+      "stage": "hold-6500",
+      "at": 75855.9122,
+      "picture": {
+        "foreground": true,
+        "frames": 6188,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\042-tour-government-hold-9000.png",
+      "bytes": 4091528,
+      "sha256": "ad1491a79ffd1ed7e26c2a2e2324261a3a2e2dbfe05b4cbad68eed77f5cff5bd",
+      "label": "tour-government",
+      "stage": "hold-9000",
+      "at": 78099.0323,
+      "picture": {
+        "foreground": true,
+        "frames": 6234,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\043-tour-government-closed.png",
+      "bytes": 3561696,
+      "sha256": "a233c6f71f1fb9d7858598ad7f4650163b69c759f788c680f03007e4d6ef715f",
+      "label": "tour-government",
+      "stage": "closed",
+      "at": 79466.7717,
+      "picture": {
+        "foreground": true,
+        "frames": 6262,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\044-fleet-increase-opened.png",
+      "bytes": 3039533,
+      "sha256": "6718b85c085013d2f3d809105d51b2143051a24b84c07739d07f43577f09635b",
+      "label": "fleet-increase",
+      "stage": "opened",
+      "at": 81376.7735,
+      "picture": {
+        "foreground": true,
+        "frames": 6291,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\045-fleet-increase-hold-1000.png",
+      "bytes": 3323958,
+      "sha256": "9711600b1e4dce0da7f29dad343c3a547640b0b772616ce34ca92b87b7930d79",
+      "label": "fleet-increase",
+      "stage": "hold-1000",
+      "at": 83171.6097,
+      "picture": {
+        "foreground": true,
+        "frames": 6327,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\046-fleet-increase-operation-returned.png",
+      "bytes": 3326131,
+      "sha256": "fe2ae173df5037e3d3e9c48990f48a75ad3ec2be518a45844b2c7bc8b4f6e280",
+      "label": "fleet-increase",
+      "stage": "operation-returned",
+      "at": 83975.1509,
+      "picture": {
+        "foreground": true,
+        "frames": 6343,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\047-fleet-increase-hold-3500.png",
+      "bytes": 3341828,
+      "sha256": "1b3f0160f9c6aabe6f89502d94a0f4d1b3c578471fe21958e88fae6bf1d34bb4",
+      "label": "fleet-increase",
+      "stage": "hold-3500",
+      "at": 85074.8903,
+      "picture": {
+        "foreground": true,
+        "frames": 6365,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\048-fleet-increase-hold-6500.png",
+      "bytes": 3346325,
+      "sha256": "1731f399f49fa47a03f6ba8e2eed5d03e749a6b78a789313ab73fd8b50df6e72",
+      "label": "fleet-increase",
+      "stage": "hold-6500",
+      "at": 88067.522,
+      "picture": {
+        "foreground": true,
+        "frames": 6426,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\049-fleet-increase-hold-9000.png",
+      "bytes": 3346126,
+      "sha256": "543632a0841f1cce50895e44a43b3d99e3f6483174c84736586dfb34ed6a08ac",
+      "label": "fleet-increase",
+      "stage": "hold-9000",
+      "at": 91072.3715,
+      "picture": {
+        "foreground": true,
+        "frames": 6487,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\050-fleet-increase-closed.png",
+      "bytes": 3900010,
+      "sha256": "7bfd4154c48de483dfee8b109dda3f7ab2a6eff81c9a841abdf8cca4499cdc17",
+      "label": "fleet-increase",
+      "stage": "closed",
+      "at": 91969.6262,
+      "picture": {
+        "foreground": true,
+        "frames": 6505,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\051-fleet-restore-opened.png",
+      "bytes": 3428228,
+      "sha256": "6ff7142d650b9f93c38722dba2d06122b8f86877a3fbe23e807bf35066ed1a51",
+      "label": "fleet-restore",
+      "stage": "opened",
+      "at": 93995.3579,
+      "picture": {
+        "foreground": true,
+        "frames": 6546,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\052-fleet-restore-hold-1000.png",
+      "bytes": 3344997,
+      "sha256": "6dbc9d09b1411fb94f8d0fdaffdfbad424c6fc7cff52e1ef15918694e7981479",
+      "label": "fleet-restore",
+      "stage": "hold-1000",
+      "at": 95773.5551,
+      "picture": {
+        "foreground": true,
+        "frames": 6582,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\053-fleet-restore-operation-returned.png",
+      "bytes": 3345805,
+      "sha256": "64f445a5b23ccff00e74c73643c63c546acb1e8973d51cd4c302b0312d297cd3",
+      "label": "fleet-restore",
+      "stage": "operation-returned",
+      "at": 96564.4456,
+      "picture": {
+        "foreground": true,
+        "frames": 6598,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\054-fleet-restore-hold-3500.png",
+      "bytes": 3342940,
+      "sha256": "c37d064dc066d195ca59b899dace767bbbbb070fefff28fe2ed6c8596284e26f",
+      "label": "fleet-restore",
+      "stage": "hold-3500",
+      "at": 97666.7283,
+      "picture": {
+        "foreground": true,
+        "frames": 6620,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\055-fleet-restore-hold-6500.png",
+      "bytes": 3337729,
+      "sha256": "bc8c0470c8308f629931e44bd8c50a4ef9333946f2241c994dfb75d17cf20b58",
+      "label": "fleet-restore",
+      "stage": "hold-6500",
+      "at": 100662.7101,
+      "picture": {
+        "foreground": true,
+        "frames": 6681,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\056-fleet-restore-hold-9000.png",
+      "bytes": 3342441,
+      "sha256": "b541e96092c9fe3a9113aa53ee0d15156ffc79d002dc049667ad99451a35652f",
+      "label": "fleet-restore",
+      "stage": "hold-9000",
+      "at": 103664.6084,
+      "picture": {
+        "foreground": true,
+        "frames": 6742,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\057-fleet-restore-closed.png",
+      "bytes": 3891253,
+      "sha256": "a52da06ac45deabaabbdf31683e14fed4627e1eb3aa2f561e4122ebd3c06aa14",
+      "label": "fleet-restore",
+      "stage": "closed",
+      "at": 104604.3726,
+      "picture": {
+        "foreground": true,
+        "frames": 6761,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\058-market-buy-opened.png",
+      "bytes": 3552032,
+      "sha256": "ce5cfe1b7ee3f041c46ca3ca83df18d95568e2b479d387ea3bc005dc015b4169",
+      "label": "market-buy",
+      "stage": "opened",
+      "at": 106663.2856,
+      "picture": {
+        "foreground": true,
+        "frames": 6803,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\059-market-buy-hold-1000.png",
+      "bytes": 3493924,
+      "sha256": "0760fa08b3582f905cb946db1b632057d8361f8363a5850995856915f81f8cbd",
+      "label": "market-buy",
+      "stage": "hold-1000",
+      "at": 108435.6117,
+      "picture": {
+        "foreground": true,
+        "frames": 6839,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\060-market-buy-operation-returned.png",
+      "bytes": 3495635,
+      "sha256": "8defe71654cb6f7ee4632fb1b4004bf4a361319693fd689657816e31c24fe39d",
+      "label": "market-buy",
+      "stage": "operation-returned",
+      "at": 109238.2042,
+      "picture": {
+        "foreground": true,
+        "frames": 6855,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\061-market-buy-hold-3500.png",
+      "bytes": 3491128,
+      "sha256": "51a93d1f1e0f63c818295f7c6862243f072b04f2ebda234974c428c1b4c41613",
+      "label": "market-buy",
+      "stage": "hold-3500",
+      "at": 110338.1536,
+      "picture": {
+        "foreground": true,
+        "frames": 6877,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\062-market-buy-hold-6500.png",
+      "bytes": 3496116,
+      "sha256": "acc4a80674fc2c15ad0196942f2c2c8e24ed122c8b521b093533cdbe61902681",
+      "label": "market-buy",
+      "stage": "hold-6500",
+      "at": 113325.5412,
+      "picture": {
+        "foreground": true,
+        "frames": 6938,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\063-market-buy-hold-9000.png",
+      "bytes": 3494250,
+      "sha256": "a6a6a4faab653c16fb31006bc92a68b250e01eae7926c0facb436dcb85fed00c",
+      "label": "market-buy",
+      "stage": "hold-9000",
+      "at": 116312.1683,
+      "picture": {
+        "foreground": true,
+        "frames": 6999,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\064-market-buy-closed.png",
+      "bytes": 3743561,
+      "sha256": "6e1b63f8edb04f46375dc2992ce0097f9bd556cd33b8724c71e815a0bf50b45c",
+      "label": "market-buy",
+      "stage": "closed",
+      "at": 117260.0016,
+      "picture": {
+        "foreground": true,
+        "frames": 7018,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\frames\\065-market-buy-final-paused.png",
+      "bytes": 3899979,
+      "sha256": "3c36d085f4e60eb8d3681e4a4baf4845845ad21f7ee563686e0b90332a036859",
+      "label": "market-buy",
+      "stage": "final-paused",
+      "at": 118019.9966,
+      "picture": {
+        "foreground": true,
+        "frames": 7033,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\001-setup-baseline.png",
+      "bytes": 3895997,
+      "sha256": "9096f0f423ff90f53fc43c1dd92e95bded59a1b27e938a9a52ad39472279893b",
+      "label": "setup",
+      "stage": "baseline",
+      "at": 2256.0242,
+      "picture": {
+        "foreground": true,
+        "frames": 16085,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\002-fleet-increase-opened.png",
+      "bytes": 3413859,
+      "sha256": "29964a2bc46257a6852f45c25831219a412bdab23eefa0b43174e50dc57bb437",
+      "label": "fleet-increase",
+      "stage": "opened",
+      "at": 3678.0573,
+      "picture": {
+        "foreground": true,
+        "frames": 16114,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\003-fleet-increase-hold-1000.png",
+      "bytes": 3340999,
+      "sha256": "2e8fefe9af5266f922cf86cecbbb450af2fca29457c32492a769e17ddd4c9e27",
+      "label": "fleet-increase",
+      "stage": "hold-1000",
+      "at": 5467.0263,
+      "picture": {
+        "foreground": true,
+        "frames": 16150,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\004-fleet-increase-operation-returned.png",
+      "bytes": 3338949,
+      "sha256": "098e4da329f4c057dca0370f3200bb8702ac84592285986ced77e2fe200d8bdd",
+      "label": "fleet-increase",
+      "stage": "operation-returned",
+      "at": 6278.7021,
+      "picture": {
+        "foreground": true,
+        "frames": 16166,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\005-fleet-increase-hold-3500.png",
+      "bytes": 3354321,
+      "sha256": "cdb6f466a81753f44a46113200c15e7830ebb8665fde1df27550831a97e7aafd",
+      "label": "fleet-increase",
+      "stage": "hold-3500",
+      "at": 7375.5386,
+      "picture": {
+        "foreground": true,
+        "frames": 16188,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\006-fleet-increase-hold-6500.png",
+      "bytes": 3355497,
+      "sha256": "e640ad43d5d13aa33863f3351032a9f10009e3f990311efc9d5010a22b0c7096",
+      "label": "fleet-increase",
+      "stage": "hold-6500",
+      "at": 10382.8575,
+      "picture": {
+        "foreground": true,
+        "frames": 16249,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\007-fleet-increase-hold-9000.png",
+      "bytes": 3352751,
+      "sha256": "f2b72c9d1e6e580622108facce92dfa56de6de0534ede6b7ca26a1aa58d48978",
+      "label": "fleet-increase",
+      "stage": "hold-9000",
+      "at": 13390.5757,
+      "picture": {
+        "foreground": true,
+        "frames": 16310,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\008-fleet-increase-closed.png",
+      "bytes": 3900820,
+      "sha256": "746e08832ff2cf966c6c8d63a33251eee857cc5289c3397e8835f5b976dca498",
+      "label": "fleet-increase",
+      "stage": "closed",
+      "at": 14285.6067,
+      "picture": {
+        "foreground": true,
+        "frames": 16328,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\009-fleet-increase-after-settle.png",
+      "bytes": 3896483,
+      "sha256": "208d4e56a10e32d2e466dfae471d172226c5e71aeda11b8a0daab4904dcb8a5c",
+      "label": "fleet-increase",
+      "stage": "after-settle",
+      "at": 15331.8043,
+      "picture": {
+        "foreground": true,
+        "frames": 16349,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\010-fleet-restore-opened.png",
+      "bytes": 3435758,
+      "sha256": "09f4b6f7037d15691cc79b90973f8ea900c1859865de1a0f13141d873a3eda1d",
+      "label": "fleet-restore",
+      "stage": "opened",
+      "at": 16712.2102,
+      "picture": {
+        "foreground": true,
+        "frames": 16377,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\011-fleet-restore-hold-1000.png",
+      "bytes": 3346747,
+      "sha256": "e74e657ed3294035fcafe82083087d5e0822b8f54a28fa3284e97e3478669be2",
+      "label": "fleet-restore",
+      "stage": "hold-1000",
+      "at": 18505.6908,
+      "picture": {
+        "foreground": true,
+        "frames": 16413,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\012-fleet-restore-operation-returned.png",
+      "bytes": 3354733,
+      "sha256": "f0ef50a864c71d9c5c9fd6ff3d73ebea4a98e2a4d646db27f16d29a01796a5c4",
+      "label": "fleet-restore",
+      "stage": "operation-returned",
+      "at": 19307.0772,
+      "picture": {
+        "foreground": true,
+        "frames": 16429,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\013-fleet-restore-hold-3500.png",
+      "bytes": 3339031,
+      "sha256": "ddde36b95bf4b211b1059c49898e0ab13e6189e627959d6e307c97769f0daebb",
+      "label": "fleet-restore",
+      "stage": "hold-3500",
+      "at": 20423.5495,
+      "picture": {
+        "foreground": true,
+        "frames": 16451,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\014-fleet-restore-hold-6500.png",
+      "bytes": 3338000,
+      "sha256": "21b1a070790f4630927701bf8f6fd80ac35d3dda830c3eec7a68d3f4a0e782d5",
+      "label": "fleet-restore",
+      "stage": "hold-6500",
+      "at": 23414.4142,
+      "picture": {
+        "foreground": true,
+        "frames": 16512,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\015-fleet-restore-hold-9000.png",
+      "bytes": 3340380,
+      "sha256": "fce43427213d0a26c329e62cff1f48b7ddb73cc5d354f279b2bfafeac93a1a9c",
+      "label": "fleet-restore",
+      "stage": "hold-9000",
+      "at": 26426.1371,
+      "picture": {
+        "foreground": true,
+        "frames": 16573,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\016-fleet-restore-closed.png",
+      "bytes": 3894694,
+      "sha256": "c35338620deff33a29697c02f5d38b08dd688420dcc07762b8afae1e97173b60",
+      "label": "fleet-restore",
+      "stage": "closed",
+      "at": 27282.4116,
+      "picture": {
+        "foreground": true,
+        "frames": 16590,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\017-fleet-restore-after-settle.png",
+      "bytes": 3899527,
+      "sha256": "1ee9420c4aeb936f5b2f59b9446798f96079eb670a9882409be06823466094f2",
+      "label": "fleet-restore",
+      "stage": "after-settle",
+      "at": 28271.7076,
+      "picture": {
+        "foreground": true,
+        "frames": 16610,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\018-market-buy-opened.png",
+      "bytes": 3546834,
+      "sha256": "e930202a8862f1484e9b0b1825d79d2527e0b71e08e1c457bb1633d476532795",
+      "label": "market-buy",
+      "stage": "opened",
+      "at": 29768.2619,
+      "picture": {
+        "foreground": true,
+        "frames": 16640,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\019-market-buy-hold-1000.png",
+      "bytes": 3502235,
+      "sha256": "8a652277b5bf7d8a55a01b7f986d83de653eb1261d489e9ee404bab66a34f894",
+      "label": "market-buy",
+      "stage": "hold-1000",
+      "at": 31546.3816,
+      "picture": {
+        "foreground": true,
+        "frames": 16676,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\020-market-buy-operation-returned.png",
+      "bytes": 3496122,
+      "sha256": "463a64f26119d4e7e9b157cfe3b618a01f394ca3442d59d105f41f94763a82e3",
+      "label": "market-buy",
+      "stage": "operation-returned",
+      "at": 32342.6728,
+      "picture": {
+        "foreground": true,
+        "frames": 16692,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\021-market-buy-hold-3500.png",
+      "bytes": 3490241,
+      "sha256": "a18c7b4fe598adb233e7fbf1a975eb9230a06fc54a0d734adfb9fbd50f77a380",
+      "label": "market-buy",
+      "stage": "hold-3500",
+      "at": 33444.8695,
+      "picture": {
+        "foreground": true,
+        "frames": 16714,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\022-market-buy-hold-6500.png",
+      "bytes": 3496821,
+      "sha256": "e5eeec7cca5e59e983164f481447a6252f2e81569241d44123b0e220728c1657",
+      "label": "market-buy",
+      "stage": "hold-6500",
+      "at": 36478.985,
+      "picture": {
+        "foreground": true,
+        "frames": 16775,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\023-market-buy-hold-9000.png",
+      "bytes": 3491841,
+      "sha256": "ee7d1a7330a9fadfd1db4ea501aeafc80d5dafd84d79ddf87b6ead451c800d62",
+      "label": "market-buy",
+      "stage": "hold-9000",
+      "at": 38859.6541,
+      "picture": {
+        "foreground": true,
+        "frames": 16820,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\024-market-buy-closed.png",
+      "bytes": 3760272,
+      "sha256": "01c07319a054ee5baaddf5a69edc68fa0283525d5d7f50b65e7da32b7cc237d8",
+      "label": "market-buy",
+      "stage": "closed",
+      "at": 40452.4407,
+      "picture": {
+        "foreground": true,
+        "frames": 16849,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\025-market-buy-after-settle.png",
+      "bytes": 3892365,
+      "sha256": "c6884f0500efafbfd680fe288a98ae8badb5abafa685ddf03648daa8aa7d7178",
+      "label": "market-buy",
+      "stage": "after-settle",
+      "at": 41956.5282,
+      "picture": {
+        "foreground": true,
+        "frames": 16877,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\026-market-buy-final-paused.png",
+      "bytes": 3891875,
+      "sha256": "6cb5ba9a57b43fe9e92e0fcae68227bcda3d84fcde3daa896d6b960319b37dcf",
+      "label": "market-buy",
+      "stage": "final-paused",
+      "at": 42135.9287,
+      "picture": {
+        "foreground": true,
+        "frames": 16880,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    }
+  ],
+  "format": "lossless PNG; initial raw-copy BMPs compacted after verification"
+}

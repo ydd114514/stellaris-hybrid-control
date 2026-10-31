@@ -1,0 +1,375 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-29",
+  "timezone": "Asia/Shanghai",
+  "startedAt": "2026-10-29T03:57:36.703Z",
+  "limits": {
+    "modelRequests": 1,
+    "ttsRequests": 1,
+    "automaticRetries": 0
+  },
+  "desktopControl": false,
+  "visibleWindows": false,
+  "mouseKeyboardInput": false,
+  "defaultAudioDevicesChanged": false,
+  "physicalMicrophoneCaptured": false,
+  "publicBroadcast": false,
+  "platformChatSent": false,
+  "sourceProfileModified": false,
+  "passed": true,
+  "models": {
+    "host": "claude-opus-4-6-thinking",
+    "hostProviderId": "custom",
+    "hostProtocol": "openai",
+    "voice": "longanlingxi_v3.1",
+    "tts": "qwen-audio-3.1-tts-flash"
+  },
+  "gameContext": {
+    "mode": "historical-stopped-copy",
+    "originalObservedAt": 1793246230074.5286,
+    "gameDate": "2288.07.01"
+  },
+  "audioPreflight": {
+    "outputLabel": "CABLE Input (VB-Audio Virtual Cable)",
+    "inputLabel": "CABLE Output (VB-Audio Virtual Cable)",
+    "physicalMicrophoneCaptured": false,
+    "systemDefaultChanged": false,
+    "visibleWindow": false,
+    "baselineRms": 0.000009069405606459258,
+    "playRmsPeak": 0,
+    "playSamples": 0,
+    "stoppedRms": null,
+    "samples": 0,
+    "media": [],
+    "feedback": [],
+    "activeAudioCount": 0,
+    "finished": false,
+    "isVisible": false,
+    "isFocused": false,
+    "neverShown": true,
+    "neverFocused": true
+  },
+  "platform": {
+    "roomId": 7322535,
+    "startAccepted": true,
+    "anonymous": true,
+    "cookiesRead": false,
+    "status": "connected",
+    "loggedIn": false,
+    "message": "已连接真实直播间（未登录，平台可能隐藏昵称；建议扫码登录）。",
+    "received": 0,
+    "lastHeartbeatAt": 1793246258722,
+    "realMessageReceived": false
+  },
+  "input": {
+    "source": "controlled-local-injection",
+    "platformEvent": false,
+    "reason": "本轮只读平台接口未取得新弹幕",
+    "eventIdSha256": "b89070fd7cfc7df8c9f67eb1f39bcedaf3c5622ab3ac13d36582970654d6e832",
+    "text": "舰长你好，今天先稳后勤还是急着扩张？用两句话说说你的打算。"
+  },
+  "actualPlatformExchange": false,
+  "scope": "controlled-local-input+real-model+real-tts+virtual-loopback",
+  "audio": {
+    "outputLabel": "CABLE Input (VB-Audio Virtual Cable)",
+    "inputLabel": "CABLE Output (VB-Audio Virtual Cable)",
+    "physicalMicrophoneCaptured": false,
+    "systemDefaultChanged": false,
+    "visibleWindow": false,
+    "baselineRms": 0.000009069405606459258,
+    "playRmsPeak": 0.27069801071446914,
+    "playSamples": 257,
+    "stoppedRms": 0.000010393587622652538,
+    "samples": 941,
+    "media": [
+      {
+        "kind": "loadedmetadata",
+        "at": 1793246291688,
+        "time": 0,
+        "duration": 12.8,
+        "paused": false,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "playing",
+        "at": 1793246291688,
+        "time": 0,
+        "duration": 12.8,
+        "paused": false,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "pause",
+        "at": 1793246304534,
+        "time": 12.8,
+        "duration": 12.8,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "ended",
+        "at": 1793246304534,
+        "time": 12.8,
+        "duration": 12.8,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      }
+    ],
+    "feedback": [
+      {
+        "id": "say-mvt0jh46-3",
+        "kind": "started",
+        "at": 1793246291688
+      },
+      {
+        "id": "say-mvt0jh46-3",
+        "kind": "ended",
+        "at": 1793246304534
+      }
+    ],
+    "activeAudioCount": 0,
+    "finished": true,
+    "isVisible": false,
+    "isFocused": false,
+    "neverShown": true,
+    "neverFocused": true,
+    "recording": {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\.local\\live-api-20261029\\run-1793246256483-9e1d7bb6\\virtual-loopback.webm",
+      "bytes": 769113,
+      "mime": "audio/webm;codecs=opus"
+    }
+  },
+  "serverObservedPlaying": true,
+  "playedAudio": {
+    "duration": 12.8,
+    "sha256": "63697c09dfb89bcee2430c2c4dd0f85988381827f353287f9b6df8eaf2fba4a4",
+    "text": "接口测试员，按上次游戏记录，欢迎上舰！老实说当时消费品和食物都是负的，得先把后勤窟窿堵上再说。稳住经济之后再挑肥的星系往外啃，不急。",
+    "id": "say-mvt0jh46-3"
+  },
+  "speech": {
+    "localTest": false,
+    "enabled": true,
+    "hasKey": true,
+    "encrypted": true,
+    "message": "正在朗读：接口测试员，按上次游戏记录，欢迎上舰！老实说当时消费品和食物都是负的，得先把后勤窟窿堵上再说。稳住经济之后再挑肥的星系往外啃，不急。",
+    "config": {
+      "model": "qwen-audio-3.1-tts-flash",
+      "voice": "longanlingxi_v3.1",
+      "rate": 1,
+      "instruction": "像和熟人随口聊天一样说话，声音软软圆圆的，带一点天然呆。语速正常，字词自然连读，重音轻，停顿跟着语意走，句尾平实收住。",
+      "baseUrl": "https://dashscope.aliyuncs.com",
+      "workspaceId": "",
+      "presetId": "tuned-20261029",
+      "narrateGame": false,
+      "replyAudience": true,
+      "maxRequestsPerHour": 240,
+      "volume": 0.8
+    },
+    "queued": 0,
+    "usage": {
+      "requests": 1,
+      "completed": 1,
+      "failed": 0,
+      "cancelled": 0,
+      "inputTokens": 66,
+      "outputTokens": 160,
+      "missing": 0
+    },
+    "voiceCheck": {
+      "state": "unchecked",
+      "message": "配置已更新，请重新查询音色状态。"
+    },
+    "tunedVoice": {
+      "ready": true,
+      "name": "呆萌平常话",
+      "message": "已生成并核验，可直接采用这版声音。",
+      "duration": 9.84
+    }
+  },
+  "ai": {
+    "running": false,
+    "message": "场控已停止，在途请求已取消。",
+    "busy": [],
+    "pending": 0,
+    "hourRequests": 1,
+    "lastHostAt": 1793246283666,
+    "usage": {
+      "host": {
+        "requests": 1,
+        "failed": 0,
+        "inputTokens": 3095,
+        "outputTokens": 142,
+        "usageMissing": 0,
+        "cachedTokens": 0,
+        "cacheWriteTokens": 0,
+        "cacheUsageMissing": 1
+      }
+    },
+    "health": {
+      "host": {
+        "consecutiveFailures": 0,
+        "lastSuccessAt": 1793246290278,
+        "circuitOpen": false
+      }
+    },
+    "snapshot": {
+      "state": "stopped",
+      "observedAt": 1793246230075,
+      "gameDate": "2288.07.01"
+    },
+    "pendingDropped": 0
+  },
+  "checks": {
+    "realModelReply": true,
+    "realTts": true,
+    "freshWavSaved": true,
+    "actualPlayerStarted": true,
+    "actualPlayerEnded": true,
+    "noPlayerError": true,
+    "virtualAudioSignal": true,
+    "neverShown": true,
+    "neverFocused": true,
+    "sourceProfileUnchanged": true
+  },
+  "cleanup": {
+    "room": "fulfilled",
+    "ai": "fulfilled",
+    "speech": "fulfilled",
+    "broadcast": "fulfilled",
+    "audio": "fulfilled"
+  },
+  "sourceFiles": [
+    {
+      "file": "ai-hub.json",
+      "beforeSha256": "6d5a940592f71bdaebad8a22f727497ca85f6a6ae968d10b2945143f251d3009",
+      "afterSha256": "6d5a940592f71bdaebad8a22f727497ca85f6a6ae968d10b2945143f251d3009",
+      "unchanged": true
+    },
+    {
+      "file": "ai-keys.enc.json",
+      "beforeSha256": "0a7dc568ba35048cc1c8cd10ed635e3574ac699217e8db5fbc12977cb68ec9c1",
+      "afterSha256": "0a7dc568ba35048cc1c8cd10ed635e3574ac699217e8db5fbc12977cb68ec9c1",
+      "unchanged": true
+    },
+    {
+      "file": "captain-speech.json",
+      "beforeSha256": "86e09017b5e7e78ac2dafef9f51ea89298bf8b8f1153288dabb7f51057a48894",
+      "afterSha256": "86e09017b5e7e78ac2dafef9f51ea89298bf8b8f1153288dabb7f51057a48894",
+      "unchanged": true
+    },
+    {
+      "file": "captain-speech-key.enc.json",
+      "beforeSha256": "575e82c0b456c83389b89001662a97d8cc12a3837cc5fdca7d52a694c96cfa44",
+      "afterSha256": "575e82c0b456c83389b89001662a97d8cc12a3837cc5fdca7d52a694c96cfa44",
+      "unchanged": true
+    },
+    {
+      "file": "bilibili-room.json",
+      "beforeSha256": "9231663b2b115790856ce38b4e433c7a19829acf4dbbd6b6abe8cdec3c07ea32",
+      "afterSha256": "9231663b2b115790856ce38b4e433c7a19829acf4dbbd6b6abe8cdec3c07ea32",
+      "unchanged": true
+    },
+    {
+      "file": "Local State",
+      "beforeSha256": "c5087342d93aeeb83b06799e9c0f27f63c45a4b7a7186b75d3f2bc7ad193e9b0",
+      "afterSha256": "c5087342d93aeeb83b06799e9c0f27f63c45a4b7a7186b75d3f2bc7ad193e9b0",
+      "unchanged": true
+    }
+  ],
+  "finishedAt": "2026-10-29T03:58:26.013Z",
+  "counts": {
+    "model": 1,
+    "tts": 1
+  },
+  "calls": [
+    {
+      "kind": "model",
+      "model": "claude-opus-4-6-thinking",
+      "providerId": "custom",
+      "at": 1793246283678,
+      "status": "completed",
+      "httpStatus": 200,
+      "usage": {
+        "prompt_tokens": 3095,
+        "completion_tokens": 142,
+        "total_tokens": 3237
+      },
+      "finishedAt": 1793246290277
+    },
+    {
+      "kind": "tts",
+      "model": "qwen-audio-3.1-tts-flash",
+      "voice": "longanlingxi_v3.1",
+      "at": 1793246290285,
+      "status": "completed",
+      "httpStatus": 200,
+      "finishedAt": 1793246291659,
+      "usage": {
+        "inputTokens": 66,
+        "outputTokens": 160
+      },
+      "characters": 125,
+      "charactersReported": true,
+      "rawAudio": {
+        "duration": 12.8,
+        "sha256": "1646b5b8da53a55ae1bab7f69d2ec9b6ae78c02f1feba33860604e2fd3e70229"
+      }
+    }
+  ],
+  "platformRequests": [
+    {
+      "host": "api.live.bilibili.com",
+      "path": "/room/v1/Room/room_init",
+      "at": 1793246258159,
+      "httpStatus": 200,
+      "serviceCode": 0,
+      "liveStatus": 0
+    },
+    {
+      "host": "api.bilibili.com",
+      "path": "/x/frontend/finger/spi",
+      "at": 1793246258342,
+      "httpStatus": 200,
+      "serviceCode": 0
+    },
+    {
+      "host": "api.bilibili.com",
+      "path": "/x/web-interface/nav",
+      "at": 1793246258417,
+      "httpStatus": 200,
+      "serviceCode": -101
+    },
+    {
+      "host": "api.live.bilibili.com",
+      "path": "/xlive/web-room/v1/index/getDanmuInfo",
+      "at": 1793246258467,
+      "httpStatus": 200,
+      "serviceCode": 0
+    }
+  ],
+  "published": [
+    {
+      "id": "say-mvt0jh46-3",
+      "to": "接口测试员",
+      "text": "按上次游戏记录，欢迎上舰！老实说当时消费品和食物都是负的，得先把后勤窟窿堵上再说。稳住经济之后再挑肥的星系往外啃，不急。",
+      "at": 1793246290278,
+      "queued": true
+    }
+  ],
+  "sourceFileBaseline": {
+    "ai-hub.json": "6d5a940592f71bdaebad8a22f727497ca85f6a6ae968d10b2945143f251d3009",
+    "ai-keys.enc.json": "0a7dc568ba35048cc1c8cd10ed635e3574ac699217e8db5fbc12977cb68ec9c1",
+    "captain-speech.json": "86e09017b5e7e78ac2dafef9f51ea89298bf8b8f1153288dabb7f51057a48894",
+    "captain-speech-key.enc.json": "575e82c0b456c83389b89001662a97d8cc12a3837cc5fdca7d52a694c96cfa44",
+    "bilibili-room.json": "9231663b2b115790856ce38b4e433c7a19829acf4dbbd6b6abe8cdec3c07ea32",
+    "Local State": "c5087342d93aeeb83b06799e9c0f27f63c45a4b7a7186b75d3f2bc7ad193e9b0"
+  }
+}

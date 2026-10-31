@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-29",
+  "timezone": "Asia/Shanghai",
+  "startedAt": "2026-10-29T02:47:05.999Z",
+  "limits": {
+    "modelRequests": 1,
+    "ttsRequests": 1,
+    "automaticRetries": 0
+  },
+  "desktopControl": false,
+  "visibleWindows": false,
+  "mouseKeyboardInput": false,
+  "defaultAudioDevicesChanged": false,
+  "physicalMicrophoneCaptured": false,
+  "publicBroadcast": false,
+  "platformChatSent": false,
+  "sourceProfileModified": false,
+  "passed": false,
+  "error": "Error while decrypting the ciphertext provided to safeStorage.decryptString.",
+  "sourceFiles": [
+    {
+      "file": "ai-hub.json",
+      "beforeSha256": "6d5a940592f71bdaebad8a22f727497ca85f6a6ae968d10b2945143f251d3009",
+      "afterSha256": "6d5a940592f71bdaebad8a22f727497ca85f6a6ae968d10b2945143f251d3009",
+      "unchanged": true
+    },
+    {
+      "file": "ai-keys.enc.json",
+      "beforeSha256": "0a7dc568ba35048cc1c8cd10ed635e3574ac699217e8db5fbc12977cb68ec9c1",
+      "afterSha256": "0a7dc568ba35048cc1c8cd10ed635e3574ac699217e8db5fbc12977cb68ec9c1",
+      "unchanged": true
+    },
+    {
+      "file": "captain-speech.json",
+      "beforeSha256": "86e09017b5e7e78ac2dafef9f51ea89298bf8b8f1153288dabb7f51057a48894",
+      "afterSha256": "86e09017b5e7e78ac2dafef9f51ea89298bf8b8f1153288dabb7f51057a48894",
+      "unchanged": true
+    },
+    {
+      "file": "captain-speech-key.enc.json",
+      "beforeSha256": "575e82c0b456c83389b89001662a97d8cc12a3837cc5fdca7d52a694c96cfa44",
+      "afterSha256": "575e82c0b456c83389b89001662a97d8cc12a3837cc5fdca7d52a694c96cfa44",
+      "unchanged": true
+    },
+    {
+      "file": "bilibili-room.json",
+      "beforeSha256": "9231663b2b115790856ce38b4e433c7a19829acf4dbbd6b6abe8cdec3c07ea32",
+      "afterSha256": "9231663b2b115790856ce38b4e433c7a19829acf4dbbd6b6abe8cdec3c07ea32",
+      "unchanged": true
+    },
+    {
+      "file": "Local State",
+      "beforeSha256": "c5087342d93aeeb83b06799e9c0f27f63c45a4b7a7186b75d3f2bc7ad193e9b0",
+      "afterSha256": "c5087342d93aeeb83b06799e9c0f27f63c45a4b7a7186b75d3f2bc7ad193e9b0",
+      "unchanged": true
+    }
+  ],
+  "finishedAt": "2026-10-29T02:47:06.044Z",
+  "counts": {
+    "model": 0,
+    "tts": 0
+  },
+  "calls": [],
+  "platformRequests": [],
+  "published": []
+}

@@ -1,0 +1,98 @@
+[
+  {
+    "file": "untitledv2.json",
+    "id": "wasapi_output_capture",
+    "name": "Desktop Audio",
+    "muted": true,
+    "enabled": true,
+    "monitoring_type": 0,
+    "settings": {}
+  },
+  {
+    "file": "untitledv2.json",
+    "id": "wasapi_input_capture",
+    "name": "Mic/Aux",
+    "muted": true,
+    "enabled": true,
+    "monitoring_type": 0,
+    "settings": {}
+  },
+  {
+    "file": "untitledv2.json",
+    "id": "window_capture",
+    "name": "群星 · 实时游戏",
+    "muted": false,
+    "enabled": true,
+    "monitoring_type": 0,
+    "settings": {
+      "window": "Stellaris::stellaris.exe",
+      "capture_audio": true
+    }
+  },
+  {
+    "file": "untitledv2.json",
+    "id": "browser_source",
+    "name": "大肥鱼 · 蓝白框面与解说",
+    "muted": true,
+    "enabled": true,
+    "monitoring_type": 0,
+    "settings": {
+      "url": "http://127.0.0.1:17655/overlay?rev=0314",
+      "reroute_audio": false
+    }
+  },
+  {
+    "file": "Scene Collection/support_group_collection.json",
+    "id": "wasapi_output_capture",
+    "name": "Desktop Audio",
+    "muted": true,
+    "enabled": false,
+    "monitoring_type": 0,
+    "settings": {}
+  },
+  {
+    "file": "Scene Collection/support_group_collection.json",
+    "id": "wasapi_input_capture",
+    "name": "Mic/Aux",
+    "muted": true,
+    "enabled": false,
+    "monitoring_type": 0,
+    "settings": {}
+  },
+  {
+    "file": "Scene Collection/support_group_collection.json",
+    "id": "window_capture",
+    "name": "群星 · 实时游戏",
+    "muted": false,
+    "enabled": true,
+    "monitoring_type": 0,
+    "settings": {
+      "capture_audio": true,
+      "window": "Stellaris:SDL_app:stellaris.exe"
+    }
+  },
+  {
+    "file": "Scene Collection/support_group_collection.json",
+    "id": "browser_source",
+    "name": "大肥鱼 · 蓝白框面与解说",
+    "muted": true,
+    "enabled": true,
+    "monitoring_type": 0,
+    "settings": {
+      "url": "http://127.0.0.1:17655/overlay?layout=left-20261028&rev=0314",
+      "reroute_audio": false
+    }
+  },
+  {
+    "file": "Scene Collection/support_group_collection.json",
+    "id": "window_capture",
+    "name": "大肥鱼 · QQ音乐（独立程序声音）",
+    "muted": false,
+    "enabled": true,
+    "monitoring_type": 0,
+    "settings": {
+      "capture_audio": true,
+      "window": "群星控制器大肥鱼 · QQ音乐:Chrome_WidgetWin_1:大肥鱼 DSH.exe"
+    }
+  }
+]

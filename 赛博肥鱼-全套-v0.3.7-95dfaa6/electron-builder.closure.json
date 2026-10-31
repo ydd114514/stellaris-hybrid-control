@@ -1,0 +1,9 @@
+{
+  "extends": "./electron-builder.stellaris.json",
+  "extraMetadata": { "version": "0.3.9" },
+  "directories": { "output": "release/dsh-closure-20261029-0.3.9" },
+  "win": {
+    "target": [{ "target": "nsis", "arch": ["x64"] }, { "target": "zip", "arch": ["x64"] }],
+    "artifactName": "Cyberfish-DSH-0.3.9-Closure-Windows-x64.${ext}"
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "offlineOnly": true,
+  "commands": [
+    {
+      "command": "change_job_priority_command",
+      "token": "0x2bbb",
+      "vtable": "0x2391208",
+      "methods": {
+        "destroy": {
+          "rva": "0x1af570",
+          "entry16": "40534883ec20488d05b3601902488bd9"
+        },
+        "isValid": {
+          "rva": "0x6b6f00",
+          "entry16": "4889742410574883ec20488b1527dda5"
+        },
+        "execute": {
+          "rva": "0x6b6e30",
+          "entry16": "488b1591dea5024c8bd14885d2742a44"
+        },
+        "clone": {
+          "rva": "0x6b8000",
+          "entry16": "40534883ec20488bd9b930000000e855"
+        },
+        "getToken": {
+          "rva": "0x6b8090",
+          "entry16": "b8bb2b0000c3cccccccccccccccccccc"
+        }
+      },
+      "fields": [
+        {
+          "field": "country",
+          "offset": "0x20",
+          "serializer": "tok 0x2c88 ref<CCountry>"
+        },
+        {
+          "field": "job",
+          "offset": "0x24",
+          "serializer": "tok 0x2cdc ref<CPopJob>"
+        },
+        {
+          "field": "amount",
+          "offset": "0x28",
+          "serializer": "tok 0x1a1 u64"
+        }
+      ],
+      "enabled": false
+    },
+    {
+      "command": "set_colony_type_command",
+      "token": "0x2af9",
+      "vtable": "0x2391938",
+      "methods": {
+        "destroy": {
+          "rva": "0x1af570",
+          "entry16": "40534883ec20488d05b3601902488bd9"
+        },
+        "isValid": {
+          "rva": "0x6b4cd0",
+          "entry16": "40574883ec20488b155bffa502488bf9"
+        },
+        "execute": {
+          "rva": "0x6b4c50",
+          "entry16": "48895c2408574883ec20488b15c701a6"
+        },
+        "clone": {
+          "rva": "0x6b8670",
+          "entry16": "40534883ec20488bd9b930000000e8e5"
+        },
+        "getToken": {
+          "rva": "0x6b8700",
+          "entry16": "b8f92a0000c3cccccccccccccccccccc"
+        }
+      },
+      "fields": [
+        {
+          "field": "country",
+          "offset": "0x24",
+          "serializer": "tok 0x2c88 ref<CCountry>"
+        },
+        {
+          "field": "colony",
+          "offset": "0x20",
+          "serializer": "tok 0x3931 ref<CColony>"
+        },
+        {
+          "field": "designation",
+          "offset": "0x28",
+          "serializer": "tok 0x2ad3 ptr (object pointer; serialized as its key string)"
+        }
+      ],
+      "enabled": false
+    },
+    {
+      "command": "auto_ship_design_command",
+      "token": "0x33e3",
+      "vtable": "0x23cb838",
+      "methods": {
+        "destroy": {
+          "rva": "0x1af570",
+          "entry16": "40534883ec20488d05b3601902488bd9"
+        },
+        "isValid": {
+          "rva": "0x1d08aa0",
+          "entry16": "48895c2408574883ec20488b1587c140"
+        },
+        "execute": {
+          "rva": "0x1d08a10",
+          "entry16": "48895c2408574883ec20488b1517c240"
+        },
+        "clone": {
+          "rva": "0xc1a470",
+          "entry16": "40534883ec20488bd9b930000000e8e5"
+        },
+        "getToken": {
+          "rva": "0xc1a500",
+          "entry16": "b8e3330000c3cccccccccccccccccccc"
+        }
+      },
+      "fields": [
+        {
+          "field": "setting",
+          "offset": "0x24",
+          "serializer": "tok 0x28cf bool_cond"
+        },
+        {
+          "field": "ship_owner_type",
+          "offset": "0x28",
+          "serializer": "tok 0x3eb1 other"
+        }
+      ],
+      "enabled": false
+    }
+  ]
+}

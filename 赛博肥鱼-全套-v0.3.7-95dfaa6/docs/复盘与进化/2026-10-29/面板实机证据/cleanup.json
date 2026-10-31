@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-29T01:27:29.672Z",
+  "continueRestored": true,
+  "originalSourceUnchanged": true,
+  "isolatedInitialSaveUnchanged": true,
+  "sourceSha256": "b64962fa59b26e1c558d788d22cc4d505da00b4d8ad8c4a53295c3ce0179d839",
+  "game": {
+    "date": {
+      "day": 1,
+      "formatted": "2288.07.01",
+      "month": 7,
+      "year": 2288
+    },
+    "paused": true,
+    "in_game": true
+  },
+  "gameLeftOpen": true,
+  "controllerStopped": true,
+  "archivedFrameFormat": "lossless PNG; raw-copy BMPs removed",
+  "removedBmp": 91,
+  "unrelatedDesktopCaptureRemoved": true,
+  "modelApiCalls": 0,
+  "liveBroadcastStarted": false
+}

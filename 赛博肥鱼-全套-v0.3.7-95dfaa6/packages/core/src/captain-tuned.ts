@@ -1,0 +1,3 @@
+/** User-selected F audition: preserve the actual natural-chat voice and its unprocessed audio. */
+export const CAPTAIN_TUNED_VOICE={id:'yezhiqing-natural-20261031',revision:1,name:'叶知晴 · 自然聊天（F）',model:'qwen-audio-3.1-tts-flash',voice:'yezhiqing_v3.1',baseUrl:'https://dashscope.aliyuncs.com',rate:1,gainDb:0,fadeMilliseconds:0,instruction:'像坐在旁边和熟人随口说话，放松、朴素，不面向听众表演。句子自然连起来，只在意思转折时短暂停一下，重音轻，句尾平实收住。不要字字清晰用力，不要节目主持或广告介绍的语气，不刻意卖萌。',sampleText:'嗯？你说刚才那个啊。等一下，我看一眼……哦，还真是。那先不弄这个了，咱们换个办法试试。你别急，我这边慢慢来。'} as const
+export const CAPTAIN_TUNED_SAMPLE_SHA256='6ad4338fc27d7244f344441ae5daf539baf0b841306744c3c3f3ae4fa9ec32ff'

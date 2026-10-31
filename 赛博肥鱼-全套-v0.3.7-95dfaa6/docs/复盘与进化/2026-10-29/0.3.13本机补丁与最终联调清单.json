@@ -1,0 +1,51 @@
+{
+  "version": "0.3.13",
+  "date": "2026-10-29",
+  "passedFor": "controlled-complete-interface-chain",
+  "actualPublicBroadcast": false,
+  "actualPlatformQuestion": false,
+  "realModelRequests": 1,
+  "realTtsRequests": 1,
+  "testsPassed": 754,
+  "testsSkipped": 2,
+  "syncChecks": {
+    "initialPlanHidden": true,
+    "generatingHidden": true,
+    "readyHidden": true,
+    "planCannotOverwritePlaying": true,
+    "singlePlaybackLease": true,
+    "pauseClears": true,
+    "resumeRestores": true,
+    "naturalEndClears": true,
+    "captionTiming": true,
+    "standaloneHostFollowsPlaying": true,
+    "oldEndedCannotClearNew": true,
+    "stopClears": true,
+    "errorClears": true,
+    "realVirtualAudioSignal": true,
+    "noDesktopInterference": true
+  },
+  "timings": {
+    "enqueueToActualPlayingMs": 864,
+    "playingToCaptionMs": 4,
+    "endedToCaptionClearMs": 2,
+    "thresholdMs": 250,
+    "note": "Local interface/DOM timing from one replay; not a guarantee of OBS or viewer latency.",
+    "playingToHostCaptionMs": 4,
+    "endedToHostCaptionClearMs": 2,
+    "ungatedQueueToPlayingMs": 29,
+    "ungatedLatencyScope": "Offline PCM returns immediately; measures only application queue/audio scheduling, excluding real text-model and TTS generation."
+  },
+  "desktopControl": false,
+  "deployment": {
+    "directory": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.13",
+    "files": 73,
+    "launched": false,
+    "profileChanged": false,
+    "asarSha256": "343a2158cd874f4146369176cf734290d8378ea84f221fbc8318f4ef67929307"
+  },
+  "remaining": [
+    "T11实时市场估价能力缺口",
+    "实际平台观众问答、OBS和整晚直播仍待验收"
+  ]
+}

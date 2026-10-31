@@ -1,0 +1,1526 @@
+{
+  "at": "2026-10-31T13:32:08.168Z",
+  "originalReport": "E:\\肥鱼直播\\stellaris-player\\.local\\country-ai-p1-acceptance-1793453223229\\report.json",
+  "originalSha256": "98b8bac4810d59ad8191592ef2cd847393a036fb672dee86b259e8d569e5c92f",
+  "readOnly": true,
+  "gameTimeAdvanced": false,
+  "passed": true,
+  "coreGoalComplete": false,
+  "binding": {
+    "ok": true,
+    "pid": 60288,
+    "creationTime": "134379267389791665"
+  },
+  "state": {
+    "assigned_local_human_verified": true,
+    "autonomous_operation_verified": false,
+    "country_coverage_complete": true,
+    "country_id": 0,
+    "country_type_ai_enabled": true,
+    "country_type_ai_flags": 122879,
+    "country_type_settings_scope": "shared_country_type",
+    "execution_receipt_hooks_installed": true,
+    "execution_receipt_scheme": "session_client_sequence_payload",
+    "global_flags": {
+      "force_human_ai": false,
+      "human_ai": false,
+      "normal_ai": true
+    },
+    "human_countries": [
+      {
+        "country_id": 0,
+        "human_ids": [
+          1
+        ]
+      }
+    ],
+    "live_countries": 27,
+    "major_decision_boundary_verified": false,
+    "network_flag": 0,
+    "paused": true,
+    "pending": {
+      "country_id": 0,
+      "desired_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "execute_receipts": 3,
+      "force_command_identity": {
+        "client": 1,
+        "command_sequence": 739,
+        "object_address": 1443395915200,
+        "valid": true,
+        "value": 0
+      },
+      "human_command_identity": {
+        "client": 1,
+        "command_sequence": 738,
+        "object_address": 1443395915680,
+        "valid": true,
+        "value": 0
+      },
+      "identity_before": {
+        "assigned_local_human_verified": true,
+        "country_address": 1442407960640,
+        "country_id": 0,
+        "date": "2238.02.24",
+        "global_flags": {
+          "force_human_ai": true,
+          "human_ai": true,
+          "normal_ai": true
+        },
+        "human_countries": [
+          {
+            "country_id": 0,
+            "human_ids": [
+              1
+            ]
+          }
+        ],
+        "idler_address": 1441376281744,
+        "local_player_id": 1,
+        "network_flag": 0,
+        "sequence": 5,
+        "world_generation": 0
+      },
+      "identity_matches": true,
+      "observed_executions_since_post": [
+        {
+          "event": 11,
+          "identity": {
+            "client": 1,
+            "command_sequence": 738,
+            "object_address": 1443395914864,
+            "valid": true,
+            "value": 0
+          },
+          "kind": 1
+        },
+        {
+          "event": 12,
+          "identity": {
+            "client": 1,
+            "command_sequence": 739,
+            "object_address": 1443395913184,
+            "valid": true,
+            "value": 0
+          },
+          "kind": 2
+        }
+      ],
+      "original_flags": {
+        "force_human_ai": true,
+        "human_ai": true,
+        "normal_ai": true
+      },
+      "phase": "readback_confirmed",
+      "receipt_loss": 0,
+      "sequence": 6,
+      "superseded_sequence": null
+    },
+    "per_country_domain_settings_verified": false,
+    "precondition": {
+      "assigned_local_human_verified": true,
+      "country_address": 1442407960640,
+      "country_id": 0,
+      "date": "2238.02.24",
+      "global_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "human_countries": [
+        {
+          "country_id": 0,
+          "human_ids": [
+            1
+          ]
+        }
+      ],
+      "idler_address": 1441376281744,
+      "local_player_id": 1,
+      "network_flag": 0,
+      "sequence": 6,
+      "world_generation": 0
+    },
+    "research_only": true,
+    "scope": "global_human_countries",
+    "single_local_human_guard": true,
+    "success": true,
+    "world_generation_tracking": true,
+    "world_loading": false
+  },
+  "colonies": [
+    {
+      "automation": {
+        "budget_known": false,
+        "category_membership": {
+          "definitions_sha256": "3dc84ac4969f4c8b752502ef5e6121900e40f957045592210c2f081ec1d97581",
+          "effective_mod_configuration_verified": false,
+          "execution_semantics_verified": false,
+          "known": true,
+          "member_count": 13,
+          "member_keys": [
+            "planet_automation_deficit_restriction",
+            "planet_automation_designation_construction",
+            "planet_automation_upgrade_buildings",
+            "planet_automation_amenities",
+            "planet_automation_rare_resources",
+            "planet_automation_pop_assembly",
+            "planet_automation_housing",
+            "planet_automation_crime",
+            "planet_automation_clear_blockers",
+            "planet_automation_biotrophy_management",
+            "planet_automation_worm",
+            "planet_automation_permanent_employment_center",
+            "planet_automation_psi_corps_building"
+          ]
+        },
+        "colony_id": 0,
+        "enabled": true,
+        "known": true,
+        "note": "State, existing queue identities and serializer category membership only; category execution semantics, costs and spending bounds remain unverified",
+        "owner_id": 0,
+        "planet_id": 3,
+        "queue": {
+          "items": [],
+          "known": true,
+          "queue_id": 0
+        },
+        "read_only": true,
+        "scope": "single_owned_settled_colony",
+        "settings_known": false
+      },
+      "planet": {
+        "armies_summary": {
+          "assault_armies_count": 0,
+          "assault_power": 0,
+          "defense_armies_count": 8,
+          "deploy_in_orbit": true,
+          "garrison_power": 129.4,
+          "include_in_builder": true,
+          "recruitment_queue_count": 0,
+          "total_power": 129.4,
+          "total_stationed_armies": 8
+        },
+        "blockers": [],
+        "colony_ascension": {
+          "can_ascend": false,
+          "description": "提升该殖民地的潜力，为子孙后代铸造一个更加繁荣、稳定、高效的星球。",
+          "designation_multiplier_percent": 0,
+          "status_desc": "行星尚未飞升。",
+          "tier": 0,
+          "tier_name": "行星尚未飞升。"
+        },
+        "colony_id": 0,
+        "construction_queue": [],
+        "designation": "帝国首都",
+        "designation_key": "col_capital",
+        "designation_tier": 4,
+        "districts": [
+          {
+            "built": 7,
+            "name": "城市区划",
+            "type": "district_city",
+            "zone_slots": 3,
+            "zones": [
+              {
+                "buildings": [
+                  {
+                    "id": 107,
+                    "is_capital": true,
+                    "key": "building_major_capital",
+                    "name": "行星都城",
+                    "slot_index": 0,
+                    "status": "built"
+                  },
+                  {
+                    "id": 2,
+                    "is_capital": false,
+                    "key": "building_holo_theatres",
+                    "name": "全息影像剧场",
+                    "slot_index": 1,
+                    "status": "built"
+                  },
+                  {
+                    "id": 3,
+                    "is_capital": false,
+                    "key": "building_commercial_zone",
+                    "name": "商业区",
+                    "slot_index": 2,
+                    "status": "built"
+                  },
+                  {
+                    "id": 16777259,
+                    "is_capital": false,
+                    "key": "building_foundry_1",
+                    "name": "合金铸造厂",
+                    "slot_index": 3,
+                    "status": "built"
+                  },
+                  {
+                    "id": 16777269,
+                    "is_capital": false,
+                    "key": "building_factory_1",
+                    "name": "民用工业体",
+                    "slot_index": 4,
+                    "status": "built"
+                  },
+                  {
+                    "id": 16777270,
+                    "is_capital": false,
+                    "key": "building_foundry_1",
+                    "name": "合金铸造厂",
+                    "slot_index": 5,
+                    "status": "built"
+                  }
+                ],
+                "buildings_known": true,
+                "key": "zone_default",
+                "max_buildings": 6,
+                "name": "政府特区",
+                "slot_index": 0
+              },
+              {
+                "buildings": [
+                  {
+                    "id": 41,
+                    "is_capital": false,
+                    "key": "building_research_lab_1",
+                    "name": "研究实验室",
+                    "slot_index": 0,
+                    "status": "built"
+                  },
+                  {
+                    "id": 46,
+                    "is_capital": false,
+                    "key": "building_research_lab_1",
+                    "name": "研究实验室",
+                    "slot_index": 1,
+                    "status": "built"
+                  },
+                  {
+                    "id": 16777261,
+                    "is_capital": false,
+                    "key": "building_research_lab_1",
+                    "name": "研究实验室",
+                    "slot_index": 2,
+                    "status": "built"
+                  }
+                ],
+                "buildings_known": true,
+                "key": "zone_research_unity",
+                "max_buildings": 3,
+                "name": "档案馆",
+                "slot_index": 1
+              },
+              {
+                "buildings": [
+                  {
+                    "id": 1,
+                    "is_capital": false,
+                    "key": "building_factory_1",
+                    "name": "民用工业体",
+                    "slot_index": 0,
+                    "status": "built"
+                  },
+                  {
+                    "id": 50,
+                    "is_capital": false,
+                    "key": "building_foundry_1",
+                    "name": "合金铸造厂",
+                    "slot_index": 1,
+                    "status": "built"
+                  },
+                  {
+                    "id": 16777278,
+                    "is_capital": false,
+                    "key": "building_factory_1",
+                    "name": "民用工业体",
+                    "slot_index": 2,
+                    "status": "built"
+                  }
+                ],
+                "buildings_known": true,
+                "key": "zone_industrial",
+                "max_buildings": 3,
+                "name": "混合工业",
+                "slot_index": 2
+              }
+            ]
+          },
+          {
+            "built": 3,
+            "name": "发电区划",
+            "type": "district_generator",
+            "zone_slots": 1,
+            "zones": []
+          },
+          {
+            "built": 3,
+            "name": "采矿区划",
+            "type": "district_mining",
+            "zone_slots": 1,
+            "zones": []
+          },
+          {
+            "built": 4,
+            "name": "农业区划",
+            "type": "district_farming",
+            "zone_slots": 1,
+            "zones": []
+          }
+        ],
+        "governor": {
+          "age": 36,
+          "assignment_target": 0,
+          "assignment_type": 1,
+          "assignment_type_name": "governor",
+          "background_job": "artisan",
+          "background_job_name": "工匠",
+          "class_key": "official",
+          "class_name": "行政官",
+          "ethic_key": "ethic_egalitarian",
+          "ethic_name": "平等主义",
+          "experience": 1664.25,
+          "has_unspent_trait_points": false,
+          "id": 251658251,
+          "is_councilor": true,
+          "level": 4,
+          "name": "贝克尔埃尔莎",
+          "title": "国务卿",
+          "traits": [
+            {
+              "key": "trait_ruler_investor",
+              "name": "投资者",
+              "tier": 1
+            },
+            {
+              "key": "leader_trait_ambassador_extra_envoys",
+              "name": "随从团队",
+              "tier": 1
+            },
+            {
+              "key": "leader_trait_politician",
+              "name": "政治家",
+              "tier": 1
+            },
+            {
+              "key": "trait_ruler_frontier_spirit",
+              "name": "开拓精神",
+              "tier": 1
+            }
+          ]
+        },
+        "is_capital": true,
+        "kpi": {
+          "amenities": 3308.1,
+          "amenities_display": "3.3K",
+          "crime_percent": 0,
+          "growth": 0,
+          "housing": 3412.5,
+          "pop_capacity": 6008,
+          "pop_display": "6.0K",
+          "pop_groups": 6004,
+          "stability_percent": 100,
+          "unemployed": 0
+        },
+        "monthly_population_summary": {
+          "assembly": 0,
+          "categories": {
+            "GROWTH_CAT_EMIGRATION": 19,
+            "GROWTH_CAT_GROWTH": 4,
+            "GROWTH_CAT_IMMIGRATION": 19,
+            "GROWTH_CAT_PROMOTION": 0
+          },
+          "demographics": [
+            {
+              "count": 5967,
+              "share_percent": 99.3,
+              "species_id": 2600468481,
+              "species_name": "人类"
+            },
+            {
+              "count": 41,
+              "share_percent": 0.7,
+              "species_id": 36,
+              "species_name": "机器人"
+            }
+          ],
+          "growth": 4,
+          "migration": 0,
+          "net_change": 4
+        },
+        "monthly_production": {
+          "net": {
+            "alloys": 81.4,
+            "consumer_goods": 92.58,
+            "energy": 12.66,
+            "engineering_research": 28.81,
+            "food": 108.04,
+            "minerals": -66.28,
+            "physics_research": 28.81,
+            "society_research": 28.81,
+            "trade": 65.64,
+            "unity": 78.48
+          },
+          "produced": {
+            "alloys": 81.4,
+            "consumer_goods": 162.79,
+            "energy": 67.07,
+            "engineering_research": 28.81,
+            "food": 167.67,
+            "minerals": 70.52,
+            "physics_research": 28.81,
+            "society_research": 28.81,
+            "trade": 65.64,
+            "unity": 78.48
+          },
+          "upkeep": {
+            "consumer_goods": 70.21,
+            "energy": 54.41,
+            "food": 59.63,
+            "minerals": 136.8
+          }
+        },
+        "name": "地球",
+        "overview": {
+          "colony_date": "2016.05.09",
+          "habitability_percent": 100,
+          "habitability_species_id": 2600468481,
+          "planet_size": 18,
+          "planet_type": "陆地星球"
+        },
+        "planet_id": 3,
+        "planetary_features": {
+          "features": [
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 443,
+              "description": "几乎遍及整个新月沃地的这个巨大都市，其本身就是对文明发源之地的致敬。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_mesopotamian_urban_corridor",
+              "modifiers": [
+                {
+                  "formatted": "采矿区划最大建造数量: +3",
+                  "key": "mod_district_mining_max_add",
+                  "name": "采矿区划最大建造数量",
+                  "type_id": 9231,
+                  "value": 3
+                }
+              ],
+              "name": "美索不达米亚城市走廊",
+              "status_text": "",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 444,
+              "description": "波士顿-华盛顿暴动给整整一代人留下了难以抚平的创伤。也正是因为如此，才引致了大刀阔斧的法律改革。永远不要忘记前人的牺牲！",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_boswash_metropolitan_axis",
+              "modifiers": [
+                {
+                  "formatted": "发电区划最大建造数量: +3",
+                  "key": "mod_district_generator_max_add",
+                  "name": "发电区划最大建造数量",
+                  "type_id": 9229,
+                  "value": 3
+                }
+              ],
+              "name": "波士顿-华盛顿都市枢纽",
+              "status_text": "",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 445,
+              "description": "在这里，铁切尔上校和他余下寥寥的兵士们进行了他们世界闻名的背水一战。直到现在，也偶尔会在此处发现当年没有爆炸的哑弹。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_mauritanian_security_zone",
+              "modifiers": [
+                {
+                  "formatted": "采矿区划最大建造数量: +1",
+                  "key": "mod_district_mining_max_add",
+                  "name": "采矿区划最大建造数量",
+                  "type_id": 9231,
+                  "value": 1
+                }
+              ],
+              "name": "毛里塔尼亚安全区域",
+              "status_text": "",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 446,
+              "description": "当萨蒂斯711494号迫近地球的消息传来时，造成了72年的大规模恐慌事件。每个人都认为地球大限已至——该来的最终还是来了。幸运的是，萨蒂斯711494号的体积并没有大到摧毁整个地球，但阿尔伯塔的大半部分还是不幸从地图上被抹去了。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_great_albertan_crater",
+              "modifiers": [
+                {
+                  "formatted": "采矿区划最大建造数量: +3",
+                  "key": "mod_district_mining_max_add",
+                  "name": "采矿区划最大建造数量",
+                  "type_id": 9231,
+                  "value": 3
+                }
+              ],
+              "name": "阿尔伯塔巨型陨石坑",
+              "status_text": "",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 447,
+              "description": "22世纪末进行的大型恢复再开发行动十分有效，除了几处最为顽固的放射区域以外，其它区域都已经恢复了正常。核泄漏事件以来的基因突变率已降至最低点。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_scandinavian_reclamation_sector",
+              "modifiers": [
+                {
+                  "formatted": "农业区划最大建造数量: +1",
+                  "key": "mod_district_farming_max_add",
+                  "name": "农业区划最大建造数量",
+                  "type_id": 9233,
+                  "value": 1
+                }
+              ],
+              "name": "北欧再开发区域",
+              "status_text": "",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 448,
+              "description": "当年绿色撒哈拉行动刚刚被提出时，伊兹奎多教授受到了各界的冷嘲热讽……但现在应该已经没人记得了吧。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_saharan_irrigation_project",
+              "modifiers": [
+                {
+                  "formatted": "农业区划最大建造数量: +4",
+                  "key": "mod_district_farming_max_add",
+                  "name": "农业区划最大建造数量",
+                  "type_id": 9233,
+                  "value": 4
+                }
+              ],
+              "name": "撒哈拉水利工程",
+              "status_text": "",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 449,
+              "description": "珠江区域是地球上第一个被正式归类为巨型都市的地区。在此处发扬光大的金三角防污染政策将会被世界各地的大型城市所相继运用。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_pearl_river_agglomerate",
+              "modifiers": [
+                {
+                  "formatted": "发电区划最大建造数量: +3",
+                  "key": "mod_district_generator_max_add",
+                  "name": "发电区划最大建造数量",
+                  "type_id": 9229,
+                  "value": 3
+                }
+              ],
+              "name": "珠江都市集群区",
+              "status_text": "",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 450,
+              "description": "只有潜到海底才能看到的壮观景象。好似能一直蔓延下去，没有尽头。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_pacific_algae_tracts",
+              "modifiers": [
+                {
+                  "formatted": "农业区划最大建造数量: +3",
+                  "key": "mod_district_farming_max_add",
+                  "name": "农业区划最大建造数量",
+                  "type_id": 9233,
+                  "value": 3
+                }
+              ],
+              "name": "太平洋海藻带",
+              "status_text": "",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 451,
+              "description": "直到22世纪末，吉祥天商业高塔一直是地球上最高的建筑。其特殊的造型直到现在都是德里城区一道独特的风景。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_delhi_sprawl",
+              "modifiers": [
+                {
+                  "formatted": "发电区划最大建造数量: +2",
+                  "key": "mod_district_generator_max_add",
+                  "name": "发电区划最大建造数量",
+                  "type_id": 9229,
+                  "value": 2
+                }
+              ],
+              "name": "德里城区",
+              "status_text": "",
+              "swap_type": null
+            }
+          ],
+          "summary": {
+            "blockers_count": 0,
+            "clearable_blockers_count": 0,
+            "natural_features_count": 9,
+            "queued_blockers_count": 0,
+            "total_features": 9
+          }
+        },
+        "population_breakdown": [
+          {
+            "net_change": 0,
+            "pop_count": 5967,
+            "pop_count_display": "6.0K",
+            "portrait": "human",
+            "share_percent": 99.3,
+            "species_id": 2600468481,
+            "species_name": "人类"
+          },
+          {
+            "net_change": 0,
+            "pop_count": 41,
+            "pop_count_display": "41",
+            "portrait": "sd_hum_robot",
+            "share_percent": 0.7,
+            "species_id": 36,
+            "species_name": "机器人"
+          }
+        ],
+        "status_alerts": [],
+        "system_id": 1,
+        "system_name": "太阳",
+        "workforce_summary": {
+          "active_jobs_count": 13,
+          "prioritized_job": null,
+          "strata": [
+            {
+              "active_jobs_count": 1,
+              "effective_workforce": 330,
+              "stratum_key": "ruler",
+              "stratum_name": "精英",
+              "workforce": 300
+            },
+            {
+              "active_jobs_count": 9,
+              "effective_workforce": 4443,
+              "stratum_key": "specialist",
+              "stratum_name": "专家",
+              "workforce": 3704
+            },
+            {
+              "active_jobs_count": 3,
+              "effective_workforce": 2304,
+              "stratum_key": "worker",
+              "stratum_name": "劳工",
+              "workforce": 2004
+            }
+          ],
+          "total_effective_workforce": 7077,
+          "total_employed_workforce": 6008,
+          "unemployed": 0
+        }
+      }
+    },
+    {
+      "automation": {
+        "budget_known": false,
+        "category_membership": {
+          "definitions_sha256": "3dc84ac4969f4c8b752502ef5e6121900e40f957045592210c2f081ec1d97581",
+          "effective_mod_configuration_verified": false,
+          "execution_semantics_verified": false,
+          "known": true,
+          "member_count": 13,
+          "member_keys": [
+            "planet_automation_deficit_restriction",
+            "planet_automation_designation_construction",
+            "planet_automation_upgrade_buildings",
+            "planet_automation_amenities",
+            "planet_automation_rare_resources",
+            "planet_automation_pop_assembly",
+            "planet_automation_housing",
+            "planet_automation_crime",
+            "planet_automation_clear_blockers",
+            "planet_automation_biotrophy_management",
+            "planet_automation_worm",
+            "planet_automation_permanent_employment_center",
+            "planet_automation_psi_corps_building"
+          ]
+        },
+        "colony_id": 24,
+        "enabled": true,
+        "known": true,
+        "note": "State, existing queue identities and serializer category membership only; category execution semantics, costs and spending bounds remain unverified",
+        "owner_id": 0,
+        "planet_id": 152,
+        "queue": {
+          "items": [
+            {
+              "item_id": 268435506
+            }
+          ],
+          "known": true,
+          "queue_id": 2014
+        },
+        "read_only": true,
+        "scope": "single_owned_settled_colony",
+        "settings_known": false
+      },
+      "planet": {
+        "armies_summary": {
+          "assault_armies_count": 0,
+          "assault_power": 0,
+          "defense_armies_count": 4,
+          "deploy_in_orbit": true,
+          "garrison_power": 64.7,
+          "include_in_builder": true,
+          "recruitment_queue_count": 0,
+          "total_power": 64.7,
+          "total_stationed_armies": 4
+        },
+        "blockers": [
+          {
+            "can_clear": false,
+            "category": "deposit_blockers_natural",
+            "clear_cost": {
+              "energy": 1000
+            },
+            "clear_time": 270,
+            "deposit_id": 201,
+            "description": "一大片高耸险峻的山脉横跨此区域。",
+            "is_blocker": true,
+            "is_queued": false,
+            "key": "d_mountain_range",
+            "modifiers": [
+              {
+                "formatted": "最大区划数: -2",
+                "key": "MOD_PLANET_MAX_DISTRICTS_ADD",
+                "name": "最大区划数",
+                "type_id": 131,
+                "value": -2
+              }
+            ],
+            "name": "blocker 高耸山脉",
+            "status_text": "未满足清理前提条件",
+            "swap_type": null
+          },
+          {
+            "can_clear": false,
+            "category": "deposit_blockers_natural",
+            "clear_cost": {
+              "energy": 500
+            },
+            "clear_time": 180,
+            "deposit_id": 204,
+            "description": "这整个区域完全长满了厚厚的、不可穿越的丛林。",
+            "is_blocker": true,
+            "is_queued": false,
+            "key": "d_dense_jungle",
+            "modifiers": [
+              {
+                "formatted": "最大区划数: -1",
+                "key": "MOD_PLANET_MAX_DISTRICTS_ADD",
+                "name": "最大区划数",
+                "type_id": 131,
+                "value": -1
+              }
+            ],
+            "name": "blocker 茂密丛林",
+            "status_text": "未满足清理前提条件",
+            "swap_type": {
+              "description": "这片有毒沼泽覆盖着矮植物、苔藓、以及菌类，水面上不时冒出气体。",
+              "key": "d_fuming_bog",
+              "modifiers": [
+                {
+                  "formatted": "农业区划最大建造数量: +3",
+                  "key": "mod_district_farming_max_add",
+                  "name": "农业区划最大建造数量",
+                  "type_id": 9233,
+                  "value": 3
+                }
+              ],
+              "name": "发烟泥潭"
+            }
+          },
+          {
+            "can_clear": false,
+            "category": "deposit_blockers_natural",
+            "clear_cost": {
+              "energy": 500
+            },
+            "clear_time": 180,
+            "deposit_id": 205,
+            "description": "这整个区域完全长满了厚厚的、不可穿越的丛林。",
+            "is_blocker": true,
+            "is_queued": false,
+            "key": "d_dense_jungle",
+            "modifiers": [
+              {
+                "formatted": "最大区划数: -1",
+                "key": "MOD_PLANET_MAX_DISTRICTS_ADD",
+                "name": "最大区划数",
+                "type_id": 131,
+                "value": -1
+              }
+            ],
+            "name": "blocker 茂密丛林",
+            "status_text": "未满足清理前提条件",
+            "swap_type": {
+              "description": "这些温泉的水面上腾升着由地底热能所蒸发的水蒸气。",
+              "key": "d_hot_springs",
+              "modifiers": [
+                {
+                  "formatted": "发电区划最大建造数量: +1",
+                  "key": "mod_district_generator_max_add",
+                  "name": "发电区划最大建造数量",
+                  "type_id": 9229,
+                  "value": 1
+                }
+              ],
+              "name": "温泉"
+            }
+          },
+          {
+            "can_clear": false,
+            "category": "deposit_blockers_natural",
+            "clear_cost": {
+              "energy": 500
+            },
+            "clear_time": 180,
+            "deposit_id": 209,
+            "description": "这整个区域完全长满了厚厚的、不可穿越的丛林。",
+            "is_blocker": true,
+            "is_queued": false,
+            "key": "d_dense_jungle",
+            "modifiers": [
+              {
+                "formatted": "最大区划数: -1",
+                "key": "MOD_PLANET_MAX_DISTRICTS_ADD",
+                "name": "最大区划数",
+                "type_id": 131,
+                "value": -1
+              }
+            ],
+            "name": "blocker 茂密丛林",
+            "status_text": "未满足清理前提条件",
+            "swap_type": {
+              "description": "这些山洞犹如巨型的晶洞，里面充斥着稀有的水晶。",
+              "key": "d_crystalline_caverns",
+              "modifiers": [
+                {
+                  "formatted": "采矿区划最大建造数量: +3",
+                  "key": "mod_district_mining_max_add",
+                  "name": "采矿区划最大建造数量",
+                  "type_id": 9231,
+                  "value": 3
+                }
+              ],
+              "name": "水晶洞穴"
+            }
+          }
+        ],
+        "colony_ascension": {
+          "can_ascend": false,
+          "description": "提升该殖民地的潜力，为子孙后代铸造一个更加繁荣、稳定、高效的星球。",
+          "designation_multiplier_percent": 0,
+          "status_desc": "行星尚未飞升。",
+          "tier": 0,
+          "tier_name": "行星尚未飞升。"
+        },
+        "colony_id": 24,
+        "construction_queue": [
+          {
+            "item_id": 268435506,
+            "item_name": "稀有水晶提取",
+            "key": "zone_rare_crystals",
+            "progress": 22,
+            "progress_percent": 6.25,
+            "remaining_days": 338,
+            "total_days": 360,
+            "type": "zone_specialization"
+          }
+        ],
+        "designation": "统一中心",
+        "designation_key": "col_bureau",
+        "designation_tier": 5,
+        "districts": [
+          {
+            "built": 2,
+            "name": "城市区划",
+            "type": "district_city",
+            "zone_slots": 3,
+            "zones": [
+              {
+                "buildings": [
+                  {
+                    "id": 50331692,
+                    "is_capital": true,
+                    "key": "building_capital",
+                    "name": "行星首府",
+                    "slot_index": 0,
+                    "status": "built"
+                  },
+                  {
+                    "id": 16777271,
+                    "is_capital": false,
+                    "key": "building_research_lab_1",
+                    "name": "研究实验室",
+                    "slot_index": 1,
+                    "status": "built"
+                  },
+                  {
+                    "id": 69,
+                    "is_capital": false,
+                    "key": "building_foundry_1",
+                    "name": "合金铸造厂",
+                    "slot_index": 2,
+                    "status": "built"
+                  },
+                  {
+                    "id": 72,
+                    "is_capital": false,
+                    "key": "building_research_lab_1",
+                    "name": "研究实验室",
+                    "slot_index": 3,
+                    "status": "built"
+                  },
+                  {
+                    "id": 85,
+                    "is_capital": false,
+                    "key": "building_robot_assembly_plant",
+                    "name": "机器人组装厂",
+                    "slot_index": 4,
+                    "status": "built"
+                  },
+                  {
+                    "id": 108,
+                    "is_capital": false,
+                    "key": "building_holo_theatres",
+                    "name": "全息影像剧场",
+                    "slot_index": 5,
+                    "status": "built"
+                  }
+                ],
+                "buildings_known": true,
+                "key": "zone_default",
+                "max_buildings": 6,
+                "name": "政府特区",
+                "slot_index": 39
+              },
+              {
+                "buildings": [
+                  {
+                    "id": 89,
+                    "is_capital": false,
+                    "key": "building_bureaucratic_1",
+                    "name": "行政办公楼",
+                    "slot_index": 0,
+                    "status": "built"
+                  },
+                  {
+                    "id": 96,
+                    "is_capital": false,
+                    "key": "building_bureaucratic_1",
+                    "name": "行政办公楼",
+                    "slot_index": 1,
+                    "status": "built"
+                  },
+                  {
+                    "id": 104,
+                    "is_capital": false,
+                    "key": "building_bureaucratic_1",
+                    "name": "行政办公楼",
+                    "slot_index": 2,
+                    "status": "built"
+                  }
+                ],
+                "buildings_known": true,
+                "key": "zone_unity",
+                "max_buildings": 3,
+                "name": "行政中心",
+                "slot_index": 45
+              },
+              {
+                "buildings": [],
+                "buildings_known": true,
+                "key": "zone_unity",
+                "max_buildings": 3,
+                "name": "行政中心",
+                "slot_index": 52
+              }
+            ]
+          },
+          {
+            "built": 1,
+            "name": "采矿区划",
+            "type": "district_mining",
+            "zone_slots": 1,
+            "zones": []
+          }
+        ],
+        "governor": null,
+        "is_capital": false,
+        "kpi": {
+          "amenities": 2219.83,
+          "amenities_display": "2.2K",
+          "crime_percent": 0,
+          "growth": 0,
+          "housing": 481.5,
+          "pop_capacity": 1928,
+          "pop_display": "1.9K",
+          "pop_groups": 1923,
+          "stability_percent": 100,
+          "unemployed": 0
+        },
+        "monthly_population_summary": {
+          "assembly": 2,
+          "categories": {
+            "GROWTH_CAT_ASSEMBLY": 2,
+            "GROWTH_CAT_EMIGRATION": 19,
+            "GROWTH_CAT_GROWTH": 3,
+            "GROWTH_CAT_IMMIGRATION": 19,
+            "GROWTH_CAT_PROMOTION": 0
+          },
+          "demographics": [
+            {
+              "count": 139,
+              "share_percent": 7.2,
+              "species_id": 36,
+              "species_name": "机器人"
+            },
+            {
+              "count": 1789,
+              "share_percent": 92.8,
+              "species_id": 2600468481,
+              "species_name": "人类"
+            }
+          ],
+          "growth": 3,
+          "migration": 0,
+          "net_change": 5
+        },
+        "monthly_production": {
+          "net": {
+            "alloys": -1.14,
+            "consumer_goods": -48.23,
+            "energy": -30.71,
+            "engineering_research": 5.87,
+            "food": -19.65,
+            "minerals": 11.93,
+            "physics_research": 5.22,
+            "rare_crystals": 0.15,
+            "society_research": 9.26,
+            "trade": 6.23,
+            "unity": 131.5
+          },
+          "produced": {
+            "alloys": 0.96,
+            "engineering_research": 5.87,
+            "minerals": 12.75,
+            "physics_research": 5.22,
+            "rare_crystals": 0.15,
+            "society_research": 9.26,
+            "trade": 6.23,
+            "unity": 131.5
+          },
+          "upkeep": {
+            "alloys": 2.1,
+            "consumer_goods": 48.23,
+            "energy": 30.71,
+            "food": 19.65,
+            "minerals": 0.82
+          }
+        },
+        "name": "温州",
+        "overview": {
+          "colony_date": "2211.07.08",
+          "habitability_percent": 90,
+          "habitability_species_id": 2600468481,
+          "planet_size": 15,
+          "planet_type": "陆地星球"
+        },
+        "planet_id": 152,
+        "planetary_features": {
+          "features": [
+            {
+              "can_clear": false,
+              "category": "deposit_blockers_natural",
+              "clear_cost": {
+                "energy": 1000
+              },
+              "clear_time": 270,
+              "deposit_id": 201,
+              "description": "一大片高耸险峻的山脉横跨此区域。",
+              "is_blocker": true,
+              "is_queued": false,
+              "key": "d_mountain_range",
+              "modifiers": [
+                {
+                  "formatted": "最大区划数: -2",
+                  "key": "MOD_PLANET_MAX_DISTRICTS_ADD",
+                  "name": "最大区划数",
+                  "type_id": 131,
+                  "value": -2
+                }
+              ],
+              "name": "blocker 高耸山脉",
+              "status_text": "未满足清理前提条件",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 202,
+              "description": "这些山洞犹如巨型的晶洞，里面充斥着稀有的水晶。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_crystalline_caverns",
+              "modifiers": [
+                {
+                  "formatted": "采矿区划最大建造数量: +3",
+                  "key": "mod_district_mining_max_add",
+                  "name": "采矿区划最大建造数量",
+                  "type_id": 9231,
+                  "value": 3
+                }
+              ],
+              "name": "水晶洞穴",
+              "status_text": "",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 203,
+              "description": "冷冰冰的多岩树林中生长着大量草本下层植被。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_rugged_woods",
+              "modifiers": [
+                {
+                  "formatted": "农业区划最大建造数量: +1",
+                  "key": "mod_district_farming_max_add",
+                  "name": "农业区划最大建造数量",
+                  "type_id": 9233,
+                  "value": 1
+                }
+              ],
+              "name": "崎岖森林",
+              "status_text": "",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "deposit_blockers_natural",
+              "clear_cost": {
+                "energy": 500
+              },
+              "clear_time": 180,
+              "deposit_id": 204,
+              "description": "这整个区域完全长满了厚厚的、不可穿越的丛林。",
+              "is_blocker": true,
+              "is_queued": false,
+              "key": "d_dense_jungle",
+              "modifiers": [
+                {
+                  "formatted": "最大区划数: -1",
+                  "key": "MOD_PLANET_MAX_DISTRICTS_ADD",
+                  "name": "最大区划数",
+                  "type_id": 131,
+                  "value": -1
+                }
+              ],
+              "name": "blocker 茂密丛林",
+              "status_text": "未满足清理前提条件",
+              "swap_type": {
+                "description": "这片有毒沼泽覆盖着矮植物、苔藓、以及菌类，水面上不时冒出气体。",
+                "key": "d_fuming_bog",
+                "modifiers": [
+                  {
+                    "formatted": "农业区划最大建造数量: +3",
+                    "key": "mod_district_farming_max_add",
+                    "name": "农业区划最大建造数量",
+                    "type_id": 9233,
+                    "value": 3
+                  }
+                ],
+                "name": "发烟泥潭"
+              }
+            },
+            {
+              "can_clear": false,
+              "category": "deposit_blockers_natural",
+              "clear_cost": {
+                "energy": 500
+              },
+              "clear_time": 180,
+              "deposit_id": 205,
+              "description": "这整个区域完全长满了厚厚的、不可穿越的丛林。",
+              "is_blocker": true,
+              "is_queued": false,
+              "key": "d_dense_jungle",
+              "modifiers": [
+                {
+                  "formatted": "最大区划数: -1",
+                  "key": "MOD_PLANET_MAX_DISTRICTS_ADD",
+                  "name": "最大区划数",
+                  "type_id": 131,
+                  "value": -1
+                }
+              ],
+              "name": "blocker 茂密丛林",
+              "status_text": "未满足清理前提条件",
+              "swap_type": {
+                "description": "这些温泉的水面上腾升着由地底热能所蒸发的水蒸气。",
+                "key": "d_hot_springs",
+                "modifiers": [
+                  {
+                    "formatted": "发电区划最大建造数量: +1",
+                    "key": "mod_district_generator_max_add",
+                    "name": "发电区划最大建造数量",
+                    "type_id": 9229,
+                    "value": 1
+                  }
+                ],
+                "name": "温泉"
+              }
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 206,
+              "description": "这片山坡上点缀着各种矿藏和珍贵的石头。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_rich_mountain",
+              "modifiers": [
+                {
+                  "formatted": "采矿区划最大建造数量: +3",
+                  "key": "mod_district_mining_max_add",
+                  "name": "采矿区划最大建造数量",
+                  "type_id": 9231,
+                  "value": 3
+                }
+              ],
+              "name": "富饶山脉",
+              "status_text": "",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "deposit_blockers_natural",
+              "clear_cost": {
+                "energy": 500
+              },
+              "clear_time": 180,
+              "deposit_id": 209,
+              "description": "这整个区域完全长满了厚厚的、不可穿越的丛林。",
+              "is_blocker": true,
+              "is_queued": false,
+              "key": "d_dense_jungle",
+              "modifiers": [
+                {
+                  "formatted": "最大区划数: -1",
+                  "key": "MOD_PLANET_MAX_DISTRICTS_ADD",
+                  "name": "最大区划数",
+                  "type_id": 131,
+                  "value": -1
+                }
+              ],
+              "name": "blocker 茂密丛林",
+              "status_text": "未满足清理前提条件",
+              "swap_type": {
+                "description": "这些山洞犹如巨型的晶洞，里面充斥着稀有的水晶。",
+                "key": "d_crystalline_caverns",
+                "modifiers": [
+                  {
+                    "formatted": "采矿区划最大建造数量: +3",
+                    "key": "mod_district_mining_max_add",
+                    "name": "采矿区划最大建造数量",
+                    "type_id": 9231,
+                    "value": 3
+                  }
+                ],
+                "name": "水晶洞穴"
+              }
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 210,
+              "description": "这片辽阔的平原堪称是完美的农田选地。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_fertile_lands",
+              "modifiers": [
+                {
+                  "formatted": "农业区划最大建造数量: +2",
+                  "key": "mod_district_farming_max_add",
+                  "name": "农业区划最大建造数量",
+                  "type_id": 9233,
+                  "value": 2
+                }
+              ],
+              "name": "丰饶之地",
+              "status_text": "",
+              "swap_type": null
+            },
+            {
+              "can_clear": false,
+              "category": "",
+              "clear_cost": {},
+              "clear_time": 0,
+              "deposit_id": 211,
+              "description": "这片多雨的山地上的斜坡生长着饱受狂风摧残的顽固植物。",
+              "is_blocker": false,
+              "is_queued": false,
+              "key": "d_tempestous_mountain",
+              "modifiers": [
+                {
+                  "formatted": "发电区划最大建造数量: +3",
+                  "key": "mod_district_generator_max_add",
+                  "name": "发电区划最大建造数量",
+                  "type_id": 9229,
+                  "value": 3
+                }
+              ],
+              "name": "风暴山脉",
+              "status_text": "",
+              "swap_type": null
+            }
+          ],
+          "summary": {
+            "blockers_count": 4,
+            "clearable_blockers_count": 0,
+            "natural_features_count": 5,
+            "queued_blockers_count": 0,
+            "total_features": 9
+          }
+        },
+        "population_breakdown": [
+          {
+            "net_change": 0,
+            "pop_count": 139,
+            "pop_count_display": "139",
+            "portrait": "sd_hum_robot",
+            "share_percent": 7.2,
+            "species_id": 36,
+            "species_name": "机器人"
+          },
+          {
+            "net_change": 0,
+            "pop_count": 1789,
+            "pop_count_display": "1.8K",
+            "portrait": "human",
+            "share_percent": 92.8,
+            "species_id": 2600468481,
+            "species_name": "人类"
+          }
+        ],
+        "status_alerts": [
+          {
+            "desc": "此殖民地可建设额外的建筑 建筑。",
+            "id": "construction_available",
+            "name": "有新的建筑槽位"
+          }
+        ],
+        "system_id": 58,
+        "system_name": "南门二",
+        "workforce_summary": {
+          "active_jobs_count": 10,
+          "prioritized_job": "miner",
+          "strata": [
+            {
+              "active_jobs_count": 1,
+              "effective_workforce": 190,
+              "stratum_key": "ruler",
+              "stratum_name": "精英",
+              "workforce": 200
+            },
+            {
+              "active_jobs_count": 8,
+              "effective_workforce": 1817,
+              "stratum_key": "specialist",
+              "stratum_name": "专家",
+              "workforce": 1589
+            },
+            {
+              "active_jobs_count": 1,
+              "effective_workforce": 129,
+              "stratum_key": "worker",
+              "stratum_name": "劳工",
+              "workforce": 139
+            }
+          ],
+          "total_effective_workforce": 2136,
+          "total_employed_workforce": 1928,
+          "unemployed": 0
+        }
+      }
+    }
+  ],
+  "witnesses": [
+    {
+      "domain": "planet_construction",
+      "colonyId": 24,
+      "planetId": 152,
+      "queueId": 2014,
+      "itemId": 268435506,
+      "definition": "zone_rare_crystals",
+      "trackingId": 3,
+      "decisionSequence": 21
+    }
+  ]
+}

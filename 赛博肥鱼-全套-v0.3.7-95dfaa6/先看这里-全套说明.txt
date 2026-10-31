@@ -1,0 +1,14 @@
+赛博肥鱼完整交接包
+
+版本：0.3.7
+源码提交：95dfaa665d5d45aacc95ae6c65b50175369181db
+
+包含：源码、开发计划与文档、许可证和第三方说明、角色素材、已安装的开发依赖、构建产物，以及 Apple Silicon Mac 安装包。
+
+直接使用：打开“安装包”中的 DMG，将应用复制到自己的应用程序目录。仅适用 Apple Silicon Mac。API、QQ 登录和声卡设置需接收方自行配置。
+继续开发：在本目录使用 Node.js 与 pnpm，必要时执行 pnpm install --frozen-lockfile 重新生成本机依赖入口，再按 README 开发。随包依赖来自 Apple Silicon Mac，其他系统应重新安装。
+
+0.3.7 是已构建的候选更新包；当前正在直播的程序仍为 0.3.6，此次打包不会替换直播程序。
+
+不含：你的 API 密钥、QQ 登录会话、直播记录、数据库、系统权限和 Git 历史。
+角色素材来源与权利说明保留在 assets/figure/whale/ASSET_NOTICE.md 与 THIRD_PARTY_NOTICES.md，素材不随代码的 AGPL 许可证授权。

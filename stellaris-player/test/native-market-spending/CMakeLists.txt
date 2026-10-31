@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(native_market_spending_test LANGUAGES CXX)
+add_executable(native_market_spending_test policy.cpp)
+target_compile_features(native_market_spending_test PRIVATE cxx_std_17)
+target_include_directories(native_market_spending_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../.local/research/stellaris-mcp-native/stellaris_bridge/include")
+enable_testing()
+add_test(NAME market_spending_policy COMMAND native_market_spending_test)

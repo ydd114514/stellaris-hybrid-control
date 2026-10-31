@@ -1,0 +1,32 @@
+RVA 0x6c4840; extent=unwind
+0x6c4840 sub rsp, 0x48
+0x6c4844 mov rdx, qword ptr [rip + 0x2a503ed]
+0x6c484b mov r11, rcx
+0x6c484e test rdx, rdx
+0x6c4851 je 0x6c487d
+0x6c4853 mov r8d, dword ptr [rcx + 0x30]
+0x6c4857 mov eax, r8d
+0x6c485a and eax, 0xffffff
+0x6c485f cmp eax, dword ptr [rdx + 0x20]
+0x6c4862 jae 0x6c487d
+0x6c4864 mov ecx, eax
+0x6c4866 mov rax, qword ptr [rdx + 0x18]
+0x6c486a add rcx, rcx
+0x6c486d mov rcx, qword ptr [rax + rcx*8 + 8]
+0x6c4872 test rcx, rcx
+0x6c4875 je 0x6c487d
+0x6c4877 cmp dword ptr [rcx + 0x20], r8d
+0x6c487b je 0x6c4884
+0x6c487d mov rcx, qword ptr [rip + 0x2a4e61c]
+0x6c4884 mov rcx, qword ptr [rcx + 0x1b28]
+0x6c488b mov eax, dword ptr [r11 + 0x2c]
+0x6c488f mov r9d, dword ptr [r11 + 0x28]
+0x6c4893 mov r8d, dword ptr [r11 + 0x24]
+0x6c4897 mov r10, qword ptr [rcx]
+0x6c489a mov edx, dword ptr [r11 + 0x20]
+0x6c489e mov dword ptr [rsp + 0x30], 0x165
+0x6c48a6 mov byte ptr [rsp + 0x28], 0
+0x6c48ab mov dword ptr [rsp + 0x20], eax
+0x6c48af call qword ptr [r10 + 8]
+0x6c48b3 add rsp, 0x48
+0x6c48b7 ret 

@@ -1,0 +1,20 @@
+{
+  "text": "嗨，欢迎来到肥鱼深夜小店！今天有没有好好吃饭？哼，别只顾着工作呀。先坐下喝口热茶，再告诉我，你想听哪一首歌？",
+  "sources": [
+    "https://help.aliyun.com/zh/model-studio/tts-model",
+    "https://help.aliyun.com/zh/model-studio/qwen-audio-tts-voice-list",
+    "https://help.aliyun.com/zh/model-studio/qwen-audio-tts-http-api"
+  ],
+  "samples": [
+    { "id": "01", "model": "qwen-audio-3.0-tts-flash", "voice": "longanlingxi", "name": "龙安灵希", "style": "甜美可爱" },
+    { "id": "02", "model": "qwen-audio-3.0-tts-flash", "voice": "longanxiaoxin", "name": "龙安小昕", "style": "亲切活泼" },
+    { "id": "03", "model": "qwen-audio-3.0-tts-flash", "voice": "longanyuanfei", "name": "龙安元妃", "style": "傲娇角色感" },
+    { "id": "04", "model": "qwen-audio-3.1-tts-flash", "voice": "longanlingxin_v3.1", "name": "龙安灵心", "style": "温柔陪伴" },
+    { "id": "05", "model": "qwen-audio-3.1-tts-flash", "voice": "longanhuan_v3.1", "name": "龙安欢", "style": "明亮自然" },
+    { "id": "06", "model": "qwen-audio-3.1-tts-flash", "voice": "longanfengyue_v3.1", "name": "龙安风悦", "style": "自然聊天" },
+    { "id": "07", "model": "qwen-audio-3.1-tts-flash", "voice": "qiaoxiaojiao_v3.1", "name": "乔小娇", "style": "俏丽可爱" },
+    { "id": "08", "model": "qwen-audio-3.1-tts-plus", "voice": "longanlingxin_v3.1", "name": "龙安灵心", "style": "温柔陪伴 · 与04比较模型" },
+    { "id": "09", "model": "qwen-audio-3.1-tts-plus", "voice": "longanhuan_v3.1", "name": "龙安欢", "style": "明亮自然 · 与05比较模型" },
+    { "id": "10", "model": "qwen-audio-3.1-tts-plus", "voice": "longanfengyue_v3.1", "name": "龙安风悦", "style": "自然聊天 · 与06比较模型" }
+  ]
+}

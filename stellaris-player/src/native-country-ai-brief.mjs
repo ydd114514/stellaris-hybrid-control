@@ -1,0 +1,4 @@
+export function nativeCountryAIBrief(minutes){
+ if(!Number.isFinite(minutes)||minutes<=0||minutes>60)throw Error('国家 AI 会话时长无效');
+ return `在本轮 ${minutes} 分钟内按 v1.4 执行战略指挥。先 observe 核实帝国、局势、事件、资源和 countryAIControl，明确当前战略方向与关键干预条件。日常经营交给游戏原生国家 AI：使用 country_ai_control delegate，当前仅开放 research_and_planet_construction 两个领域的有界试点，其他领域和整体核心交付尚未证明。不要逐条选择日常科研、建筑、岗位，不启动本地经营任务、自动调查或旧战役长测来代替国家 AI。托管期间使用 watch 监督真实状态；战略复查点若无需干预，country_ai_control continue 让原生继续工作，不重复 delegate。重大事件、方向改变或关键决定时，先 country_ai_control takeover，确认 owner=human、暂停、实际开关关闭且 ordinaryOrdersBlocked=false 后，依据新快照执行必要的关键干预并回读；若确需替换在研科技，用 apply_orders 的 strategicResearchOverride=true，只提交一项 select_research 并明确 explanation 理由，不能用作日常科研微操；随后 resume 交还。未知写入不重放；接管或世界身份待确认时保持封口，报告待核对，不改用其他工具绕过。用户停止或时长结束时停止并核对交接。不能用开关开启、提交计数或旧施工进度宣称自主经营成功；新增工作需要原生来源和真实结果配对。不要为填满等待时间而频繁调用模型或下无关订单，也不自动开启外围征服测试。每次只简短说明战略、关键干预与已验证结果。`;
+}

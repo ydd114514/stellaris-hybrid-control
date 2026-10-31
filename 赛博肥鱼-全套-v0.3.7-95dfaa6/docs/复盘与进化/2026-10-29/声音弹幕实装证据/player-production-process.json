@@ -1,0 +1,24 @@
+{
+  "CheckedAt": "2026-10-29T02:36:10.9788092+00:00",
+  "ExpectedPath": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.11\\大肥鱼 DSH.exe",
+  "Present": true,
+  "Processes": [
+    {
+      "Id": 12240,
+      "Path": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.11\\大肥鱼 DSH.exe"
+    },
+    {
+      "Id": 27912,
+      "Path": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.11\\大肥鱼 DSH.exe"
+    },
+    {
+      "Id": 29116,
+      "Path": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.11\\大肥鱼 DSH.exe"
+    },
+    {
+      "Id": 32516,
+      "Path": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.11\\大肥鱼 DSH.exe"
+    }
+  ],
+  "ReadOnly": true
+}

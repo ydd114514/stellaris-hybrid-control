@@ -1,0 +1,81 @@
+{
+  "sessionId": "a40aa617-bd55-47a6-a293-c6f5d41c3904",
+  "publishedAt": 1793251562033,
+  "readbackConfirmed": true,
+  "sameSession": true,
+  "observedAt": 1793251604303,
+  "date": "2334.10.17",
+  "intents": [
+    {
+      "at": "2026-10-29T05:26:33.418Z",
+      "requestId": "r73-diplomacy",
+      "explanation": "影响力攒满了，挑瓦雷维夫先把大使馆立起来，艾希尔那边也维护一下关系。",
+      "commands": [
+        "diplomacy",
+        "diplomacy"
+      ]
+    }
+  ],
+  "receipts": [
+    {
+      "at": "2026-10-29T05:26:02.318Z",
+      "command": "set_job_priority",
+      "verification": {
+        "verified": true,
+        "phase": "job_priority_readback",
+        "job": {
+          "bonus_workforce": 20,
+          "can_prioritize": true,
+          "current_workforce": 200,
+          "effective_workforce": 220,
+          "is_prioritized": false,
+          "job_key": "artisan",
+          "job_name": "工匠",
+          "max_workforce": 200,
+          "workforce_limit": 200
+        }
+      }
+    },
+    {
+      "at": "2026-10-29T05:26:12.592Z",
+      "command": "set_job_priority",
+      "verification": {
+        "verified": true,
+        "phase": "job_priority_readback",
+        "job": {
+          "bonus_workforce": 20,
+          "can_prioritize": true,
+          "current_workforce": 200,
+          "effective_workforce": 220,
+          "is_prioritized": false,
+          "job_key": "artisan",
+          "job_name": "工匠",
+          "max_workforce": 200,
+          "workforce_limit": 200
+        }
+      }
+    },
+    {
+      "at": "2026-10-29T05:26:35.736Z",
+      "command": "diplomacy",
+      "verification": {
+        "verified": false,
+        "phase": "proposal_pending_acceptance",
+        "contact": {
+          "country_id": 16777218,
+          "country_type": "default",
+          "has_communications": true,
+          "name": "瓦雷维夫安宁委治国",
+          "name_key": "%ADJECTIVE%",
+          "treaties": {
+            "commercial_pact": false,
+            "migration_pact": false,
+            "research_agreement": false
+          }
+        }
+      }
+    }
+  ],
+  "stopped": false,
+  "expiresAt": 1793252462033
+}

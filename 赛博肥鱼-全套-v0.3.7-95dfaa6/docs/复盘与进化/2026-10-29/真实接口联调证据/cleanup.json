@@ -1,0 +1,13 @@
+{
+  "originalTestProcessAlive": false,
+  "profileFoldersRemoved": [
+    "profile",
+    "services",
+    "isolated-game"
+  ],
+  "staleAudioLeaseRemoved": true,
+  "paidRequestsAdded": 0,
+  "desktopControl": false,
+  "originalReportFinalizationIncomplete": true,
+  "reason": "Last hidden window destruction exited Electron before final JSON/cleanup completed; original result is retained as intermediate evidence."
+}

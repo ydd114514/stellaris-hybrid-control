@@ -1,0 +1,12 @@
+{
+  "version": "0.5.2",
+  "upstream": "Yidhar/stellaris-mcp",
+  "commit": "6cc8e82013f88d7ef51d906f3cdfa44054b7a250",
+  "license": "MIT",
+  "dll_sha256": "4ae2db8d1486ea5309426c82c107d34f3a323fa2129dbd5c21fa28dff0168770",
+  "patch_sha256": "743b627294abe82734a588cfe319850d0c47c4ec43d647736fe7b21e3cf7dbb8",
+  "game_sha256": "400df27c82ddc845aa9dce79bd468d81f18f060d299cd263e3afa93aef4f7a83",
+  "node_tests": 256,
+  "python_tests": 42,
+  "build": "MSVC 2022 x64 Release / CMake 4.4.4"
+}

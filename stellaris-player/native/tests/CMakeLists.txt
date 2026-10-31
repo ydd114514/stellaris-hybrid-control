@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.20)
+project(CyberfishMonthlyPolicyTests LANGUAGES CXX)
+add_executable(monthly_trade_policy_test monthly_trade_policy_test.cpp)
+target_compile_features(monthly_trade_policy_test PRIVATE cxx_std_20)
+target_include_directories(monthly_trade_policy_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../.local/research/stellaris-mcp-native/stellaris_bridge/include")

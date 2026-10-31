@@ -1,0 +1,145 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0ff520a..80b9ac0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,7 +10,8 @@ include(FetchContent)
+ FetchContent_Declare(
+     minhook
+     GIT_REPOSITORY https://github.com/TsudaKageyu/minhook.git
+-    GIT_TAG        master
++    GIT_TAG        v1.3.4
++    GIT_SHALLOW    TRUE
+ )
+ FetchContent_MakeAvailable(minhook)
+ 
+@@ -19,6 +20,7 @@ FetchContent_Declare(
+     nlohmann_json
+     GIT_REPOSITORY https://github.com/nlohmann/json.git
+     GIT_TAG        v3.11.3
++    GIT_SHALLOW    TRUE
+ )
+ FetchContent_MakeAvailable(nlohmann_json)
+ 
+diff --git a/stellaris_bridge/include/fleet_access.hpp b/stellaris_bridge/include/fleet_access.hpp
+index 5a8fe1d..9a5f913 100644
+--- a/stellaris_bridge/include/fleet_access.hpp
++++ b/stellaris_bridge/include/fleet_access.hpp
+@@ -52,6 +52,8 @@ void* Find(uintptr_t base, uint32_t fleet_id);
+ 
+ // Fleets the country owns (CCountryFleetsManager::owned_fleets).
+ std::vector<uint32_t> Owned(void* country);
++// A leader location of type 2 refers to CShip, not CFleet.
++std::vector<uint32_t> ShipIds(void* fleet);
+ 
+ ShipClass ClassOf(void* fleet);
+ double MilitaryPower(void* fleet);   // CFleet::military_power, normalized
+diff --git a/stellaris_bridge/include/galaxy_manager.hpp b/stellaris_bridge/include/galaxy_manager.hpp
+index afa339f..4b5f215 100644
+--- a/stellaris_bridge/include/galaxy_manager.hpp
++++ b/stellaris_bridge/include/galaxy_manager.hpp
+@@ -32,6 +32,7 @@ public:
+     nlohmann::json Survey(uint32_t fleet_id, uint32_t system_id, uint32_t planet_id, bool queue);
+     // a construction ship builds an outpost (starbase) in the system
+     nlohmann::json BuildOutpost(uint32_t fleet_id, uint32_t system_id, bool queue);
++    nlohmann::json BuildStations(uint32_t fleet_id, uint32_t system_id, const std::string& station_type, bool queue);
+     // a colony ship colonizes the planet
+     nlohmann::json Colonize(uint32_t fleet_id, uint32_t planet_id, bool queue);
+     // cancel every order of these fleets (they stop where they are)
+diff --git a/stellaris_bridge/src/fleet_access.cpp b/stellaris_bridge/src/fleet_access.cpp
+index 217c8df..4a0bdb3 100644
+--- a/stellaris_bridge/src/fleet_access.cpp
++++ b/stellaris_bridge/src/fleet_access.cpp
+@@ -100,6 +100,20 @@ ShipClass ClassOf(void* fleet) {
+     return fleet && Read((const void*)((uintptr_t)fleet + sdk::ent::CFleet::ship_class), &c) ? (ShipClass)c : ShipClass::Unknown;
+ }
+ 
++std::vector<uint32_t> ShipIds(void* fleet) {
++    std::vector<uint32_t> ids;
++    uintptr_t data = 0;
++    uint32_t count = 0;
++    const uintptr_t ships = (uintptr_t)fleet + sdk::ent::CFleet::ships;
++    if (!fleet || !Read((const void*)ships, &data) || !data ||
++        !Read((const void*)(ships + 0xC), &count) || count > 4096) return ids;
++    for (uint32_t i = 0; i < count; ++i) {
++        uint32_t id = 0xFFFFFFFF;
++        if (Read((const void*)(data + i * sizeof(uint32_t)), &id) && id != 0xFFFFFFFF) ids.push_back(id);
++    }
++    return ids;
++}
++
+ double MilitaryPower(void* fleet) {
+     int64_t raw = 0;
+     return fleet && Read((const void*)((uintptr_t)fleet + sdk::ent::CFleet::military_power), &raw) ? raw / 100000.0 : 0.0;
+diff --git a/stellaris_bridge/src/galaxy_manager.cpp b/stellaris_bridge/src/galaxy_manager.cpp
+index d133818..0d3057d 100644
+--- a/stellaris_bridge/src/galaxy_manager.cpp
++++ b/stellaris_bridge/src/galaxy_manager.cpp
+@@ -1462,6 +1462,32 @@ nlohmann::json GalaxyManager::Colonize(uint32_t fleet_id, uint32_t planet_id, bo
+              {"queued", queue}, {"message", "Colonization order posted"} };
+ }
+ 
++nlohmann::json GalaxyManager::BuildStations(uint32_t fleet_id, uint32_t system_id,
++                                            const std::string& station_type, bool queue) {
++    Snapshot s = Take();
++    if (!s.player || !OwnFleet(s, fleet_id)) return {{"success", false}, {"error", "Not an owned construction fleet"}};
++    if (!s.index.count(system_id) || Owner(s.systems[s.index[system_id]].obj) != s.player_id)
++        return {{"success", false}, {"error", "Resource stations require an owned system"}};
++    const auto cls = station_type == "mining" ? fleets::ShipClass::MiningStation :
++                     station_type == "research" ? fleets::ShipClass::ResearchStation : fleets::ShipClass::Unknown;
++    if (cls == fleets::ShipClass::Unknown) return {{"success", false}, {"error", "station_type must be mining or research"}};
++    // Same current-build command/factory as outposts. With no single deposit holder,
++    // galactic_object requests the system-wide construction order, as the map menu does.
++    namespace ob = sdk::cmd::build_orbital_station_order;
++    auto cmd = CommandBuilder::Get().Create(ob::kSpec);
++    cmd.Set<uint32_t>(ob::fleet, fleet_id)
++       .Set<uint32_t>(ob::galactic_object, system_id)
++       .Set<uint8_t>(ob::class_, (uint8_t)cls)
++       .Set<uint8_t>(ob::queue, queue ? 1 : 0)
++       .Set<uint8_t>(ob::queue_to_front, 0);
++    std::string why;
++    if (!cmd.IsValid(&why)) return {{"success", false}, {"error", why.empty() ? "No legal resource station order" : why}};
++    if (!cmd.Post(NativeCommand::Check::EngineGate)) return {{"success", false}, {"error", cmd.error()}};
++    return {{"success", true}, {"fleet_id", fleet_id}, {"system_id", system_id},
++            {"system", SystemName(system_id, s.systems[s.index[system_id]].obj)},
++            {"station_type", station_type}, {"queued", queue}, {"message", "Station order posted; verify construction and resource changes"}};
++}
++
+ nlohmann::json GalaxyManager::FindSystems(const std::string& purpose, uint32_t from, int limit, uint32_t fleet_id,
+                                           const std::string& resource, uint32_t species_id) {
+     Snapshot s = Take();
+diff --git a/stellaris_bridge/src/ipc_server.cpp b/stellaris_bridge/src/ipc_server.cpp
+index 114fce8..aa926e2 100644
+--- a/stellaris_bridge/src/ipc_server.cpp
++++ b/stellaris_bridge/src/ipc_server.cpp
+@@ -202,6 +202,14 @@ nlohmann::json IPCServer::ProcessRequest(const nlohmann::json& req) {
+         fut = TaskQueue::Get().Enqueue([fleet_id, system_id, queue]() {
+             return GalaxyManager::Get().BuildOutpost(fleet_id, system_id, queue);
+         });
++    } else if (method == "build_stations") {
++        const uint32_t fleet_id = params.value("fleet_id", 0xFFFFFFFFu);
++        const uint32_t system_id = params.value("system_id", 0xFFFFFFFFu);
++        const std::string station_type = params.value("station_type", "");
++        const bool queue = params.value("queue", false);
++        fut = TaskQueue::Get().Enqueue([fleet_id, system_id, station_type, queue]() {
++            return GalaxyManager::Get().BuildStations(fleet_id, system_id, station_type, queue);
++        });
+     } else if (method == "get_megastructure") {
+         uint32_t id = params.value("megastructure_id", 0xFFFFFFFFu);
+         fut = TaskQueue::Get().Enqueue([id]() { return GalaxyManager::Get().GetMegastructureJson(id); });
+diff --git a/stellaris_bridge/src/outliner_manager.cpp b/stellaris_bridge/src/outliner_manager.cpp
+index fe5d7fe..64f4aeb 100644
+--- a/stellaris_bridge/src/outliner_manager.cpp
++++ b/stellaris_bridge/src/outliner_manager.cpp
+@@ -1151,8 +1151,11 @@ nlohmann::json OutlinerManager::GetCivilianFleetsJson() {
+             {"ship_class", fleets::ShipClassKey(cls)},
+             {"status", fleets::OrdersText(flt)}
+         };
+-        auto leader = fleet_leader_map.find(fid);
++        const auto ships = fleets::ShipIds(flt);
++        if (ships.size() == 1) entry["ship_id"] = ships.front();
++        auto leader = ships.empty() ? fleet_leader_map.end() : fleet_leader_map.find(ships.front());
+         if (leader != fleet_leader_map.end()) {
++            entry["leader_id"] = leader->second.id;
+             entry["leader_name"] = leader->second.name;
+             entry["leader_level"] = leader->second.level;
+         }

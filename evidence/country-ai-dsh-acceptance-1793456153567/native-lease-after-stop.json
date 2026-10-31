@@ -1,0 +1,2303 @@
+{
+  "binding": {
+    "ok": true,
+    "pid": 60288,
+    "creationTime": "134379267389791665"
+  },
+  "state": {
+    "assigned_local_human_verified": true,
+    "autonomous_operation_verified": false,
+    "country_coverage_complete": true,
+    "country_id": 0,
+    "country_type_ai_enabled": true,
+    "country_type_ai_flags": 122879,
+    "country_type_settings_scope": "shared_country_type",
+    "execution_receipt_hooks_installed": true,
+    "execution_receipt_scheme": "session_client_sequence_payload",
+    "global_flags": {
+      "force_human_ai": false,
+      "human_ai": false,
+      "normal_ai": true
+    },
+    "human_countries": [
+      {
+        "country_id": 0,
+        "human_ids": [
+          1
+        ]
+      }
+    ],
+    "live_countries": 27,
+    "major_decision_boundary_verified": false,
+    "network_flag": 0,
+    "paused": true,
+    "pending": {
+      "country_id": 0,
+      "desired_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "execute_receipts": 3,
+      "force_command_identity": {
+        "client": 1,
+        "command_sequence": 52825,
+        "object_address": 1444542922608,
+        "valid": true,
+        "value": 0
+      },
+      "human_command_identity": {
+        "client": 1,
+        "command_sequence": 52824,
+        "object_address": 1444542924576,
+        "valid": true,
+        "value": 0
+      },
+      "identity_before": {
+        "assigned_local_human_verified": true,
+        "country_address": 1442407960640,
+        "country_id": 0,
+        "date": "2248.06.08",
+        "global_flags": {
+          "force_human_ai": true,
+          "human_ai": true,
+          "normal_ai": true
+        },
+        "human_countries": [
+          {
+            "country_id": 0,
+            "human_ids": [
+              1
+            ]
+          }
+        ],
+        "idler_address": 1441376281744,
+        "local_player_id": 1,
+        "network_flag": 0,
+        "sequence": 9,
+        "world_generation": 0
+      },
+      "identity_matches": true,
+      "observed_executions_since_post": [
+        {
+          "event": 19,
+          "identity": {
+            "client": 1,
+            "command_sequence": 52824,
+            "object_address": 1444542925296,
+            "valid": true,
+            "value": 0
+          },
+          "kind": 1
+        },
+        {
+          "event": 20,
+          "identity": {
+            "client": 1,
+            "command_sequence": 52825,
+            "object_address": 1444542919392,
+            "valid": true,
+            "value": 0
+          },
+          "kind": 2
+        }
+      ],
+      "original_flags": {
+        "force_human_ai": true,
+        "human_ai": true,
+        "normal_ai": true
+      },
+      "phase": "readback_confirmed",
+      "receipt_loss": 0,
+      "sequence": 10,
+      "superseded_sequence": null
+    },
+    "per_country_domain_settings_verified": false,
+    "precondition": {
+      "assigned_local_human_verified": true,
+      "country_address": 1442407960640,
+      "country_id": 0,
+      "date": "2248.06.08",
+      "global_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "human_countries": [
+        {
+          "country_id": 0,
+          "human_ids": [
+            1
+          ]
+        }
+      ],
+      "idler_address": 1441376281744,
+      "local_player_id": 1,
+      "network_flag": 0,
+      "sequence": 10,
+      "world_generation": 0
+    },
+    "research_only": true,
+    "scope": "global_human_countries",
+    "single_local_human_guard": true,
+    "success": true,
+    "world_generation_tracking": true,
+    "world_loading": false
+  },
+  "lease": {
+    "autonomous_operation_verified": false,
+    "baseline": {
+      "assigned_local_human_verified": true,
+      "country_address": 1442407960640,
+      "country_id": 0,
+      "date": "2247.12.04",
+      "global_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "human_countries": [
+        {
+          "country_id": 0,
+          "human_ids": [
+            1
+          ]
+        }
+      ],
+      "idler_address": 1441376281744,
+      "local_player_id": 1,
+      "network_flag": 0,
+      "sequence": 8,
+      "world_generation": 0
+    },
+    "generation": 5,
+    "last_native_state": {
+      "assigned_local_human_verified": true,
+      "autonomous_operation_verified": false,
+      "country_coverage_complete": true,
+      "country_id": 0,
+      "country_type_ai_enabled": true,
+      "country_type_ai_flags": 122879,
+      "country_type_settings_scope": "shared_country_type",
+      "execution_receipt_hooks_installed": true,
+      "execution_receipt_scheme": "session_client_sequence_payload",
+      "global_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "human_countries": [
+        {
+          "country_id": 0,
+          "human_ids": [
+            1
+          ]
+        }
+      ],
+      "live_countries": 27,
+      "major_decision_boundary_verified": false,
+      "network_flag": 0,
+      "paused": true,
+      "pending": {
+        "country_id": 0,
+        "desired_flags": {
+          "force_human_ai": false,
+          "human_ai": false,
+          "normal_ai": true
+        },
+        "execute_receipts": 3,
+        "force_command_identity": {
+          "client": 1,
+          "command_sequence": 52825,
+          "object_address": 1444542922608,
+          "valid": true,
+          "value": 0
+        },
+        "human_command_identity": {
+          "client": 1,
+          "command_sequence": 52824,
+          "object_address": 1444542924576,
+          "valid": true,
+          "value": 0
+        },
+        "identity_before": {
+          "assigned_local_human_verified": true,
+          "country_address": 1442407960640,
+          "country_id": 0,
+          "date": "2248.06.08",
+          "global_flags": {
+            "force_human_ai": true,
+            "human_ai": true,
+            "normal_ai": true
+          },
+          "human_countries": [
+            {
+              "country_id": 0,
+              "human_ids": [
+                1
+              ]
+            }
+          ],
+          "idler_address": 1441376281744,
+          "local_player_id": 1,
+          "network_flag": 0,
+          "sequence": 9,
+          "world_generation": 0
+        },
+        "identity_matches": true,
+        "observed_executions_since_post": [
+          {
+            "event": 19,
+            "identity": {
+              "client": 1,
+              "command_sequence": 52824,
+              "object_address": 1444542925296,
+              "valid": true,
+              "value": 0
+            },
+            "kind": 1
+          },
+          {
+            "event": 20,
+            "identity": {
+              "client": 1,
+              "command_sequence": 52825,
+              "object_address": 1444542919392,
+              "valid": true,
+              "value": 0
+            },
+            "kind": 2
+          }
+        ],
+        "original_flags": {
+          "force_human_ai": true,
+          "human_ai": true,
+          "normal_ai": true
+        },
+        "phase": "readback_confirmed",
+        "receipt_loss": 0,
+        "sequence": 10,
+        "superseded_sequence": null
+      },
+      "per_country_domain_settings_verified": false,
+      "precondition": {
+        "assigned_local_human_verified": true,
+        "country_address": 1442407960640,
+        "country_id": 0,
+        "date": "2248.06.08",
+        "global_flags": {
+          "force_human_ai": false,
+          "human_ai": false,
+          "normal_ai": true
+        },
+        "human_countries": [
+          {
+            "country_id": 0,
+            "human_ids": [
+              1
+            ]
+          }
+        ],
+        "idler_address": 1441376281744,
+        "local_player_id": 1,
+        "network_flag": 0,
+        "sequence": 10,
+        "world_generation": 0
+      },
+      "research_only": true,
+      "scope": "global_human_countries",
+      "single_local_human_guard": true,
+      "success": true,
+      "world_generation_tracking": true,
+      "world_loading": false
+    },
+    "last_post": {
+      "pending": {
+        "country_id": 0,
+        "desired_flags": {
+          "force_human_ai": false,
+          "human_ai": false,
+          "normal_ai": true
+        },
+        "identity_before": {
+          "assigned_local_human_verified": true,
+          "country_address": 1442407960640,
+          "country_id": 0,
+          "date": "2248.06.08",
+          "global_flags": {
+            "force_human_ai": true,
+            "human_ai": true,
+            "normal_ai": true
+          },
+          "human_countries": [
+            {
+              "country_id": 0,
+              "human_ids": [
+                1
+              ]
+            }
+          ],
+          "idler_address": 1441376281744,
+          "local_player_id": 1,
+          "network_flag": 0,
+          "sequence": 9,
+          "world_generation": 0
+        },
+        "original_flags": {
+          "force_human_ai": true,
+          "human_ai": true,
+          "normal_ai": true
+        },
+        "phase": "posted_unconfirmed",
+        "sequence": 10,
+        "superseded_sequence": null
+      },
+      "phase": "posted_unconfirmed",
+      "requires_independent_readback": true,
+      "research_only": true,
+      "success": true
+    },
+    "lease_remaining_ms": 0,
+    "observation": {
+      "armed": false,
+      "binding": {
+        "assigned_local_human_verified": true,
+        "country_address": 1442407960640,
+        "country_id": 0,
+        "date": "2247.12.04",
+        "global_flags": {
+          "force_human_ai": false,
+          "human_ai": false,
+          "normal_ai": true
+        },
+        "human_countries": [
+          {
+            "country_id": 0,
+            "human_ids": [
+              1
+            ]
+          }
+        ],
+        "idler_address": 1441376281744,
+        "local_player_id": 1,
+        "network_flag": 0,
+        "sequence": 8,
+        "world_generation": 0
+      },
+      "changes_ai_policy": false,
+      "commands_drained": true,
+      "events": [
+        {
+          "country_id": 0,
+          "decision_sequence": 1,
+          "event_sequence": 1,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 2,
+          "event_sequence": 2,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 3,
+          "event_sequence": 3,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 4,
+          "event_sequence": 4,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1444627746912,
+          "command_name": "set_home_base_command",
+          "command_token": 15180,
+          "country_id": 0,
+          "decision_sequence": 4,
+          "event_sequence": 5,
+          "payload_hex": "00000000450000000000000002010000009582994f010000301862994f0100000083be9b4f010000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "vtable_rva": 37387160
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1444627746912,
+          "command_name": "set_home_base_command",
+          "command_token": 15180,
+          "country_id": 0,
+          "decision_sequence": 4,
+          "event_sequence": 6,
+          "payload_hex": "00000000450000000000000002010000009582994f010000301862994f0100000083be9b4f010000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_blocked",
+          "vtable_rva": 37387160
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 5,
+          "event_sequence": 7,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 6,
+          "event_sequence": 8,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 7,
+          "event_sequence": 9,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 8,
+          "event_sequence": 10,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 9,
+          "event_sequence": 11,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 10,
+          "event_sequence": 12,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 11,
+          "event_sequence": 13,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 12,
+          "event_sequence": 14,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 13,
+          "event_sequence": 15,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 14,
+          "event_sequence": 16,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 15,
+          "event_sequence": 17,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 16,
+          "event_sequence": 18,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 17,
+          "event_sequence": 19,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 18,
+          "event_sequence": 20,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 19,
+          "event_sequence": 21,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 20,
+          "event_sequence": 22,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 21,
+          "event_sequence": 23,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 22,
+          "event_sequence": 24,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 23,
+          "event_sequence": 25,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 24,
+          "event_sequence": 26,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1444550582112,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 24,
+          "event_sequence": 27,
+          "payload_hex": "000000005d020000c004770000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1444550582112,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 24,
+          "event_sequence": 28,
+          "payload_hex": "000000005d020000c004770000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_blocked",
+          "vtable_rva": 37294600
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 25,
+          "event_sequence": 29,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 26,
+          "event_sequence": 30,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 27,
+          "event_sequence": 31,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 28,
+          "event_sequence": 32,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 29,
+          "event_sequence": 33,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 30,
+          "event_sequence": 34,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 31,
+          "event_sequence": 35,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 32,
+          "event_sequence": 36,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 33,
+          "event_sequence": 37,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 34,
+          "event_sequence": 38,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 35,
+          "event_sequence": 39,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 36,
+          "event_sequence": 40,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 37,
+          "event_sequence": 41,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 38,
+          "event_sequence": 42,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 39,
+          "event_sequence": 43,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 40,
+          "event_sequence": 44,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 41,
+          "event_sequence": 45,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 42,
+          "event_sequence": 46,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 43,
+          "event_sequence": 47,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 44,
+          "event_sequence": 48,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 45,
+          "event_sequence": 49,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 46,
+          "event_sequence": 50,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 47,
+          "event_sequence": 51,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 48,
+          "event_sequence": 52,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 49,
+          "event_sequence": 53,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 50,
+          "event_sequence": 54,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 51,
+          "event_sequence": 55,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 52,
+          "event_sequence": 56,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 53,
+          "event_sequence": 57,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 54,
+          "event_sequence": 58,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1444550581216,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 54,
+          "event_sequence": 59,
+          "payload_hex": "000000005d020000c004770000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1444550581216,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 54,
+          "event_sequence": 60,
+          "payload_hex": "000000005d020000c004770000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_blocked",
+          "vtable_rva": 37294600
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 55,
+          "event_sequence": 61,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 56,
+          "event_sequence": 62,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 57,
+          "event_sequence": 63,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 58,
+          "event_sequence": 64,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 59,
+          "event_sequence": 65,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 60,
+          "event_sequence": 66,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 61,
+          "event_sequence": 67,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 62,
+          "event_sequence": 68,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 63,
+          "event_sequence": 69,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 64,
+          "event_sequence": 70,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 65,
+          "event_sequence": 71,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 66,
+          "event_sequence": 72,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 67,
+          "event_sequence": 73,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 68,
+          "event_sequence": 74,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 69,
+          "event_sequence": 75,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 70,
+          "event_sequence": 76,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 71,
+          "event_sequence": 77,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 72,
+          "event_sequence": 78,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 73,
+          "event_sequence": 79,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 74,
+          "event_sequence": 80,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 75,
+          "event_sequence": 81,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 76,
+          "event_sequence": 82,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 77,
+          "event_sequence": 83,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 78,
+          "event_sequence": 84,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 79,
+          "event_sequence": 85,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 80,
+          "event_sequence": 86,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 81,
+          "event_sequence": 87,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 82,
+          "event_sequence": 88,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 83,
+          "event_sequence": 89,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 84,
+          "event_sequence": 90,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1439150827232,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 84,
+          "event_sequence": 91,
+          "payload_hex": "000000005d020000c004770000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1439150827232,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 84,
+          "event_sequence": 92,
+          "payload_hex": "000000005d020000c004770000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_blocked",
+          "vtable_rva": 37294600
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 85,
+          "event_sequence": 93,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 86,
+          "event_sequence": 94,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 87,
+          "event_sequence": 95,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 88,
+          "event_sequence": 96,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 89,
+          "event_sequence": 97,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 90,
+          "event_sequence": 98,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 91,
+          "event_sequence": 99,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 92,
+          "event_sequence": 100,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 93,
+          "event_sequence": 101,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 94,
+          "event_sequence": 102,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 95,
+          "event_sequence": 103,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 96,
+          "event_sequence": 104,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 97,
+          "event_sequence": 105,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 98,
+          "event_sequence": 106,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 99,
+          "event_sequence": 107,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 100,
+          "event_sequence": 108,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 101,
+          "event_sequence": 109,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 102,
+          "event_sequence": 110,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 103,
+          "event_sequence": 111,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 104,
+          "event_sequence": 112,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 105,
+          "event_sequence": 113,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 106,
+          "event_sequence": 114,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 107,
+          "event_sequence": 115,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 108,
+          "event_sequence": 116,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 109,
+          "event_sequence": 117,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 110,
+          "event_sequence": 118,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 111,
+          "event_sequence": 119,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 112,
+          "event_sequence": 120,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 113,
+          "event_sequence": 121,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 114,
+          "event_sequence": 122,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1444629493616,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 114,
+          "event_sequence": 123,
+          "payload_hex": "000000005d020000c004770000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1444629493616,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 114,
+          "event_sequence": 124,
+          "payload_hex": "000000005d020000c004770000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_blocked",
+          "vtable_rva": 37294600
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 115,
+          "event_sequence": 125,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 116,
+          "event_sequence": 126,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 117,
+          "event_sequence": 127,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 118,
+          "event_sequence": 128,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 119,
+          "event_sequence": 129,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 120,
+          "event_sequence": 130,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 121,
+          "event_sequence": 131,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 122,
+          "event_sequence": 132,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 123,
+          "event_sequence": 133,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 124,
+          "event_sequence": 134,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 125,
+          "event_sequence": 135,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 126,
+          "event_sequence": 136,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 127,
+          "event_sequence": 137,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 128,
+          "event_sequence": 138,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 129,
+          "event_sequence": 139,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 130,
+          "event_sequence": 140,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 131,
+          "event_sequence": 141,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 132,
+          "event_sequence": 142,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 133,
+          "event_sequence": 143,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 134,
+          "event_sequence": 144,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 135,
+          "event_sequence": 145,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 136,
+          "event_sequence": 146,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 137,
+          "event_sequence": 147,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 138,
+          "event_sequence": 148,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 139,
+          "event_sequence": 149,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 140,
+          "event_sequence": 150,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 141,
+          "event_sequence": 151,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 142,
+          "event_sequence": 152,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 143,
+          "event_sequence": 153,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 144,
+          "event_sequence": 154,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1444550580000,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 144,
+          "event_sequence": 155,
+          "payload_hex": "000000005d020000c004770000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1444550580000,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 144,
+          "event_sequence": 156,
+          "payload_hex": "000000005d020000c004770000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_blocked",
+          "vtable_rva": 37294600
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 145,
+          "event_sequence": 157,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 146,
+          "event_sequence": 158,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 147,
+          "event_sequence": 159,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 148,
+          "event_sequence": 160,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 149,
+          "event_sequence": 161,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 150,
+          "event_sequence": 162,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 151,
+          "event_sequence": 163,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "buildable_kind": "district",
+          "colony_reference": 24,
+          "command_address": 1444633222048,
+          "command_name": "add_buildable_to_queue_command",
+          "command_token": 15851,
+          "country_id": 0,
+          "decision_sequence": 151,
+          "definition_key": "district_city",
+          "domain": "planet_construction",
+          "event_sequence": 164,
+          "payload_country_id": 0,
+          "payload_hex": "40445f405001000000000000de070000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "queue_id": 2014,
+          "stage": "native_country_pending",
+          "vtable_rva": 37493600
+        },
+        {
+          "ai_flag": 1,
+          "buildable_kind": "district",
+          "colony_reference": 24,
+          "command_address": 1444633222048,
+          "command_name": "add_buildable_to_queue_command",
+          "command_token": 15851,
+          "country_id": 0,
+          "decision_sequence": 151,
+          "definition_key": "district_city",
+          "domain": "planet_construction",
+          "event_sequence": 165,
+          "payload_country_id": 0,
+          "payload_hex": "40445f405001000000000000de070000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "queue_id": 2014,
+          "stage": "native_session_post_entered",
+          "vtable_rva": 37493600
+        },
+        {
+          "ai_flag": 1,
+          "buildable_kind": "district",
+          "client_id": 1,
+          "colony_reference": 24,
+          "command_address": 1444633222048,
+          "command_name": "add_buildable_to_queue_command",
+          "command_sequence": 52325,
+          "command_token": 15851,
+          "country_id": 0,
+          "decision_sequence": 151,
+          "definition_key": "district_city",
+          "domain": "planet_construction",
+          "event_sequence": 166,
+          "instance_address": 1444633222048,
+          "payload_country_id": 0,
+          "payload_hex": "40445f405001000000000000de070000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "queue_id": 2014,
+          "stage": "native_command_serialized",
+          "tracking_id": 6,
+          "vtable_rva": 37493600
+        },
+        {
+          "ai_flag": 1,
+          "buildable_kind": "district",
+          "client_id": 1,
+          "colony_reference": 24,
+          "command_address": 1444633222048,
+          "command_name": "add_buildable_to_queue_command",
+          "command_sequence": 52325,
+          "command_token": 15851,
+          "country_id": 0,
+          "decision_sequence": 151,
+          "definition_key": "district_city",
+          "domain": "planet_construction",
+          "event_sequence": 167,
+          "instance_address": 1444633221344,
+          "payload_country_id": 0,
+          "payload_hex": "40445f405001000000000000de070000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "queue_id": 2014,
+          "stage": "native_command_deserialized",
+          "tracking_id": 6,
+          "vtable_rva": 37493600
+        },
+        {
+          "ai_flag": 1,
+          "buildable_kind": "district",
+          "client_id": 1,
+          "colony_reference": 24,
+          "command_address": 1444633222048,
+          "command_name": "add_buildable_to_queue_command",
+          "command_sequence": 52325,
+          "command_token": 15851,
+          "country_id": 0,
+          "decision_sequence": 151,
+          "definition_key": "district_city",
+          "domain": "planet_construction",
+          "event_sequence": 168,
+          "instance_address": 1444633222048,
+          "payload_country_id": 0,
+          "payload_hex": "40445f405001000000000000de070000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "queue_id": 2014,
+          "stage": "native_original_disposed",
+          "tracking_id": 6,
+          "vtable_rva": 37493600
+        },
+        {
+          "ai_flag": 1,
+          "buildable_kind": "district",
+          "colony_reference": 24,
+          "command_address": 1444633222048,
+          "command_name": "add_buildable_to_queue_command",
+          "command_token": 15851,
+          "country_id": 0,
+          "decision_sequence": 151,
+          "definition_key": "district_city",
+          "domain": "planet_construction",
+          "event_sequence": 169,
+          "payload_country_id": 0,
+          "payload_hex": "40445f405001000000000000de070000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "queue_id": 2014,
+          "stage": "native_session_post_returned",
+          "vtable_rva": 37493600
+        },
+        {
+          "ai_flag": 1,
+          "buildable_kind": "district",
+          "client_id": 1,
+          "colony_reference": 24,
+          "command_address": 1444633222048,
+          "command_name": "add_buildable_to_queue_command",
+          "command_sequence": 52325,
+          "command_token": 15851,
+          "country_id": 0,
+          "decision_sequence": 151,
+          "definition_key": "district_city",
+          "domain": "planet_construction",
+          "event_sequence": 170,
+          "instance_address": 1444633221728,
+          "payload_country_id": 0,
+          "payload_hex": "40445f405001000000000000de070000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "queue_id": 2014,
+          "stage": "native_command_cloned",
+          "tracking_id": 6,
+          "vtable_rva": 37493600
+        },
+        {
+          "ai_flag": 1,
+          "buildable_kind": "district",
+          "client_id": 1,
+          "colony_reference": 24,
+          "command_address": 1444633222048,
+          "command_name": "add_buildable_to_queue_command",
+          "command_sequence": 52325,
+          "command_token": 15851,
+          "country_id": 0,
+          "decision_sequence": 151,
+          "definition_key": "district_city",
+          "domain": "planet_construction",
+          "event_sequence": 171,
+          "instance_address": 1444633221344,
+          "payload_country_id": 0,
+          "payload_hex": "40445f405001000000000000de070000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "queue_id": 2014,
+          "stage": "native_copy_disposed",
+          "tracking_id": 6,
+          "vtable_rva": 37493600
+        },
+        {
+          "ai_flag": 1,
+          "buildable_kind": "district",
+          "client_id": 1,
+          "colony_reference": 24,
+          "command_address": 1444633222048,
+          "command_name": "add_buildable_to_queue_command",
+          "command_sequence": 52325,
+          "command_token": 15851,
+          "country_id": 0,
+          "decision_sequence": 151,
+          "definition_key": "district_city",
+          "domain": "planet_construction",
+          "event_sequence": 172,
+          "instance_address": 1444633221728,
+          "payload_country_id": 0,
+          "payload_hex": "40445f405001000000000000de070000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "queue_id": 2014,
+          "stage": "native_execute_entered",
+          "tracking_id": 6,
+          "vtable_rva": 37493600
+        },
+        {
+          "ai_flag": 1,
+          "buildable_kind": "district",
+          "client_id": 1,
+          "colony_reference": 24,
+          "command_address": 1444633222048,
+          "command_name": "add_buildable_to_queue_command",
+          "command_sequence": 52325,
+          "command_token": 15851,
+          "country_id": 0,
+          "decision_sequence": 151,
+          "definition_key": "district_city",
+          "domain": "planet_construction",
+          "event_sequence": 173,
+          "instance_address": 1444633221728,
+          "payload_country_id": 0,
+          "payload_hex": "40445f405001000000000000de070000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "queue_id": 2014,
+          "stage": "native_execute_returned",
+          "tracking_id": 6,
+          "vtable_rva": 37493600
+        },
+        {
+          "ai_flag": 1,
+          "buildable_kind": "district",
+          "client_id": 1,
+          "colony_reference": 24,
+          "command_address": 1444633222048,
+          "command_name": "add_buildable_to_queue_command",
+          "command_sequence": 52325,
+          "command_token": 15851,
+          "country_id": 0,
+          "decision_sequence": 151,
+          "definition_key": "district_city",
+          "domain": "planet_construction",
+          "event_sequence": 174,
+          "instance_address": 1444633221728,
+          "payload_country_id": 0,
+          "payload_hex": "40445f405001000000000000de070000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "queue_id": 2014,
+          "stage": "native_copy_disposed",
+          "tracking_id": 6,
+          "vtable_rva": 37493600
+        },
+        {
+          "ai_flag": 1,
+          "buildable_kind": "district",
+          "client_id": 1,
+          "colony_reference": 24,
+          "command_address": 1444633222048,
+          "command_name": "add_buildable_to_queue_command",
+          "command_sequence": 52325,
+          "command_token": 15851,
+          "country_id": 0,
+          "decision_sequence": 151,
+          "definition_key": "district_city",
+          "domain": "planet_construction",
+          "event_sequence": 175,
+          "payload_country_id": 0,
+          "payload_hex": "40445f405001000000000000de070000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "queue_id": 2014,
+          "stage": "native_command_resolved",
+          "tracking_id": 6,
+          "vtable_rva": 37493600
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 152,
+          "event_sequence": 176,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 153,
+          "event_sequence": 177,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 154,
+          "event_sequence": 178,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 155,
+          "event_sequence": 179,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 156,
+          "event_sequence": 180,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 157,
+          "event_sequence": 181,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 158,
+          "event_sequence": 182,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 159,
+          "event_sequence": 183,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 160,
+          "event_sequence": 184,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 161,
+          "event_sequence": 185,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 162,
+          "event_sequence": 186,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 163,
+          "event_sequence": 187,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 164,
+          "event_sequence": 188,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 165,
+          "event_sequence": 189,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 166,
+          "event_sequence": 190,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 167,
+          "event_sequence": 191,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 168,
+          "event_sequence": 192,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 169,
+          "event_sequence": 193,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 170,
+          "event_sequence": 194,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 171,
+          "event_sequence": 195,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 172,
+          "event_sequence": 196,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 173,
+          "event_sequence": 197,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 174,
+          "event_sequence": 198,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1439150841568,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 174,
+          "event_sequence": 199,
+          "payload_hex": "000000005d020000c004770000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 1439150841568,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 174,
+          "event_sequence": 200,
+          "payload_hex": "000000005d020000c004770000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_blocked",
+          "vtable_rva": 37294600
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 175,
+          "event_sequence": 201,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 176,
+          "event_sequence": 202,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 177,
+          "event_sequence": 203,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 178,
+          "event_sequence": 204,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 179,
+          "event_sequence": 205,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 180,
+          "event_sequence": 206,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 181,
+          "event_sequence": 207,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 182,
+          "event_sequence": 208,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 183,
+          "event_sequence": 209,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 184,
+          "event_sequence": 210,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        }
+      ],
+      "execution_verified": false,
+      "last_event_sequence": 210,
+      "lost_events": 0,
+      "major_decision_boundary_verified": false,
+      "source": "native_country_ai_serialized_execution_lifetime",
+      "success": true,
+      "tracking_faults": 0,
+      "unresolved_commands": 0
+    },
+    "phase": "stopped",
+    "production_ready": false,
+    "reclaim_world": null,
+    "review_due": false,
+    "routine_gate": {
+      "admitted_at_own_session_post": 1,
+      "admitted_to_native_validation": 1,
+      "armed": false,
+      "binding": {
+        "assigned_local_human_verified": true,
+        "country_address": 1442407960640,
+        "country_id": 0,
+        "date": "2247.12.04",
+        "global_flags": {
+          "force_human_ai": false,
+          "human_ai": false,
+          "normal_ai": true
+        },
+        "human_countries": [
+          {
+            "country_id": 0,
+            "human_ids": [
+              1
+            ]
+          }
+        ],
+        "idler_address": 1441376281744,
+        "local_player_id": 1,
+        "network_flag": 0,
+        "sequence": 8,
+        "world_generation": 0
+      },
+      "blocked_at_own_session_post": 7,
+      "blocked_before_native_queue": 2509,
+      "blocked_vtables": [
+        {
+          "count": 6,
+          "vtable_rva": 36980448
+        },
+        {
+          "count": 6,
+          "vtable_rva": 37294600
+        },
+        {
+          "count": 13,
+          "vtable_rva": 37296440
+        },
+        {
+          "count": 1288,
+          "vtable_rva": 37300280
+        },
+        {
+          "count": 12,
+          "vtable_rva": 37303808
+        },
+        {
+          "count": 156,
+          "vtable_rva": 37305648
+        },
+        {
+          "count": 2,
+          "vtable_rva": 37307304
+        },
+        {
+          "count": 368,
+          "vtable_rva": 37310520
+        },
+        {
+          "count": 1,
+          "vtable_rva": 37387160
+        },
+        {
+          "count": 6,
+          "vtable_rva": 37437752
+        },
+        {
+          "count": 60,
+          "vtable_rva": 37437936
+        },
+        {
+          "count": 26,
+          "vtable_rva": 37461096
+        },
+        {
+          "count": 52,
+          "vtable_rva": 37461280
+        },
+        {
+          "count": 26,
+          "vtable_rva": 37462016
+        },
+        {
+          "count": 22,
+          "vtable_rva": 37464992
+        },
+        {
+          "count": 26,
+          "vtable_rva": 37465360
+        },
+        {
+          "count": 12,
+          "vtable_rva": 37465912
+        },
+        {
+          "count": 266,
+          "vtable_rva": 37493600
+        },
+        {
+          "count": 1,
+          "vtable_rva": 37527744
+        },
+        {
+          "count": 103,
+          "vtable_rva": 37531144
+        },
+        {
+          "count": 52,
+          "vtable_rva": 37533752
+        },
+        {
+          "count": 12,
+          "vtable_rva": 37951672
+        }
+      ],
+      "coverage": "AddAICommand_and_source_proven_own_pending_session_post",
+      "coverage_faults": 0,
+      "enables_ai": false,
+      "generation": 5,
+      "lease_cleanup_implemented": false,
+      "live_acceptance": false,
+      "native_budget_hard_limit": false,
+      "planet_construction_allowed": false,
+      "production_ready": false,
+      "research_allowed": false,
+      "success": true,
+      "unpauses_game": false
+    },
+    "run_confirmed": true,
+    "stop_at_review": false,
+    "stop_reason": "user_pause_or_ai_flags_changed",
+    "success": true,
+    "world_reload_live_verified": false,
+    "world_reload_policy": "pause_invalidate_require_fresh_reclaim"
+  }
+}

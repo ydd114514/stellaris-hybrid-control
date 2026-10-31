@@ -1,0 +1,37 @@
+✔ bridge version and required features must match before the controller continues (1.1503ms)
+✔ upgrade pilot requires the corrected parser layout and rejects feature downgrade (0.321ms)
+✔ claim bridge requires exact quotes and native capped spending without dropping old productive features (0.1899ms)
+✔ controller economy mode cannot downgrade to r2 or advertise missing native constraints (0.2557ms)
+✔ native workforce evidence uses exact handles, original clamp semantics and resolved lifetime (1.336ms)
+✔ missing readback, identity mismatch, no-op and unconfirmed copies never count as work (0.9614ms)
+✔ native designation needs the requested actual new key, own country and full colony identity (0.1647ms)
+✔ own native ship and colony ship need actual new queue items; full ID zero is valid (0.9758ms)
+✔ old items, unexecuted commands, unresolved Clone and unrelated additions are no evidence (1.1994ms)
+✔ foreign, stale full refs, wrong design/starbase/payer and incomplete snapshots fail closed (0.569ms)
+✔ normal DSH schema retains verified r2 scope without silently exposing the economic candidate (1.2616ms)
+✔ explicit economic schema exposes strategic protection with full handles and honest pending status (0.4293ms)
+✔ native delegation, supervision, whole-country takeover and new-generation resume (10.6949ms)
+✔ economic candidate needs explicit host opt-in and exact complete capability handshake (0.5435ms)
+✔ economic key protection is normalized, copied, read back and retained through takeover/resume (1.505ms)
+✔ native arm must prove constraints before enabling; mismatch closes its acquired generation (0.4847ms)
+✔ economic constraints reject truncated/foreign-format references and unknown categories (0.2944ms)
+✔ strategic protection needs actual takeover, reason, durable record and fresh revalidation on return (1.1716ms)
+✔ foreign generation or world readback cannot release an active dispatch fence (0.5372ms)
+✔ unknown enable is never replayed; explicit stop closes its known lease (0.4411ms)
+✔ unconfirmed takeover keeps every ordinary dispatcher fenced (0.3711ms)
+✔ changed native world generation cannot resume the previous strategy (0.4818ms)
+✔ work sources are never inferred from the switch or admission counters (0.2349ms)
+✔ a candidate without the final Post boundary and clone lifetime is rejected before gameplay writes (0.3228ms)
+✔ the model-facing MCP schema advertises reviewed route, industry and job capabilities without opening the game (94.169ms)
+✔ disabled MCP retains recovery tools while new delegation stays outside its schema (97.7151ms)
+✔ enabled MCP advertises the same recovery operations plus scoped delegation (88.1317ms)
+✔ delivered desktop feature flags expose bounded upgrades, monthly conditions and local queue waiting (88.8032ms)
+✔ MCP exposes bounded construction sections and current upgrade availability without old pending-only wording (88.0269ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 455.9098

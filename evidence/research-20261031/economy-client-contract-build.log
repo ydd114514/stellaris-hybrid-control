@@ -1,0 +1,5 @@
+适用于 .NET Framework MSBuild 版本 17.14.60+43b635718
+
+  minhook.vcxproj -> E:\肥鱼直播\stellaris-player\.local\native-bridge\build\_deps\minhook-build\Release\minhook.x64.lib
+  ipc_server.cpp
+  stellaris_bridge.vcxproj -> E:\肥鱼直播\stellaris-player\.local\native-bridge\build\stellaris_bridge\Release\stellaris_bridge.dll

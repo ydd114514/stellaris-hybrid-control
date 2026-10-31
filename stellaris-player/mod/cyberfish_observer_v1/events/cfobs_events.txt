@@ -1,0 +1,62 @@
+# Player-only observation. No resource, technology, queue, modifier or AI effects.
+# Loc expressions occur directly in events, not in scripted-effect templates.
+namespace = cfobs
+
+country_event = {
+	id = cfobs.1
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = { is_ai = no }
+	immediate = {
+		log = "FISH_OBS|1|BEGIN|[GetDate]|[This.GetName]"
+		export_resource_stockpile_to_variable = { resource = energy variable = cfobs_stock_energy }
+		export_resource_income_to_variable = { resource = energy variable = cfobs_income_energy }
+		log = "FISH_OBS|1|RESOURCE|energy|[This.cfobs_stock_energy]|[This.cfobs_income_energy]"
+		export_resource_stockpile_to_variable = { resource = minerals variable = cfobs_stock_minerals }
+		export_resource_income_to_variable = { resource = minerals variable = cfobs_income_minerals }
+		log = "FISH_OBS|1|RESOURCE|minerals|[This.cfobs_stock_minerals]|[This.cfobs_income_minerals]"
+		export_resource_stockpile_to_variable = { resource = food variable = cfobs_stock_food }
+		export_resource_income_to_variable = { resource = food variable = cfobs_income_food }
+		log = "FISH_OBS|1|RESOURCE|food|[This.cfobs_stock_food]|[This.cfobs_income_food]"
+		export_resource_stockpile_to_variable = { resource = consumer_goods variable = cfobs_stock_consumer_goods }
+		export_resource_income_to_variable = { resource = consumer_goods variable = cfobs_income_consumer_goods }
+		log = "FISH_OBS|1|RESOURCE|consumer_goods|[This.cfobs_stock_consumer_goods]|[This.cfobs_income_consumer_goods]"
+		export_resource_stockpile_to_variable = { resource = alloys variable = cfobs_stock_alloys }
+		export_resource_income_to_variable = { resource = alloys variable = cfobs_income_alloys }
+		log = "FISH_OBS|1|RESOURCE|alloys|[This.cfobs_stock_alloys]|[This.cfobs_income_alloys]"
+		export_resource_stockpile_to_variable = { resource = influence variable = cfobs_stock_influence }
+		export_resource_income_to_variable = { resource = influence variable = cfobs_income_influence }
+		log = "FISH_OBS|1|RESOURCE|influence|[This.cfobs_stock_influence]|[This.cfobs_income_influence]"
+		export_resource_stockpile_to_variable = { resource = unity variable = cfobs_stock_unity }
+		export_resource_income_to_variable = { resource = unity variable = cfobs_income_unity }
+		log = "FISH_OBS|1|RESOURCE|unity|[This.cfobs_stock_unity]|[This.cfobs_income_unity]"
+		log = "FISH_OBS|1|END|[GetDate]|[This.GetName]"
+		clear_variable = cfobs_stock_energy
+		clear_variable = cfobs_income_energy
+		clear_variable = cfobs_stock_minerals
+		clear_variable = cfobs_income_minerals
+		clear_variable = cfobs_stock_food
+		clear_variable = cfobs_income_food
+		clear_variable = cfobs_stock_consumer_goods
+		clear_variable = cfobs_income_consumer_goods
+		clear_variable = cfobs_stock_alloys
+		clear_variable = cfobs_income_alloys
+		clear_variable = cfobs_stock_influence
+		clear_variable = cfobs_income_influence
+		clear_variable = cfobs_stock_unity
+		clear_variable = cfobs_income_unity
+	}
+}
+
+# on_single_player_save_game_load has no country scope in the vanilla engine.
+event = {
+	id = cfobs.2
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		every_playable_country = {
+			limit = { is_ai = no }
+			country_event = { id = cfobs.1 }
+		}
+	}
+}

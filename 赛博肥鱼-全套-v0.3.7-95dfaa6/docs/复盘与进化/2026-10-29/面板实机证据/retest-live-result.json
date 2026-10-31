@@ -1,0 +1,3469 @@
+{
+  "status": "runtime_passed_pending_visual_review",
+  "createdAt": "2026-10-29T01:25:25.583Z",
+  "world": "Cyberfish-Presentation-20261029-1793236215323",
+  "sourceUnchanged": true,
+  "sessionId": "b52b6046-7b29-4437-873a-6370d4257c7b",
+  "initialDate": {
+    "day": 1,
+    "formatted": "2288.07.01",
+    "month": 7,
+    "year": 2288
+  },
+  "finalDate": {
+    "day": 1,
+    "formatted": "2288.07.01",
+    "month": 7,
+    "year": 2288
+  },
+  "finalPaused": true,
+  "tour": [],
+  "actions": [
+    {
+      "name": "fleet-increase",
+      "command": "increase_fleet_quota",
+      "arguments": {
+        "fleet_id": 3,
+        "design_id": 167773421,
+        "target_quota": 5
+      },
+      "elapsedMs": 12438.4888,
+      "receipt": {
+        "command": "increase_fleet_quota",
+        "status": "posted",
+        "response": {
+          "design_id": 167773421,
+          "fleet_id": 3,
+          "message": "Native fleet quota change posted; read back template before reinforcement",
+          "success": true,
+          "target_quota": 5
+        },
+        "verification": {
+          "verified": true,
+          "phase": "fleet_template",
+          "entry": {
+            "actual_count": 4,
+            "deficit": 1,
+            "design_id": 167773421,
+            "design_name": "巡洋舰",
+            "naval_size": 20,
+            "target_quota": 5
+          }
+        },
+        "tracking": null
+      }
+    },
+    {
+      "name": "fleet-restore",
+      "command": "decrease_fleet_quota",
+      "arguments": {
+        "fleet_id": 3,
+        "design_id": 167773421,
+        "target_quota": 4
+      },
+      "elapsedMs": 12349.8713,
+      "receipt": {
+        "command": "decrease_fleet_quota",
+        "status": "posted",
+        "response": {
+          "design_id": 167773421,
+          "fleet_id": 3,
+          "message": "Native fleet quota change posted; read back template before reinforcement",
+          "success": true,
+          "target_quota": 4
+        },
+        "verification": {
+          "verified": true,
+          "phase": "fleet_template",
+          "entry": {
+            "actual_count": 4,
+            "deficit": 0,
+            "design_id": 167773421,
+            "design_name": "巡洋舰",
+            "naval_size": 20,
+            "target_quota": 4
+          }
+        },
+        "tracking": null
+      }
+    },
+    {
+      "name": "market-buy",
+      "command": "market_trade",
+      "arguments": {
+        "resource": "consumer_goods",
+        "action": "buy",
+        "units": 50
+      },
+      "elapsedMs": 12995.240400000002,
+      "receipt": {
+        "command": "market_trade",
+        "status": "posted",
+        "response": {
+          "message": "Successfully purchased 50 units (1 batches) of consumer_goods",
+          "success": true
+        },
+        "verification": {
+          "verified": true,
+          "phase": "market_balance_readback",
+          "before": {
+            "resource": 3740.56,
+            "currency": 38651.34,
+            "settlement": "trade"
+          },
+          "after": {
+            "resource": 3790.56,
+            "currency": 38393.12
+          },
+          "observedResourceDelta": 50,
+          "observedSettlementDelta": -258.2199999999939,
+          "costNote": "本笔余额差额；不是下一笔实时价格，基准估算不能保证实际运营储备。"
+        },
+        "tracking": null
+      }
+    }
+  ],
+  "frames": [
+    {
+      "label": "setup",
+      "stage": "baseline",
+      "at": 2256.0242,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\001-setup-baseline.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16085,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "opened",
+      "at": 3678.0573,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\002-fleet-increase-opened.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16114,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "hold-1000",
+      "at": 5467.0263,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\003-fleet-increase-hold-1000.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16150,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "operation-returned",
+      "at": 6278.7021,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\004-fleet-increase-operation-returned.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16166,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "hold-3500",
+      "at": 7375.5386,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\005-fleet-increase-hold-3500.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16188,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "hold-6500",
+      "at": 10382.8575,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\006-fleet-increase-hold-6500.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16249,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "hold-9000",
+      "at": 13390.5757,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\007-fleet-increase-hold-9000.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16310,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "closed",
+      "at": 14285.6067,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\008-fleet-increase-closed.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16328,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "after-settle",
+      "at": 15331.8043,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\009-fleet-increase-after-settle.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16349,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "opened",
+      "at": 16712.2102,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\010-fleet-restore-opened.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16377,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "hold-1000",
+      "at": 18505.6908,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\011-fleet-restore-hold-1000.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16413,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "operation-returned",
+      "at": 19307.0772,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\012-fleet-restore-operation-returned.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16429,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "hold-3500",
+      "at": 20423.5495,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\013-fleet-restore-hold-3500.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16451,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "hold-6500",
+      "at": 23414.4142,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\014-fleet-restore-hold-6500.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16512,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "hold-9000",
+      "at": 26426.1371,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\015-fleet-restore-hold-9000.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16573,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "closed",
+      "at": 27282.4116,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\016-fleet-restore-closed.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16590,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "after-settle",
+      "at": 28271.7076,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\017-fleet-restore-after-settle.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16610,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "market-buy",
+      "stage": "opened",
+      "at": 29768.2619,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\018-market-buy-opened.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16640,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "market-buy",
+      "stage": "hold-1000",
+      "at": 31546.3816,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\019-market-buy-hold-1000.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16676,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "market-buy",
+      "stage": "operation-returned",
+      "at": 32342.6728,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\020-market-buy-operation-returned.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16692,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "market-buy",
+      "stage": "hold-3500",
+      "at": 33444.8695,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\021-market-buy-hold-3500.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16714,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "market-buy",
+      "stage": "hold-6500",
+      "at": 36478.985,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\022-market-buy-hold-6500.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16775,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "market-buy",
+      "stage": "hold-9000",
+      "at": 38859.6541,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\023-market-buy-hold-9000.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16820,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "market-buy",
+      "stage": "closed",
+      "at": 40452.4407,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\024-market-buy-closed.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16849,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "market-buy",
+      "stage": "after-settle",
+      "at": 41956.5282,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\025-market-buy-after-settle.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16877,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    },
+    {
+      "label": "market-buy",
+      "stage": "final-paused",
+      "at": 42135.9287,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\026-market-buy-final-paused.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16880,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      }
+    }
+  ],
+  "rpcLog": [
+    {
+      "label": "setup",
+      "method": "ping",
+      "params": {},
+      "start": 193.0644,
+      "end": 193.5211
+    },
+    {
+      "label": "setup",
+      "method": "get_status",
+      "params": {},
+      "start": 194.2617,
+      "end": 226.4638
+    },
+    {
+      "label": "setup",
+      "method": "get_government",
+      "params": {},
+      "start": 226.5708,
+      "end": 274.9756
+    },
+    {
+      "label": "setup",
+      "method": "get_civilian_fleets",
+      "params": {},
+      "start": 274.9873,
+      "end": 322.6107
+    },
+    {
+      "label": "setup",
+      "method": "get_research_state",
+      "params": {},
+      "start": 322.6254,
+      "end": 370.5434
+    },
+    {
+      "label": "setup",
+      "method": "get_military_fleets",
+      "params": {},
+      "start": 370.5496,
+      "end": 418.4604
+    },
+    {
+      "label": "setup",
+      "method": "get_pending_diplomacy",
+      "params": {},
+      "start": 418.4666,
+      "end": 466.5256
+    },
+    {
+      "label": "setup",
+      "method": "get_alerts",
+      "params": {},
+      "start": 466.533,
+      "end": 514.2055
+    },
+    {
+      "label": "setup",
+      "method": "get_active_events",
+      "params": {},
+      "start": 514.2139,
+      "end": 564.3784
+    },
+    {
+      "label": "setup",
+      "method": "get_wars",
+      "params": {},
+      "start": 564.4058,
+      "end": 612.018
+    },
+    {
+      "label": "setup",
+      "method": "get_leaders",
+      "params": {},
+      "start": 612.0813,
+      "end": 661.1838
+    },
+    {
+      "label": "setup",
+      "method": "get_galaxy_overview",
+      "params": {},
+      "start": 661.1941,
+      "end": 710.4562
+    },
+    {
+      "label": "setup",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 821.3918,
+      "end": 854.001
+    },
+    {
+      "label": "setup",
+      "method": "set_paused",
+      "params": {
+        "paused": false
+      },
+      "start": 854.0321,
+      "end": 902.4263,
+      "success": true
+    },
+    {
+      "label": "setup",
+      "method": "get_status",
+      "params": {},
+      "start": 902.5918,
+      "end": 955.4473
+    },
+    {
+      "label": "setup",
+      "method": "get_civilian_fleets",
+      "params": {},
+      "start": 955.479,
+      "end": 1004.2908
+    },
+    {
+      "label": "setup",
+      "method": "get_research_state",
+      "params": {},
+      "start": 1004.3004,
+      "end": 1054.1502
+    },
+    {
+      "label": "setup",
+      "method": "get_military_fleets",
+      "params": {},
+      "start": 1054.1607,
+      "end": 1103.2441
+    },
+    {
+      "label": "setup",
+      "method": "get_pending_diplomacy",
+      "params": {},
+      "start": 1103.266,
+      "end": 1151.7225
+    },
+    {
+      "label": "setup",
+      "method": "get_alerts",
+      "params": {},
+      "start": 1151.7355,
+      "end": 1200.1272
+    },
+    {
+      "label": "setup",
+      "method": "get_active_events",
+      "params": {},
+      "start": 1200.146,
+      "end": 1248.5
+    },
+    {
+      "label": "setup",
+      "method": "get_wars",
+      "params": {},
+      "start": 1248.5108,
+      "end": 1297.1985
+    },
+    {
+      "label": "setup",
+      "method": "get_leaders",
+      "params": {},
+      "start": 1297.2226,
+      "end": 1347.7885
+    },
+    {
+      "label": "setup",
+      "method": "get_galaxy_overview",
+      "params": {},
+      "start": 1347.7961,
+      "end": 1398.5804
+    },
+    {
+      "label": "setup",
+      "method": "set_paused",
+      "params": {
+        "paused": true
+      },
+      "start": 1505.7396,
+      "end": 1546.4176,
+      "success": true
+    },
+    {
+      "label": "setup",
+      "method": "get_status",
+      "params": {},
+      "start": 1546.5946,
+      "end": 1598.1647
+    },
+    {
+      "label": "setup",
+      "method": "get_civilian_fleets",
+      "params": {},
+      "start": 1598.1931,
+      "end": 1647.9037
+    },
+    {
+      "label": "setup",
+      "method": "get_research_state",
+      "params": {},
+      "start": 1647.9106,
+      "end": 1696.9908
+    },
+    {
+      "label": "setup",
+      "method": "get_military_fleets",
+      "params": {},
+      "start": 1696.9994,
+      "end": 1746.4555
+    },
+    {
+      "label": "setup",
+      "method": "get_pending_diplomacy",
+      "params": {},
+      "start": 1746.4647,
+      "end": 1794.5607
+    },
+    {
+      "label": "setup",
+      "method": "get_alerts",
+      "params": {},
+      "start": 1794.5681,
+      "end": 1842.2108
+    },
+    {
+      "label": "setup",
+      "method": "get_active_events",
+      "params": {},
+      "start": 1842.2187,
+      "end": 1890.4076
+    },
+    {
+      "label": "setup",
+      "method": "get_wars",
+      "params": {},
+      "start": 1890.4156,
+      "end": 1938.8819
+    },
+    {
+      "label": "setup",
+      "method": "get_leaders",
+      "params": {},
+      "start": 1938.9025,
+      "end": 1987.7435
+    },
+    {
+      "label": "setup",
+      "method": "get_galaxy_overview",
+      "params": {},
+      "start": 1987.7506,
+      "end": 2037.3738
+    },
+    {
+      "label": "setup",
+      "method": "get_status",
+      "params": {},
+      "start": 2145.9215,
+      "end": 2186.0768
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_fleets",
+      "params": {},
+      "start": 2256.2813,
+      "end": 2299.935
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 2300.3154,
+      "end": 2350.4322
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_civilian_fleets",
+      "params": {},
+      "start": 2350.4567,
+      "end": 2398.7737
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_research_state",
+      "params": {},
+      "start": 2398.7816,
+      "end": 2446.1944
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_military_fleets",
+      "params": {},
+      "start": 2446.2021,
+      "end": 2494.1844
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_pending_diplomacy",
+      "params": {},
+      "start": 2494.1916,
+      "end": 2541.8793
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 2541.8909,
+      "end": 2589.9771
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 2589.9869,
+      "end": 2638.2001
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 2638.208,
+      "end": 2686.2146
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_leaders",
+      "params": {},
+      "start": 2686.2291,
+      "end": 2734.8016
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_galaxy_overview",
+      "params": {},
+      "start": 2734.809,
+      "end": 2783.8416
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 2894.8242,
+      "end": 2931.8116
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 2931.8354,
+      "end": 2979.8768
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 2980.9302,
+      "end": 3030.669
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 3030.6954,
+      "end": 3078.6981
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 3078.834,
+      "end": 3125.9136
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 3125.9212,
+      "end": 3173.3998
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_fleets",
+      "params": {
+        "fleet_id": 3
+      },
+      "start": 3173.5072,
+      "end": 3221.8821
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 3222.4261,
+      "end": 3273.163
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 3273.1867,
+      "end": 3320.9043
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 3320.9141,
+      "end": 3369.2529
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 3369.2652,
+      "end": 3416.5089
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 3416.517,
+      "end": 3463.5749
+    },
+    {
+      "label": "fleet-increase",
+      "method": "show_panel",
+      "params": {
+        "panel": "game"
+      },
+      "start": 3463.8445,
+      "end": 3511.6331,
+      "success": true
+    },
+    {
+      "label": "fleet-increase",
+      "method": "focus_fleet",
+      "params": {
+        "fleet_id": 3
+      },
+      "start": 3511.6486,
+      "end": 3558.9294,
+      "success": true
+    },
+    {
+      "label": "fleet-increase",
+      "method": "show_panel",
+      "params": {
+        "panel": "fleets"
+      },
+      "start": 3559.2704,
+      "end": 3607.0504,
+      "success": true
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 3679.0537,
+      "end": 3727.1576
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 3727.1813,
+      "end": 3776.602
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 3776.6131,
+      "end": 3824.5842
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 3824.5928,
+      "end": 3873.6339
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 3873.6417,
+      "end": 3925.2498
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 4428.669,
+      "end": 4466.6699
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 4466.7078,
+      "end": 4515.4237
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 4515.4333,
+      "end": 4563.795
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 4563.8035,
+      "end": 4611.9468
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 4611.9548,
+      "end": 4661.2824
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 5167.5847,
+      "end": 5202.3937
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 5202.4227,
+      "end": 5251.3294
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 5251.3393,
+      "end": 5299.5199
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 5299.5295,
+      "end": 5348.6006
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 5348.6101,
+      "end": 5397.6027
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 5685.918,
+      "end": 5712.0822
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 5712.1008,
+      "end": 5759.7777
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 5759.7879,
+      "end": 5809.0008
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 5809.0088,
+      "end": 5858.5329
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 5858.5421,
+      "end": 5907.127
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 5907.3299,
+      "end": 5959.3092
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 5959.3235,
+      "end": 6008.2638
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 6008.2775,
+      "end": 6056.4502
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 6056.4579,
+      "end": 6106.0592
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 6106.0675,
+      "end": 6153.9061
+    },
+    {
+      "label": "fleet-increase",
+      "method": "set_fleet_template_quota",
+      "params": {
+        "fleet_id": 3,
+        "design_id": 167773421,
+        "target_quota": 5
+      },
+      "start": 6153.9354,
+      "end": 6201.6854,
+      "success": true
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_fleets",
+      "params": {
+        "fleet_id": 3
+      },
+      "start": 6279.3767,
+      "end": 6317.3821
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 6318.1879,
+      "end": 6369.4653
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 6369.4836,
+      "end": 6419.0566
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 6419.0733,
+      "end": 6469.6575
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 6469.6654,
+      "end": 6518.7482
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 6518.7608,
+      "end": 6566.6534
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 7077.3749,
+      "end": 7108.7191
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 7108.7344,
+      "end": 7156.7381
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 7156.7469,
+      "end": 7206.1756
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 7206.1845,
+      "end": 7254.1001
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 7254.1102,
+      "end": 7302.6667
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 7887.4637,
+      "end": 7901.4306
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 7901.4438,
+      "end": 7949.2934
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 7949.3022,
+      "end": 7999.0474
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 7999.0562,
+      "end": 8047.5649
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 8047.5726,
+      "end": 8096.6052
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 8603.5089,
+      "end": 8638.6995
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 8638.7133,
+      "end": 8687.1551
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 8687.1671,
+      "end": 8735.3225
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 8735.3347,
+      "end": 8783.9697
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 8783.9776,
+      "end": 8831.9552
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 9332.7744,
+      "end": 9371.3518
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 9371.368,
+      "end": 9420.2204
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 9420.2285,
+      "end": 9468.5772
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 9468.5859,
+      "end": 9518.4269
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 9518.4314,
+      "end": 9568.3229
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 10076.8074,
+      "end": 10111.906
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 10111.9169,
+      "end": 10162.1709
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 10162.1772,
+      "end": 10211.2952
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 10211.3,
+      "end": 10260.6861
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 10260.6909,
+      "end": 10311.3849
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 10883.8056,
+      "end": 10920.5604
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 10920.5715,
+      "end": 10970.0135
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 10970.0195,
+      "end": 11019.1938
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 11019.1988,
+      "end": 11068.1329
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 11068.1372,
+      "end": 11116.48
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 11620.9119,
+      "end": 11656.698
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 11656.7101,
+      "end": 11705.3997
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 11705.4051,
+      "end": 11753.8361
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 11753.8425,
+      "end": 11802.1372
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 11802.1421,
+      "end": 11851.0121
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 12362.3953,
+      "end": 12389.3636
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 12389.3738,
+      "end": 12440.2013
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 12440.207,
+      "end": 12488.7104
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 12488.7159,
+      "end": 12536.6609
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 12536.6652,
+      "end": 12585.3057
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 13091.3772,
+      "end": 13126.4779
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 13126.4888,
+      "end": 13176.6703
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 13176.6764,
+      "end": 13224.2491
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 13224.254,
+      "end": 13273.7802
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 13273.7852,
+      "end": 13322.3543
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 13687.7186,
+      "end": 13733.6966
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 13733.7081,
+      "end": 13781.4647
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 13781.4705,
+      "end": 13829.4253
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 13829.43,
+      "end": 13877.5388
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 13877.5434,
+      "end": 13926.0295
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 13926.2843,
+      "end": 13979.0656
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 13979.0797,
+      "end": 14027.3464
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 14027.3516,
+      "end": 14075.2641
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 14075.2687,
+      "end": 14124.5272
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 14124.5325,
+      "end": 14173.218
+    },
+    {
+      "label": "fleet-increase",
+      "method": "show_panel",
+      "params": {
+        "panel": "game"
+      },
+      "start": 14173.243,
+      "end": 14220.9624,
+      "success": true
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_status",
+      "params": {},
+      "start": 14640.8295,
+      "end": 14671.9614
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_civilian_fleets",
+      "params": {},
+      "start": 14671.9781,
+      "end": 14720.6714
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_research_state",
+      "params": {},
+      "start": 14720.6831,
+      "end": 14770.1243
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_military_fleets",
+      "params": {},
+      "start": 14770.1368,
+      "end": 14818.8351
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_pending_diplomacy",
+      "params": {},
+      "start": 14818.8451,
+      "end": 14867.4917
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_alerts",
+      "params": {},
+      "start": 14867.5041,
+      "end": 14915.2683
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_active_events",
+      "params": {},
+      "start": 14915.2764,
+      "end": 14963.2117
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_wars",
+      "params": {},
+      "start": 14963.2243,
+      "end": 15010.6503
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_leaders",
+      "params": {},
+      "start": 15010.6681,
+      "end": 15059.747
+    },
+    {
+      "label": "fleet-increase",
+      "method": "get_galaxy_overview",
+      "params": {},
+      "start": 15059.7566,
+      "end": 15108.6386
+    },
+    {
+      "label": "fleet-increase",
+      "method": "capture_game_frame",
+      "params": {},
+      "start": 15219.7027,
+      "end": 15268.8574,
+      "success": true
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 15332.4568,
+      "end": 15378.6079
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_civilian_fleets",
+      "params": {},
+      "start": 15378.6346,
+      "end": 15427.2493
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_research_state",
+      "params": {},
+      "start": 15427.2571,
+      "end": 15474.9256
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_military_fleets",
+      "params": {},
+      "start": 15474.9321,
+      "end": 15524.1112
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_pending_diplomacy",
+      "params": {},
+      "start": 15524.1203,
+      "end": 15572.2003
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 15572.2078,
+      "end": 15620.789
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 15620.8032,
+      "end": 15669.9816
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 15669.9942,
+      "end": 15718.2316
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_leaders",
+      "params": {},
+      "start": 15718.2455,
+      "end": 15766.8064
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_galaxy_overview",
+      "params": {},
+      "start": 15766.8153,
+      "end": 15814.936
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 15922.098,
+      "end": 15963.1766
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 15963.1994,
+      "end": 16011.6867
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 16012.1742,
+      "end": 16062.4474
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 16062.466,
+      "end": 16110.016
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 16110.0835,
+      "end": 16158.5212
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 16158.5298,
+      "end": 16206.104
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_fleets",
+      "params": {
+        "fleet_id": 3
+      },
+      "start": 16206.1376,
+      "end": 16254.8528
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 16255.0535,
+      "end": 16306.5636
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 16306.5833,
+      "end": 16354.1655
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 16354.1774,
+      "end": 16402.9412
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 16402.9584,
+      "end": 16451.0399
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 16451.0889,
+      "end": 16499.5787
+    },
+    {
+      "label": "fleet-restore",
+      "method": "show_panel",
+      "params": {
+        "panel": "game"
+      },
+      "start": 16499.6218,
+      "end": 16549.092,
+      "success": true
+    },
+    {
+      "label": "fleet-restore",
+      "method": "focus_fleet",
+      "params": {
+        "fleet_id": 3
+      },
+      "start": 16549.105,
+      "end": 16597.168,
+      "success": true
+    },
+    {
+      "label": "fleet-restore",
+      "method": "show_panel",
+      "params": {
+        "panel": "fleets"
+      },
+      "start": 16597.6495,
+      "end": 16644.262,
+      "success": true
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 16712.9045,
+      "end": 16761.7601
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 16761.7778,
+      "end": 16810.9054
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 16810.9123,
+      "end": 16859.5279
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 16859.5338,
+      "end": 16908.3664
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 16908.3715,
+      "end": 16956.838
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 17462.0234,
+      "end": 17498.3482
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 17498.3635,
+      "end": 17547.5647
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 17547.5706,
+      "end": 17595.7327
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 17595.7383,
+      "end": 17644.0179
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 17644.0236,
+      "end": 17693.848
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 18202.2782,
+      "end": 18241.786
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 18241.8015,
+      "end": 18290.3318
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 18290.3385,
+      "end": 18338.9813
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 18338.9864,
+      "end": 18387.8656
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 18387.871,
+      "end": 18436.1255
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 18721.112,
+      "end": 18746.8232
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 18746.8364,
+      "end": 18795.8387
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 18795.846,
+      "end": 18844.2596
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 18844.265,
+      "end": 18896.0726
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 18896.0794,
+      "end": 18944.979
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 18945.1418,
+      "end": 18996.8729
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 18996.8844,
+      "end": 19044.4968
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 19044.5043,
+      "end": 19093.0401
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 19093.0517,
+      "end": 19141.3584
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 19141.3637,
+      "end": 19189.5676
+    },
+    {
+      "label": "fleet-restore",
+      "method": "set_fleet_template_quota",
+      "params": {
+        "fleet_id": 3,
+        "design_id": 167773421,
+        "target_quota": 4
+      },
+      "start": 19189.5977,
+      "end": 19237.6177,
+      "success": true
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_fleets",
+      "params": {
+        "fleet_id": 3
+      },
+      "start": 19307.1976,
+      "end": 19354.3211
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 19354.7307,
+      "end": 19406.3978
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 19406.4094,
+      "end": 19454.3573
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 19454.3636,
+      "end": 19503.3394
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 19503.3454,
+      "end": 19554.0795
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 19554.0862,
+      "end": 19603.3123
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 20105.4564,
+      "end": 20141.9024
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 20141.9144,
+      "end": 20190.6909
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 20190.6981,
+      "end": 20240.3391
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 20240.3446,
+      "end": 20289.5302
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 20289.5471,
+      "end": 20338.0629
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 20938.6115,
+      "end": 20942.8322
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 20942.8423,
+      "end": 20991.6186
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 20991.6253,
+      "end": 21040.4138
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 21040.4198,
+      "end": 21090.0507
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 21090.0594,
+      "end": 21138.0908
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 21653.2271,
+      "end": 21682.1225
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 21682.1345,
+      "end": 21731.2144
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 21731.2256,
+      "end": 21779.8431
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 21779.8554,
+      "end": 21828.1923
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 21828.1974,
+      "end": 21877.2169
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 22381.9466,
+      "end": 22417.6565
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 22417.6679,
+      "end": 22465.2835
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 22465.2895,
+      "end": 22515.0129
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 22515.018,
+      "end": 22564.0846
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 22564.0944,
+      "end": 22614.5137
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 23124.7057,
+      "end": 23155.7247
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 23155.7378,
+      "end": 23203.7945
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 23203.8007,
+      "end": 23252.2977
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 23252.3045,
+      "end": 23299.9596
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 23299.9649,
+      "end": 23348.4804
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 23917.5949,
+      "end": 23952.1722
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 23952.1837,
+      "end": 24002.7455
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 24002.7518,
+      "end": 24052.0378
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 24052.0456,
+      "end": 24100.3068
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 24100.3127,
+      "end": 24147.5392
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 24658.8296,
+      "end": 24689.9208
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 24689.9334,
+      "end": 24738.9669
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 24738.9734,
+      "end": 24787.4671
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 24787.4777,
+      "end": 24836.5421
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 24836.5472,
+      "end": 24885.5222
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 25389.6967,
+      "end": 25424.5942
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 25424.6068,
+      "end": 25474.3851
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 25474.3911,
+      "end": 25523.4712
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 25523.4761,
+      "end": 25572.4982
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 25572.5033,
+      "end": 25621.191
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 26132.2012,
+      "end": 26163.4259
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 26163.4375,
+      "end": 26212.4897
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 26212.4963,
+      "end": 26261.7881
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 26261.7945,
+      "end": 26310.4117
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 26310.4174,
+      "end": 26359.0577
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 26716.4966,
+      "end": 26723.6887
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 26723.7067,
+      "end": 26771.3974
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 26771.4045,
+      "end": 26819.2117
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 26819.2171,
+      "end": 26868.7667
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 26868.7716,
+      "end": 26917.6009
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 26917.7763,
+      "end": 26969.4379
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 26969.4521,
+      "end": 27017.6702
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 27017.68,
+      "end": 27066.1588
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 27066.1643,
+      "end": 27113.8493
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 27113.8544,
+      "end": 27163.2814
+    },
+    {
+      "label": "fleet-restore",
+      "method": "show_panel",
+      "params": {
+        "panel": "game"
+      },
+      "start": 27163.3096,
+      "end": 27212.2879,
+      "success": true
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_status",
+      "params": {},
+      "start": 27647.1301,
+      "end": 27672.6109
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_civilian_fleets",
+      "params": {},
+      "start": 27672.6306,
+      "end": 27720.3569
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_research_state",
+      "params": {},
+      "start": 27720.3714,
+      "end": 27768.9065
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_military_fleets",
+      "params": {},
+      "start": 27768.916,
+      "end": 27817.2023
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_pending_diplomacy",
+      "params": {},
+      "start": 27817.2121,
+      "end": 27866.1207
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_alerts",
+      "params": {},
+      "start": 27866.1304,
+      "end": 27914.0023
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_active_events",
+      "params": {},
+      "start": 27914.0131,
+      "end": 27961.5993
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_wars",
+      "params": {},
+      "start": 27961.6089,
+      "end": 28010.9852
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_leaders",
+      "params": {},
+      "start": 28011.0041,
+      "end": 28059.7014
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_galaxy_overview",
+      "params": {},
+      "start": 28059.7104,
+      "end": 28108.3833
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_fleets",
+      "params": {
+        "fleet_id": 3
+      },
+      "start": 28271.8483,
+      "end": 28316.1467
+    },
+    {
+      "label": "fleet-restore",
+      "method": "get_market",
+      "params": {},
+      "start": 28316.2186,
+      "end": 28365.1352
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 28365.4416,
+      "end": 28416.7883
+    },
+    {
+      "label": "market-buy",
+      "method": "get_civilian_fleets",
+      "params": {},
+      "start": 28416.8013,
+      "end": 28465.8283
+    },
+    {
+      "label": "market-buy",
+      "method": "get_research_state",
+      "params": {},
+      "start": 28465.8322,
+      "end": 28514.731
+    },
+    {
+      "label": "market-buy",
+      "method": "get_military_fleets",
+      "params": {},
+      "start": 28514.7358,
+      "end": 28563.183
+    },
+    {
+      "label": "market-buy",
+      "method": "get_pending_diplomacy",
+      "params": {},
+      "start": 28563.1896,
+      "end": 28611.0933
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 28611.0983,
+      "end": 28659.3017
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 28659.3071,
+      "end": 28707.1094
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 28707.1156,
+      "end": 28757.1981
+    },
+    {
+      "label": "market-buy",
+      "method": "get_leaders",
+      "params": {},
+      "start": 28757.2097,
+      "end": 28806.3313
+    },
+    {
+      "label": "market-buy",
+      "method": "get_galaxy_overview",
+      "params": {},
+      "start": 28806.3356,
+      "end": 28855.3572
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 28961.6178,
+      "end": 29004.6485
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 29004.6664,
+      "end": 29053.4192
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 29053.9018,
+      "end": 29105.2417
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 29105.2568,
+      "end": 29152.569
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 29152.6219,
+      "end": 29200.2985
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 29200.3069,
+      "end": 29248.5789
+    },
+    {
+      "label": "market-buy",
+      "method": "get_market",
+      "params": {},
+      "start": 29248.5994,
+      "end": 29297.9624
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 29297.9717,
+      "end": 29349.5628
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 29349.91,
+      "end": 29400.7029
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 29400.7284,
+      "end": 29448.2477
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 29448.2632,
+      "end": 29498.1993
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 29498.2124,
+      "end": 29546.6327
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 29546.6477,
+      "end": 29594.7023
+    },
+    {
+      "label": "market-buy",
+      "method": "show_panel",
+      "params": {
+        "panel": "game"
+      },
+      "start": 29594.7444,
+      "end": 29644.5508,
+      "success": true
+    },
+    {
+      "label": "market-buy",
+      "method": "show_panel",
+      "params": {
+        "panel": "market"
+      },
+      "start": 29644.5668,
+      "end": 29694.1906,
+      "success": true
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 29768.8916,
+      "end": 29817.4846
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 29817.5008,
+      "end": 29865.7219
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 29865.7275,
+      "end": 29913.9078
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 29913.9135,
+      "end": 29961.9824
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 29961.988,
+      "end": 30009.681
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 30516.8502,
+      "end": 30546.9032
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 30546.9149,
+      "end": 30595.0415
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 30595.0479,
+      "end": 30644.582
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 30644.5889,
+      "end": 30692.6354
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 30692.6419,
+      "end": 30740.8633
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 31241.7383,
+      "end": 31286.3628
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 31286.3746,
+      "end": 31334.6991
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 31334.7052,
+      "end": 31382.8179
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 31382.8229,
+      "end": 31431.4601
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 31431.4657,
+      "end": 31479.7817
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 31776.2055,
+      "end": 31788.0856
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 31788.0976,
+      "end": 31836.6437
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 31836.6523,
+      "end": 31884.4733
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 31884.4794,
+      "end": 31932.8781
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 31932.8834,
+      "end": 31982.5984
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 31983.0229,
+      "end": 32035.7216
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 32035.7323,
+      "end": 32083.7349
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 32083.741,
+      "end": 32131.491
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 32131.4983,
+      "end": 32179.6701
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 32179.6751,
+      "end": 32227.8901
+    },
+    {
+      "label": "market-buy",
+      "method": "market_trade",
+      "params": {
+        "resource": "consumer_goods",
+        "action": "buy",
+        "units": 50
+      },
+      "start": 32227.915,
+      "end": 32275.6548,
+      "success": true
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 32342.7714,
+      "end": 32391.0692
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 32391.5481,
+      "end": 32445.4692
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 32445.4824,
+      "end": 32493.9619
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 32493.968,
+      "end": 32542.0167
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 32542.0226,
+      "end": 32591.3065
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 32591.3121,
+      "end": 32641.1636
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 33146.7797,
+      "end": 33176.0914
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 33176.1028,
+      "end": 33224.901
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 33224.9064,
+      "end": 33273.4775
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 33273.4827,
+      "end": 33324.2349
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 33324.2411,
+      "end": 33374.295
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 33954.1569,
+      "end": 33979.3507
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 33979.3627,
+      "end": 34027.7286
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 34027.7342,
+      "end": 34075.9221
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 34075.9281,
+      "end": 34124.1708
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 34124.1765,
+      "end": 34172.1444
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 34675.0241,
+      "end": 34708.5971
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 34708.6087,
+      "end": 34757.8914
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 34757.8975,
+      "end": 34806.0531
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 34806.0588,
+      "end": 34854.6078
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 34854.6128,
+      "end": 34902.7902
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 35414.0782,
+      "end": 35440.8264
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 35440.8397,
+      "end": 35490.3395
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 35490.345,
+      "end": 35540.3128
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 35540.3183,
+      "end": 35588.4723
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 35588.4772,
+      "end": 35637.3177
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 36143.478,
+      "end": 36180.1814
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 36180.1935,
+      "end": 36229.1733
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 36229.1819,
+      "end": 36278.0488
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 36278.0547,
+      "end": 36326.3522
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 36326.3577,
+      "end": 36375.4242
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 37054.6709,
+      "end": 37062.1671
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 37062.1811,
+      "end": 37112.3056
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 37112.3137,
+      "end": 37166.8884
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 37166.8999,
+      "end": 37220.8058
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 37220.8148,
+      "end": 37272.3845
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 37782.6477,
+      "end": 37812.8563
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 37812.8724,
+      "end": 37862.6505
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 37862.6587,
+      "end": 37914.4382
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 37914.4461,
+      "end": 37969.1106
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 37969.1274,
+      "end": 38022.639
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 38534.9435,
+      "end": 38560.1901
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 38560.2217,
+      "end": 38613.2489
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 38613.2633,
+      "end": 38664.2375
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 38664.2455,
+      "end": 38716.4195
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 38716.4296,
+      "end": 38770.1777
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 39375.8081,
+      "end": 39390.0735
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 39390.099,
+      "end": 39441.1364
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 39441.1455,
+      "end": 39497.585
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 39497.5924,
+      "end": 39549.0564
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 39549.0637,
+      "end": 39604.8039
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 39784.2264,
+      "end": 39820.5985
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 39820.6194,
+      "end": 39873.2105
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 39873.2204,
+      "end": 39926.0127
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 39926.0221,
+      "end": 39977.5013
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 39977.5093,
+      "end": 40028.3232
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 40030.0715,
+      "end": 40088.7354
+    },
+    {
+      "label": "market-buy",
+      "method": "get_picture_state",
+      "params": {},
+      "start": 40088.7524,
+      "end": 40141.9071
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 40141.9263,
+      "end": 40196.6454
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 40196.6551,
+      "end": 40248.3614
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 40248.3707,
+      "end": 40301.7492
+    },
+    {
+      "label": "market-buy",
+      "method": "show_panel",
+      "params": {
+        "panel": "game"
+      },
+      "start": 40301.784,
+      "end": 40352.4746,
+      "success": true
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 40817.4367,
+      "end": 40864.143
+    },
+    {
+      "label": "market-buy",
+      "method": "get_civilian_fleets",
+      "params": {},
+      "start": 40864.1677,
+      "end": 40917.7806
+    },
+    {
+      "label": "market-buy",
+      "method": "get_research_state",
+      "params": {},
+      "start": 40917.7922,
+      "end": 40969.0017
+    },
+    {
+      "label": "market-buy",
+      "method": "get_military_fleets",
+      "params": {},
+      "start": 40969.0131,
+      "end": 41022.9819
+    },
+    {
+      "label": "market-buy",
+      "method": "get_pending_diplomacy",
+      "params": {},
+      "start": 41022.9931,
+      "end": 41076.2803
+    },
+    {
+      "label": "market-buy",
+      "method": "get_alerts",
+      "params": {},
+      "start": 41076.2911,
+      "end": 41125.886
+    },
+    {
+      "label": "market-buy",
+      "method": "get_active_events",
+      "params": {},
+      "start": 41125.9018,
+      "end": 41176.5941
+    },
+    {
+      "label": "market-buy",
+      "method": "get_wars",
+      "params": {},
+      "start": 41176.6071,
+      "end": 41227.8798
+    },
+    {
+      "label": "market-buy",
+      "method": "get_leaders",
+      "params": {},
+      "start": 41227.8965,
+      "end": 41284.0177
+    },
+    {
+      "label": "market-buy",
+      "method": "get_galaxy_overview",
+      "params": {},
+      "start": 41284.0304,
+      "end": 41340.5146
+    },
+    {
+      "label": "market-buy",
+      "method": "set_paused",
+      "params": {
+        "paused": true
+      },
+      "start": 41956.7037,
+      "end": 42002.9434,
+      "success": true
+    },
+    {
+      "label": "market-buy",
+      "method": "get_status",
+      "params": {},
+      "start": 42002.9645,
+      "end": 42061.1491
+    }
+  ],
+  "modelApiCalls": 0,
+  "reinforcementOrders": 0,
+  "constructionOrders": 0,
+  "quotaRestored": true
+}

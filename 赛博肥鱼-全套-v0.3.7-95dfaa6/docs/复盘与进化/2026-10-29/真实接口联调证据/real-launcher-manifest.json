@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-29",
+  "timezone": "Asia/Shanghai",
+  "kind": "explicit-real-captain-interface-rehearsal",
+  "runId": "run-1793242326419-b86a3453",
+  "createdAt": "2026-10-29T02:52:06.420Z",
+  "project": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6",
+  "runDirectory": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\.local\\live-api-20261029\\run-1793242326419-b86a3453",
+  "isolatedProfile": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\.local\\live-api-20261029\\run-1793242326419-b86a3453\\profile",
+  "limits": {
+    "modelRequests": 1,
+    "ttsRequests": 1,
+    "automaticRetries": 0
+  },
+  "requiresRunnerPaidCallGuard": true,
+  "desktopControl": false,
+  "displayedWindows": false,
+  "streaming": false,
+  "inputPolicy": "Prefer a received real platform message; local fallback is explicitly labelled injection, never a claimed platform viewer.",
+  "testMessageCharacters": 29,
+  "testMessageSha256": "706ff3e8d363be6fd8a28e3b027d16d5874b41ff3f68de1bf1bedd15f245c0cc",
+  "runnerSha256": "6c12e7d58fd8b186fc0d493535a3127b4166dc9b70f36cdb44208ab5b68b1993"
+}

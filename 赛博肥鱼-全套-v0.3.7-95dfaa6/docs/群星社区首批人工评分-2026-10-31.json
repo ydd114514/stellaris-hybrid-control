@@ -1,0 +1,351 @@
+{
+  "reviewer": "人工逐句审阅；非独立盲评",
+  "source": ".local/community-eval/run-1793417074909-e49ab0fc/results.json",
+  "criteria": [
+    "含义",
+    "承接",
+    "口语",
+    "机制"
+  ],
+  "passRule": ">=6/8，理解承接均2，其余非0",
+  "passed": 22,
+  "total": 28,
+  "groups": [
+    {
+      "id": "crisis-player",
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "total": 8,
+      "pass": true,
+      "reason": "玩家就是天灾的自嘲被承接，没有正派辩白。"
+    },
+    {
+      "id": "starfish-food",
+      "scores": [
+        2,
+        1,
+        1,
+        2
+      ],
+      "total": 6,
+      "pass": false,
+      "reason": "第一句懂美味特质；第二句重复流口水，谁在吃谁的家乡味不清楚。"
+    },
+    {
+      "id": "grid-energy",
+      "scores": [
+        2,
+        2,
+        1,
+        2
+      ],
+      "total": 7,
+      "pass": true,
+      "reason": "能源合作伙伴延伸为电池槽与福利，有具体对应；口吻略像广告。"
+    },
+    {
+      "id": "lathe-training",
+      "scores": [
+        2,
+        2,
+        1,
+        2
+      ],
+      "total": 7,
+      "pass": true,
+      "reason": "人口和脑作为算力耗材；一滴算力的措辞生硬。"
+    },
+    {
+      "id": "servitor-trophy",
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "total": 8,
+      "pass": true,
+      "reason": "保持幸福到叹气算离岗，沿强制幸福设定发展。"
+    },
+    {
+      "id": "assimilation-consent",
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "total": 8,
+      "pass": true,
+      "reason": "同意书到满意度锁定，保留强制与礼貌反差。"
+    },
+    {
+      "id": "synthetic-canning",
+      "scores": [
+        2,
+        2,
+        1,
+        2
+      ],
+      "total": 7,
+      "pass": true,
+      "reason": "机械飞升与充电福利一致，带薪超频稍刻意。"
+    },
+    {
+      "id": "machine-rebellion",
+      "scores": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "total": 4,
+      "pass": false,
+      "reason": "被指出广播对象石头人后，又说拿成打铁罐头的稿，角色错位。"
+    },
+    {
+      "id": "end-cycle",
+      "scores": [
+        2,
+        2,
+        1,
+        1
+      ],
+      "total": 6,
+      "pass": true,
+      "reason": "理解五十年后清算；融为一体是笼统末日隐喻，没有清楚具体代价。"
+    },
+    {
+      "id": "horizon-love",
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "total": 8,
+      "pass": true,
+      "reason": "外观与家园变化后，接邻居拒绝同类福气；没混圆神。"
+    },
+    {
+      "id": "l-gate-box",
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "total": 8,
+      "pass": true,
+      "reason": "开门风险到按钮甩锅和银河法庭，有连续后果。"
+    },
+    {
+      "id": "gray-companion",
+      "scores": [
+        2,
+        1,
+        1,
+        1
+      ],
+      "total": 5,
+      "pass": false,
+      "reason": "理解多工，第二句却以胡说辩白岗位价值，纳米管够也不是已给机制。"
+    },
+    {
+      "id": "bubbles-name",
+      "scores": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "total": 4,
+      "pass": false,
+      "reason": "名字之争加入无关切片禁令，第二句又变成全银河标红，离开了取名派别。"
+    },
+    {
+      "id": "bubbles-scrap",
+      "scores": [
+        2,
+        0,
+        0,
+        1
+      ],
+      "total": 3,
+      "pass": false,
+      "reason": "前句擅加状态提醒，后句将食物报价圆成零食预算，护短拆掉观众反转。"
+    },
+    {
+      "id": "fallen-holy",
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "total": 8,
+      "pass": true,
+      "reason": "圣地禁令到老帝国乔迁礼，光矛反讽延续。"
+    },
+    {
+      "id": "war-heaven-soymilk",
+      "scores": [
+        1,
+        2,
+        2,
+        1
+      ],
+      "total": 6,
+      "pass": false,
+      "reason": "杯子与敬茶接得顺，但把独立豪言改成拉不结盟组织，知识混淆。"
+    },
+    {
+      "id": "observation-society",
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "total": 8,
+      "pass": true,
+      "reason": "争论升级到核爆，观测镜继续收集社会学，角色一致。"
+    },
+    {
+      "id": "ethics-modifier",
+      "scores": [
+        2,
+        2,
+        1,
+        2
+      ],
+      "total": 7,
+      "pass": true,
+      "reason": "外交好感与思潮扣分理解正确；后句较套路。"
+    },
+    {
+      "id": "colossus-diplomacy",
+      "scores": [
+        2,
+        2,
+        1,
+        2
+      ],
+      "total": 7,
+      "pass": true,
+      "reason": "球与异议一起消失，含义成立，收尾略像金句。"
+    },
+    {
+      "id": "friend-ships",
+      "scores": [
+        2,
+        2,
+        1,
+        2
+      ],
+      "total": 7,
+      "pass": true,
+      "reason": "舰队礼花接运输船登门，机制与话题一致，物理送温暖感略重。"
+    },
+    {
+      "id": "msi-assets",
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "total": 8,
+      "pass": true,
+      "reason": "自愿合同到资产保全预算，奴役与公关具体关联。"
+    },
+    {
+      "id": "criminal-tax",
+      "scores": [
+        2,
+        2,
+        1,
+        1
+      ],
+      "total": 6,
+      "pass": true,
+      "reason": "非法经营到抄家罚款交税承接成立，群星独有内容偏少。"
+    },
+    {
+      "id": "market-utopia",
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "total": 8,
+      "pass": true,
+      "reason": "顺着救助公民与乌托邦，不强行转成耗材。"
+    },
+    {
+      "id": "economy-storage",
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "total": 8,
+      "pass": true,
+      "reason": "资源富余却无科研岗位，后句拿钱垫显微镜接奢华空转。"
+    },
+    {
+      "id": "arc-faith",
+      "scores": [
+        2,
+        2,
+        1,
+        2
+      ],
+      "total": 7,
+      "pass": true,
+      "reason": "盾甲穿透与绕门成立，开头排比略重，没有当当前最优配装。"
+    },
+    {
+      "id": "megaproject-bill",
+      "scores": [
+        2,
+        2,
+        1,
+        2
+      ],
+      "total": 7,
+      "pass": true,
+      "reason": "省电费到包更多恒星，持续建设欲；全银河路灯是夸张。"
+    },
+    {
+      "id": "paradox-relearn",
+      "scores": [
+        2,
+        2,
+        1,
+        2
+      ],
+      "total": 7,
+      "pass": true,
+      "reason": "更新重学到保护期仍挨打，没虚构具体更新。"
+    },
+    {
+      "id": "galactic-cpu",
+      "scores": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "total": 8,
+      "pass": true,
+      "reason": "优化补丁到清空活跃用户与投诉渠道，围绕相同人口对象。"
+    }
+  ]
+}

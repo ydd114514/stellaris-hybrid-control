@@ -1,0 +1,1 @@
+{"extends":"./electron-builder.stellaris.json","extraMetadata":{"version":"0.3.14"},"directories":{"output":"release/dsh-music-market-0.3.14"},"win":{"target":[{"target":"nsis","arch":["x64"]},{"target":"zip","arch":["x64"]}],"artifactName":"Cyberfish-DSH-0.3.14-Windows-x64.${ext}"}}

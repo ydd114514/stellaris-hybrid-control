@@ -1,0 +1,36 @@
+{
+  "verifiedAt": "2026-10-29T01:29:04.677Z",
+  "version": "0.3.10",
+  "edition": "complete-local",
+  "basic": false,
+  "asarEntries": 2595,
+  "excludedUserData": true,
+  "resources": [
+    "app-icon.png",
+    "app-update.yml",
+    "app.asar",
+    "elevate.exe"
+  ],
+  "artifacts": [
+    {
+      "path": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\release\\dsh-presentation-20261029-0.3.10\\Cyberfish-DSH-0.3.10-Presentation-Windows-x64.exe",
+      "size": 93864592,
+      "sha256": "0433e67577a57c92db740ceffd5983ed3537b3fc0f2aef48db49ee6609489811"
+    },
+    {
+      "path": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\release\\dsh-presentation-20261029-0.3.10\\Cyberfish-DSH-0.3.10-Presentation-Windows-x64.zip",
+      "size": 128560624,
+      "sha256": "dbfe356dc287517c82c947dff865d2d615253b6c45c0278187a6e0c5850c6b96"
+    },
+    {
+      "path": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\release\\dsh-presentation-20261029-0.3.10\\win-unpacked\\大肥鱼 DSH.exe",
+      "size": 211177472,
+      "sha256": "e317b8583de2226dd901fa077366ffc2b3433ec868ec1f04480a52779d576c2b"
+    },
+    {
+      "path": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\release\\dsh-presentation-20261029-0.3.10\\win-unpacked\\resources\\app.asar",
+      "size": 27925738,
+      "sha256": "28bdf62682b81faa780553a71cdfe801d69a6631e85351784e74717ca131e303"
+    }
+  ]
+}

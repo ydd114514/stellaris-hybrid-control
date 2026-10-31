@@ -1,0 +1,13 @@
+{
+  "exitedPids": [
+    31480
+  ],
+  "livehimePid": 31800,
+  "gamePid": 26488,
+  "streamingRequested": false,
+  "obsPid": 6720,
+  "confirmedStoppedBeforeLaunch": true,
+  "desktopControl": false,
+  "startedAt": "2026-10-29T12:03:25.4103473+08:00",
+  "mouseKeyboardInput": false
+}

@@ -1,0 +1,2 @@
+# Unified patches contain meaningful context-only lines consisting of a space.
+integrations/stellaris-player/*.patch text eol=lf -whitespace

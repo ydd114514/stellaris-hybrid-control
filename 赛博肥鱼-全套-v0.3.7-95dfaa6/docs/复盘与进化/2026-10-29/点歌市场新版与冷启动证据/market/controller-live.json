@@ -1,0 +1,926 @@
+{
+  "market": {
+    "active_monthly_trades_count": 0,
+    "is_galactic_market": true,
+    "market_fee_percent": null,
+    "monthly_trades": [],
+    "resources": [
+      {
+        "batch_size": 100,
+        "buy_price_per_unit": 1.0273448,
+        "key": "energy",
+        "localized_name": "能量币",
+        "sell_price_per_unit": 0.55,
+        "stockpile": 31671.68,
+        "unit_base_price": 1,
+        "quote_units": 100,
+        "buy_total": 102.73448,
+        "sell_total": 55,
+        "price_basis": "engine_transaction_total"
+      },
+      {
+        "batch_size": 100,
+        "buy_price_per_unit": 3.5517212000000002,
+        "key": "minerals",
+        "localized_name": "矿物",
+        "sell_price_per_unit": 1.91,
+        "stockpile": 22605.9,
+        "unit_base_price": 1,
+        "quote_units": 100,
+        "buy_total": 355.17212,
+        "sell_total": 191,
+        "price_basis": "engine_transaction_total"
+      },
+      {
+        "batch_size": 100,
+        "buy_price_per_unit": 1.3501471,
+        "key": "food",
+        "localized_name": "食物",
+        "sell_price_per_unit": 0.72,
+        "stockpile": 2653.04,
+        "unit_base_price": 1,
+        "quote_units": 100,
+        "buy_total": 135.01471,
+        "sell_total": 72,
+        "price_basis": "engine_transaction_total"
+      },
+      {
+        "batch_size": 50,
+        "buy_price_per_unit": 4.7632772,
+        "key": "consumer_goods",
+        "localized_name": "消费品",
+        "sell_price_per_unit": 2.56,
+        "stockpile": 3254.86,
+        "unit_base_price": 2,
+        "quote_units": 50,
+        "buy_total": 238.16386,
+        "sell_total": 128,
+        "price_basis": "engine_transaction_total"
+      },
+      {
+        "batch_size": 25,
+        "buy_price_per_unit": 3.4677296,
+        "key": "alloys",
+        "localized_name": "合金",
+        "sell_price_per_unit": 1.84,
+        "stockpile": 23197.61,
+        "unit_base_price": 4,
+        "quote_units": 25,
+        "buy_total": 86.69324,
+        "sell_total": 46,
+        "price_basis": "engine_transaction_total"
+      },
+      {
+        "batch_size": 10,
+        "buy_price_per_unit": 13,
+        "key": "exotic_gases",
+        "localized_name": "异星天然气",
+        "sell_price_per_unit": 7,
+        "stockpile": 200,
+        "unit_base_price": 10,
+        "quote_units": 10,
+        "buy_total": 130,
+        "sell_total": 70,
+        "price_basis": "engine_transaction_total"
+      },
+      {
+        "batch_size": 10,
+        "buy_price_per_unit": 13,
+        "key": "rare_crystals",
+        "localized_name": "稀有水晶",
+        "sell_price_per_unit": 7,
+        "stockpile": 200,
+        "unit_base_price": 10,
+        "quote_units": 10,
+        "buy_total": 130,
+        "sell_total": 70,
+        "price_basis": "engine_transaction_total"
+      }
+    ],
+    "settlement_currency": "trade",
+    "tradable_resources_count": 7,
+    "price_basis": "engine_transaction_total",
+    "automatic_trading_available": true,
+    "price_note": "必须按本次resource/action/units查询整笔报价；单批均价不能直接乘以其他数量。手续费已含在引擎整笔金额内。"
+  },
+  "result": {
+    "requestId": "live-controller-market-1793247112136",
+    "explanation": "我先买一小批合金，按实时整笔费用核对实际支出。",
+    "orders": [
+      {
+        "command": "market_trade",
+        "status": "posted",
+        "response": {
+          "message": "Successfully purchased 25 units (1 batches) of alloys",
+          "success": true
+        },
+        "verification": {
+          "verified": true,
+          "phase": "market_balance_readback",
+          "before": {
+            "resource": 23197.61,
+            "currency": 39490.21,
+            "settlement": "trade",
+            "quote": {
+              "action": "buy",
+              "engine_price_fixed": 8669324,
+              "includes_fee": true,
+              "price_basis": "engine_transaction_total",
+              "resource": "alloys",
+              "settlement_currency": "trade",
+              "settlement_rounding": "fixed_point",
+              "success": true,
+              "total": 86.69324,
+              "total_fixed": 8669324,
+              "units": 25
+            }
+          },
+          "after": {
+            "resource": 23222.61,
+            "currency": 39403.51
+          },
+          "observedResourceDelta": 25,
+          "observedSettlementDelta": -86.69999999999709,
+          "quoteMatches": true,
+          "costNote": "本笔完整引擎报价与实际结算核对；余额显示到0.01，允许0.03显示精度差。每笔须重新报价。"
+        },
+        "tracking": null
+      }
+    ],
+    "state": {
+      "snapshotId": "b9531391-c81d-461f-ac49-a7785851e2a1:4",
+      "remainingSeconds": 168,
+      "date": "2288.12.26",
+      "paused": true,
+      "speed": 2,
+      "player": {
+        "capital_system": "太阳",
+        "capital_system_id": 10,
+        "country_id": 0,
+        "owned_systems": 55
+      },
+      "resources": {
+        "alloys": {
+          "stockpile": 23222.61,
+          "net": 69.32,
+          "capped": false,
+          "max": 25000
+        },
+        "astral_threads": {
+          "stockpile": 0,
+          "net": 0,
+          "capped": false,
+          "max": 500
+        },
+        "consumer_goods": {
+          "stockpile": 3254.86,
+          "net": -76.22,
+          "capped": false,
+          "max": 25000
+        },
+        "energy": {
+          "stockpile": 31671.68,
+          "net": 5.62,
+          "capped": false,
+          "max": 35000
+        },
+        "engineering_research": {
+          "stockpile": 0,
+          "net": 146.55
+        },
+        "exotic_gases": {
+          "stockpile": 200,
+          "net": 0,
+          "capped": false,
+          "max": 25000
+        },
+        "food": {
+          "stockpile": 2653.04,
+          "net": -75.06,
+          "capped": false,
+          "max": 25000
+        },
+        "influence": {
+          "stockpile": 258.46,
+          "net": 3.13,
+          "capped": false,
+          "max": 1000
+        },
+        "minerals": {
+          "stockpile": 22605.9,
+          "net": 307.92,
+          "capped": false,
+          "max": 25000
+        },
+        "nanites": {
+          "stockpile": 0,
+          "net": 0
+        },
+        "physics_research": {
+          "stockpile": 0,
+          "net": 173.78
+        },
+        "rare_crystals": {
+          "stockpile": 200,
+          "net": 0,
+          "capped": false,
+          "max": 25000
+        },
+        "society_research": {
+          "stockpile": 0,
+          "net": 149.45
+        },
+        "trade": {
+          "stockpile": 39403.51,
+          "net": 116.7,
+          "capped": false,
+          "max": 60000
+        },
+        "unity": {
+          "stockpile": 0,
+          "net": -7.76
+        },
+        "volatile_motes": {
+          "stockpile": 0,
+          "net": 0,
+          "capped": false,
+          "max": 25000
+        }
+      },
+      "civilian": {
+        "colony_ships": [
+          {
+            "fleet_id": 16779837,
+            "name": "UNS索马里",
+            "ship_class": "shipclass_colonizer",
+            "ship_id": 4534,
+            "status": "无指令"
+          }
+        ],
+        "colony_ships_count": 1,
+        "construction_ships": [
+          {
+            "fleet_id": 2,
+            "name": "UNS亚马孙",
+            "ship_class": "shipclass_constructor",
+            "ship_id": 2,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 932,
+            "name": "UNS太平洋",
+            "ship_class": "shipclass_constructor",
+            "ship_id": 2283,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 942,
+            "name": "UNS湄公河",
+            "ship_class": "shipclass_constructor",
+            "ship_id": 2295,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 1074,
+            "name": "UNS孟加拉",
+            "ship_class": "shipclass_constructor",
+            "ship_id": 2442,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 16777331,
+            "name": "UNS恒河",
+            "ship_class": "shipclass_constructor",
+            "ship_id": 16777886,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 16779888,
+            "name": "UNS亚马孙",
+            "ship_class": "shipclass_constructor",
+            "ship_id": 16781719,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 33554833,
+            "name": "UNS卢比孔河",
+            "ship_class": "shipclass_constructor",
+            "ship_id": 1622,
+            "status": "无指令"
+          }
+        ],
+        "construction_ships_count": 7,
+        "science_ships": [
+          {
+            "fleet_id": 414,
+            "leader_id": 33554916,
+            "leader_level": 3,
+            "leader_name": "黄珍",
+            "name": "UNS先锋",
+            "ship_class": "shipclass_science_ship",
+            "ship_id": 1620,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 443,
+            "leader_id": 16777701,
+            "leader_level": 3,
+            "leader_name": "铃木诗织",
+            "name": "UNS开普勒",
+            "ship_class": "shipclass_science_ship",
+            "ship_id": 1681,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 1737,
+            "leader_id": 16777750,
+            "leader_level": 4,
+            "leader_name": "施奈德古斯塔夫",
+            "name": "UNS信风",
+            "ship_class": "shipclass_science_ship",
+            "ship_id": 3310,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 1943,
+            "leader_id": 33554534,
+            "leader_level": 3,
+            "leader_name": "许珍",
+            "name": "UNS牛顿",
+            "ship_class": "shipclass_science_ship",
+            "ship_id": 3537,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 2322,
+            "leader_id": 67109294,
+            "leader_level": 3,
+            "leader_name": "何东",
+            "name": "UNS旅居者",
+            "ship_class": "shipclass_science_ship",
+            "ship_id": 4030,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 2386,
+            "leader_id": 16777702,
+            "leader_level": 3,
+            "leader_name": "勒克莱尔马克",
+            "name": "UNS哈勃",
+            "ship_class": "shipclass_science_ship",
+            "ship_id": 4069,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 2713,
+            "leader_id": 16777762,
+            "leader_level": 2,
+            "leader_name": "芬莫格",
+            "name": "UNS爱因斯坦",
+            "ship_class": "shipclass_science_ship",
+            "ship_id": 16781930,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 16779443,
+            "name": "UNS齐奥尔科夫斯基",
+            "ship_class": "shipclass_science_ship",
+            "ship_id": 16781079,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 16779887,
+            "leader_id": 67109363,
+            "leader_level": 3,
+            "leader_name": "托尔加纳克",
+            "name": "UNS戈达德",
+            "ship_class": "shipclass_science_ship",
+            "ship_id": 4627,
+            "status": "无指令"
+          },
+          {
+            "fleet_id": 33554454,
+            "leader_id": 16777696,
+            "leader_level": 4,
+            "leader_name": "罗森休",
+            "name": "UNS埃尔哈特",
+            "ship_class": "shipclass_science_ship",
+            "ship_id": 16779134,
+            "status": "无指令"
+          }
+        ],
+        "science_ships_count": 10,
+        "transport_fleets": [],
+        "transport_fleets_count": 0
+      },
+      "military": {
+        "fleets": [
+          {
+            "can_reinforce": false,
+            "fleet_id": 3,
+            "military_power": 3649.7890625,
+            "name": "第1舰队",
+            "status": "无指令",
+            "template_id": 0,
+            "total_quota": 30,
+            "total_ships": 30
+          },
+          {
+            "can_reinforce": false,
+            "fleet_id": 33556121,
+            "military_power": 3167.7578125,
+            "name": "第2舰队",
+            "status": "无指令",
+            "template_id": 67108976,
+            "total_quota": 18,
+            "total_ships": 18
+          }
+        ],
+        "total_military_fleets": 2
+      },
+      "research": {
+        "engineering": {
+          "area": 2,
+          "area_name": "engineering",
+          "candidates": [
+            {
+              "cost": 4000,
+              "key": "tech_mine_rare_crystals",
+              "name": "稀有水晶开采",
+              "tier": 1
+            },
+            {
+              "cost": 4000,
+              "key": "tech_robomodding",
+              "name": "机械模板系统",
+              "tier": 1
+            },
+            {
+              "cost": 3000,
+              "key": "tech_strike_craft_1",
+              "name": "航母作战",
+              "tier": 1
+            },
+            {
+              "cost": 8000,
+              "key": "tech_thrusters_3",
+              "name": "等离子推进器",
+              "tier": 1
+            },
+            {
+              "cost": 8000,
+              "key": "tech_housing_2",
+              "name": "反重力工程",
+              "tier": 1
+            }
+          ],
+          "current": {
+            "cost": 8000,
+            "is_researching": true,
+            "key": "tech_thrusters_3",
+            "name": "等离子推进器",
+            "tier": 1
+          }
+        },
+        "physics": {
+          "area": 0,
+          "area_name": "physics",
+          "candidates": [
+            {
+              "cost": 8000,
+              "key": "tech_space_science_5",
+              "name": "多维分析",
+              "tier": 1
+            },
+            {
+              "cost": 8000,
+              "key": "tech_wormhole_stabilization",
+              "name": "虫洞稳定",
+              "tier": 1
+            },
+            {
+              "cost": 6000,
+              "key": "tech_power_hub_2",
+              "name": "行星电力网",
+              "tier": 1
+            },
+            {
+              "cost": 6000,
+              "key": "tech_pd_tracking_2",
+              "name": "互联支援系统",
+              "tier": 1
+            },
+            {
+              "cost": 10000,
+              "key": "tech_antimatter_power",
+              "name": "反物质能源",
+              "tier": 1
+            }
+          ],
+          "current": {
+            "cost": 6000,
+            "is_researching": true,
+            "key": "tech_power_hub_2",
+            "name": "行星电力网",
+            "tier": 1
+          }
+        },
+        "society": {
+          "area": 1,
+          "area_name": "society",
+          "candidates": [
+            {
+              "cost": 12000,
+              "key": "tech_galactic_administration",
+              "name": "星系管理",
+              "tier": 1
+            },
+            {
+              "cost": 2500,
+              "key": "tech_dense_jungle",
+              "name": "选择性脱叶剂",
+              "tier": 1
+            },
+            {
+              "cost": 2500,
+              "key": "tech_deep_sinkhole",
+              "name": "地下殖民",
+              "tier": 1
+            },
+            {
+              "cost": 6000,
+              "key": "tech_living_state",
+              "name": "活体国度",
+              "tier": 1
+            },
+            {
+              "cost": 10000,
+              "key": "tech_autocurating_vault",
+              "name": "自动综合处理算法",
+              "tier": 1
+            }
+          ],
+          "current": {
+            "cost": 12000,
+            "is_researching": true,
+            "key": "tech_galactic_administration",
+            "name": "星系管理",
+            "tier": 1
+          }
+        }
+      },
+      "colonies": [
+        {
+          "capital_planet_id": 3,
+          "capital_planet_name": "地球",
+          "colonies_count": 8,
+          "colonies_summary": [
+            {
+              "colony_id": 0,
+              "has_construction": false,
+              "is_capital": true,
+              "is_colonizing": false,
+              "name": "地球",
+              "planet_id": 3,
+              "pops": 5468,
+              "status": "established",
+              "status_alerts_count": 2
+            },
+            {
+              "colony_id": 63,
+              "has_construction": true,
+              "is_capital": false,
+              "is_colonizing": false,
+              "name": "新加的斯",
+              "planet_id": 303,
+              "pops": 4038,
+              "status": "established",
+              "status_alerts_count": 2
+            },
+            {
+              "colony_id": 68,
+              "has_construction": true,
+              "is_capital": false,
+              "is_colonizing": false,
+              "name": "圣克里斯多弗",
+              "planet_id": 223,
+              "pops": 1723,
+              "status": "established",
+              "status_alerts_count": 2
+            },
+            {
+              "colony_id": 70,
+              "has_construction": false,
+              "is_capital": false,
+              "is_colonizing": false,
+              "name": "贡萨雷斯港",
+              "planet_id": 1687,
+              "pops": 943,
+              "status": "established",
+              "status_alerts_count": 1
+            },
+            {
+              "colony_id": 74,
+              "has_construction": true,
+              "is_capital": false,
+              "is_colonizing": false,
+              "name": "卡拉克",
+              "planet_id": 1050,
+              "pops": 2376,
+              "status": "established",
+              "status_alerts_count": 2
+            },
+            {
+              "colony_id": 78,
+              "has_construction": true,
+              "is_capital": false,
+              "is_colonizing": false,
+              "name": "得尔格维希亚",
+              "planet_id": 1055,
+              "pops": 528,
+              "status": "established",
+              "status_alerts_count": 1
+            },
+            {
+              "colony_id": 80,
+              "has_construction": true,
+              "is_capital": false,
+              "is_colonizing": false,
+              "name": "吉萨",
+              "planet_id": 3020,
+              "pops": 480,
+              "status": "established",
+              "status_alerts_count": 1
+            },
+            {
+              "colony_id": 87,
+              "has_construction": false,
+              "is_capital": false,
+              "is_colonizing": false,
+              "name": "得尔格维希亚",
+              "planet_id": 899,
+              "pops": 211,
+              "status": "established",
+              "status_alerts_count": 1
+            }
+          ],
+          "is_core": true,
+          "sector_id": 0,
+          "sector_name": "地球",
+          "total_pops": 15767
+        },
+        {
+          "capital_planet_id": 4294967295,
+          "capital_planet_name": "",
+          "colonies_count": 5,
+          "colonies_summary": [
+            {
+              "colony_id": 82,
+              "has_construction": true,
+              "is_capital": false,
+              "is_colonizing": false,
+              "name": "新加的斯",
+              "planet_id": 2187,
+              "pops": 323,
+              "status": "established",
+              "status_alerts_count": 1
+            },
+            {
+              "colony_id": 95,
+              "has_construction": false,
+              "is_capital": false,
+              "is_colonizing": false,
+              "name": "圣波默罗伊",
+              "planet_id": 848,
+              "pops": 236,
+              "status": "established",
+              "status_alerts_count": 1
+            },
+            {
+              "colony_id": 97,
+              "has_construction": false,
+              "is_capital": false,
+              "is_colonizing": false,
+              "name": "圣克里斯多弗",
+              "planet_id": 3474,
+              "pops": 187,
+              "status": "established",
+              "status_alerts_count": 1
+            },
+            {
+              "colony_id": 100,
+              "has_construction": false,
+              "is_capital": false,
+              "is_colonizing": false,
+              "name": "忒伊亚",
+              "planet_id": 5750,
+              "pops": 195,
+              "status": "established",
+              "status_alerts_count": 1
+            },
+            {
+              "colony_id": 105,
+              "has_construction": false,
+              "is_capital": false,
+              "is_colonizing": false,
+              "name": "马塔巴赫",
+              "planet_id": 1033,
+              "pops": 178,
+              "status": "established",
+              "status_alerts_count": 1
+            }
+          ],
+          "is_core": false,
+          "sector_id": null,
+          "sector_name": "无星域",
+          "total_pops": 1119
+        }
+      ],
+      "capacities": {
+        "colonies": 13,
+        "empire_size": 444,
+        "naval_capacity": {
+          "capacity": 255,
+          "used": 373
+        },
+        "starbases": {
+          "capacity": 10,
+          "used": 1
+        }
+      },
+      "picture": {
+        "foreground": false,
+        "frames": 23030,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "pendingDiplomacy": [],
+      "wars": [],
+      "warGoalsWindow": false,
+      "alerts": [
+        {
+          "alert_id": 16,
+          "type": "alert_resource_shortage",
+          "title": "关键资源短缺",
+          "description": "我们的关键资源存在短缺。这会对我们的帝国造成非常不利的影响，需要尽快情况改善。\n\n凝聚力短缺\n稳定度: -20\n主流思潮吸引力: -100%\n\n提示：你可以在市场中创建一次性或月度交易！"
+        },
+        {
+          "alert_id": 41,
+          "type": "alert_unassigned_leader",
+          "title": "空闲领袖",
+          "description": "你有至少一位领袖等待安排工作。"
+        },
+        {
+          "alert_id": 42,
+          "type": "alert_available_council_agenda",
+          "title": "可用的内阁议程",
+          "description": "你可以为帝国选择一项内阁议程。"
+        },
+        {
+          "alert_id": 45,
+          "type": "alert_open_council_position",
+          "title": "内阁席位空缺",
+          "description": "你有一个内阁席位未安排领袖。"
+        }
+      ],
+      "council": {
+        "active_agenda": "",
+        "active_agenda_name": "",
+        "agenda_cost": 0,
+        "agenda_progress": 0,
+        "agenda_ready": false,
+        "councilor_count": 4,
+        "ruler_name": "坎贝尔伊丽丝"
+      },
+      "traditions": {
+        "active_edicts_count": 0,
+        "adopted_trees_count": 2,
+        "can_unlock_tradition": false,
+        "edict_fund": 0,
+        "next_tradition_cost": 3462.78,
+        "unlocked_traditions_count": 11
+      },
+      "leaders": {
+        "has_unspent_trait_points": false,
+        "leader_capacity": 5,
+        "pool_count": 19,
+        "total_hired": 14
+      },
+      "pendingEvents": [],
+      "note": "来自当前游戏原生接口。指令返回 posted 仅表示提交；后续状态、订单或队列才是效果证据。",
+      "operationalFacts": [],
+      "capabilities": {
+        "version": 1,
+        "availableActions": [
+          "adopt_ascension_perk",
+          "adopt_tradition",
+          "assign_councilor",
+          "assign_scientist",
+          "build_building",
+          "build_district",
+          "build_outpost",
+          "build_ship",
+          "build_stations",
+          "clear_blocker",
+          "close_war_goals",
+          "colonize",
+          "decrease_fleet_quota",
+          "diplomacy",
+          "follow_fleet",
+          "hire_leader",
+          "increase_fleet_quota",
+          "launch_council_agenda",
+          "market_trade",
+          "merge_fleets",
+          "move_fleet",
+          "open_alert",
+          "open_notification",
+          "open_war_goals",
+          "reinforce_fleet",
+          "resolve_event",
+          "respond_diplomacy",
+          "select_leader_trait",
+          "select_research",
+          "set_council_agenda",
+          "set_defender_war_goal",
+          "set_district_zone",
+          "set_fleet_stance",
+          "set_job_priority",
+          "set_speed",
+          "survey",
+          "upgrade_building",
+          "upgrade_fleet"
+        ],
+        "limitations": [
+          "星球专精切换尚无执行接口；列为能力受限，不承诺已经操作",
+          "星基升级及模块建设尚无执行接口；列为能力受限，不承诺已经操作",
+          "国民理念改革尚无执行接口；列为能力受限，不承诺已经操作",
+          "总督派驻尚无执行接口；列为能力受限，不承诺已经操作"
+        ]
+      },
+      "orderTracking": {
+        "counts": {},
+        "recent": []
+      },
+      "strategy": {
+        "version": 2,
+        "route": "regular",
+        "mode": "consolidate",
+        "focus": "消化疆域，修复内政",
+        "ordinaryExpansionAllowed": false,
+        "deficits": [
+          {
+            "resource": "food",
+            "net": -75.1,
+            "months": 35.3
+          },
+          {
+            "resource": "consumer_goods",
+            "net": -76.2,
+            "months": 42.7
+          }
+        ],
+        "priorities": [
+          "先查食物约35.3月余量：岗位填充→专精/特区→队列→新增产能",
+          "海军373/255，控制维护费并补后勤，不继续和平超编",
+          "查凝聚力岗位与维护，兼顾传统推进"
+        ],
+        "growth": {
+          "known": false,
+          "reason": "尚无同局10至20年的可比科研样本",
+          "bottleneck": false,
+          "cappedSurpluses": []
+        },
+        "capabilityGaps": [
+          "已有特区或星球专精切换",
+          "星基升级与模块",
+          "国民理念改革"
+        ],
+        "resumeWhen": "关键赤字和殖民地问题改善后重评；已开工项目、修复和防守继续",
+        "empireSize": 444,
+        "note": "本机启发式；规模不是硬上限。可执行能力以当前工具与引擎候选为准，缺失信息先查，不猜。",
+        "reviewTargets": [
+          {
+            "planetId": 3,
+            "name": "地球",
+            "alerts": 2
+          },
+          {
+            "planetId": 303,
+            "name": "新加的斯",
+            "alerts": 2
+          },
+          {
+            "planetId": 223,
+            "name": "圣克里斯多弗",
+            "alerts": 2
+          }
+        ]
+      }
+    }
+  },
+  "passed": true
+}

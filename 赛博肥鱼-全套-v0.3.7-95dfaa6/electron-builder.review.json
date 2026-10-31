@@ -1,0 +1,6 @@
+{
+  "extends": "./electron-builder.stellaris.json",
+  "extraMetadata": { "version": "0.3.8" },
+  "directories": { "output": "release/dsh-review-20261029-0.3.8" },
+  "win": { "artifactName": "Cyberfish-DSH-0.3.8-Review-Windows-x64.${ext}" }
+}

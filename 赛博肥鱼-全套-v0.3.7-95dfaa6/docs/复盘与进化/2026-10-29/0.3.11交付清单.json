@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-29",
+  "timezone": "Asia/Shanghai",
+  "version": "0.3.11",
+  "edition": "complete-local",
+  "voice": {
+    "revision": 4,
+    "name": "呆萌平常话",
+    "model": "qwen-audio-3.1-tts-flash",
+    "voice": "longanlingxi_v3.1",
+    "rate": 1,
+    "sampleSha256": "87ba9b28506a656558b2ecc3086a3a02f09283f7f61e7b46d766146352283a30"
+  },
+  "validation": {
+    "unitFiles": 80,
+    "unitPassed": 743,
+    "unitSkipped": 2,
+    "typecheckVue": true,
+    "typecheckElectron": true,
+    "sourceSmoke": true,
+    "packagedSmoke": true,
+    "realWavChromiumDecode": true,
+    "silentPlayback": true,
+    "newTtsRequests": 0,
+    "newModelRequests": 0,
+    "actualPlatformExchange": false,
+    "speakerOrObsListening": false
+  },
+  "deployment": {
+    "version": "0.3.11",
+    "operation": "deploy-selected-voice",
+    "newModelRequests": 0,
+    "newTtsRequests": 0,
+    "platformConnected": false,
+    "passed": true,
+    "profile": "C:\\Users\\YDD\\Documents\\大肥鱼 DSH\\.local\\dsh-desktop",
+    "executable": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.11\\大肥鱼 DSH.exe",
+    "speechEnabled": false,
+    "speechHasKey": true,
+    "tunedReady": true,
+    "voice": "longanlingxi_v3.1",
+    "model": "qwen-audio-3.1-tts-flash",
+    "presetId": "tuned-20261029",
+    "sampleDuration": 9.84,
+    "requests": 0,
+    "chatRunning": false,
+    "hostConfigured": true,
+    "hostModel": "claude-opus-4-6-thinking",
+    "controllerProject": "E:\\肥鱼直播\\stellaris-player",
+    "controllerCanStop": false,
+    "localPlayerWindowOpenedAndClosed": true,
+    "enabledOnStartup": false,
+    "keysAndCookiesNotCopied": true,
+    "filesVerified": 75,
+    "desktopShortcut": "C:\\Users\\YDD\\Desktop\\大肥鱼 DSH.lnk",
+    "previousVersionsPreserved": true
+  },
+  "packageAudit": {
+    "version": "0.3.11",
+    "main": "dist/dsh/electron/main.cjs",
+    "asarEntries": 2598,
+    "excludedUserData": true,
+    "bundledVoice": {
+      "revision": 4,
+      "voice": "longanlingxi_v3.1",
+      "sha256": "87ba9b28506a656558b2ecc3086a3a02f09283f7f61e7b46d766146352283a30"
+    },
+    "installedMatchesPackage": true
+  },
+  "programs": [
+    {
+      "file": "E:\\肥鱼直播\\打包成品\\语音弹幕实装版-0.3.11\\Cyberfish-DSH-0.3.11-VoiceChat-Windows-x64.exe",
+      "bytes": 94214267,
+      "sha256": "dd40849f757e60a860142d991a2074a60f15007ffb985fb2349a9bf81134d75c"
+    },
+    {
+      "file": "E:\\肥鱼直播\\打包成品\\语音弹幕实装版-0.3.11\\Cyberfish-DSH-0.3.11-VoiceChat-Windows-x64.zip",
+      "bytes": 128937841,
+      "sha256": "0239f0f28a048be99491a41d5648954907076e9a60c0ba8130694b8edc0ca4bf"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\release\\dsh-voice-chat-20261029-0.3.11\\win-unpacked\\大肥鱼 DSH.exe",
+      "bytes": 211177472,
+      "sha256": "f2a3547e97781d31d9705ec60469ea6279b32b09da61db4d25d82e515ec6f451"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\release\\dsh-voice-chat-20261029-0.3.11\\win-unpacked\\resources\\app.asar",
+      "bytes": 28407170,
+      "sha256": "3712552276406834b50775cf614e7b905dd608db1da16f855870af34145eb76a"
+    }
+  ],
+  "sourceFiles": 836,
+  "delivery": [
+    {
+      "file": "E:\\肥鱼直播\\打包成品\\语音弹幕实装版-0.3.11\\Cyberfish-DSH-0.3.11-Source.zip",
+      "bytes": 77331872,
+      "sha256": "36979775e144bf5d387287cd7d47e766ed2fe60b56d536edba127f0e5e611608"
+    },
+    {
+      "file": "E:\\肥鱼直播\\打包成品\\语音弹幕实装版-0.3.11\\Cyberfish-0.3.10-Controller-Native-Source.zip",
+      "bytes": 9427227,
+      "sha256": "73a0da833121a29a4ece46eb9d7e5fc9ae4d283cd3d76aab3093e694896f8ce2"
+    },
+    {
+      "file": "E:\\肥鱼直播\\打包成品\\语音弹幕实装版-0.3.11\\使用说明.txt",
+      "bytes": 1620,
+      "sha256": "4be7a4bb85a6f8e71cb7bf390e63a969da367bf7e705e8d40a67688cc7650723"
+    },
+    {
+      "file": "E:\\肥鱼直播\\打包成品\\语音弹幕实装版-0.3.11\\启动本机新版.bat",
+      "bytes": 123,
+      "sha256": "0ce57eea3adba10c28a1ed5e03bb6a115f6937a9c19524c7a18e95a19051a661"
+    }
+  ],
+  "evidence": [
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\activation.json",
+      "bytes": 850,
+      "sha256": "ea48389c0d39f14a454c20549dc833fe2de8251a2b3131380db3919f5cb80164"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\activation.log",
+      "bytes": 426,
+      "sha256": "44448c76954c79d9f0bfe21d1a8096cacd4e75c88261a69cd48c43c94540a0d9"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\build.log",
+      "bytes": 639,
+      "sha256": "4b1689f3a804e517d6823ec1f6693477ac34e228d39518e3f3a4a4ec3d4f3151"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\deployed-0.3.11-voice-chat.png",
+      "bytes": 208438,
+      "sha256": "d3e5bbe6491297eff005c6f8281792928f641b97ef7a1af5b188d2606c02b267"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\deployment-files.json",
+      "bytes": 12209,
+      "sha256": "274f6dd4e19930d30c4ae85800d67c5cedb0d6fa1500291a6977a42c0e69d387"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\package.log",
+      "bytes": 2040,
+      "sha256": "7d7cd01219f7fc4369f66e48467a8dab3bd86812df727f22b284263f2adcd343"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\packaged-artifact-check.json",
+      "bytes": 311,
+      "sha256": "8bb5ef113f02f7ebab8aef56090e7aae06256bf3354f7b91fbe94cb920c37c83"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\packaged-smoke.log",
+      "bytes": 379,
+      "sha256": "58d625545fc421a15b8fc6ce405a0ad958e1e9c2bf242320259d92b668266bae"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\player-cleanup-processes.json",
+      "bytes": 479,
+      "sha256": "47f3691b8364f427919316c7d349f9661066616c921baffd33ae455fb1c526cb"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\player-production-process.json",
+      "bytes": 762,
+      "sha256": "e9496fb625dea4844febe51ce266f7c08684ec31ee7ad2037d0386e11afaa841"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\player-result.json",
+      "bytes": 5079,
+      "sha256": "c1dc4514e17d6bcd09970430368f542068df1f75a05d925efc16dc9c85141f01"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\player-revision4-playing.png",
+      "bytes": 7287,
+      "sha256": "0645f2479ce5247c0f7f91bbd3f33142a6509f7c477274cabc9c68c79fe02a73"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\player-revision4-stopped.png",
+      "bytes": 3364,
+      "sha256": "dc9e2444c4347a8bded3a163555abdb565fe781ac93526d3a742673db6eb8526"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\player-smoke.log",
+      "bytes": 729,
+      "sha256": "7ede53c4bbef0e3f33b8702c2b0ac9031afac620ea5382689587a79e35f8e411"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\source-smoke.log",
+      "bytes": 379,
+      "sha256": "be57d581da243a9fda193406068c74835b41bf911b325b2785c2cd4852c4f30b"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\typecheck-electron.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\typecheck-vue.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装证据\\unit.log",
+      "bytes": 5463,
+      "sha256": "1e07e77312a006460f4d1e30fdcc7dbc701d9f35578e09d757aeaa004d65fa91"
+    }
+  ],
+  "report": {
+    "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\声音弹幕实装与0.3.11交付.md",
+    "bytes": 9518,
+    "sha256": "a7d37e10a1ac20bbb8fe4c6d44d328fbae3ce85311fbbd4af4de52d2656e4131"
+  },
+  "limits": [
+    "真实平台问答与当前账户实时合成尚待实际会话验证",
+    "未验收扬声器或OBS听感",
+    "本轮只有B站文字弹幕接入",
+    "T11实时市场定价及其他已有能力缺口保留"
+  ]
+}

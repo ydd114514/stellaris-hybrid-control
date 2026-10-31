@@ -1,0 +1,9 @@
+{
+  "extends": "./electron-builder.stellaris.json",
+  "extraMetadata": { "version": "0.3.12" },
+  "directories": { "output": "release/dsh-caption-sync-20261029-0.3.12" },
+  "win": {
+    "target": [{ "target": "nsis", "arch": ["x64"] }, { "target": "zip", "arch": ["x64"] }],
+    "artifactName": "Cyberfish-DSH-0.3.12-CaptionSync-Windows-x64.${ext}"
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "offline": true,
+  "newlySynthesizedAudio": false,
+  "audibleSpeakerCheck": false,
+  "mutedChromiumDecode": true,
+  "realCredentialsRead": false,
+  "actualExternalRequests": 0,
+  "startedAt": "2026-10-29T02:34:42.168Z",
+  "checks": {
+    "exactRealWavDecodedAndEnded": true,
+    "stopClearsPlayingAudioAndStaleMediaEvents": true,
+    "lateOfflineSynthesisCannotReviveStoppedAudio": true
+  },
+  "sample": {
+    "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\assets\\captain-tuned\\20.wav",
+    "rawFile": "E:\\肥鱼直播\\语音小样\\2026-10-29\\呆萌平常话四调\\B-平常话对照-原始.wav",
+    "duration": 9.84,
+    "sha256": "87ba9b28506a656558b2ecc3086a3a02f09283f7f61e7b46d766146352283a30",
+    "voice": "longanlingxi_v3.1",
+    "model": "qwen-audio-3.1-tts-flash",
+    "revision": 4
+  },
+  "stubCalls": 3,
+  "feedback": [
+    {
+      "id": "offline-full",
+      "kind": "started",
+      "at": 1793241288256
+    },
+    {
+      "id": "offline-full",
+      "kind": "ended",
+      "at": 1793241298192
+    },
+    {
+      "id": "offline-stop",
+      "kind": "started",
+      "at": 1793241299445
+    }
+  ],
+  "media": [
+    {
+      "kind": "loadedmetadata",
+      "duration": null,
+      "time": 0,
+      "paused": false,
+      "readyState": 1,
+      "at": 1793241288190
+    },
+    {
+      "kind": "playing",
+      "duration": null,
+      "time": 0,
+      "paused": false,
+      "readyState": 4,
+      "at": 1793241288252
+    },
+    {
+      "kind": "pause",
+      "duration": 9.813333,
+      "time": 9.813333,
+      "paused": true,
+      "readyState": 4,
+      "at": 1793241298191
+    },
+    {
+      "kind": "ended",
+      "duration": 9.813333,
+      "time": 9.813333,
+      "paused": true,
+      "readyState": 4,
+      "at": 1793241298191
+    },
+    {
+      "kind": "loadedmetadata",
+      "duration": null,
+      "time": 0,
+      "paused": false,
+      "readyState": 1,
+      "at": 1793241299432
+    },
+    {
+      "kind": "playing",
+      "duration": null,
+      "time": 0,
+      "paused": false,
+      "readyState": 4,
+      "at": 1793241299443
+    }
+  ],
+  "audioDownloads": [
+    {
+      "sha256": "87ba9b28506a656558b2ecc3086a3a02f09283f7f61e7b46d766146352283a30",
+      "bytes": 472364
+    },
+    {
+      "sha256": "87ba9b28506a656558b2ecc3086a3a02f09283f7f61e7b46d766146352283a30",
+      "bytes": 472364
+    }
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/player"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "GET",
+      "path": "/audio/offline-full"
+    },
+    {
+      "method": "POST",
+      "path": "/player/feedback"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/feedback"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "GET",
+      "path": "/audio/offline-stop"
+    },
+    {
+      "method": "POST",
+      "path": "/player/feedback"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    },
+    {
+      "method": "POST",
+      "path": "/player/poll"
+    }
+  ],
+  "browserDurationSeconds": 9.813333,
+  "durationToleranceSeconds": 0.1,
+  "passed": true,
+  "finishedAt": "2026-10-29T02:35:05.544Z",
+  "cleanup": {
+    "knownTestProcessesExited": true,
+    "isolatedProfileRemoved": true,
+    "evidence": "cleanup-processes.json",
+    "productionProcessesTouched": false
+  }
+}

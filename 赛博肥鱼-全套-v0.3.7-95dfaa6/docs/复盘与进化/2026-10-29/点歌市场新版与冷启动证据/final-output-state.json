@@ -1,0 +1,19 @@
+{
+  "stream": {
+    "outputActive": false,
+    "outputBytes": 0,
+    "outputCongestion": 0,
+    "outputDuration": 0,
+    "outputReconnecting": false,
+    "outputSkippedFrames": 0,
+    "outputTimecode": "00:00:00.000",
+    "outputTotalFrames": 0
+  },
+  "record": {
+    "outputActive": false,
+    "outputBytes": 1888782,
+    "outputDuration": 0,
+    "outputPaused": false,
+    "outputTimecode": "00:00:00.000"
+  }
+}

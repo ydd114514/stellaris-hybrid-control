@@ -1,0 +1,17 @@
+{
+  "appId": "cn.cyberfish.stellaris.basic",
+  "productName": "群星控制器大肥鱼",
+  "extraMetadata": { "name": "qunxing-feiyu-basic", "description": "群星控制器大肥鱼 · 基础版", "version": "0.4.0", "main": "dist/dsh/electron/main.cjs" },
+  "directories": { "output": "release/群星控制器大肥鱼-基础版-0.4.0" },
+  "files": ["dist/dsh/**/*", "package.json", "LICENSE", "licenses/**/*", "THIRD_PARTY_NOTICES.md"],
+  "extraResources": [
+    { "from": "assets/app-icon.png", "to": "app-icon.png" },
+    { "from": ".local/package-basic/bundle", "to": "feiyu-bundle" }
+  ],
+  "win": {
+    "target": [{ "target": "nsis", "arch": ["x64"] }, { "target": "zip", "arch": ["x64"] }],
+    "icon": "assets/app-icon.png",
+    "artifactName": "群星控制器大肥鱼-基础版-0.4.0-Windows-x64.${ext}"
+  },
+  "nsis": { "oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "shortcutName": "群星控制器大肥鱼", "deleteAppDataOnUninstall": false }
+}

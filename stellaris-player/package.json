@@ -1,0 +1,17 @@
+{
+  "name": "deepseek-stellaris-player",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DeepSeek/DSH 通过群星实时结构化状态与正常原生命令自主经营，保留界面原型作辅助",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "doctor": "node src/cli.mjs doctor",
+    "check:api": "node src/cli.mjs check-api",
+    "observe": "node src/cli.mjs observe",
+    "play": "node src/cli.mjs play",
+    "play:native": "node scripts/play-native-dsh.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,23 @@
+{
+  "kind": "same-user-isolated-safestorage-session-probe",
+  "actualUsername": "YDD",
+  "paidCalls": 0,
+  "windowsCreated": 0,
+  "sourceModified": false,
+  "localStateCopiedTo": "sessionData/Local State",
+  "osCryptFields": [
+    "audit_enabled",
+    "encrypted_key"
+  ],
+  "safeStorageAvailable": true,
+  "model": {
+    "envelopePrefix": "v10",
+    "decryptSucceeded": true
+  },
+  "tts": {
+    "envelopePrefix": "v10",
+    "decryptSucceeded": true
+  },
+  "roundTrip": true,
+  "passed": true
+}

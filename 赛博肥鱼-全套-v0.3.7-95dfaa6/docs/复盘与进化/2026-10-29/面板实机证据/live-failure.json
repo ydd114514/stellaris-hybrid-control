@@ -1,0 +1,18 @@
+{
+  "failure": "bridge_pipe_busy_or_missing",
+  "tour": [],
+  "actions": [],
+  "frames": [],
+  "rpcLog": [
+    {
+      "label": "setup",
+      "method": "set_paused",
+      "params": {
+        "paused": true
+      },
+      "start": 2209.2921,
+      "end": 2244.7546,
+      "success": true
+    }
+  ]
+}

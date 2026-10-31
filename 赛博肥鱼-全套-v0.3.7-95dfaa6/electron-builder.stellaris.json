@@ -1,0 +1,10 @@
+{
+  "appId": "cn.cyberfish.stellaris",
+  "productName": "大肥鱼 DSH",
+  "extraMetadata": { "name": "cyberfish-stellaris-desktop", "version": "0.3.6", "main": "dist/dsh/electron/main.cjs" },
+  "directories": { "output": "release/dsh-desktop-0.3.6" },
+  "files": ["dist/dsh/**/*", "package.json", "LICENSE", "licenses/**/*", "THIRD_PARTY_NOTICES.md"],
+  "extraResources": [{ "from": "assets/app-icon.png", "to": "app-icon.png" }],
+  "win": { "target": [{ "target": "nsis", "arch": ["x64"] }], "icon": "assets/app-icon.png", "artifactName": "Cyberfish-DSH-0.3.6-Windows-x64-Setup.${ext}" },
+  "nsis": { "oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "shortcutName": "大肥鱼 DSH", "deleteAppDataOnUninstall": false }
+}

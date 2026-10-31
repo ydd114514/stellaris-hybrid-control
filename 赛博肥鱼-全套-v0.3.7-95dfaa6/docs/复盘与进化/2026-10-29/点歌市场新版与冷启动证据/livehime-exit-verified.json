@@ -1,0 +1,37 @@
+{
+  "remaining": [
+    {
+      "Id": 31800,
+      "StartTime": "2026-10-29T12:03:25.3273847+08:00",
+      "Responding": true
+    },
+    {
+      "Id": 33548,
+      "StartTime": "2026-10-29T12:03:25.6539623+08:00",
+      "Responding": true
+    }
+  ],
+  "stopErrors": [
+    {
+      "reason": "由于以下错误，无法停止进程“livehime (31800)”: 拒绝访问。",
+      "pid": 31800
+    },
+    {
+      "reason": "由于以下错误，无法停止进程“livehime (33548)”: 拒绝访问。",
+      "pid": 33548
+    }
+  ],
+  "before": [
+    {
+      "Id": 31800,
+      "StartTime": "2026-10-29T12:03:25.3273847+08:00",
+      "Responding": true
+    },
+    {
+      "Id": 33548,
+      "StartTime": "2026-10-29T12:03:25.6539623+08:00",
+      "Responding": true
+    }
+  ],
+  "confirmedExited": false
+}

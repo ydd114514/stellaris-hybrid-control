@@ -1,0 +1,48 @@
+{
+  "at": 1793248161596,
+  "mode": "play",
+  "desktopControl": false,
+  "newModelRequests": 0,
+  "newTtsRequests": 0,
+  "phases": [
+    {
+      "name": "silence-before",
+      "start": 1793248161736,
+      "end": 1793248165743
+    },
+    {
+      "name": "real-selected-voice",
+      "start": 1793248165743,
+      "media": {
+        "startedAt": 1793248165908,
+        "endedAt": 1793248178695,
+        "duration": 12.8,
+        "actualDecodedWav": true
+      },
+      "end": 1793248178696
+    },
+    {
+      "name": "silence-gap",
+      "start": 1793248178696,
+      "end": 1793248181709
+    },
+    {
+      "name": "actual-QQ-music",
+      "start": 1793248181709,
+      "media": {
+        "status": "playing",
+        "title": "Let Me Go (女独奏) (大肥鱼摸鱼歌)"
+      },
+      "end": 1793248189915
+    },
+    {
+      "name": "silence-after",
+      "start": 1793248189915,
+      "end": 1793248194917
+    }
+  ],
+  "installedVersion": "0.3.14",
+  "defaultStopped": true,
+  "playbackCompleted": true,
+  "recordingValidated": false
+}

@@ -1,0 +1,21 @@
+✔ bridge version and required features must match before the controller continues (1.6445ms)
+✔ upgrade pilot requires the corrected parser layout and rejects feature downgrade (0.3109ms)
+✔ claim bridge requires exact quotes and native capped spending without dropping old productive features (0.2048ms)
+✔ native delegation, supervision, whole-country takeover and new-generation resume (10.7892ms)
+✔ economic candidate needs explicit host opt-in and exact complete capability handshake (0.5621ms)
+✔ economic key protection is normalized, copied, read back and retained through takeover/resume (1.3099ms)
+✔ native arm must prove constraints before enabling; mismatch closes its acquired generation (0.4813ms)
+✔ economic constraints reject truncated/foreign-format references and unknown categories (0.2822ms)
+✔ unknown enable is never replayed; explicit stop closes its known lease (0.3953ms)
+✔ unconfirmed takeover keeps every ordinary dispatcher fenced (0.3402ms)
+✔ changed native world generation cannot resume the previous strategy (0.3816ms)
+✔ work sources are never inferred from the switch or admission counters (0.3544ms)
+✔ a candidate without the final Post boundary and clone lifetime is rejected before gameplay writes (0.3717ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 91.5567

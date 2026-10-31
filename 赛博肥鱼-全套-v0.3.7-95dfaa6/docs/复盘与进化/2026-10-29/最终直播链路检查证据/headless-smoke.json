@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "packaged": true,
+  "desktopControl": false,
+  "visibleWindows": false,
+  "focusedWindows": false,
+  "modelRequests": 0,
+  "ttsRequests": 0,
+  "windows": [
+    {
+      "visible": false,
+      "focused": false,
+      "focusable": false
+    }
+  ],
+  "restrictedIpc": true,
+  "offlineApiGuard": true
+}

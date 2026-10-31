@@ -1,0 +1,12 @@
+{
+  "extends": "./electron-builder.stellaris.json",
+  "extraMetadata": {"version":"0.3.16"},
+  "directories": {"output":"release/dsh-gestalt-0.3.16"},
+  "extraResources": [
+    {"from":".local/package-gestalt/bundle","to":"feiyu-bundle"}
+  ],
+  "win": {
+    "target":[{"target":"nsis","arch":["x64"]},{"target":"zip","arch":["x64"]}],
+    "artifactName":"Cyberfish-DSH-Gestalt-0.3.16-Windows-x64.${ext}"
+  }
+}

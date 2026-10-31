@@ -1,0 +1,1237 @@
+{
+  "status": "passed",
+  "trades": [
+    {
+      "resource": "consumer_goods",
+      "action": "buy",
+      "units": 50,
+      "quote": {
+        "action": "buy",
+        "engine_price_fixed": 25692295,
+        "includes_fee": true,
+        "price_basis": "engine_transaction_total",
+        "resource": "consumer_goods",
+        "settlement_currency": "trade",
+        "settlement_rounding": "fixed_point",
+        "success": true,
+        "total": 256.92295,
+        "total_fixed": 25692295,
+        "units": 50
+      },
+      "posted": {
+        "message": "Successfully purchased 50 units (1 batches) of consumer_goods",
+        "success": true
+      },
+      "actual": 256.92000000000553,
+      "error": 0.0029499999944846422,
+      "resourceDelta": 50,
+      "remaining": 38651.34,
+      "passed": true
+    },
+    {
+      "resource": "consumer_goods",
+      "action": "sell",
+      "units": 50,
+      "quote": {
+        "action": "sell",
+        "engine_price_fixed": 13904312,
+        "includes_fee": true,
+        "price_basis": "engine_transaction_total",
+        "resource": "consumer_goods",
+        "settlement_currency": "trade",
+        "settlement_rounding": "truncate_to_whole_currency",
+        "success": true,
+        "total": 139,
+        "total_fixed": 13900000,
+        "units": 50
+      },
+      "posted": {
+        "message": "Protected market resource reserve/storage limit",
+        "success": false
+      },
+      "passed": true,
+      "guardRejected": true
+    },
+    {
+      "resource": "consumer_goods",
+      "action": "buy",
+      "units": 100,
+      "quote": {
+        "action": "buy",
+        "engine_price_fixed": 51774590,
+        "includes_fee": true,
+        "price_basis": "engine_transaction_total",
+        "resource": "consumer_goods",
+        "settlement_currency": "trade",
+        "settlement_rounding": "fixed_point",
+        "success": true,
+        "total": 517.7459,
+        "total_fixed": 51774590,
+        "units": 100
+      },
+      "posted": {
+        "message": "Successfully purchased 100 units (2 batches) of consumer_goods",
+        "success": true
+      },
+      "actual": 517.75,
+      "error": 0.004099999999993997,
+      "resourceDelta": 100,
+      "remaining": 38133.59,
+      "passed": true
+    },
+    {
+      "resource": "consumer_goods",
+      "action": "sell",
+      "units": 100,
+      "quote": {
+        "action": "sell",
+        "engine_price_fixed": 28018625,
+        "includes_fee": true,
+        "price_basis": "engine_transaction_total",
+        "resource": "consumer_goods",
+        "settlement_currency": "trade",
+        "settlement_rounding": "truncate_to_whole_currency",
+        "success": true,
+        "total": 280,
+        "total_fixed": 28000000,
+        "units": 100
+      },
+      "posted": {
+        "message": "Protected market resource reserve/storage limit",
+        "success": false
+      },
+      "passed": true,
+      "guardRejected": true
+    },
+    {
+      "resource": "consumer_goods",
+      "action": "buy",
+      "units": 150,
+      "quote": {
+        "action": "buy",
+        "engine_price_fixed": 78636885,
+        "includes_fee": true,
+        "price_basis": "engine_transaction_total",
+        "resource": "consumer_goods",
+        "settlement_currency": "trade",
+        "settlement_rounding": "fixed_point",
+        "success": true,
+        "total": 786.36885,
+        "total_fixed": 78636885,
+        "units": 150
+      },
+      "posted": {
+        "message": "Successfully purchased 150 units (3 batches) of consumer_goods",
+        "success": true
+      },
+      "actual": 786.3599999999933,
+      "error": 0.008850000006646042,
+      "resourceDelta": 150,
+      "remaining": 37347.23,
+      "passed": true
+    },
+    {
+      "resource": "consumer_goods",
+      "action": "sell",
+      "units": 150,
+      "quote": {
+        "action": "sell",
+        "engine_price_fixed": 42552938,
+        "includes_fee": true,
+        "price_basis": "engine_transaction_total",
+        "resource": "consumer_goods",
+        "settlement_currency": "trade",
+        "settlement_rounding": "truncate_to_whole_currency",
+        "success": true,
+        "total": 425,
+        "total_fixed": 42500000,
+        "units": 150
+      },
+      "posted": {
+        "message": "Protected market resource reserve/storage limit",
+        "success": false
+      },
+      "passed": true,
+      "guardRejected": true
+    },
+    {
+      "resource": "alloys",
+      "action": "buy",
+      "units": 25,
+      "quote": {
+        "action": "buy",
+        "engine_price_fixed": 11443213,
+        "includes_fee": true,
+        "price_basis": "engine_transaction_total",
+        "resource": "alloys",
+        "settlement_currency": "trade",
+        "settlement_rounding": "fixed_point",
+        "success": true,
+        "total": 114.43213,
+        "total_fixed": 11443213,
+        "units": 25
+      },
+      "posted": {
+        "message": "Successfully purchased 25 units (1 batches) of alloys",
+        "success": true
+      },
+      "actual": 114.44000000000233,
+      "error": 0.007870000002327515,
+      "resourceDelta": 25,
+      "remaining": 37232.79,
+      "passed": true
+    },
+    {
+      "resource": "alloys",
+      "action": "sell",
+      "units": 25,
+      "quote": {
+        "action": "sell",
+        "engine_price_fixed": 6182730,
+        "includes_fee": true,
+        "price_basis": "engine_transaction_total",
+        "resource": "alloys",
+        "settlement_currency": "trade",
+        "settlement_rounding": "truncate_to_whole_currency",
+        "success": true,
+        "total": 61,
+        "total_fixed": 6100000,
+        "units": 25
+      },
+      "posted": {
+        "message": "Successfully sold 25 units (1 batches) of alloys",
+        "success": true
+      },
+      "actual": 61,
+      "error": 0,
+      "resourceDelta": -25,
+      "remaining": 37293.79,
+      "passed": true
+    }
+  ],
+  "quotes": [
+    {
+      "action": "buy",
+      "engine_price_fixed": 25692295,
+      "includes_fee": true,
+      "price_basis": "engine_transaction_total",
+      "resource": "consumer_goods",
+      "settlement_currency": "trade",
+      "settlement_rounding": "fixed_point",
+      "success": true,
+      "total": 256.92295,
+      "total_fixed": 25692295,
+      "units": 50
+    },
+    {
+      "action": "sell",
+      "engine_price_fixed": 13904312,
+      "includes_fee": true,
+      "price_basis": "engine_transaction_total",
+      "resource": "consumer_goods",
+      "settlement_currency": "trade",
+      "settlement_rounding": "truncate_to_whole_currency",
+      "success": true,
+      "total": 139,
+      "total_fixed": 13900000,
+      "units": 50
+    },
+    {
+      "action": "buy",
+      "engine_price_fixed": 51774590,
+      "includes_fee": true,
+      "price_basis": "engine_transaction_total",
+      "resource": "consumer_goods",
+      "settlement_currency": "trade",
+      "settlement_rounding": "fixed_point",
+      "success": true,
+      "total": 517.7459,
+      "total_fixed": 51774590,
+      "units": 100
+    },
+    {
+      "action": "sell",
+      "engine_price_fixed": 28018625,
+      "includes_fee": true,
+      "price_basis": "engine_transaction_total",
+      "resource": "consumer_goods",
+      "settlement_currency": "trade",
+      "settlement_rounding": "truncate_to_whole_currency",
+      "success": true,
+      "total": 280,
+      "total_fixed": 28000000,
+      "units": 100
+    },
+    {
+      "action": "buy",
+      "engine_price_fixed": 78636885,
+      "includes_fee": true,
+      "price_basis": "engine_transaction_total",
+      "resource": "consumer_goods",
+      "settlement_currency": "trade",
+      "settlement_rounding": "fixed_point",
+      "success": true,
+      "total": 786.36885,
+      "total_fixed": 78636885,
+      "units": 150
+    },
+    {
+      "action": "sell",
+      "engine_price_fixed": 42552938,
+      "includes_fee": true,
+      "price_basis": "engine_transaction_total",
+      "resource": "consumer_goods",
+      "settlement_currency": "trade",
+      "settlement_rounding": "truncate_to_whole_currency",
+      "success": true,
+      "total": 425,
+      "total_fixed": 42500000,
+      "units": 150
+    },
+    {
+      "action": "buy",
+      "engine_price_fixed": 11443213,
+      "includes_fee": true,
+      "price_basis": "engine_transaction_total",
+      "resource": "alloys",
+      "settlement_currency": "trade",
+      "settlement_rounding": "fixed_point",
+      "success": true,
+      "total": 114.43213,
+      "total_fixed": 11443213,
+      "units": 25
+    },
+    {
+      "action": "sell",
+      "engine_price_fixed": 6182730,
+      "includes_fee": true,
+      "price_basis": "engine_transaction_total",
+      "resource": "alloys",
+      "settlement_currency": "trade",
+      "settlement_rounding": "truncate_to_whole_currency",
+      "success": true,
+      "total": 61,
+      "total_fixed": 6100000,
+      "units": 25
+    }
+  ],
+  "desktopInput": false,
+  "sourceSaveUnchanged": true,
+  "before": {
+    "contacts": {
+      "known_empires_count": 16,
+      "pending_first_contacts_count": 4
+    },
+    "council": {
+      "active_agenda": "",
+      "active_agenda_name": "",
+      "agenda_cost": 0,
+      "agenda_progress": 0,
+      "agenda_ready": false,
+      "councilor_count": 4,
+      "ruler_name": "坎贝尔伊丽丝"
+    },
+    "date": {
+      "day": 1,
+      "formatted": "2288.07.01",
+      "month": 7,
+      "year": 2288
+    },
+    "discoveries": {
+      "can_activate_relic": false,
+      "held_relics_count": 0
+    },
+    "fleets": {
+      "civilian_fleets_count": 18,
+      "military_fleets_count": 2,
+      "total_military_power": 6817.546875,
+      "total_reinforceable_fleets": 0
+    },
+    "in_game": true,
+    "is_paused": true,
+    "leaders": {
+      "has_unspent_trait_points": false,
+      "leader_capacity": 5,
+      "pool_count": 19,
+      "total_hired": 14
+    },
+    "market": {
+      "is_galactic_market": true,
+      "market_fee_percent": 30,
+      "normally_tradable_commodities_count": 7,
+      "settlement_currency": "trade"
+    },
+    "outliner": {
+      "armies_summary": {
+        "garrison_armies_count": 5,
+        "transport_armies_count": 0
+      },
+      "civilian_fleets_summary": {
+        "civilian_fleets_count": 18
+      },
+      "military_fleets_summary": {
+        "military_fleets_count": 2,
+        "total_military_power": 6817.5
+      },
+      "sectors_summary": {
+        "capital_system": "太阳",
+        "sectors": [
+          {
+            "capital_planet_id": 3,
+            "capital_planet_name": "地球",
+            "colonies_count": 8,
+            "colonies_summary": [
+              {
+                "colony_id": 0,
+                "has_construction": false,
+                "is_capital": true,
+                "is_colonizing": false,
+                "name": "地球",
+                "planet_id": 3,
+                "pops": 5469,
+                "status": "established",
+                "status_alerts_count": 2
+              },
+              {
+                "colony_id": 63,
+                "has_construction": true,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "新加的斯",
+                "planet_id": 303,
+                "pops": 4020,
+                "status": "established",
+                "status_alerts_count": 2
+              },
+              {
+                "colony_id": 68,
+                "has_construction": true,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "圣克里斯多弗",
+                "planet_id": 223,
+                "pops": 1709,
+                "status": "established",
+                "status_alerts_count": 2
+              },
+              {
+                "colony_id": 70,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "贡萨雷斯港",
+                "planet_id": 1687,
+                "pops": 932,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 74,
+                "has_construction": true,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "卡拉克",
+                "planet_id": 1050,
+                "pops": 2358,
+                "status": "established",
+                "status_alerts_count": 2
+              },
+              {
+                "colony_id": 78,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "得尔格维希亚",
+                "planet_id": 1055,
+                "pops": 521,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 80,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "吉萨",
+                "planet_id": 3020,
+                "pops": 472,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 87,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "得尔格维希亚",
+                "planet_id": 899,
+                "pops": 209,
+                "status": "established",
+                "status_alerts_count": 1
+              }
+            ],
+            "is_core": true,
+            "sector_id": 0,
+            "sector_name": "地球",
+            "total_pops": 15690
+          },
+          {
+            "capital_planet_id": 4294967295,
+            "capital_planet_name": "",
+            "colonies_count": 5,
+            "colonies_summary": [
+              {
+                "colony_id": 82,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "新加的斯",
+                "planet_id": 2187,
+                "pops": 321,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 95,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "圣波默罗伊",
+                "planet_id": 848,
+                "pops": 235,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 97,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "圣克里斯多弗",
+                "planet_id": 3474,
+                "pops": 185,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 100,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "忒伊亚",
+                "planet_id": 5750,
+                "pops": 193,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 105,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "马塔巴赫",
+                "planet_id": 1033,
+                "pops": 176,
+                "status": "established",
+                "status_alerts_count": 1
+              }
+            ],
+            "is_core": false,
+            "sector_id": null,
+            "sector_name": "无星域",
+            "total_pops": 1110
+          }
+        ],
+        "total_colonies": 13,
+        "total_pops": 16800,
+        "total_sectors": 2
+      }
+    },
+    "resources": {
+      "advanced_logic": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "alloys": {
+        "capped": false,
+        "expense": 78.71,
+        "income": 152.78,
+        "max": 25000,
+        "net": 74.07,
+        "stockpile": 22852.81
+      },
+      "astral_threads": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 500,
+        "net": 0,
+        "stockpile": 0
+      },
+      "biomass": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "consumer_goods": {
+        "capped": false,
+        "expense": 196.57,
+        "income": 106.85,
+        "max": 25000,
+        "net": -89.72,
+        "stockpile": 3690.56
+      },
+      "energy": {
+        "capped": false,
+        "expense": 674.21,
+        "income": 681.84,
+        "max": 35000,
+        "net": 7.63,
+        "stockpile": 31630.6
+      },
+      "engineering_research": {
+        "expense": 0,
+        "income": 146.49,
+        "net": 146.49,
+        "stockpile": 146.39
+      },
+      "entropy_crystals": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "exotic_gases": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 25000,
+        "net": 0,
+        "stockpile": 200
+      },
+      "feral_insight": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "food": {
+        "capped": false,
+        "expense": 202.86,
+        "income": 132.49,
+        "max": 25000,
+        "net": -70.38,
+        "stockpile": 3010.37
+      },
+      "influence": {
+        "capped": false,
+        "expense": 1.88,
+        "income": 5,
+        "max": 1000,
+        "net": 3.13,
+        "stockpile": 242.84
+      },
+      "integrity": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "menace": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "minerals": {
+        "capped": false,
+        "expense": 243.95,
+        "income": 568.75,
+        "max": 25000,
+        "net": 324.81,
+        "stockpile": 22241.68
+      },
+      "minor_artifacts": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 2000,
+        "net": 0,
+        "stockpile": 0
+      },
+      "nanites": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "physics_research": {
+        "expense": 0,
+        "income": 173.64,
+        "net": 173.64,
+        "stockpile": 173.63
+      },
+      "rare_crystals": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 25000,
+        "net": 0,
+        "stockpile": 200
+      },
+      "society_research": {
+        "expense": 0,
+        "income": 149.16,
+        "net": 149.16,
+        "stockpile": 149.06
+      },
+      "sr_dark_matter": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 25000,
+        "net": 0,
+        "stockpile": 0
+      },
+      "sr_living_metal": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 25000,
+        "net": 0,
+        "stockpile": 0
+      },
+      "sr_zro": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 25000,
+        "net": 0,
+        "stockpile": 0
+      },
+      "trade": {
+        "capped": false,
+        "expense": 324.98,
+        "income": 440.25,
+        "max": 60000,
+        "net": 115.28,
+        "stockpile": 38908.26
+      },
+      "unity": {
+        "expense": 110.8,
+        "income": 98.14,
+        "net": -12.66,
+        "stockpile": 0
+      },
+      "volatile_motes": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 25000,
+        "net": 0,
+        "stockpile": 0
+      }
+    },
+    "situation_log": {
+      "anomalies_count": 48,
+      "situations_count": 0,
+      "special_projects_count": 10
+    },
+    "society": {
+      "active_edicts_count": 0,
+      "adopted_trees_count": 2,
+      "can_unlock_tradition": false,
+      "edict_fund": 0,
+      "next_tradition_cost": 3462.78,
+      "unlocked_traditions_count": 11
+    },
+    "species": {
+      "empire_colonies_count": 13,
+      "founder_species_id": 385875969,
+      "founder_species_name": "人类",
+      "total_empire_pops": 16800,
+      "total_species_in_galaxy": 82
+    },
+    "speed": 2,
+    "stats": {
+      "colonies": 13,
+      "empire_size": 444,
+      "naval_capacity": {
+        "capacity": 255,
+        "used": 373
+      },
+      "starbases": {
+        "capacity": 10,
+        "used": 1
+      }
+    }
+  },
+  "ping": {
+    "bridge_version": "cyberfish-0.6.5-marketquotes-r2",
+    "features": [
+      "building_upgrade_candidates",
+      "building_upgrade_queue_identity",
+      "ship_design_naval_size",
+      "zone_building_membership",
+      "owned_shipyard_queues",
+      "engine_market_transaction_quotes"
+    ],
+    "status": "pong"
+  },
+  "after": {
+    "contacts": {
+      "known_empires_count": 16,
+      "pending_first_contacts_count": 4
+    },
+    "council": {
+      "active_agenda": "",
+      "active_agenda_name": "",
+      "agenda_cost": 0,
+      "agenda_progress": 0,
+      "agenda_ready": false,
+      "councilor_count": 4,
+      "ruler_name": "坎贝尔伊丽丝"
+    },
+    "date": {
+      "day": 1,
+      "formatted": "2288.07.01",
+      "month": 7,
+      "year": 2288
+    },
+    "discoveries": {
+      "can_activate_relic": false,
+      "held_relics_count": 0
+    },
+    "fleets": {
+      "civilian_fleets_count": 18,
+      "military_fleets_count": 2,
+      "total_military_power": 6817.546875,
+      "total_reinforceable_fleets": 0
+    },
+    "in_game": true,
+    "is_paused": true,
+    "leaders": {
+      "has_unspent_trait_points": false,
+      "leader_capacity": 5,
+      "pool_count": 19,
+      "total_hired": 14
+    },
+    "market": {
+      "is_galactic_market": true,
+      "market_fee_percent": 30,
+      "normally_tradable_commodities_count": 7,
+      "settlement_currency": "trade"
+    },
+    "outliner": {
+      "armies_summary": {
+        "garrison_armies_count": 5,
+        "transport_armies_count": 0
+      },
+      "civilian_fleets_summary": {
+        "civilian_fleets_count": 18
+      },
+      "military_fleets_summary": {
+        "military_fleets_count": 2,
+        "total_military_power": 6817.5
+      },
+      "sectors_summary": {
+        "capital_system": "太阳",
+        "sectors": [
+          {
+            "capital_planet_id": 3,
+            "capital_planet_name": "地球",
+            "colonies_count": 8,
+            "colonies_summary": [
+              {
+                "colony_id": 0,
+                "has_construction": false,
+                "is_capital": true,
+                "is_colonizing": false,
+                "name": "地球",
+                "planet_id": 3,
+                "pops": 5469,
+                "status": "established",
+                "status_alerts_count": 2
+              },
+              {
+                "colony_id": 63,
+                "has_construction": true,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "新加的斯",
+                "planet_id": 303,
+                "pops": 4020,
+                "status": "established",
+                "status_alerts_count": 2
+              },
+              {
+                "colony_id": 68,
+                "has_construction": true,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "圣克里斯多弗",
+                "planet_id": 223,
+                "pops": 1709,
+                "status": "established",
+                "status_alerts_count": 2
+              },
+              {
+                "colony_id": 70,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "贡萨雷斯港",
+                "planet_id": 1687,
+                "pops": 932,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 74,
+                "has_construction": true,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "卡拉克",
+                "planet_id": 1050,
+                "pops": 2358,
+                "status": "established",
+                "status_alerts_count": 2
+              },
+              {
+                "colony_id": 78,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "得尔格维希亚",
+                "planet_id": 1055,
+                "pops": 521,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 80,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "吉萨",
+                "planet_id": 3020,
+                "pops": 472,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 87,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "得尔格维希亚",
+                "planet_id": 899,
+                "pops": 209,
+                "status": "established",
+                "status_alerts_count": 1
+              }
+            ],
+            "is_core": true,
+            "sector_id": 0,
+            "sector_name": "地球",
+            "total_pops": 15690
+          },
+          {
+            "capital_planet_id": 4294967295,
+            "capital_planet_name": "",
+            "colonies_count": 5,
+            "colonies_summary": [
+              {
+                "colony_id": 82,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "新加的斯",
+                "planet_id": 2187,
+                "pops": 321,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 95,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "圣波默罗伊",
+                "planet_id": 848,
+                "pops": 235,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 97,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "圣克里斯多弗",
+                "planet_id": 3474,
+                "pops": 185,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 100,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "忒伊亚",
+                "planet_id": 5750,
+                "pops": 193,
+                "status": "established",
+                "status_alerts_count": 1
+              },
+              {
+                "colony_id": 105,
+                "has_construction": false,
+                "is_capital": false,
+                "is_colonizing": false,
+                "name": "马塔巴赫",
+                "planet_id": 1033,
+                "pops": 176,
+                "status": "established",
+                "status_alerts_count": 1
+              }
+            ],
+            "is_core": false,
+            "sector_id": null,
+            "sector_name": "无星域",
+            "total_pops": 1110
+          }
+        ],
+        "total_colonies": 13,
+        "total_pops": 16800,
+        "total_sectors": 2
+      }
+    },
+    "resources": {
+      "advanced_logic": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "alloys": {
+        "capped": false,
+        "expense": 78.71,
+        "income": 152.78,
+        "max": 25000,
+        "net": 74.07,
+        "stockpile": 22852.81
+      },
+      "astral_threads": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 500,
+        "net": 0,
+        "stockpile": 0
+      },
+      "biomass": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "consumer_goods": {
+        "capped": false,
+        "expense": 196.57,
+        "income": 106.85,
+        "max": 25000,
+        "net": -89.72,
+        "stockpile": 3990.56
+      },
+      "energy": {
+        "capped": false,
+        "expense": 674.21,
+        "income": 681.84,
+        "max": 35000,
+        "net": 7.63,
+        "stockpile": 31630.6
+      },
+      "engineering_research": {
+        "expense": 0,
+        "income": 146.49,
+        "net": 146.49,
+        "stockpile": 0
+      },
+      "entropy_crystals": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "exotic_gases": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 25000,
+        "net": 0,
+        "stockpile": 200
+      },
+      "feral_insight": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "food": {
+        "capped": false,
+        "expense": 202.86,
+        "income": 132.49,
+        "max": 25000,
+        "net": -70.38,
+        "stockpile": 3010.37
+      },
+      "influence": {
+        "capped": false,
+        "expense": 1.88,
+        "income": 5,
+        "max": 1000,
+        "net": 3.13,
+        "stockpile": 242.84
+      },
+      "integrity": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "menace": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "minerals": {
+        "capped": false,
+        "expense": 243.95,
+        "income": 568.75,
+        "max": 25000,
+        "net": 324.81,
+        "stockpile": 22241.68
+      },
+      "minor_artifacts": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 2000,
+        "net": 0,
+        "stockpile": 0
+      },
+      "nanites": {
+        "expense": 0,
+        "income": 0,
+        "net": 0,
+        "stockpile": 0
+      },
+      "physics_research": {
+        "expense": 0,
+        "income": 173.64,
+        "net": 173.64,
+        "stockpile": 0
+      },
+      "rare_crystals": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 25000,
+        "net": 0,
+        "stockpile": 200
+      },
+      "society_research": {
+        "expense": 0,
+        "income": 149.16,
+        "net": 149.16,
+        "stockpile": 0
+      },
+      "sr_dark_matter": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 25000,
+        "net": 0,
+        "stockpile": 0
+      },
+      "sr_living_metal": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 25000,
+        "net": 0,
+        "stockpile": 0
+      },
+      "sr_zro": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 25000,
+        "net": 0,
+        "stockpile": 0
+      },
+      "trade": {
+        "capped": false,
+        "expense": 324.98,
+        "income": 440.25,
+        "max": 60000,
+        "net": 115.28,
+        "stockpile": 37293.79
+      },
+      "unity": {
+        "expense": 110.8,
+        "income": 98.14,
+        "net": -12.66,
+        "stockpile": 0
+      },
+      "volatile_motes": {
+        "capped": false,
+        "expense": 0,
+        "income": 0,
+        "max": 25000,
+        "net": 0,
+        "stockpile": 0
+      }
+    },
+    "situation_log": {
+      "anomalies_count": 48,
+      "situations_count": 0,
+      "special_projects_count": 10
+    },
+    "society": {
+      "active_edicts_count": 0,
+      "adopted_trees_count": 2,
+      "can_unlock_tradition": false,
+      "edict_fund": 0,
+      "next_tradition_cost": 3462.78,
+      "unlocked_traditions_count": 11
+    },
+    "species": {
+      "empire_colonies_count": 13,
+      "founder_species_id": 385875969,
+      "founder_species_name": "人类",
+      "total_empire_pops": 16800,
+      "total_species_in_galaxy": 82
+    },
+    "speed": 2,
+    "stats": {
+      "colonies": 13,
+      "empire_size": 444,
+      "naval_capacity": {
+        "capacity": 255,
+        "used": 373
+      },
+      "starbases": {
+        "capacity": 10,
+        "used": 1
+      }
+    }
+  },
+  "continueRestored": true
+}

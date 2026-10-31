@@ -1,0 +1,5092 @@
+{
+  "startedAt": "2026-10-31T12:59:42.172Z",
+  "passed": false,
+  "coreGoalComplete": false,
+  "scope": "bounded_research_and_planet_construction_country_ai_pilot",
+  "windows": [
+    {
+      "name": "native_before_key_intervention",
+      "before": {
+        "research": {
+          "engineering": {
+            "area": 2,
+            "area_name": "engineering",
+            "candidates": [
+              {
+                "cost": 2500,
+                "key": "tech_afterburners_1",
+                "name": "加力燃烧室",
+                "tier": 1
+              },
+              {
+                "cost": 6000,
+                "key": "tech_assembly_pattern",
+                "name": "装配模式",
+                "tier": 1
+              },
+              {
+                "cost": 5000,
+                "key": "tech_starbase_3",
+                "name": "星垒",
+                "tier": 1
+              },
+              {
+                "cost": 2500,
+                "key": "tech_corvette_build_speed",
+                "name": "标准化护卫舰模板",
+                "tier": 1
+              }
+            ],
+            "current": {
+              "cost": 2500,
+              "is_researching": true,
+              "key": "tech_corvette_build_speed",
+              "name": "标准化护卫舰模板",
+              "tier": 1
+            }
+          },
+          "physics": {
+            "area": 0,
+            "area_name": "physics",
+            "candidates": [
+              {
+                "cost": 6000,
+                "key": "tech_shields_3",
+                "name": "护盾",
+                "tier": 1
+              },
+              {
+                "cost": 6000,
+                "key": "tech_pd_tracking_2",
+                "name": "互联支援系统",
+                "tier": 1
+              },
+              {
+                "cost": 5000,
+                "key": "tech_cold_fusion_power",
+                "name": "冷核聚变能源",
+                "tier": 1
+              },
+              {
+                "cost": 2500,
+                "key": "tech_lasers_2",
+                "name": "蓝激光发射器",
+                "tier": 1
+              },
+              {
+                "cost": 5000,
+                "key": "tech_hyper_drive_2",
+                "name": "超空间航道突破点",
+                "tier": 1
+              },
+              {
+                "cost": 2500,
+                "key": "tech_automated_exploration",
+                "name": "自动探索协议",
+                "tier": 1
+              }
+            ],
+            "current": {
+              "cost": 0,
+              "is_researching": false,
+              "key": null,
+              "name": null,
+              "tier": 0
+            }
+          },
+          "society": {
+            "area": 1,
+            "area_name": "society",
+            "candidates": [
+              {
+                "cost": 5000,
+                "key": "tech_cloning",
+                "name": "克隆",
+                "tier": 1
+              },
+              {
+                "cost": 6000,
+                "key": "tech_artificial_moral_codes",
+                "name": "人工道德规范",
+                "tier": 1
+              },
+              {
+                "cost": 5000,
+                "key": "tech_doctrine_navy_size_2",
+                "name": "学说：支援船队",
+                "tier": 1
+              },
+              {
+                "cost": 5000,
+                "key": "tech_subdermal_stimulation",
+                "name": "皮下刺激",
+                "tier": 1
+              }
+            ],
+            "current": {
+              "cost": 5000,
+              "is_researching": true,
+              "key": "tech_doctrine_navy_size_2",
+              "name": "学说：支援船队",
+              "tier": 1
+            }
+          }
+        },
+        "control": {
+          "assigned_local_human_verified": true,
+          "autonomous_operation_verified": false,
+          "country_coverage_complete": true,
+          "country_id": 0,
+          "country_type_ai_enabled": true,
+          "country_type_ai_flags": 122879,
+          "country_type_settings_scope": "shared_country_type",
+          "execution_receipt_hooks_installed": false,
+          "execution_receipt_scheme": "session_client_sequence_payload",
+          "global_flags": {
+            "force_human_ai": false,
+            "human_ai": false,
+            "normal_ai": true
+          },
+          "human_countries": [
+            {
+              "country_id": 0,
+              "human_ids": [
+                1
+              ]
+            }
+          ],
+          "live_countries": 26,
+          "major_decision_boundary_verified": false,
+          "network_flag": 0,
+          "paused": true,
+          "pending": null,
+          "per_country_domain_settings_verified": false,
+          "precondition": {
+            "assigned_local_human_verified": true,
+            "country_address": 2726591656000,
+            "country_id": 0,
+            "date": "2226.07.01",
+            "global_flags": {
+              "force_human_ai": false,
+              "human_ai": false,
+              "normal_ai": true
+            },
+            "human_countries": [
+              {
+                "country_id": 0,
+                "human_ids": [
+                  1
+                ]
+              }
+            ],
+            "idler_address": 2725545608864,
+            "local_player_id": 1,
+            "network_flag": 0,
+            "sequence": 0,
+            "world_generation": 0
+          },
+          "research_only": true,
+          "scope": "global_human_countries",
+          "single_local_human_guard": true,
+          "success": true,
+          "world_generation_tracking": true,
+          "world_loading": false
+        },
+        "colonies": [
+          {
+            "budget_known": false,
+            "category_membership": {
+              "definitions_sha256": "3dc84ac4969f4c8b752502ef5e6121900e40f957045592210c2f081ec1d97581",
+              "effective_mod_configuration_verified": false,
+              "execution_semantics_verified": false,
+              "known": true,
+              "member_count": 13,
+              "member_keys": [
+                "planet_automation_deficit_restriction",
+                "planet_automation_designation_construction",
+                "planet_automation_upgrade_buildings",
+                "planet_automation_amenities",
+                "planet_automation_rare_resources",
+                "planet_automation_pop_assembly",
+                "planet_automation_housing",
+                "planet_automation_crime",
+                "planet_automation_clear_blockers",
+                "planet_automation_biotrophy_management",
+                "planet_automation_worm",
+                "planet_automation_permanent_employment_center",
+                "planet_automation_psi_corps_building"
+              ]
+            },
+            "colony_id": 0,
+            "enabled": true,
+            "known": true,
+            "note": "State, existing queue identities and serializer category membership only; category execution semantics, costs and spending bounds remain unverified",
+            "owner_id": 0,
+            "planet_id": 3,
+            "queue": {
+              "items": [
+                {
+                  "item_id": 268435473
+                }
+              ],
+              "known": true,
+              "queue_id": 0
+            },
+            "read_only": true,
+            "scope": "single_owned_settled_colony",
+            "settings_known": false
+          },
+          {
+            "budget_known": false,
+            "category_membership": {
+              "definitions_sha256": "3dc84ac4969f4c8b752502ef5e6121900e40f957045592210c2f081ec1d97581",
+              "effective_mod_configuration_verified": false,
+              "execution_semantics_verified": false,
+              "known": true,
+              "member_count": 13,
+              "member_keys": [
+                "planet_automation_deficit_restriction",
+                "planet_automation_designation_construction",
+                "planet_automation_upgrade_buildings",
+                "planet_automation_amenities",
+                "planet_automation_rare_resources",
+                "planet_automation_pop_assembly",
+                "planet_automation_housing",
+                "planet_automation_crime",
+                "planet_automation_clear_blockers",
+                "planet_automation_biotrophy_management",
+                "planet_automation_worm",
+                "planet_automation_permanent_employment_center",
+                "planet_automation_psi_corps_building"
+              ]
+            },
+            "colony_id": 24,
+            "enabled": true,
+            "known": true,
+            "note": "State, existing queue identities and serializer category membership only; category execution semantics, costs and spending bounds remain unverified",
+            "owner_id": 0,
+            "planet_id": 152,
+            "queue": {
+              "items": [
+                {
+                  "item_id": 587202563
+                }
+              ],
+              "known": true,
+              "queue_id": 2014
+            },
+            "read_only": true,
+            "scope": "single_owned_settled_colony",
+            "settings_known": false
+          }
+        ]
+      },
+      "events": [
+        {
+          "country_id": 0,
+          "decision_sequence": 1,
+          "event_sequence": 1,
+          "pending_count": 2,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271006816,
+          "command_name": "research_technology_command",
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 2,
+          "payload_country_id": 0,
+          "payload_hex": "000000006b0a0000a0a9a56f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "technology_key": "tech_lasers_2",
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271003744,
+          "command_name": "research_technology_command",
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 3,
+          "payload_country_id": 0,
+          "payload_hex": "000000007b02000020676a6f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "technology_key": "tech_robotic_workers",
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271006816,
+          "command_name": "research_technology_command",
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 4,
+          "payload_country_id": 0,
+          "payload_hex": "000000006b0a0000a0a9a56f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_entered",
+          "technology_key": "tech_lasers_2",
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "client_id": 1,
+          "command_address": 2722271006816,
+          "command_name": "research_technology_command",
+          "command_sequence": 24,
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 5,
+          "instance_address": 2722271006816,
+          "payload_country_id": 0,
+          "payload_hex": "000000006b0a0000a0a9a56f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_command_serialized",
+          "technology_key": "tech_lasers_2",
+          "tracking_id": 1,
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "client_id": 1,
+          "command_address": 2722271006816,
+          "command_name": "research_technology_command",
+          "command_sequence": 24,
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 6,
+          "instance_address": 2722271004640,
+          "payload_country_id": 0,
+          "payload_hex": "000000006b0a0000a0a9a56f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_command_deserialized",
+          "technology_key": "tech_lasers_2",
+          "tracking_id": 1,
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "client_id": 1,
+          "command_address": 2722271006816,
+          "command_name": "research_technology_command",
+          "command_sequence": 24,
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 7,
+          "instance_address": 2722271006816,
+          "payload_country_id": 0,
+          "payload_hex": "000000006b0a0000a0a9a56f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_original_disposed",
+          "technology_key": "tech_lasers_2",
+          "tracking_id": 1,
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271006816,
+          "command_name": "research_technology_command",
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 8,
+          "payload_country_id": 0,
+          "payload_hex": "000000006b0a0000a0a9a56f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_returned",
+          "technology_key": "tech_lasers_2",
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271003744,
+          "command_name": "research_technology_command",
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 9,
+          "payload_country_id": 0,
+          "payload_hex": "000000007b02000020676a6f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_entered",
+          "technology_key": "tech_robotic_workers",
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "client_id": 1,
+          "command_address": 2722271003744,
+          "command_name": "research_technology_command",
+          "command_sequence": 25,
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 10,
+          "instance_address": 2722271003744,
+          "payload_country_id": 0,
+          "payload_hex": "000000007b02000020676a6f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_command_serialized",
+          "technology_key": "tech_robotic_workers",
+          "tracking_id": 2,
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "client_id": 1,
+          "command_address": 2722271003744,
+          "command_name": "research_technology_command",
+          "command_sequence": 25,
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 11,
+          "instance_address": 2722271005216,
+          "payload_country_id": 0,
+          "payload_hex": "000000007b02000020676a6f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_command_deserialized",
+          "technology_key": "tech_robotic_workers",
+          "tracking_id": 2,
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "client_id": 1,
+          "command_address": 2722271003744,
+          "command_name": "research_technology_command",
+          "command_sequence": 25,
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 12,
+          "instance_address": 2722271003744,
+          "payload_country_id": 0,
+          "payload_hex": "000000007b02000020676a6f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_original_disposed",
+          "technology_key": "tech_robotic_workers",
+          "tracking_id": 2,
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271003744,
+          "command_name": "research_technology_command",
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 13,
+          "payload_country_id": 0,
+          "payload_hex": "000000007b02000020676a6f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_returned",
+          "technology_key": "tech_robotic_workers",
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "client_id": 1,
+          "command_address": 2722271006816,
+          "command_name": "research_technology_command",
+          "command_sequence": 24,
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 14,
+          "instance_address": 2722271004640,
+          "payload_country_id": 0,
+          "payload_hex": "000000006b0a0000a0a9a56f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_copy_disposed",
+          "technology_key": "tech_lasers_2",
+          "tracking_id": 1,
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "client_id": 1,
+          "command_address": 2722271006816,
+          "command_name": "research_technology_command",
+          "command_sequence": 24,
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 15,
+          "payload_country_id": 0,
+          "payload_hex": "000000006b0a0000a0a9a56f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_command_resolved",
+          "technology_key": "tech_lasers_2",
+          "tracking_id": 1,
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "client_id": 1,
+          "command_address": 2722271003744,
+          "command_name": "research_technology_command",
+          "command_sequence": 25,
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 16,
+          "instance_address": 2722271005216,
+          "payload_country_id": 0,
+          "payload_hex": "000000007b02000020676a6f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_copy_disposed",
+          "technology_key": "tech_robotic_workers",
+          "tracking_id": 2,
+          "vtable_rva": 37309968
+        },
+        {
+          "ai_flag": 1,
+          "client_id": 1,
+          "command_address": 2722271003744,
+          "command_name": "research_technology_command",
+          "command_sequence": 25,
+          "command_token": 11532,
+          "country_id": 0,
+          "decision_sequence": 1,
+          "domain": "research",
+          "event_sequence": 17,
+          "payload_country_id": 0,
+          "payload_hex": "000000007b02000020676a6f7a020000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_command_resolved",
+          "technology_key": "tech_robotic_workers",
+          "tracking_id": 2,
+          "vtable_rva": 37309968
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 2,
+          "event_sequence": 18,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 3,
+          "event_sequence": 19,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 4,
+          "event_sequence": 20,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 5,
+          "event_sequence": 21,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 6,
+          "event_sequence": 22,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 7,
+          "event_sequence": 23,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 8,
+          "event_sequence": 24,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 9,
+          "event_sequence": 25,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 10,
+          "event_sequence": 26,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 11,
+          "event_sequence": 27,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 12,
+          "event_sequence": 28,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 13,
+          "event_sequence": 29,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 14,
+          "event_sequence": 30,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 15,
+          "event_sequence": 31,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 16,
+          "event_sequence": 32,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 17,
+          "event_sequence": 33,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 18,
+          "event_sequence": 34,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 19,
+          "event_sequence": 35,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 20,
+          "event_sequence": 36,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 21,
+          "event_sequence": 37,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 22,
+          "event_sequence": 38,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 23,
+          "event_sequence": 39,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 24,
+          "event_sequence": 40,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 25,
+          "event_sequence": 41,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 26,
+          "event_sequence": 42,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 27,
+          "event_sequence": 43,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 28,
+          "event_sequence": 44,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 29,
+          "event_sequence": 45,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 30,
+          "event_sequence": 46,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271018912,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 30,
+          "event_sequence": 47,
+          "payload_hex": "0000000015000000007c920000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271018912,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 30,
+          "event_sequence": 48,
+          "payload_hex": "0000000015000000007c920000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_entered",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271018912,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 30,
+          "event_sequence": 49,
+          "payload_hex": "0000000015000000007c920000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_returned",
+          "vtable_rva": 37294600
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 31,
+          "event_sequence": 50,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 32,
+          "event_sequence": 51,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 33,
+          "event_sequence": 52,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 34,
+          "event_sequence": 53,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 35,
+          "event_sequence": 54,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 36,
+          "event_sequence": 55,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 37,
+          "event_sequence": 56,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 38,
+          "event_sequence": 57,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 39,
+          "event_sequence": 58,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 40,
+          "event_sequence": 59,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 41,
+          "event_sequence": 60,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 42,
+          "event_sequence": 61,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 43,
+          "event_sequence": 62,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 44,
+          "event_sequence": 63,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 45,
+          "event_sequence": 64,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 46,
+          "event_sequence": 65,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 47,
+          "event_sequence": 66,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 48,
+          "event_sequence": 67,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 49,
+          "event_sequence": 68,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 50,
+          "event_sequence": 69,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 51,
+          "event_sequence": 70,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 52,
+          "event_sequence": 71,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 53,
+          "event_sequence": 72,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 54,
+          "event_sequence": 73,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 55,
+          "event_sequence": 74,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 56,
+          "event_sequence": 75,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 57,
+          "event_sequence": 76,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 58,
+          "event_sequence": 77,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 59,
+          "event_sequence": 78,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 60,
+          "event_sequence": 79,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271011808,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 60,
+          "event_sequence": 80,
+          "payload_hex": "000000001500000060f5900000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271011808,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 60,
+          "event_sequence": 81,
+          "payload_hex": "000000001500000060f5900000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_entered",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271011808,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 60,
+          "event_sequence": 82,
+          "payload_hex": "000000001500000060f5900000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_returned",
+          "vtable_rva": 37294600
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 61,
+          "event_sequence": 83,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 62,
+          "event_sequence": 84,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 63,
+          "event_sequence": 85,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 64,
+          "event_sequence": 86,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 65,
+          "event_sequence": 87,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 66,
+          "event_sequence": 88,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 67,
+          "event_sequence": 89,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 68,
+          "event_sequence": 90,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 69,
+          "event_sequence": 91,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 70,
+          "event_sequence": 92,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 71,
+          "event_sequence": 93,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 72,
+          "event_sequence": 94,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 73,
+          "event_sequence": 95,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 74,
+          "event_sequence": 96,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 75,
+          "event_sequence": 97,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 76,
+          "event_sequence": 98,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 77,
+          "event_sequence": 99,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 78,
+          "event_sequence": 100,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 79,
+          "event_sequence": 101,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 80,
+          "event_sequence": 102,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 81,
+          "event_sequence": 103,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 82,
+          "event_sequence": 104,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 83,
+          "event_sequence": 105,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 84,
+          "event_sequence": 106,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 85,
+          "event_sequence": 107,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 86,
+          "event_sequence": 108,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 87,
+          "event_sequence": 109,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 88,
+          "event_sequence": 110,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 89,
+          "event_sequence": 111,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 90,
+          "event_sequence": 112,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271013024,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 90,
+          "event_sequence": 113,
+          "payload_hex": "0000000015000000c06e8f0000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271013024,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 90,
+          "event_sequence": 114,
+          "payload_hex": "0000000015000000c06e8f0000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_entered",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271013024,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 90,
+          "event_sequence": 115,
+          "payload_hex": "0000000015000000c06e8f0000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_returned",
+          "vtable_rva": 37294600
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 91,
+          "event_sequence": 116,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 92,
+          "event_sequence": 117,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 93,
+          "event_sequence": 118,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 94,
+          "event_sequence": 119,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 95,
+          "event_sequence": 120,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 96,
+          "event_sequence": 121,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 97,
+          "event_sequence": 122,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 98,
+          "event_sequence": 123,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 99,
+          "event_sequence": 124,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 100,
+          "event_sequence": 125,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 101,
+          "event_sequence": 126,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 102,
+          "event_sequence": 127,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 103,
+          "event_sequence": 128,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 104,
+          "event_sequence": 129,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 105,
+          "event_sequence": 130,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 106,
+          "event_sequence": 131,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 107,
+          "event_sequence": 132,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 108,
+          "event_sequence": 133,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 109,
+          "event_sequence": 134,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 110,
+          "event_sequence": 135,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 111,
+          "event_sequence": 136,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 112,
+          "event_sequence": 137,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 113,
+          "event_sequence": 138,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 114,
+          "event_sequence": 139,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 115,
+          "event_sequence": 140,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 116,
+          "event_sequence": 141,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 117,
+          "event_sequence": 142,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 118,
+          "event_sequence": 143,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 119,
+          "event_sequence": 144,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 120,
+          "event_sequence": 145,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271017056,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 120,
+          "event_sequence": 146,
+          "payload_hex": "000000001500000020e88d0000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271017056,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 120,
+          "event_sequence": 147,
+          "payload_hex": "000000001500000020e88d0000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_entered",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722271017056,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 120,
+          "event_sequence": 148,
+          "payload_hex": "000000001500000020e88d0000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_returned",
+          "vtable_rva": 37294600
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 121,
+          "event_sequence": 149,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 122,
+          "event_sequence": 150,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 123,
+          "event_sequence": 151,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 124,
+          "event_sequence": 152,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 125,
+          "event_sequence": 153,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 126,
+          "event_sequence": 154,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 127,
+          "event_sequence": 155,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 128,
+          "event_sequence": 156,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 129,
+          "event_sequence": 157,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 130,
+          "event_sequence": 158,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 131,
+          "event_sequence": 159,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 132,
+          "event_sequence": 160,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 133,
+          "event_sequence": 161,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 134,
+          "event_sequence": 162,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 135,
+          "event_sequence": 163,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 136,
+          "event_sequence": 164,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 137,
+          "event_sequence": 165,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 138,
+          "event_sequence": 166,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 139,
+          "event_sequence": 167,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 140,
+          "event_sequence": 168,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 141,
+          "event_sequence": 169,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 142,
+          "event_sequence": 170,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 143,
+          "event_sequence": 171,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 144,
+          "event_sequence": 172,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 145,
+          "event_sequence": 173,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 146,
+          "event_sequence": 174,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 147,
+          "event_sequence": 175,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 148,
+          "event_sequence": 176,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 149,
+          "event_sequence": 177,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 150,
+          "event_sequence": 178,
+          "pending_count": 1,
+          "stage": "native_producer_joined"
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722270896544,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 150,
+          "event_sequence": 179,
+          "payload_hex": "000000001500000080618c0000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_country_pending",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722270896544,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 150,
+          "event_sequence": 180,
+          "payload_hex": "000000001500000080618c0000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_entered",
+          "vtable_rva": 37294600
+        },
+        {
+          "ai_flag": 1,
+          "command_address": 2722270896544,
+          "command_name": "change_job_priority_command",
+          "command_token": 11195,
+          "country_id": 0,
+          "decision_sequence": 150,
+          "event_sequence": 181,
+          "payload_hex": "000000001500000080618c0000000000",
+          "payload_offset": 32,
+          "payload_truncated": false,
+          "stage": "native_session_post_returned",
+          "vtable_rva": 37294600
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 151,
+          "event_sequence": 182,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 152,
+          "event_sequence": 183,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 153,
+          "event_sequence": 184,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 154,
+          "event_sequence": 185,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 155,
+          "event_sequence": 186,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 156,
+          "event_sequence": 187,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 157,
+          "event_sequence": 188,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 158,
+          "event_sequence": 189,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 159,
+          "event_sequence": 190,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 160,
+          "event_sequence": 191,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 161,
+          "event_sequence": 192,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 162,
+          "event_sequence": 193,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 163,
+          "event_sequence": 194,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 164,
+          "event_sequence": 195,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 165,
+          "event_sequence": 196,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 166,
+          "event_sequence": 197,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 167,
+          "event_sequence": 198,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 168,
+          "event_sequence": 199,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 169,
+          "event_sequence": 200,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 170,
+          "event_sequence": 201,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 171,
+          "event_sequence": 202,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 172,
+          "event_sequence": 203,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 173,
+          "event_sequence": 204,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 174,
+          "event_sequence": 205,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 175,
+          "event_sequence": 206,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 176,
+          "event_sequence": 207,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        },
+        {
+          "country_id": 0,
+          "decision_sequence": 177,
+          "event_sequence": 208,
+          "pending_count": 0,
+          "stage": "native_producer_joined"
+        }
+      ],
+      "witnesses": [],
+      "delegation": {
+        "control": {
+          "enabled": true,
+          "phase": "native",
+          "nativePhase": "running",
+          "owner": "native",
+          "ordinaryOrdersBlocked": true,
+          "generation": 1,
+          "domains": [
+            "research",
+            "planet_construction"
+          ],
+          "actualFlags": {
+            "force_human_ai": true,
+            "human_ai": true,
+            "normal_ai": true
+          },
+          "paused": false,
+          "nativeAdmitted": 0,
+          "nativeBlocked": 0,
+          "coverageFaults": 0,
+          "stopReason": "",
+          "reviewDue": false,
+          "hardNativeBudget": false,
+          "autonomousWorkVerified": false,
+          "evidenceIncomplete": false
+        },
+        "state": {
+          "snapshotId": "abc4c89d-2c71-4a1d-a400-a65c9a668393:3",
+          "remainingSeconds": 297,
+          "date": "2226.07.01",
+          "paused": false,
+          "speed": 2,
+          "controlCapabilities": {
+            "surveyDelegationAvailable": false,
+            "colonyHousingAvailable": true,
+            "colonyUpgradeAvailable": false,
+            "monthlyConditionsAvailable": false,
+            "trustedWaitMaximumSeconds": 20,
+            "note": "可用能力不是已启用的对象控制权；委派须显式申请并核对实际条件。"
+          },
+          "player": {
+            "capital_system": "太阳",
+            "capital_system_id": 1,
+            "country_id": 0,
+            "owned_systems": 6
+          },
+          "resources": {
+            "alloys": {
+              "stockpile": 8289.72,
+              "net": 75.35,
+              "capped": false,
+              "max": 15000
+            },
+            "astral_threads": {
+              "stockpile": 0,
+              "net": 0,
+              "capped": false,
+              "max": 500
+            },
+            "consumer_goods": {
+              "stockpile": 15000,
+              "net": 81.69,
+              "capped": true,
+              "max": 15000
+            },
+            "energy": {
+              "stockpile": 18067.65,
+              "net": 124.56,
+              "capped": false,
+              "max": 25000
+            },
+            "engineering_research": {
+              "stockpile": 115.29,
+              "net": 57.65
+            },
+            "exotic_gases": {
+              "stockpile": 0,
+              "net": 0,
+              "capped": false,
+              "max": 15000
+            },
+            "food": {
+              "stockpile": 13541.28,
+              "net": 123.01,
+              "capped": false,
+              "max": 15000
+            },
+            "influence": {
+              "stockpile": 229.63,
+              "net": 5,
+              "capped": false,
+              "max": 1000
+            },
+            "minerals": {
+              "stockpile": 9509.3,
+              "net": 62.04,
+              "capped": false,
+              "max": 15000
+            },
+            "nanites": {
+              "stockpile": 0,
+              "net": 0
+            },
+            "physics_research": {
+              "stockpile": 110.69,
+              "net": 55.35
+            },
+            "rare_crystals": {
+              "stockpile": 0,
+              "net": 0,
+              "capped": false,
+              "max": 15000
+            },
+            "society_research": {
+              "stockpile": 84.23,
+              "net": 42.11
+            },
+            "trade": {
+              "stockpile": 1505.68,
+              "net": 36.4,
+              "capped": false,
+              "max": 50000
+            },
+            "unity": {
+              "stockpile": 1574.92,
+              "net": 62.66
+            },
+            "volatile_motes": {
+              "stockpile": 0,
+              "net": 0,
+              "capped": false,
+              "max": 15000
+            }
+          },
+          "civilian": {
+            "colony_ships": [],
+            "colony_ships_count": 0,
+            "construction_ships": [
+              {
+                "fleet_id": 2,
+                "name": "UNS莱茵河",
+                "ship_class": "shipclass_constructor",
+                "ship_id": 2,
+                "status": "舰队自动托管"
+              },
+              {
+                "fleet_id": 567,
+                "name": "UNS密西西比河",
+                "ship_class": "shipclass_constructor",
+                "ship_id": 1130,
+                "status": "舰队自动托管"
+              },
+              {
+                "fleet_id": 573,
+                "name": "UNS亚得里亚海",
+                "ship_class": "shipclass_constructor",
+                "ship_id": 1137,
+                "status": "舰队自动托管"
+              }
+            ],
+            "construction_ships_count": 3,
+            "science_ships": [
+              {
+                "fleet_id": 1,
+                "leader_id": 251658247,
+                "leader_level": 4,
+                "leader_name": "加涅苏珊娜",
+                "name": "UNS开普勒",
+                "ship_class": "shipclass_science_ship",
+                "ship_id": 1,
+                "status": "舰队自动托管"
+              },
+              {
+                "fleet_id": 571,
+                "leader_id": 33554657,
+                "leader_level": 2,
+                "leader_name": "克吕格尔史蒂芬妮",
+                "name": "UNS格里索姆",
+                "ship_class": "shipclass_science_ship",
+                "ship_id": 1135,
+                "status": "舰队自动托管"
+              },
+              {
+                "fleet_id": 580,
+                "leader_id": 33554641,
+                "leader_level": 2,
+                "leader_name": "萨勒曼哈桑",
+                "name": "UNS马可·波罗",
+                "ship_class": "shipclass_science_ship",
+                "ship_id": 1144,
+                "status": "舰队自动托管"
+              }
+            ],
+            "science_ships_count": 3,
+            "transport_fleets": [
+              {
+                "fleet_id": 496,
+                "name": "第5运输舰队",
+                "ship_class": "shipclass_transport",
+                "status": "无指令"
+              },
+              {
+                "fleet_id": 548,
+                "name": "第1运输舰队",
+                "ship_class": "shipclass_transport",
+                "ship_id": 1108,
+                "status": "无指令"
+              }
+            ],
+            "transport_fleets_count": 2
+          },
+          "military": {
+            "fleets": [
+              {
+                "can_reinforce": true,
+                "fleet_id": 3,
+                "military_power": 890.1796875,
+                "name": "第1舰队",
+                "status": "正在升级舰船（太阳空间站）：0%",
+                "template_id": 0,
+                "total_quota": 14,
+                "total_ships": 10
+              },
+              {
+                "can_reinforce": false,
+                "fleet_id": 528,
+                "military_power": 1696.140625,
+                "name": "第2舰队",
+                "status": "正在升级舰船（太阳空间站）：0%",
+                "template_id": 60,
+                "total_quota": 15,
+                "total_ships": 15
+              }
+            ],
+            "total_military_fleets": 2
+          },
+          "research": {
+            "engineering": {
+              "area": 2,
+              "area_name": "engineering",
+              "candidates": [
+                {
+                  "cost": 2500,
+                  "key": "tech_afterburners_1",
+                  "name": "加力燃烧室",
+                  "tier": 1
+                },
+                {
+                  "cost": 6000,
+                  "key": "tech_assembly_pattern",
+                  "name": "装配模式",
+                  "tier": 1
+                },
+                {
+                  "cost": 5000,
+                  "key": "tech_starbase_3",
+                  "name": "星垒",
+                  "tier": 1
+                },
+                {
+                  "cost": 2500,
+                  "key": "tech_corvette_build_speed",
+                  "name": "标准化护卫舰模板",
+                  "tier": 1
+                }
+              ],
+              "current": {
+                "cost": 2500,
+                "is_researching": true,
+                "key": "tech_corvette_build_speed",
+                "name": "标准化护卫舰模板",
+                "tier": 1
+              }
+            },
+            "physics": {
+              "area": 0,
+              "area_name": "physics",
+              "candidates": [
+                {
+                  "cost": 6000,
+                  "key": "tech_shields_3",
+                  "name": "护盾",
+                  "tier": 1
+                },
+                {
+                  "cost": 6000,
+                  "key": "tech_pd_tracking_2",
+                  "name": "互联支援系统",
+                  "tier": 1
+                },
+                {
+                  "cost": 5000,
+                  "key": "tech_cold_fusion_power",
+                  "name": "冷核聚变能源",
+                  "tier": 1
+                },
+                {
+                  "cost": 2500,
+                  "key": "tech_lasers_2",
+                  "name": "蓝激光发射器",
+                  "tier": 1
+                },
+                {
+                  "cost": 5000,
+                  "key": "tech_hyper_drive_2",
+                  "name": "超空间航道突破点",
+                  "tier": 1
+                },
+                {
+                  "cost": 2500,
+                  "key": "tech_automated_exploration",
+                  "name": "自动探索协议",
+                  "tier": 1
+                }
+              ],
+              "current": {
+                "cost": 0,
+                "is_researching": false,
+                "key": null,
+                "name": null,
+                "tier": 0
+              }
+            },
+            "society": {
+              "area": 1,
+              "area_name": "society",
+              "candidates": [
+                {
+                  "cost": 5000,
+                  "key": "tech_cloning",
+                  "name": "克隆",
+                  "tier": 1
+                },
+                {
+                  "cost": 6000,
+                  "key": "tech_artificial_moral_codes",
+                  "name": "人工道德规范",
+                  "tier": 1
+                },
+                {
+                  "cost": 5000,
+                  "key": "tech_doctrine_navy_size_2",
+                  "name": "学说：支援船队",
+                  "tier": 1
+                },
+                {
+                  "cost": 5000,
+                  "key": "tech_subdermal_stimulation",
+                  "name": "皮下刺激",
+                  "tier": 1
+                }
+              ],
+              "current": {
+                "cost": 5000,
+                "is_researching": true,
+                "key": "tech_doctrine_navy_size_2",
+                "name": "学说：支援船队",
+                "tier": 1
+              }
+            }
+          },
+          "colonies": [
+            {
+              "capital_planet_id": 3,
+              "capital_planet_name": "地球",
+              "colonies_count": 2,
+              "colonies_summary": [
+                {
+                  "colony_id": 0,
+                  "has_construction": true,
+                  "is_capital": true,
+                  "is_colonizing": false,
+                  "name": "地球",
+                  "planet_id": 3,
+                  "pops": 5678,
+                  "status": "established",
+                  "status_alerts_count": 0
+                },
+                {
+                  "colony_id": 24,
+                  "has_construction": true,
+                  "is_capital": false,
+                  "is_colonizing": false,
+                  "name": "温州",
+                  "planet_id": 152,
+                  "pops": 1142,
+                  "status": "established",
+                  "status_alerts_count": 1
+                }
+              ],
+              "is_core": true,
+              "sector_id": 0,
+              "sector_name": "地球",
+              "total_pops": 6820
+            }
+          ],
+          "capacities": {
+            "colonies": 2,
+            "empire_size": 83,
+            "naval_capacity": {
+              "capacity": 204,
+              "used": 155
+            },
+            "starbases": {
+              "capacity": 3,
+              "used": 1
+            }
+          },
+          "picture": {
+            "foreground": false,
+            "frames": 2577,
+            "height": 1440,
+            "minimized": false,
+            "rendering": true,
+            "visible": true,
+            "width": 2560
+          },
+          "pendingDiplomacy": [],
+          "wars": [],
+          "warGoalsWindow": false,
+          "alerts": [],
+          "council": {
+            "active_agenda": "agenda_evolving_society",
+            "active_agenda_name": "演化社会",
+            "agenda_cost": 7000,
+            "agenda_progress": 1970.31,
+            "agenda_ready": false,
+            "councilor_count": 4,
+            "ruler_name": "多洛雷丝·穆万加"
+          },
+          "traditions": {
+            "active_edicts_count": 0,
+            "adopted_trees_count": 3,
+            "can_unlock_tradition": false,
+            "edict_fund": 0,
+            "next_tradition_cost": 3462.78,
+            "unlocked_traditions_count": 11
+          },
+          "leaders": {
+            "has_unspent_trait_points": false,
+            "leader_capacity": 5,
+            "pool_count": 13,
+            "total_hired": 11
+          },
+          "pendingEvents": [],
+          "note": "来自当前游戏原生接口。指令返回 posted 仅表示提交；后续状态、订单或队列才是效果证据。",
+          "operationalFacts": [],
+          "capabilities": {
+            "version": 1,
+            "availableActions": [
+              "adopt_ascension_perk",
+              "adopt_tradition",
+              "assign_councilor",
+              "assign_scientist",
+              "build_building",
+              "build_district",
+              "build_outpost",
+              "build_ship",
+              "build_stations",
+              "claim_system",
+              "clear_blocker",
+              "close_war_goals",
+              "colonize",
+              "declare_war",
+              "decrease_fleet_quota",
+              "diplomacy",
+              "embark_all_armies",
+              "fleet_mia",
+              "follow_fleet",
+              "hire_leader",
+              "increase_fleet_quota",
+              "land_armies",
+              "launch_council_agenda",
+              "market_trade",
+              "merge_fleets",
+              "move_fleet",
+              "offer_peace",
+              "open_alert",
+              "open_notification",
+              "open_war_goals",
+              "recruit_planet_army",
+              "reinforce_fleet",
+              "resolve_event",
+              "respond_diplomacy",
+              "select_leader_trait",
+              "select_research",
+              "set_council_agenda",
+              "set_defender_war_goal",
+              "set_district_zone",
+              "set_fleet_stance",
+              "set_job_priority",
+              "set_speed",
+              "survey",
+              "upgrade_building",
+              "upgrade_fleet"
+            ],
+            "limitations": [
+              "星球专精切换尚无执行接口；列为能力受限，不承诺已经操作",
+              "星基升级及模块建设尚无执行接口；列为能力受限，不承诺已经操作",
+              "国民理念改革尚无执行接口；列为能力受限，不承诺已经操作",
+              "总督派驻尚无执行接口；列为能力受限，不承诺已经操作"
+            ]
+          },
+          "nativeWorldGeneration": 0,
+          "countryAIControl": {
+            "enabled": true,
+            "phase": "native",
+            "nativePhase": "running",
+            "owner": "native",
+            "ordinaryOrdersBlocked": true,
+            "generation": 1,
+            "domains": [
+              "research",
+              "planet_construction"
+            ],
+            "actualFlags": {
+              "force_human_ai": true,
+              "human_ai": true,
+              "normal_ai": true
+            },
+            "paused": false,
+            "nativeAdmitted": 0,
+            "nativeBlocked": 0,
+            "coverageFaults": 0,
+            "stopReason": "",
+            "reviewDue": false,
+            "hardNativeBudget": false,
+            "autonomousWorkVerified": false,
+            "evidenceIncomplete": false
+          },
+          "orderTracking": {
+            "counts": {},
+            "recent": []
+          },
+          "colonyControl": {
+            "mode": "local_housing_scheduler",
+            "nativeAutomation": false,
+            "records": [],
+            "queuedWorkCancelled": false
+          },
+          "colonyUpgradeControl": {
+            "mode": "local_building_upgrade_scheduler",
+            "nativeAutomation": false,
+            "validation": "fresh_engine_checks_per_order",
+            "records": [],
+            "queuedWorkCancelled": false,
+            "enabled": false
+          },
+          "monthlyControl": {
+            "scope": "session_order_records",
+            "sessionId": "abc4c89d-2c71-4a1d-a400-a65c9a668393",
+            "lifecyclePilotEnabled": false,
+            "settlementConfirmed": false,
+            "recordCount": 0,
+            "detailsTruncated": false,
+            "detailOrder": "unresolved_then_owned_then_recent",
+            "counts": {
+              "registered": 0,
+              "uncertain": 0,
+              "conditional": 0,
+              "policyCompleted": 0
+            },
+            "records": [],
+            "recovery": {
+              "scope": "bound_process_persisted_records",
+              "count": 0,
+              "detailsTruncated": false,
+              "detailOrder": "unresolved_then_recent",
+              "records": []
+            }
+          },
+          "strategyCards": [
+            {
+              "id": "first-war",
+              "name": "进攻开局与首战准备",
+              "steps": [
+                "核对可达目标与收益",
+                "侦察参战方",
+                "补齐经济、舰队与占领能力",
+                "集结核对后开战"
+              ],
+              "exit": "准备超期或收益消失时缩小目标或更换对手",
+              "version": 1,
+              "scope": {
+                "gameVersion": "需当前桥确认",
+                "empire": "需确认当前普通/蜂巢/机械政体",
+                "dlc": "未知",
+                "mods": "未知"
+              },
+              "source": "STELLARIS_GESTALT_PLAN.md 第四、五节；工程基线",
+              "validation": "仅离线流程测试，未验证实机打法"
+            },
+            {
+              "id": "repair-economy",
+              "name": "战前经济修复",
+              "steps": [
+                "读取库存、月净产和共享承诺",
+                "修复真实瓶颈",
+                "回读修复收益"
+              ],
+              "exit": "缺口解除后恢复备战；无法维持则收缩",
+              "version": 1,
+              "scope": {
+                "gameVersion": "需当前桥确认",
+                "empire": "需确认当前普通/蜂巢/机械政体",
+                "dlc": "未知",
+                "mods": "未知"
+              },
+              "source": "STELLARIS_GESTALT_PLAN.md 第四、五节；工程基线",
+              "validation": "仅离线流程测试，未验证实机打法"
+            },
+            {
+              "id": "strong-neighbor",
+              "name": "强邻与机会调整",
+              "steps": [
+                "重查路线与参战关系",
+                "保护主力",
+                "比较候补目标"
+              ],
+              "exit": "威胁解除恢复进攻，否则终止旧战役",
+              "version": 1,
+              "scope": {
+                "gameVersion": "需当前桥确认",
+                "empire": "需确认当前普通/蜂巢/机械政体",
+                "dlc": "未知",
+                "mods": "未知"
+              },
+              "source": "STELLARIS_GESTALT_PLAN.md 第四、五节；工程基线",
+              "validation": "仅离线流程测试，未验证实机打法"
+            }
+          ],
+          "gestalt": {
+            "paused": false,
+            "tasks": [],
+            "commitments": {},
+            "unconfirmed": []
+          },
+          "strategy": {
+            "version": 3,
+            "route": "regular",
+            "mode": "selective_growth",
+            "focus": "有预算地选择扩张",
+            "conquest": {
+              "objective": "主动进攻与持续征服",
+              "stage": "seek_target",
+              "advisoryOnly": true,
+              "automaticDeclaration": false,
+              "decisionRequired": true,
+              "nextCall": {
+                "tool": "inspect",
+                "input": {
+                  "topic": "targets"
+                }
+              },
+              "warStateKnown": true,
+              "campaignPhase": null,
+              "target": null,
+              "economicGaps": [],
+              "campaignGaps": [],
+              "priorOutcome": null,
+              "next": "inspect targets比较已知敌国、星系/殖民地收益与路线，选定后campaign select；补齐真实准备条件即campaign start推进，不无限转回内政",
+              "recheckWhen": [
+                "准备任务完成",
+                "路线、战争合法性或参战方变化",
+                "敌我实际战力或维护承受能力变化",
+                "和平结果和战后恢复完成"
+              ],
+              "acceptance": "真实战斗/占领、和平结果、取得的战果与战后下一目标评估；posted和运行时长不能代替"
+            },
+            "ordinaryExpansionAllowed": true,
+            "deficits": [],
+            "priorities": [
+              "主动评估一个征服目标：inspect targets→核对收益/战力/合法战争条件→campaign select保存目标和备战；内政小赤字或普通扩张暂缓不取消本项",
+              "补上空闲科研：physics"
+            ],
+            "growth": {
+              "known": false,
+              "reason": "尚无同局10至20年的可比科研样本",
+              "bottleneck": false,
+              "cappedSurpluses": [
+                "consumer_goods"
+              ]
+            },
+            "marketPolicy": {
+              "mode": "bounded_maintenance",
+              "sizing": {
+                "triggerRatio": 0.95,
+                "targetRatio": 0.7,
+                "bufferMonths": 24,
+                "recoveryMonths": 3
+              },
+              "note": "非紧急市场维护不能连续占用经营回合。完成一笔后轮巡一个实际可推进的非市场目标；库存余量超过36个月的赤字不反复补货。无合法动作则watch，不为凑轮巡强行下单。",
+              "reviewAcrossTurns": [
+                "research",
+                "traditions",
+                "ascension",
+                "government",
+                "fleets",
+                "expansion"
+              ],
+              "preserveGuards": "紧急资源、事件和防务优先，所有交易仍按实时整笔报价及储备/容量检查；不禁止必要交易。"
+            },
+            "capabilityGaps": [
+              "已有特区或星球专精切换",
+              "星基升级与模块",
+              "国民理念改革"
+            ],
+            "resumeWhen": "经济与殖民地稳定，目标合法且有边境/资源/宜居收益才扩张",
+            "empireSize": 83,
+            "note": "本机启发式；规模不是硬上限。可执行能力以当前工具与引擎候选为准，缺失信息先查，不猜。",
+            "reviewTargets": [
+              {
+                "planetId": 152,
+                "name": "温州",
+                "alerts": 1
+              },
+              {
+                "planetId": 3,
+                "name": "地球",
+                "alerts": 0
+              }
+            ]
+          }
+        }
+      },
+      "observation": {
+        "armed": true,
+        "binding": {
+          "assigned_local_human_verified": true,
+          "country_address": 2726591656000,
+          "country_id": 0,
+          "date": "2226.07.01",
+          "global_flags": {
+            "force_human_ai": false,
+            "human_ai": false,
+            "normal_ai": true
+          },
+          "human_countries": [
+            {
+              "country_id": 0,
+              "human_ids": [
+                1
+              ]
+            }
+          ],
+          "idler_address": 2725545608864,
+          "local_player_id": 1,
+          "network_flag": 0,
+          "sequence": 0,
+          "world_generation": 0
+        },
+        "changes_ai_policy": false,
+        "commands_drained": false,
+        "events": [
+          {
+            "country_id": 0,
+            "decision_sequence": 172,
+            "event_sequence": 203,
+            "pending_count": 0,
+            "stage": "native_producer_joined"
+          },
+          {
+            "country_id": 0,
+            "decision_sequence": 173,
+            "event_sequence": 204,
+            "pending_count": 0,
+            "stage": "native_producer_joined"
+          },
+          {
+            "country_id": 0,
+            "decision_sequence": 174,
+            "event_sequence": 205,
+            "pending_count": 0,
+            "stage": "native_producer_joined"
+          },
+          {
+            "country_id": 0,
+            "decision_sequence": 175,
+            "event_sequence": 206,
+            "pending_count": 0,
+            "stage": "native_producer_joined"
+          },
+          {
+            "country_id": 0,
+            "decision_sequence": 176,
+            "event_sequence": 207,
+            "pending_count": 0,
+            "stage": "native_producer_joined"
+          },
+          {
+            "country_id": 0,
+            "decision_sequence": 177,
+            "event_sequence": 208,
+            "pending_count": 0,
+            "stage": "native_producer_joined"
+          }
+        ],
+        "execution_verified": false,
+        "last_event_sequence": 208,
+        "lost_events": 0,
+        "major_decision_boundary_verified": false,
+        "source": "native_country_ai_serialized_execution_lifetime",
+        "success": true,
+        "tracking_faults": 0,
+        "unresolved_commands": 5
+      },
+      "after": {
+        "research": {
+          "engineering": {
+            "area": 2,
+            "area_name": "engineering",
+            "candidates": [
+              {
+                "cost": 3000,
+                "key": "tech_robotic_workers",
+                "name": "人造劳动力",
+                "tier": 1
+              },
+              {
+                "cost": 4000,
+                "key": "tech_mine_rare_crystals",
+                "name": "稀有水晶开采",
+                "tier": 1
+              },
+              {
+                "cost": 2500,
+                "key": "tech_ship_armor_2",
+                "name": "瓷金复合材料",
+                "tier": 1
+              },
+              {
+                "cost": 4000,
+                "key": "tech_rare_crystals",
+                "name": "稀有水晶生产",
+                "tier": 1
+              },
+              {
+                "cost": 2500,
+                "key": "tech_afterburners_1",
+                "name": "加力燃烧室",
+                "tier": 1
+              }
+            ],
+            "current": {
+              "cost": 3000,
+              "is_researching": true,
+              "key": "tech_robotic_workers",
+              "name": "人造劳动力",
+              "tier": 1
+            }
+          },
+          "physics": {
+            "area": 0,
+            "area_name": "physics",
+            "candidates": [
+              {
+                "cost": 6000,
+                "key": "tech_shields_3",
+                "name": "护盾",
+                "tier": 1
+              },
+              {
+                "cost": 6000,
+                "key": "tech_pd_tracking_2",
+                "name": "互联支援系统",
+                "tier": 1
+              },
+              {
+                "cost": 5000,
+                "key": "tech_cold_fusion_power",
+                "name": "冷核聚变能源",
+                "tier": 1
+              },
+              {
+                "cost": 2500,
+                "key": "tech_lasers_2",
+                "name": "蓝激光发射器",
+                "tier": 1
+              },
+              {
+                "cost": 5000,
+                "key": "tech_hyper_drive_2",
+                "name": "超空间航道突破点",
+                "tier": 1
+              },
+              {
+                "cost": 2500,
+                "key": "tech_automated_exploration",
+                "name": "自动探索协议",
+                "tier": 1
+              }
+            ],
+            "current": {
+              "cost": 2500,
+              "is_researching": true,
+              "key": "tech_lasers_2",
+              "name": "蓝激光发射器",
+              "tier": 1
+            }
+          },
+          "society": {
+            "area": 1,
+            "area_name": "society",
+            "candidates": [
+              {
+                "cost": 5000,
+                "key": "tech_cloning",
+                "name": "克隆",
+                "tier": 1
+              },
+              {
+                "cost": 6000,
+                "key": "tech_artificial_moral_codes",
+                "name": "人工道德规范",
+                "tier": 1
+              },
+              {
+                "cost": 5000,
+                "key": "tech_doctrine_navy_size_2",
+                "name": "学说：支援船队",
+                "tier": 1
+              },
+              {
+                "cost": 5000,
+                "key": "tech_subdermal_stimulation",
+                "name": "皮下刺激",
+                "tier": 1
+              }
+            ],
+            "current": {
+              "cost": 5000,
+              "is_researching": true,
+              "key": "tech_doctrine_navy_size_2",
+              "name": "学说：支援船队",
+              "tier": 1
+            }
+          }
+        },
+        "control": {
+          "assigned_local_human_verified": true,
+          "autonomous_operation_verified": false,
+          "country_coverage_complete": true,
+          "country_id": 0,
+          "country_type_ai_enabled": true,
+          "country_type_ai_flags": 122879,
+          "country_type_settings_scope": "shared_country_type",
+          "execution_receipt_hooks_installed": true,
+          "execution_receipt_scheme": "session_client_sequence_payload",
+          "global_flags": {
+            "force_human_ai": true,
+            "human_ai": true,
+            "normal_ai": true
+          },
+          "human_countries": [
+            {
+              "country_id": 0,
+              "human_ids": [
+                1
+              ]
+            }
+          ],
+          "live_countries": 26,
+          "major_decision_boundary_verified": false,
+          "network_flag": 0,
+          "paused": false,
+          "pending": {
+            "country_id": 0,
+            "desired_flags": {
+              "force_human_ai": true,
+              "human_ai": true,
+              "normal_ai": true
+            },
+            "execute_receipts": 3,
+            "force_command_identity": {
+              "client": 1,
+              "command_sequence": 13,
+              "object_address": 2727400858096,
+              "valid": true,
+              "value": 1
+            },
+            "human_command_identity": {
+              "client": 1,
+              "command_sequence": 12,
+              "object_address": 2727400859248,
+              "valid": true,
+              "value": 1
+            },
+            "identity_before": {
+              "assigned_local_human_verified": true,
+              "country_address": 2726591656000,
+              "country_id": 0,
+              "date": "2226.07.01",
+              "global_flags": {
+                "force_human_ai": false,
+                "human_ai": false,
+                "normal_ai": true
+              },
+              "human_countries": [
+                {
+                  "country_id": 0,
+                  "human_ids": [
+                    1
+                  ]
+                }
+              ],
+              "idler_address": 2725545608864,
+              "local_player_id": 1,
+              "network_flag": 0,
+              "sequence": 0,
+              "world_generation": 0
+            },
+            "identity_matches": false,
+            "observed_executions_since_post": [
+              {
+                "event": 1,
+                "identity": {
+                  "client": 1,
+                  "command_sequence": 12,
+                  "object_address": 2727400867792,
+                  "valid": true,
+                  "value": 1
+                },
+                "kind": 1
+              },
+              {
+                "event": 2,
+                "identity": {
+                  "client": 1,
+                  "command_sequence": 13,
+                  "object_address": 2727400861888,
+                  "valid": true,
+                  "value": 1
+                },
+                "kind": 2
+              }
+            ],
+            "original_flags": {
+              "force_human_ai": false,
+              "human_ai": false,
+              "normal_ai": true
+            },
+            "phase": "readback_confirmed",
+            "receipt_loss": 0,
+            "sequence": 1,
+            "superseded_sequence": null
+          },
+          "per_country_domain_settings_verified": false,
+          "precondition": {
+            "assigned_local_human_verified": true,
+            "country_address": 2726591656000,
+            "country_id": 0,
+            "date": "2226.12.28",
+            "global_flags": {
+              "force_human_ai": true,
+              "human_ai": true,
+              "normal_ai": true
+            },
+            "human_countries": [
+              {
+                "country_id": 0,
+                "human_ids": [
+                  1
+                ]
+              }
+            ],
+            "idler_address": 2725545608864,
+            "local_player_id": 1,
+            "network_flag": 0,
+            "sequence": 1,
+            "world_generation": 0
+          },
+          "research_only": true,
+          "scope": "global_human_countries",
+          "single_local_human_guard": true,
+          "success": true,
+          "world_generation_tracking": true,
+          "world_loading": false
+        },
+        "colonies": [
+          {
+            "budget_known": false,
+            "category_membership": {
+              "definitions_sha256": "3dc84ac4969f4c8b752502ef5e6121900e40f957045592210c2f081ec1d97581",
+              "effective_mod_configuration_verified": false,
+              "execution_semantics_verified": false,
+              "known": true,
+              "member_count": 13,
+              "member_keys": [
+                "planet_automation_deficit_restriction",
+                "planet_automation_designation_construction",
+                "planet_automation_upgrade_buildings",
+                "planet_automation_amenities",
+                "planet_automation_rare_resources",
+                "planet_automation_pop_assembly",
+                "planet_automation_housing",
+                "planet_automation_crime",
+                "planet_automation_clear_blockers",
+                "planet_automation_biotrophy_management",
+                "planet_automation_worm",
+                "planet_automation_permanent_employment_center",
+                "planet_automation_psi_corps_building"
+              ]
+            },
+            "colony_id": 0,
+            "enabled": true,
+            "known": true,
+            "note": "State, existing queue identities and serializer category membership only; category execution semantics, costs and spending bounds remain unverified",
+            "owner_id": 0,
+            "planet_id": 3,
+            "queue": {
+              "items": [
+                {
+                  "item_id": 268435473
+                }
+              ],
+              "known": true,
+              "queue_id": 0
+            },
+            "read_only": true,
+            "scope": "single_owned_settled_colony",
+            "settings_known": false
+          },
+          {
+            "budget_known": false,
+            "category_membership": {
+              "definitions_sha256": "3dc84ac4969f4c8b752502ef5e6121900e40f957045592210c2f081ec1d97581",
+              "effective_mod_configuration_verified": false,
+              "execution_semantics_verified": false,
+              "known": true,
+              "member_count": 13,
+              "member_keys": [
+                "planet_automation_deficit_restriction",
+                "planet_automation_designation_construction",
+                "planet_automation_upgrade_buildings",
+                "planet_automation_amenities",
+                "planet_automation_rare_resources",
+                "planet_automation_pop_assembly",
+                "planet_automation_housing",
+                "planet_automation_crime",
+                "planet_automation_clear_blockers",
+                "planet_automation_biotrophy_management",
+                "planet_automation_worm",
+                "planet_automation_permanent_employment_center",
+                "planet_automation_psi_corps_building"
+              ]
+            },
+            "colony_id": 24,
+            "enabled": true,
+            "known": true,
+            "note": "State, existing queue identities and serializer category membership only; category execution semantics, costs and spending bounds remain unverified",
+            "owner_id": 0,
+            "planet_id": 152,
+            "queue": {
+              "items": [
+                {
+                  "item_id": 587202563
+                }
+              ],
+              "known": true,
+              "queue_id": 2014
+            },
+            "read_only": true,
+            "scope": "single_owned_settled_colony",
+            "settings_known": false
+          }
+        ]
+      }
+    }
+  ],
+  "writes": [
+    {
+      "at": "2026-10-31T12:59:42.707Z",
+      "method": "set_paused",
+      "params": {
+        "paused": true
+      },
+      "nativeOwned": false
+    },
+    {
+      "at": "2026-10-31T12:59:43.158Z",
+      "method": "cancel_research",
+      "params": {
+        "area": "physics"
+      },
+      "nativeOwned": false
+    },
+    {
+      "at": "2026-10-31T12:59:43.366Z",
+      "method": "set_paused",
+      "params": {
+        "paused": true
+      },
+      "nativeOwned": false
+    },
+    {
+      "at": "2026-10-31T12:59:43.939Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "prepare",
+        "expected": {
+          "assigned_local_human_verified": true,
+          "country_address": 2726591656000,
+          "country_id": 0,
+          "date": "2226.07.01",
+          "global_flags": {
+            "force_human_ai": false,
+            "human_ai": false,
+            "normal_ai": true
+          },
+          "human_countries": [
+            {
+              "country_id": 0,
+              "human_ids": [
+                1
+              ]
+            }
+          ],
+          "idler_address": 2725545608864,
+          "local_player_id": 1,
+          "network_flag": 0,
+          "sequence": 0,
+          "world_generation": 0
+        },
+        "policy": "research_and_planet_construction",
+        "max_game_days": 720,
+        "max_wall_ms": 75000,
+        "stop_at_review": false
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:44.541Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "enable",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:45.102Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "run",
+        "generation": 1,
+        "limited_domain_pilot": true
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:45.786Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:47.084Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:48.083Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:49.384Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:50.381Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:51.687Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:52.683Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:53.979Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:54.986Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:56.276Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:57.296Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:58.612Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T12:59:59.585Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:00.878Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:01.896Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:03.192Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:04.204Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:05.494Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:06.497Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:07.802Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:08.807Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:10.110Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:11.114Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:12.420Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:13.426Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:14.733Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:15.713Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:17.010Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:18.049Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:19.388Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:20.348Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:21.656Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:22.651Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:23.944Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:24.979Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:26.284Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:27.267Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:28.572Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:29.571Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:30.874Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:31.888Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:33.189Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:34.182Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:35.486Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:36.489Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:37.792Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:38.784Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:40.090Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:41.086Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:42.399Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:43.398Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:44.699Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:45.694Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:46.985Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:48.005Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:49.295Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:50.312Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:51.614Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "heartbeat",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:00:52.737Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "stop",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:01:05.310Z",
+      "method": "country_ai_lease",
+      "params": {
+        "action": "stop",
+        "generation": 1
+      },
+      "nativeOwned": true
+    },
+    {
+      "at": "2026-10-31T13:01:17.574Z",
+      "method": "set_paused",
+      "params": {
+        "paused": true
+      },
+      "nativeOwned": true
+    }
+  ],
+  "strategicIntent": "接管协议试验：优先推进航道与能源科技，其次选择当前合法的较低成本科技；候选顺序在托管前固定。此项不证明模型战略质量。",
+  "limitations": [
+    "两个日常领域的试点不等于全领域帝国经营交付。",
+    "失去心跳验收不等于进程强杀、读档或所有崩溃路径验收。"
+  ],
+  "start": {
+    "snapshotId": "abc4c89d-2c71-4a1d-a400-a65c9a668393:2",
+    "remainingSeconds": 299,
+    "date": "2226.07.01",
+    "paused": true,
+    "speed": 2,
+    "controlCapabilities": {
+      "surveyDelegationAvailable": false,
+      "colonyHousingAvailable": true,
+      "colonyUpgradeAvailable": false,
+      "monthlyConditionsAvailable": false,
+      "trustedWaitMaximumSeconds": 20,
+      "note": "可用能力不是已启用的对象控制权；委派须显式申请并核对实际条件。"
+    },
+    "player": {
+      "capital_system": "太阳",
+      "capital_system_id": 1,
+      "country_id": 0,
+      "owned_systems": 6
+    },
+    "resources": {
+      "alloys": {
+        "stockpile": 8289.72,
+        "net": 75.35,
+        "capped": false,
+        "max": 15000
+      },
+      "astral_threads": {
+        "stockpile": 0,
+        "net": 0,
+        "capped": false,
+        "max": 500
+      },
+      "consumer_goods": {
+        "stockpile": 15000,
+        "net": 81.69,
+        "capped": true,
+        "max": 15000
+      },
+      "energy": {
+        "stockpile": 18067.65,
+        "net": 124.56,
+        "capped": false,
+        "max": 25000
+      },
+      "engineering_research": {
+        "stockpile": 115.29,
+        "net": 57.65
+      },
+      "exotic_gases": {
+        "stockpile": 0,
+        "net": 0,
+        "capped": false,
+        "max": 15000
+      },
+      "food": {
+        "stockpile": 13541.28,
+        "net": 123.01,
+        "capped": false,
+        "max": 15000
+      },
+      "influence": {
+        "stockpile": 229.63,
+        "net": 5,
+        "capped": false,
+        "max": 1000
+      },
+      "minerals": {
+        "stockpile": 9509.3,
+        "net": 62.04,
+        "capped": false,
+        "max": 15000
+      },
+      "nanites": {
+        "stockpile": 0,
+        "net": 0
+      },
+      "physics_research": {
+        "stockpile": 110.69,
+        "net": 55.35
+      },
+      "rare_crystals": {
+        "stockpile": 0,
+        "net": 0,
+        "capped": false,
+        "max": 15000
+      },
+      "society_research": {
+        "stockpile": 84.23,
+        "net": 42.11
+      },
+      "trade": {
+        "stockpile": 1505.68,
+        "net": 36.4,
+        "capped": false,
+        "max": 50000
+      },
+      "unity": {
+        "stockpile": 1574.92,
+        "net": 62.66
+      },
+      "volatile_motes": {
+        "stockpile": 0,
+        "net": 0,
+        "capped": false,
+        "max": 15000
+      }
+    },
+    "civilian": {
+      "colony_ships": [],
+      "colony_ships_count": 0,
+      "construction_ships": [
+        {
+          "fleet_id": 2,
+          "name": "UNS莱茵河",
+          "ship_class": "shipclass_constructor",
+          "ship_id": 2,
+          "status": "舰队自动托管"
+        },
+        {
+          "fleet_id": 567,
+          "name": "UNS密西西比河",
+          "ship_class": "shipclass_constructor",
+          "ship_id": 1130,
+          "status": "舰队自动托管"
+        },
+        {
+          "fleet_id": 573,
+          "name": "UNS亚得里亚海",
+          "ship_class": "shipclass_constructor",
+          "ship_id": 1137,
+          "status": "舰队自动托管"
+        }
+      ],
+      "construction_ships_count": 3,
+      "science_ships": [
+        {
+          "fleet_id": 1,
+          "leader_id": 251658247,
+          "leader_level": 4,
+          "leader_name": "加涅苏珊娜",
+          "name": "UNS开普勒",
+          "ship_class": "shipclass_science_ship",
+          "ship_id": 1,
+          "status": "舰队自动托管"
+        },
+        {
+          "fleet_id": 571,
+          "leader_id": 33554657,
+          "leader_level": 2,
+          "leader_name": "克吕格尔史蒂芬妮",
+          "name": "UNS格里索姆",
+          "ship_class": "shipclass_science_ship",
+          "ship_id": 1135,
+          "status": "舰队自动托管"
+        },
+        {
+          "fleet_id": 580,
+          "leader_id": 33554641,
+          "leader_level": 2,
+          "leader_name": "萨勒曼哈桑",
+          "name": "UNS马可·波罗",
+          "ship_class": "shipclass_science_ship",
+          "ship_id": 1144,
+          "status": "舰队自动托管"
+        }
+      ],
+      "science_ships_count": 3,
+      "transport_fleets": [
+        {
+          "fleet_id": 496,
+          "name": "第5运输舰队",
+          "ship_class": "shipclass_transport",
+          "status": "无指令"
+        },
+        {
+          "fleet_id": 548,
+          "name": "第1运输舰队",
+          "ship_class": "shipclass_transport",
+          "ship_id": 1108,
+          "status": "无指令"
+        }
+      ],
+      "transport_fleets_count": 2
+    },
+    "military": {
+      "fleets": [
+        {
+          "can_reinforce": true,
+          "fleet_id": 3,
+          "military_power": 890.1796875,
+          "name": "第1舰队",
+          "status": "正在升级舰船（太阳空间站）：0%",
+          "template_id": 0,
+          "total_quota": 14,
+          "total_ships": 10
+        },
+        {
+          "can_reinforce": false,
+          "fleet_id": 528,
+          "military_power": 1696.140625,
+          "name": "第2舰队",
+          "status": "正在升级舰船（太阳空间站）：0%",
+          "template_id": 60,
+          "total_quota": 15,
+          "total_ships": 15
+        }
+      ],
+      "total_military_fleets": 2
+    },
+    "research": {
+      "engineering": {
+        "area": 2,
+        "area_name": "engineering",
+        "candidates": [
+          {
+            "cost": 2500,
+            "key": "tech_afterburners_1",
+            "name": "加力燃烧室",
+            "tier": 1
+          },
+          {
+            "cost": 6000,
+            "key": "tech_assembly_pattern",
+            "name": "装配模式",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_starbase_3",
+            "name": "星垒",
+            "tier": 1
+          },
+          {
+            "cost": 2500,
+            "key": "tech_corvette_build_speed",
+            "name": "标准化护卫舰模板",
+            "tier": 1
+          }
+        ],
+        "current": {
+          "cost": 2500,
+          "is_researching": true,
+          "key": "tech_corvette_build_speed",
+          "name": "标准化护卫舰模板",
+          "tier": 1
+        }
+      },
+      "physics": {
+        "area": 0,
+        "area_name": "physics",
+        "candidates": [
+          {
+            "cost": 6000,
+            "key": "tech_shields_3",
+            "name": "护盾",
+            "tier": 1
+          },
+          {
+            "cost": 6000,
+            "key": "tech_pd_tracking_2",
+            "name": "互联支援系统",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_cold_fusion_power",
+            "name": "冷核聚变能源",
+            "tier": 1
+          },
+          {
+            "cost": 2500,
+            "key": "tech_lasers_2",
+            "name": "蓝激光发射器",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_hyper_drive_2",
+            "name": "超空间航道突破点",
+            "tier": 1
+          },
+          {
+            "cost": 2500,
+            "key": "tech_automated_exploration",
+            "name": "自动探索协议",
+            "tier": 1
+          }
+        ],
+        "current": {
+          "cost": 6000,
+          "is_researching": true,
+          "key": "tech_shields_3",
+          "name": "护盾",
+          "tier": 1
+        }
+      },
+      "society": {
+        "area": 1,
+        "area_name": "society",
+        "candidates": [
+          {
+            "cost": 5000,
+            "key": "tech_cloning",
+            "name": "克隆",
+            "tier": 1
+          },
+          {
+            "cost": 6000,
+            "key": "tech_artificial_moral_codes",
+            "name": "人工道德规范",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_doctrine_navy_size_2",
+            "name": "学说：支援船队",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_subdermal_stimulation",
+            "name": "皮下刺激",
+            "tier": 1
+          }
+        ],
+        "current": {
+          "cost": 5000,
+          "is_researching": true,
+          "key": "tech_doctrine_navy_size_2",
+          "name": "学说：支援船队",
+          "tier": 1
+        }
+      }
+    },
+    "colonies": [
+      {
+        "capital_planet_id": 3,
+        "capital_planet_name": "地球",
+        "colonies_count": 2,
+        "colonies_summary": [
+          {
+            "colony_id": 0,
+            "has_construction": true,
+            "is_capital": true,
+            "is_colonizing": false,
+            "name": "地球",
+            "planet_id": 3,
+            "pops": 5678,
+            "status": "established",
+            "status_alerts_count": 0
+          },
+          {
+            "colony_id": 24,
+            "has_construction": true,
+            "is_capital": false,
+            "is_colonizing": false,
+            "name": "温州",
+            "planet_id": 152,
+            "pops": 1142,
+            "status": "established",
+            "status_alerts_count": 1
+          }
+        ],
+        "is_core": true,
+        "sector_id": 0,
+        "sector_name": "地球",
+        "total_pops": 6820
+      }
+    ],
+    "capacities": {
+      "colonies": 2,
+      "empire_size": 83,
+      "naval_capacity": {
+        "capacity": 204,
+        "used": 155
+      },
+      "starbases": {
+        "capacity": 3,
+        "used": 1
+      }
+    },
+    "picture": {
+      "foreground": false,
+      "frames": 2577,
+      "height": 1440,
+      "minimized": false,
+      "rendering": true,
+      "visible": true,
+      "width": 2560
+    },
+    "pendingDiplomacy": [],
+    "wars": [],
+    "warGoalsWindow": false,
+    "alerts": [
+      {
+        "alert_id": 14,
+        "type": "alert_capped_resources",
+        "title": "资源爆仓",
+        "description": "有些资源已超出存储上限。只要资源储备还是满的，接下来产出的资源都会被浪费掉。"
+      },
+      {
+        "alert_id": 41,
+        "type": "alert_unassigned_leader",
+        "title": "空闲领袖",
+        "description": "你有至少一位领袖等待安排工作。"
+      }
+    ],
+    "council": {
+      "active_agenda": "agenda_evolving_society",
+      "active_agenda_name": "演化社会",
+      "agenda_cost": 7000,
+      "agenda_progress": 1970.31,
+      "agenda_ready": false,
+      "councilor_count": 4,
+      "ruler_name": "多洛雷丝·穆万加"
+    },
+    "traditions": {
+      "active_edicts_count": 0,
+      "adopted_trees_count": 3,
+      "can_unlock_tradition": false,
+      "edict_fund": 0,
+      "next_tradition_cost": 3462.78,
+      "unlocked_traditions_count": 11
+    },
+    "leaders": {
+      "has_unspent_trait_points": false,
+      "leader_capacity": 5,
+      "pool_count": 13,
+      "total_hired": 11
+    },
+    "pendingEvents": [],
+    "note": "来自当前游戏原生接口。指令返回 posted 仅表示提交；后续状态、订单或队列才是效果证据。",
+    "operationalFacts": [],
+    "capabilities": {
+      "version": 1,
+      "availableActions": [
+        "adopt_ascension_perk",
+        "adopt_tradition",
+        "assign_councilor",
+        "assign_scientist",
+        "build_building",
+        "build_district",
+        "build_outpost",
+        "build_ship",
+        "build_stations",
+        "claim_system",
+        "clear_blocker",
+        "close_war_goals",
+        "colonize",
+        "declare_war",
+        "decrease_fleet_quota",
+        "diplomacy",
+        "embark_all_armies",
+        "fleet_mia",
+        "follow_fleet",
+        "hire_leader",
+        "increase_fleet_quota",
+        "land_armies",
+        "launch_council_agenda",
+        "market_trade",
+        "merge_fleets",
+        "move_fleet",
+        "offer_peace",
+        "open_alert",
+        "open_notification",
+        "open_war_goals",
+        "recruit_planet_army",
+        "reinforce_fleet",
+        "resolve_event",
+        "respond_diplomacy",
+        "select_leader_trait",
+        "select_research",
+        "set_council_agenda",
+        "set_defender_war_goal",
+        "set_district_zone",
+        "set_fleet_stance",
+        "set_job_priority",
+        "set_speed",
+        "survey",
+        "upgrade_building",
+        "upgrade_fleet"
+      ],
+      "limitations": [
+        "星球专精切换尚无执行接口；列为能力受限，不承诺已经操作",
+        "星基升级及模块建设尚无执行接口；列为能力受限，不承诺已经操作",
+        "国民理念改革尚无执行接口；列为能力受限，不承诺已经操作",
+        "总督派驻尚无执行接口；列为能力受限，不承诺已经操作"
+      ]
+    },
+    "nativeWorldGeneration": 0,
+    "countryAIControl": {
+      "enabled": true,
+      "phase": "human",
+      "nativePhase": null,
+      "owner": "human",
+      "ordinaryOrdersBlocked": false,
+      "generation": null,
+      "domains": [],
+      "actualFlags": null,
+      "paused": null,
+      "nativeAdmitted": null,
+      "nativeBlocked": null,
+      "coverageFaults": null,
+      "stopReason": null,
+      "reviewDue": false,
+      "hardNativeBudget": false,
+      "autonomousWorkVerified": false,
+      "evidenceIncomplete": false
+    },
+    "orderTracking": {
+      "counts": {},
+      "recent": []
+    },
+    "colonyControl": {
+      "mode": "local_housing_scheduler",
+      "nativeAutomation": false,
+      "records": [],
+      "queuedWorkCancelled": false
+    },
+    "colonyUpgradeControl": {
+      "mode": "local_building_upgrade_scheduler",
+      "nativeAutomation": false,
+      "validation": "fresh_engine_checks_per_order",
+      "records": [],
+      "queuedWorkCancelled": false,
+      "enabled": false
+    },
+    "monthlyControl": {
+      "scope": "session_order_records",
+      "sessionId": "abc4c89d-2c71-4a1d-a400-a65c9a668393",
+      "lifecyclePilotEnabled": false,
+      "settlementConfirmed": false,
+      "recordCount": 0,
+      "detailsTruncated": false,
+      "detailOrder": "unresolved_then_owned_then_recent",
+      "counts": {
+        "registered": 0,
+        "uncertain": 0,
+        "conditional": 0,
+        "policyCompleted": 0
+      },
+      "records": [],
+      "recovery": {
+        "scope": "bound_process_persisted_records",
+        "count": 0,
+        "detailsTruncated": false,
+        "detailOrder": "unresolved_then_recent",
+        "records": []
+      }
+    },
+    "strategyCards": [
+      {
+        "id": "first-war",
+        "name": "进攻开局与首战准备",
+        "steps": [
+          "核对可达目标与收益",
+          "侦察参战方",
+          "补齐经济、舰队与占领能力",
+          "集结核对后开战"
+        ],
+        "exit": "准备超期或收益消失时缩小目标或更换对手",
+        "version": 1,
+        "scope": {
+          "gameVersion": "需当前桥确认",
+          "empire": "需确认当前普通/蜂巢/机械政体",
+          "dlc": "未知",
+          "mods": "未知"
+        },
+        "source": "STELLARIS_GESTALT_PLAN.md 第四、五节；工程基线",
+        "validation": "仅离线流程测试，未验证实机打法"
+      },
+      {
+        "id": "repair-economy",
+        "name": "战前经济修复",
+        "steps": [
+          "读取库存、月净产和共享承诺",
+          "修复真实瓶颈",
+          "回读修复收益"
+        ],
+        "exit": "缺口解除后恢复备战；无法维持则收缩",
+        "version": 1,
+        "scope": {
+          "gameVersion": "需当前桥确认",
+          "empire": "需确认当前普通/蜂巢/机械政体",
+          "dlc": "未知",
+          "mods": "未知"
+        },
+        "source": "STELLARIS_GESTALT_PLAN.md 第四、五节；工程基线",
+        "validation": "仅离线流程测试，未验证实机打法"
+      },
+      {
+        "id": "strong-neighbor",
+        "name": "强邻与机会调整",
+        "steps": [
+          "重查路线与参战关系",
+          "保护主力",
+          "比较候补目标"
+        ],
+        "exit": "威胁解除恢复进攻，否则终止旧战役",
+        "version": 1,
+        "scope": {
+          "gameVersion": "需当前桥确认",
+          "empire": "需确认当前普通/蜂巢/机械政体",
+          "dlc": "未知",
+          "mods": "未知"
+        },
+        "source": "STELLARIS_GESTALT_PLAN.md 第四、五节；工程基线",
+        "validation": "仅离线流程测试，未验证实机打法"
+      }
+    ],
+    "gestalt": {
+      "paused": false,
+      "tasks": [],
+      "commitments": {},
+      "unconfirmed": []
+    },
+    "strategy": {
+      "version": 3,
+      "route": "regular",
+      "mode": "selective_growth",
+      "focus": "有预算地选择扩张",
+      "conquest": {
+        "objective": "主动进攻与持续征服",
+        "stage": "seek_target",
+        "advisoryOnly": true,
+        "automaticDeclaration": false,
+        "decisionRequired": true,
+        "nextCall": {
+          "tool": "inspect",
+          "input": {
+            "topic": "targets"
+          }
+        },
+        "warStateKnown": true,
+        "campaignPhase": null,
+        "target": null,
+        "economicGaps": [],
+        "campaignGaps": [],
+        "priorOutcome": null,
+        "next": "inspect targets比较已知敌国、星系/殖民地收益与路线，选定后campaign select；补齐真实准备条件即campaign start推进，不无限转回内政",
+        "recheckWhen": [
+          "准备任务完成",
+          "路线、战争合法性或参战方变化",
+          "敌我实际战力或维护承受能力变化",
+          "和平结果和战后恢复完成"
+        ],
+        "acceptance": "真实战斗/占领、和平结果、取得的战果与战后下一目标评估；posted和运行时长不能代替"
+      },
+      "ordinaryExpansionAllowed": true,
+      "deficits": [],
+      "priorities": [
+        "主动评估一个征服目标：inspect targets→核对收益/战力/合法战争条件→campaign select保存目标和备战；内政小赤字或普通扩张暂缓不取消本项"
+      ],
+      "growth": {
+        "known": false,
+        "reason": "尚无同局10至20年的可比科研样本",
+        "bottleneck": false,
+        "cappedSurpluses": [
+          "consumer_goods"
+        ]
+      },
+      "marketPolicy": {
+        "mode": "bounded_maintenance",
+        "sizing": {
+          "triggerRatio": 0.95,
+          "targetRatio": 0.7,
+          "bufferMonths": 24,
+          "recoveryMonths": 3
+        },
+        "note": "非紧急市场维护不能连续占用经营回合。完成一笔后轮巡一个实际可推进的非市场目标；库存余量超过36个月的赤字不反复补货。无合法动作则watch，不为凑轮巡强行下单。",
+        "reviewAcrossTurns": [
+          "research",
+          "traditions",
+          "ascension",
+          "government",
+          "fleets",
+          "expansion"
+        ],
+        "preserveGuards": "紧急资源、事件和防务优先，所有交易仍按实时整笔报价及储备/容量检查；不禁止必要交易。"
+      },
+      "capabilityGaps": [
+        "已有特区或星球专精切换",
+        "星基升级与模块",
+        "国民理念改革"
+      ],
+      "resumeWhen": "经济与殖民地稳定，目标合法且有边境/资源/宜居收益才扩张",
+      "empireSize": 83,
+      "note": "本机启发式；规模不是硬上限。可执行能力以当前工具与引擎候选为准，缺失信息先查，不猜。",
+      "reviewTargets": [
+        {
+          "planetId": 152,
+          "name": "温州",
+          "alerts": 1
+        },
+        {
+          "planetId": 3,
+          "name": "地球",
+          "alerts": 0
+        }
+      ]
+    }
+  },
+  "before": {
+    "research": {
+      "engineering": {
+        "area": 2,
+        "area_name": "engineering",
+        "candidates": [
+          {
+            "cost": 2500,
+            "key": "tech_afterburners_1",
+            "name": "加力燃烧室",
+            "tier": 1
+          },
+          {
+            "cost": 6000,
+            "key": "tech_assembly_pattern",
+            "name": "装配模式",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_starbase_3",
+            "name": "星垒",
+            "tier": 1
+          },
+          {
+            "cost": 2500,
+            "key": "tech_corvette_build_speed",
+            "name": "标准化护卫舰模板",
+            "tier": 1
+          }
+        ],
+        "current": {
+          "cost": 2500,
+          "is_researching": true,
+          "key": "tech_corvette_build_speed",
+          "name": "标准化护卫舰模板",
+          "tier": 1
+        }
+      },
+      "physics": {
+        "area": 0,
+        "area_name": "physics",
+        "candidates": [
+          {
+            "cost": 6000,
+            "key": "tech_shields_3",
+            "name": "护盾",
+            "tier": 1
+          },
+          {
+            "cost": 6000,
+            "key": "tech_pd_tracking_2",
+            "name": "互联支援系统",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_cold_fusion_power",
+            "name": "冷核聚变能源",
+            "tier": 1
+          },
+          {
+            "cost": 2500,
+            "key": "tech_lasers_2",
+            "name": "蓝激光发射器",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_hyper_drive_2",
+            "name": "超空间航道突破点",
+            "tier": 1
+          },
+          {
+            "cost": 2500,
+            "key": "tech_automated_exploration",
+            "name": "自动探索协议",
+            "tier": 1
+          }
+        ],
+        "current": {
+          "cost": 6000,
+          "is_researching": true,
+          "key": "tech_shields_3",
+          "name": "护盾",
+          "tier": 1
+        }
+      },
+      "society": {
+        "area": 1,
+        "area_name": "society",
+        "candidates": [
+          {
+            "cost": 5000,
+            "key": "tech_cloning",
+            "name": "克隆",
+            "tier": 1
+          },
+          {
+            "cost": 6000,
+            "key": "tech_artificial_moral_codes",
+            "name": "人工道德规范",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_doctrine_navy_size_2",
+            "name": "学说：支援船队",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_subdermal_stimulation",
+            "name": "皮下刺激",
+            "tier": 1
+          }
+        ],
+        "current": {
+          "cost": 5000,
+          "is_researching": true,
+          "key": "tech_doctrine_navy_size_2",
+          "name": "学说：支援船队",
+          "tier": 1
+        }
+      }
+    },
+    "control": {
+      "assigned_local_human_verified": true,
+      "autonomous_operation_verified": false,
+      "country_coverage_complete": true,
+      "country_id": 0,
+      "country_type_ai_enabled": true,
+      "country_type_ai_flags": 122879,
+      "country_type_settings_scope": "shared_country_type",
+      "execution_receipt_hooks_installed": false,
+      "execution_receipt_scheme": "session_client_sequence_payload",
+      "global_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "human_countries": [
+        {
+          "country_id": 0,
+          "human_ids": [
+            1
+          ]
+        }
+      ],
+      "live_countries": 26,
+      "major_decision_boundary_verified": false,
+      "network_flag": 0,
+      "paused": true,
+      "pending": null,
+      "per_country_domain_settings_verified": false,
+      "precondition": {
+        "assigned_local_human_verified": true,
+        "country_address": 2726591656000,
+        "country_id": 0,
+        "date": "2226.07.01",
+        "global_flags": {
+          "force_human_ai": false,
+          "human_ai": false,
+          "normal_ai": true
+        },
+        "human_countries": [
+          {
+            "country_id": 0,
+            "human_ids": [
+              1
+            ]
+          }
+        ],
+        "idler_address": 2725545608864,
+        "local_player_id": 1,
+        "network_flag": 0,
+        "sequence": 0,
+        "world_generation": 0
+      },
+      "research_only": true,
+      "scope": "global_human_countries",
+      "single_local_human_guard": true,
+      "success": true,
+      "world_generation_tracking": true,
+      "world_loading": false
+    },
+    "colonies": [
+      {
+        "budget_known": false,
+        "category_membership": {
+          "definitions_sha256": "3dc84ac4969f4c8b752502ef5e6121900e40f957045592210c2f081ec1d97581",
+          "effective_mod_configuration_verified": false,
+          "execution_semantics_verified": false,
+          "known": true,
+          "member_count": 13,
+          "member_keys": [
+            "planet_automation_deficit_restriction",
+            "planet_automation_designation_construction",
+            "planet_automation_upgrade_buildings",
+            "planet_automation_amenities",
+            "planet_automation_rare_resources",
+            "planet_automation_pop_assembly",
+            "planet_automation_housing",
+            "planet_automation_crime",
+            "planet_automation_clear_blockers",
+            "planet_automation_biotrophy_management",
+            "planet_automation_worm",
+            "planet_automation_permanent_employment_center",
+            "planet_automation_psi_corps_building"
+          ]
+        },
+        "colony_id": 0,
+        "enabled": true,
+        "known": true,
+        "note": "State, existing queue identities and serializer category membership only; category execution semantics, costs and spending bounds remain unverified",
+        "owner_id": 0,
+        "planet_id": 3,
+        "queue": {
+          "items": [
+            {
+              "item_id": 268435473
+            }
+          ],
+          "known": true,
+          "queue_id": 0
+        },
+        "read_only": true,
+        "scope": "single_owned_settled_colony",
+        "settings_known": false
+      },
+      {
+        "budget_known": false,
+        "category_membership": {
+          "definitions_sha256": "3dc84ac4969f4c8b752502ef5e6121900e40f957045592210c2f081ec1d97581",
+          "effective_mod_configuration_verified": false,
+          "execution_semantics_verified": false,
+          "known": true,
+          "member_count": 13,
+          "member_keys": [
+            "planet_automation_deficit_restriction",
+            "planet_automation_designation_construction",
+            "planet_automation_upgrade_buildings",
+            "planet_automation_amenities",
+            "planet_automation_rare_resources",
+            "planet_automation_pop_assembly",
+            "planet_automation_housing",
+            "planet_automation_crime",
+            "planet_automation_clear_blockers",
+            "planet_automation_biotrophy_management",
+            "planet_automation_worm",
+            "planet_automation_permanent_employment_center",
+            "planet_automation_psi_corps_building"
+          ]
+        },
+        "colony_id": 24,
+        "enabled": true,
+        "known": true,
+        "note": "State, existing queue identities and serializer category membership only; category execution semantics, costs and spending bounds remain unverified",
+        "owner_id": 0,
+        "planet_id": 152,
+        "queue": {
+          "items": [
+            {
+              "item_id": 587202563
+            }
+          ],
+          "known": true,
+          "queue_id": 2014
+        },
+        "read_only": true,
+        "scope": "single_owned_settled_colony",
+        "settings_known": false
+      }
+    ]
+  },
+  "strategicCandidates": [
+    "tech_hyper_drive_2",
+    "tech_automated_exploration",
+    "tech_lasers_2",
+    "tech_cold_fusion_power",
+    "tech_pd_tracking_2",
+    "tech_shields_3"
+  ],
+  "fixturePhysics": {
+    "area": "physics",
+    "changed": true,
+    "before": {
+      "engineering": {
+        "area": 2,
+        "area_name": "engineering",
+        "candidates": [
+          {
+            "cost": 2500,
+            "key": "tech_afterburners_1",
+            "name": "加力燃烧室",
+            "tier": 1
+          },
+          {
+            "cost": 6000,
+            "key": "tech_assembly_pattern",
+            "name": "装配模式",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_starbase_3",
+            "name": "星垒",
+            "tier": 1
+          },
+          {
+            "cost": 2500,
+            "key": "tech_corvette_build_speed",
+            "name": "标准化护卫舰模板",
+            "tier": 1
+          }
+        ],
+        "current": {
+          "cost": 2500,
+          "is_researching": true,
+          "key": "tech_corvette_build_speed",
+          "name": "标准化护卫舰模板",
+          "tier": 1
+        }
+      },
+      "physics": {
+        "area": 0,
+        "area_name": "physics",
+        "candidates": [
+          {
+            "cost": 6000,
+            "key": "tech_shields_3",
+            "name": "护盾",
+            "tier": 1
+          },
+          {
+            "cost": 6000,
+            "key": "tech_pd_tracking_2",
+            "name": "互联支援系统",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_cold_fusion_power",
+            "name": "冷核聚变能源",
+            "tier": 1
+          },
+          {
+            "cost": 2500,
+            "key": "tech_lasers_2",
+            "name": "蓝激光发射器",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_hyper_drive_2",
+            "name": "超空间航道突破点",
+            "tier": 1
+          },
+          {
+            "cost": 2500,
+            "key": "tech_automated_exploration",
+            "name": "自动探索协议",
+            "tier": 1
+          }
+        ],
+        "current": {
+          "cost": 6000,
+          "is_researching": true,
+          "key": "tech_shields_3",
+          "name": "护盾",
+          "tier": 1
+        }
+      },
+      "society": {
+        "area": 1,
+        "area_name": "society",
+        "candidates": [
+          {
+            "cost": 5000,
+            "key": "tech_cloning",
+            "name": "克隆",
+            "tier": 1
+          },
+          {
+            "cost": 6000,
+            "key": "tech_artificial_moral_codes",
+            "name": "人工道德规范",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_doctrine_navy_size_2",
+            "name": "学说：支援船队",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_subdermal_stimulation",
+            "name": "皮下刺激",
+            "tier": 1
+          }
+        ],
+        "current": {
+          "cost": 5000,
+          "is_researching": true,
+          "key": "tech_doctrine_navy_size_2",
+          "name": "学说：支援船队",
+          "tier": 1
+        }
+      }
+    },
+    "after": {
+      "engineering": {
+        "area": 2,
+        "area_name": "engineering",
+        "candidates": [
+          {
+            "cost": 2500,
+            "key": "tech_afterburners_1",
+            "name": "加力燃烧室",
+            "tier": 1
+          },
+          {
+            "cost": 6000,
+            "key": "tech_assembly_pattern",
+            "name": "装配模式",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_starbase_3",
+            "name": "星垒",
+            "tier": 1
+          },
+          {
+            "cost": 2500,
+            "key": "tech_corvette_build_speed",
+            "name": "标准化护卫舰模板",
+            "tier": 1
+          }
+        ],
+        "current": {
+          "cost": 2500,
+          "is_researching": true,
+          "key": "tech_corvette_build_speed",
+          "name": "标准化护卫舰模板",
+          "tier": 1
+        }
+      },
+      "physics": {
+        "area": 0,
+        "area_name": "physics",
+        "candidates": [
+          {
+            "cost": 6000,
+            "key": "tech_shields_3",
+            "name": "护盾",
+            "tier": 1
+          },
+          {
+            "cost": 6000,
+            "key": "tech_pd_tracking_2",
+            "name": "互联支援系统",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_cold_fusion_power",
+            "name": "冷核聚变能源",
+            "tier": 1
+          },
+          {
+            "cost": 2500,
+            "key": "tech_lasers_2",
+            "name": "蓝激光发射器",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_hyper_drive_2",
+            "name": "超空间航道突破点",
+            "tier": 1
+          },
+          {
+            "cost": 2500,
+            "key": "tech_automated_exploration",
+            "name": "自动探索协议",
+            "tier": 1
+          }
+        ],
+        "current": {
+          "cost": 0,
+          "is_researching": false,
+          "key": null,
+          "name": null,
+          "tier": 0
+        }
+      },
+      "society": {
+        "area": 1,
+        "area_name": "society",
+        "candidates": [
+          {
+            "cost": 5000,
+            "key": "tech_cloning",
+            "name": "克隆",
+            "tier": 1
+          },
+          {
+            "cost": 6000,
+            "key": "tech_artificial_moral_codes",
+            "name": "人工道德规范",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_doctrine_navy_size_2",
+            "name": "学说：支援船队",
+            "tier": 1
+          },
+          {
+            "cost": 5000,
+            "key": "tech_subdermal_stimulation",
+            "name": "皮下刺激",
+            "tier": 1
+          }
+        ],
+        "current": {
+          "cost": 5000,
+          "is_researching": true,
+          "key": "tech_doctrine_navy_size_2",
+          "name": "学说：支援船队",
+          "tier": 1
+        }
+      }
+    }
+  },
+  "error": "Error: 国家 AI 关闭、暂停或队列交接尚未确认；派单继续封口\n    at NativeCountryAI.stopNative (file:///E:/%E8%82%A5%E9%B1%BC%E7%9B%B4%E6%92%AD/stellaris-player/src/native-country-ai.mjs:111:36)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async NativeGame.countryAIControl (file:///E:/%E8%82%A5%E9%B1%BC%E7%9B%B4%E6%92%AD/stellaris-player/src/native-game.mjs:297:11)\n    at async runWindow (file:///E:/%E8%82%A5%E9%B1%BC%E7%9B%B4%E6%92%AD/stellaris-player/scripts/accept-country-ai-p1.mjs:86:18)\n    at async file:///E:/%E8%82%A5%E9%B1%BC%E7%9B%B4%E6%92%AD/stellaris-player/scripts/accept-country-ai-p1.mjs:102:14",
+  "finishedAt": "2026-10-31T13:01:17.997Z"
+}

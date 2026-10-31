@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-28T23:50:06.555Z",
+  "scope": "2026-10-28晚间四段历史原生会话的本地确定性策略回放",
+  "method": [
+    "只读取现有文件，在内存按日志时间重放状态及既有government/planet查询。",
+    "每个原生会话创建独立增长追踪器，与当前NativeGame重启行为一致；殖民地详情仅保留本会话己方3分钟内记录。",
+    "不运行游戏、不请求模型、不产生实际订单、不修改2026-10-28原始复盘快照。",
+    "比较原日志已记录策略与新启发式输出，不让新决策改变后续历史状态。"
+  ],
+  "limitations": [
+    "仅验证启发式在历史状态上的分流和优先级，不能证明实际长期收益、行动成功率或费用变化。",
+    "增长追踪在NativeGame会话重启时从空开始，尚未持久化跨会话趋势。"
+  ],
+  "inputs": [
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-0a8ec231-4b8a-4c45-82b4-4c56df86d175.jsonl",
+      "bytes": 6116663,
+      "sha256": "5bd8b7b36892ad95c7e45901e4c5abf490ab99c73604d6fc59f149dce279083f"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl",
+      "bytes": 4801916,
+      "sha256": "305447e26113e694c6b8ab2b8f005e8d503a08f04e54bfbab156c50fe357f4df"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-768fb890-0e79-4816-b61c-f26896801f56.jsonl",
+      "bytes": 4167726,
+      "sha256": "fd6718c81190b8896b4c484428773e28536b2a63743643564db8a1854dd445c0"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-85a0adeb-c333-46cd-b8b0-6f6a45bbecf7.jsonl",
+      "bytes": 5495040,
+      "sha256": "7f7b6eb685f92c9b4eaafff6382254c8ab6d05972032261bc7ba37f71ee16485"
+    }
+  ],
+  "stateCount": 1833,
+  "after2280": {
+    "states": 396,
+    "oldModes": {
+      "selective_growth": 385,
+      "defense": 11
+    },
+    "newModes": {
+      "develop_capacity": 315,
+      "defense": 11,
+      "selective_growth": 70
+    }
+  },
+  "protectionAudit": {
+    "emergencyStates": 69,
+    "emergencyDowngrades": 0,
+    "criticalShortageStates": 4,
+    "criticalDowngrades": 0
+  },
+  "checks": {
+    "fourNativeSessions": true,
+    "all1833StatesReplayed": true,
+    "finalGameDateMatchesArchive": true,
+    "longReserveDeficitIsNotCrisis": true,
+    "surplusPromptsCapacityDiagnosis": true,
+    "lateGrowthStagnationDetected": true,
+    "valuableExpansionRemainsPossible": true,
+    "emergencyStatesNotDowngraded": true,
+    "criticalShortagesNotDowngraded": true,
+    "noGameStarted": true,
+    "noModelCalls": true
+  },
+  "passed": true,
+  "final": {
+    "at": "2026-10-28T15:30:19.092Z",
+    "gameDate": "2324.03.25",
+    "old": {
+      "mode": "selective_growth",
+      "focus": "有预算地选择扩张",
+      "priorities": [
+        "先查消费品约510.6月余量：岗位填充→专精/特区→队列→新增产能"
+      ]
+    },
+    "new": {
+      "mode": "develop_capacity",
+      "focus": "解除产能瓶颈，把储备转成有效增长",
+      "priorities": [
+        "多项正收益资源接近满仓：先核验科研/凝聚力岗位容量、劳动力、特区与升级条件，说明新增产能和可执行动作，不为腾仓盲建",
+        "新特洛伊有首府升级提示；当前未提供首府/建筑升级动作，标记能力受限，不反复加城市区划声称解锁",
+        "监测消费品约510.6月余量，保留预算并规划修复；长期小赤字不自动压过产能增长"
+      ],
+      "growth": {
+        "known": true,
+        "observedYears": 19.4,
+        "scienceGrowthPercent": 2.9,
+        "stagnating": true,
+        "note": "本机增长诊断启发式：同局10至20年科研月产增长不超过10%，不是年份达标要求",
+        "bottleneck": true,
+        "cappedSurpluses": [
+          "energy",
+          "minerals"
+        ]
+      },
+      "ordinaryExpansionAllowed": true
+    }
+  },
+  "samples": [
+    {
+      "at": "2026-10-28T14:32:45.098Z",
+      "gameDate": "2280.01.03",
+      "old": {
+        "mode": "selective_growth",
+        "focus": "有预算地选择扩张",
+        "priorities": [
+          "先查消费品约970.2月余量：岗位填充→专精/特区→队列→新增产能",
+          "补上空闲科研：society"
+        ]
+      },
+      "new": {
+        "mode": "develop_capacity",
+        "focus": "解除产能瓶颈，把储备转成有效增长",
+        "priorities": [
+          "补上空闲科研：society",
+          "多项正收益资源接近满仓：先核验科研/凝聚力岗位容量、劳动力、特区与升级条件，说明新增产能和可执行动作，不为腾仓盲建",
+          "新特洛伊有首府升级提示；当前未提供首府/建筑升级动作，标记能力受限，不反复加城市区划声称解锁"
+        ],
+        "growth": {
+          "known": true,
+          "observedYears": 19,
+          "scienceGrowthPercent": 40.2,
+          "stagnating": false,
+          "note": "本机增长诊断启发式：同局10至20年科研月产增长不超过10%，不是年份达标要求",
+          "bottleneck": true,
+          "cappedSurpluses": [
+            "energy",
+            "minerals",
+            "alloys"
+          ]
+        },
+        "ordinaryExpansionAllowed": true
+      }
+    },
+    {
+      "at": "2026-10-28T14:46:21.827Z",
+      "gameDate": "2290.04.20",
+      "old": {
+        "mode": "selective_growth",
+        "focus": "有预算地选择扩张",
+        "priorities": [
+          "先查消费品约469.8月余量：岗位填充→专精/特区→队列→新增产能"
+        ]
+      },
+      "new": {
+        "mode": "selective_growth",
+        "focus": "有预算地选择扩张",
+        "priorities": [
+          "监测消费品约469.8月余量，保留预算并规划修复；长期小赤字不自动压过产能增长"
+        ],
+        "growth": {
+          "known": false,
+          "reason": "尚无同局10至20年的可比科研样本",
+          "bottleneck": false,
+          "cappedSurpluses": []
+        },
+        "ordinaryExpansionAllowed": true
+      }
+    },
+    {
+      "at": "2026-10-28T14:58:50.234Z",
+      "gameDate": "2300.01.01",
+      "old": {
+        "mode": "defense",
+        "focus": "防务与事件优先",
+        "priorities": [
+          "处理当前事件与防务，核对敌我战力和撤退路线",
+          "先查消费品约562月余量：岗位填充→专精/特区→队列→新增产能",
+          "海军460/450，控制维护费并补后勤，不继续和平超编"
+        ]
+      },
+      "new": {
+        "mode": "defense",
+        "focus": "防务与事件优先",
+        "priorities": [
+          "处理当前事件与防务，核对敌我战力和撤退路线",
+          "海军460/450，控制维护费并补后勤，不继续和平超编",
+          "地球、圣费尔南多、新特洛伊有首府升级提示；当前未提供首府/建筑升级动作，标记能力受限，不反复加城市区划声称解锁"
+        ],
+        "growth": {
+          "known": true,
+          "observedYears": 14.1,
+          "scienceGrowthPercent": 0.8,
+          "stagnating": true,
+          "note": "本机增长诊断启发式：同局10至20年科研月产增长不超过10%，不是年份达标要求",
+          "bottleneck": false,
+          "cappedSurpluses": [
+            "energy",
+            "minerals"
+          ]
+        },
+        "ordinaryExpansionAllowed": false
+      }
+    },
+    {
+      "at": "2026-10-28T15:11:51.518Z",
+      "gameDate": "2310.01.14",
+      "old": {
+        "mode": "selective_growth",
+        "focus": "有预算地选择扩张",
+        "priorities": [
+          "先查消费品约659.4月余量：岗位填充→专精/特区→队列→新增产能",
+          "海军460/450，控制维护费并补后勤，不继续和平超编"
+        ]
+      },
+      "new": {
+        "mode": "develop_capacity",
+        "focus": "解除产能瓶颈，把储备转成有效增长",
+        "priorities": [
+          "海军460/450，控制维护费并补后勤，不继续和平超编",
+          "多项正收益资源接近满仓：先核验科研/凝聚力岗位容量、劳动力、特区与升级条件，说明新增产能和可执行动作，不为腾仓盲建",
+          "圣费尔南多、新特洛伊有首府升级提示；当前未提供首府/建筑升级动作，标记能力受限，不反复加城市区划声称解锁"
+        ],
+        "growth": {
+          "known": true,
+          "observedYears": 19.1,
+          "scienceGrowthPercent": 3.7,
+          "stagnating": true,
+          "note": "本机增长诊断启发式：同局10至20年科研月产增长不超过10%，不是年份达标要求",
+          "bottleneck": true,
+          "cappedSurpluses": [
+            "energy",
+            "food",
+            "minerals"
+          ]
+        },
+        "ordinaryExpansionAllowed": true
+      }
+    },
+    {
+      "at": "2026-10-28T15:24:17.716Z",
+      "gameDate": "2320.01.01",
+      "old": {
+        "mode": "defense",
+        "focus": "防务与事件优先",
+        "priorities": [
+          "处理当前事件与防务，核对敌我战力和撤退路线",
+          "先查消费品约506.2月余量：岗位填充→专精/特区→队列→新增产能"
+        ]
+      },
+      "new": {
+        "mode": "defense",
+        "focus": "防务与事件优先",
+        "priorities": [
+          "处理当前事件与防务，核对敌我战力和撤退路线",
+          "监测消费品约506.2月余量，保留预算并规划修复；长期小赤字不自动压过产能增长"
+        ],
+        "growth": {
+          "known": true,
+          "observedYears": 19.2,
+          "scienceGrowthPercent": 4.1,
+          "stagnating": true,
+          "note": "本机增长诊断启发式：同局10至20年科研月产增长不超过10%，不是年份达标要求",
+          "bottleneck": false,
+          "cappedSurpluses": [
+            "energy",
+            "food",
+            "minerals"
+          ]
+        },
+        "ordinaryExpansionAllowed": false
+      }
+    },
+    {
+      "at": "2026-10-28T15:30:19.092Z",
+      "gameDate": "2324.03.25",
+      "old": {
+        "mode": "selective_growth",
+        "focus": "有预算地选择扩张",
+        "priorities": [
+          "先查消费品约510.6月余量：岗位填充→专精/特区→队列→新增产能"
+        ]
+      },
+      "new": {
+        "mode": "develop_capacity",
+        "focus": "解除产能瓶颈，把储备转成有效增长",
+        "priorities": [
+          "多项正收益资源接近满仓：先核验科研/凝聚力岗位容量、劳动力、特区与升级条件，说明新增产能和可执行动作，不为腾仓盲建",
+          "新特洛伊有首府升级提示；当前未提供首府/建筑升级动作，标记能力受限，不反复加城市区划声称解锁",
+          "监测消费品约510.6月余量，保留预算并规划修复；长期小赤字不自动压过产能增长"
+        ],
+        "growth": {
+          "known": true,
+          "observedYears": 19.4,
+          "scienceGrowthPercent": 2.9,
+          "stagnating": true,
+          "note": "本机增长诊断启发式：同局10至20年科研月产增长不超过10%，不是年份达标要求",
+          "bottleneck": true,
+          "cappedSurpluses": [
+            "energy",
+            "minerals"
+          ]
+        },
+        "ordinaryExpansionAllowed": true
+      }
+    }
+  ]
+}

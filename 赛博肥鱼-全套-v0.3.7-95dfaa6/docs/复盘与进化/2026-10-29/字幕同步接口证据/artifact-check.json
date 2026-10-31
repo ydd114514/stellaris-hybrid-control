@@ -1,0 +1,9 @@
+{
+  "version": "0.3.12",
+  "asarEntries": 2598,
+  "subtitlesFromActualPlayback": true,
+  "playerLongPolling": true,
+  "excludedUserData": true,
+  "installedMatchesPackage": true,
+  "headlessSmokeOnly": true
+}

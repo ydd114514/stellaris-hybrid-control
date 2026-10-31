@@ -1,0 +1,12 @@
+{
+  "version": "0.3.11",
+  "main": "dist/dsh/electron/main.cjs",
+  "asarEntries": 2598,
+  "excludedUserData": true,
+  "bundledVoice": {
+    "revision": 4,
+    "voice": "longanlingxi_v3.1",
+    "sha256": "87ba9b28506a656558b2ecc3086a3a02f09283f7f61e7b46d766146352283a30"
+  },
+  "installedMatchesPackage": true
+}

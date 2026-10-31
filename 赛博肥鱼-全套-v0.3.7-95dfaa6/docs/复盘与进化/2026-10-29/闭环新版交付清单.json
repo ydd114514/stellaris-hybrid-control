@@ -1,0 +1,485 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-29",
+  "version": "0.3.9",
+  "bridgeVersion": "cyberfish-0.6.4-shipyards",
+  "scope": "当前电脑完整桌面版；控制器配套覆盖代码及独立原生源码快照，不含用户资料",
+  "validation": {
+    "desktop": {
+      "files": 79,
+      "passed": 734,
+      "skipped": 2
+    },
+    "controller": {
+      "passed": 407,
+      "failed": 0,
+      "context": "当前Windows用户，隔离临时资料"
+    },
+    "typecheck": true,
+    "browser": {
+      "passed": 10,
+      "channel": "msedge"
+    },
+    "build": true,
+    "sourceSmoke": true,
+    "packagedSmoke": true,
+    "nativeOfflineRebuild": true,
+    "liveGame": false,
+    "liveBroadcast": false,
+    "paidApi": false
+  },
+  "mainSource": [
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\packages\\core\\src\\ai-director.ts",
+      "bytes": 23387,
+      "sha256": "3d59aa07d3e4ee84ca78a1131851246cba6cc621de9a0eff246b5331b3c9a0e2"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\packages\\core\\src\\ai-blackboard.ts",
+      "bytes": 8187,
+      "sha256": "65fea6db30d205beb83afc5cf9e0e1570c514cd8bbb9ab0a8514dd6f070061ab"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\packages\\core\\src\\ai-prompts.ts",
+      "bytes": 20058,
+      "sha256": "b398f2280f7136337cfb5546c87f1f37dc812966acf8df733d716581a649792a"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\packages\\core\\src\\audience-query-tasks.ts",
+      "bytes": 7648,
+      "sha256": "8310d62dc2e91d820d9aa5f442b129c058fdf4909bce426d41927f2340ef2d36"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\packages\\core\\src\\operational-facts.ts",
+      "bytes": 1635,
+      "sha256": "61134ea035e96947de2bcde1e1ec8d66323941ddf4646e40064f44e8a2b5c517"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\packages\\shared\\src\\ai.ts",
+      "bytes": 7315,
+      "sha256": "b367f88072dfac47c3f8c375eb3166ba2294578c69c2e64bde866de3ea39be68"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\packages\\shared\\src\\stellaris.ts",
+      "bytes": 3353,
+      "sha256": "e579c4d2377ead1b83d2bf603e682a47c6842687f72f593c1602f7034fecf45f"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\apps\\desktop\\electron\\stellaris-ai.ts",
+      "bytes": 29481,
+      "sha256": "acf5abcc30be8e95edf8d9f9aa3d6de11f00705afdfe8c8dc0db4239ef501801"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\apps\\desktop\\electron\\stellaris-controller.ts",
+      "bytes": 18308,
+      "sha256": "5e62f07ca322dced64215deaf24a593a72d4073e508c285dd7690bd66a50c98b"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\apps\\desktop\\src\\StellarisAi.vue",
+      "bytes": 27572,
+      "sha256": "fa238b1b815d2b005a336b30f65e658b3871e48917fc080f6717fd3d2725ba52"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\apps\\desktop\\src\\StellarisDesktop.vue",
+      "bytes": 20988,
+      "sha256": "04b15c0469d4a9a0e99434682c5d853b20fffa34712bd54e57c80a41294f86d6"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\tests\\audience-query-tasks.test.ts",
+      "bytes": 10874,
+      "sha256": "9f1639c94992f1242507653e9ffc7b0630bae317b49b34b56621414cec61706f"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\tests\\stellaris-ai.test.ts",
+      "bytes": 16257,
+      "sha256": "7c255ca96620a6dac09dbf7df5fdee2b8c4353e33a8ccfbfedb8befa92ee3771"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\tests\\e2e\\stellaris-ai.spec.ts",
+      "bytes": 9920,
+      "sha256": "fb0c98e27410f11240d493e8db881aee2b7dd6345e1078c5e39ed8c032709c82"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\tests\\e2e\\stellaris-desktop.spec.ts",
+      "bytes": 5250,
+      "sha256": "5ce71dfcbe2c007919a8134cda67602c5eb9240879ad5700448d213cebd81438"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\electron-builder.closure.json",
+      "bytes": 343,
+      "sha256": "391b53886c682b9e1d18aced2ed4226e32ef60d175db97fadcfea7421acd8b55"
+    }
+  ],
+  "controllerSource": [
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\src\\native-game.mjs",
+      "bytes": 77502,
+      "sha256": "097a956e0615fa1eabe2f80cb536281a2991355514371099df494bd45defac84"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\src\\native-mcp.mjs",
+      "bytes": 7035,
+      "sha256": "7a6c9eed709b301b51d8d3695eba1f6bb6b341183c3ccf9f288c80fbc4d81f40"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\src\\native-bootstrap.mjs",
+      "bytes": 7083,
+      "sha256": "e1fd5d542aa0bf29b12f253ffee5bfa1e187b6e16c7ae04ca5abc571f0a93fe8"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\src\\bridge-capabilities.mjs",
+      "bytes": 552,
+      "sha256": "202e676b8384095f2fbc071c295988b3d16d7be7083b7bb6a40888ba190c078f"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\src\\order-tracker.mjs",
+      "bytes": 25849,
+      "sha256": "5d790dcb5e4ad2735436385262d11cad5e47627761bce4200f417c6f214961da"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\src\\building-upgrades.mjs",
+      "bytes": 2261,
+      "sha256": "c29fa3b5ba36170d3a934620857e5c9a04d03df19480873b47364f9749361459"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\src\\audience-query-bridge.mjs",
+      "bytes": 6344,
+      "sha256": "beb96e6c09f6a3b81b83b150d429f4f9a8e0b9e0356951160b754a1b82fbdeeb"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\src\\broadcast-quality.mjs",
+      "bytes": 5559,
+      "sha256": "3061b0a96e17031e196c2082e443863e4c6374303187714e552ed6f076849716"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\src\\controller-continuity.mjs",
+      "bytes": 2368,
+      "sha256": "e8ad6426af24bd28a4e3a47378f86d55ac84462b42e9a2cd518c3a4bb7be2111"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\src\\operation-guards.mjs",
+      "bytes": 4204,
+      "sha256": "83e76686971e1d06b4445ac976ebd07127b45ed5d46410e8ca1f319fdd7b27fd"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\src\\operational-context.mjs",
+      "bytes": 6473,
+      "sha256": "8b7ce74965849d50efaa55a26e1b4cf6efbc1087d88a9eb8d1b7e091745d0415"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\src\\strategic-review.mjs",
+      "bytes": 10850,
+      "sha256": "15f1f2c736a67bd10cb8864265ea8394890a309b82dfdea1c71a769feaa995e4"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\plugins\\stellaris-dsh\\cordis.patch.yml",
+      "bytes": 19961,
+      "sha256": "d718c872d8ea99e5b8c77818d125c791ecb09fc9f2a3aa4c1c536ab972294094"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\scripts\\play-native-dsh.mjs",
+      "bytes": 5963,
+      "sha256": "83b8cd141fec073a3b13844d48c3f99c0ecc87407b56c6519bd5cc0e35578f84"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\test\\native-game.test.mjs",
+      "bytes": 56790,
+      "sha256": "17eb699a31b0a4f829ae9574eeca14850005604b59024b7437fd8c43274e5a8c"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\test\\order-tracker.test.mjs",
+      "bytes": 17079,
+      "sha256": "a119646a5d4eb623d38e3e8831d3a07e32193e0d6cbe97a1ea036fc0a486870f"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\test\\building-upgrades.test.mjs",
+      "bytes": 2353,
+      "sha256": "3347c063ce4b21ab34f3cbf20b7a584a49b4caab323460ff57e23cf1c6f45141"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\test\\audience-query-bridge.test.mjs",
+      "bytes": 3330,
+      "sha256": "db33c126ecce05dfde9c4281f55a3f637e18de32a7e01ca3cce194d0faaba301"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\test\\audience-query-integration.test.mjs",
+      "bytes": 11910,
+      "sha256": "999cdc93348c43e4af49feff7f170f02c757027448a0eaa4ebab3a63db591038"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\test\\broadcast-quality.test.mjs",
+      "bytes": 7509,
+      "sha256": "37ee54456e2b2d93317193f5f83d74fb98c9c06fde62e0bfc83ee038d2f14826"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\test\\controller-continuity.test.mjs",
+      "bytes": 1822,
+      "sha256": "ff9d24d05d83a0c7cbdeddfbf157b0eb115387ba96c8a872e2330bc6a9767dcf"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\test\\bridge-capabilities.test.mjs",
+      "bytes": 695,
+      "sha256": "ec71c00db911257f39d37f98ee6b4bb3df86f7aa6b40032883c1befc9cf129d7"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\test\\operation-guards.test.mjs",
+      "bytes": 3279,
+      "sha256": "52799729d3575d9d602733820cd46349ecdb8d0a78226872428e9e02de5701a4"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\test\\operational-context.test.mjs",
+      "bytes": 2254,
+      "sha256": "efc2761fb11f3fc031b16aa417ea881fb229fcf1c4c1d37d399543716e6593c6"
+    },
+    {
+      "file": "E:\\肥鱼直播\\stellaris-player\\test\\strategic-review.test.mjs",
+      "bytes": 8916,
+      "sha256": "92efdf0d403149ad7b523cd1cce540e9d946fac875f40ec342aaf1083a6b4999"
+    }
+  ],
+  "overlay": [
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\src\\native-game.mjs",
+      "bytes": 77502,
+      "sha256": "097a956e0615fa1eabe2f80cb536281a2991355514371099df494bd45defac84"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\src\\native-mcp.mjs",
+      "bytes": 7035,
+      "sha256": "7a6c9eed709b301b51d8d3695eba1f6bb6b341183c3ccf9f288c80fbc4d81f40"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\src\\native-bootstrap.mjs",
+      "bytes": 7083,
+      "sha256": "e1fd5d542aa0bf29b12f253ffee5bfa1e187b6e16c7ae04ca5abc571f0a93fe8"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\src\\bridge-capabilities.mjs",
+      "bytes": 552,
+      "sha256": "202e676b8384095f2fbc071c295988b3d16d7be7083b7bb6a40888ba190c078f"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\src\\order-tracker.mjs",
+      "bytes": 25849,
+      "sha256": "5d790dcb5e4ad2735436385262d11cad5e47627761bce4200f417c6f214961da"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\src\\building-upgrades.mjs",
+      "bytes": 2261,
+      "sha256": "c29fa3b5ba36170d3a934620857e5c9a04d03df19480873b47364f9749361459"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\src\\audience-query-bridge.mjs",
+      "bytes": 6344,
+      "sha256": "beb96e6c09f6a3b81b83b150d429f4f9a8e0b9e0356951160b754a1b82fbdeeb"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\src\\broadcast-quality.mjs",
+      "bytes": 5559,
+      "sha256": "3061b0a96e17031e196c2082e443863e4c6374303187714e552ed6f076849716"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\src\\controller-continuity.mjs",
+      "bytes": 2368,
+      "sha256": "e8ad6426af24bd28a4e3a47378f86d55ac84462b42e9a2cd518c3a4bb7be2111"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\src\\operation-guards.mjs",
+      "bytes": 4204,
+      "sha256": "83e76686971e1d06b4445ac976ebd07127b45ed5d46410e8ca1f319fdd7b27fd"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\src\\operational-context.mjs",
+      "bytes": 6473,
+      "sha256": "8b7ce74965849d50efaa55a26e1b4cf6efbc1087d88a9eb8d1b7e091745d0415"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\src\\strategic-review.mjs",
+      "bytes": 10850,
+      "sha256": "15f1f2c736a67bd10cb8864265ea8394890a309b82dfdea1c71a769feaa995e4"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\plugins\\stellaris-dsh\\cordis.patch.yml",
+      "bytes": 19961,
+      "sha256": "d718c872d8ea99e5b8c77818d125c791ecb09fc9f2a3aa4c1c536ab972294094"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\scripts\\play-native-dsh.mjs",
+      "bytes": 5963,
+      "sha256": "83b8cd141fec073a3b13844d48c3f99c0ecc87407b56c6519bd5cc0e35578f84"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\test\\native-game.test.mjs",
+      "bytes": 56790,
+      "sha256": "17eb699a31b0a4f829ae9574eeca14850005604b59024b7437fd8c43274e5a8c"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\test\\order-tracker.test.mjs",
+      "bytes": 17079,
+      "sha256": "a119646a5d4eb623d38e3e8831d3a07e32193e0d6cbe97a1ea036fc0a486870f"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\test\\building-upgrades.test.mjs",
+      "bytes": 2353,
+      "sha256": "3347c063ce4b21ab34f3cbf20b7a584a49b4caab323460ff57e23cf1c6f45141"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\test\\audience-query-bridge.test.mjs",
+      "bytes": 3330,
+      "sha256": "db33c126ecce05dfde9c4281f55a3f637e18de32a7e01ca3cce194d0faaba301"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\test\\audience-query-integration.test.mjs",
+      "bytes": 11910,
+      "sha256": "999cdc93348c43e4af49feff7f170f02c757027448a0eaa4ebab3a63db591038"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\test\\broadcast-quality.test.mjs",
+      "bytes": 7509,
+      "sha256": "37ee54456e2b2d93317193f5f83d74fb98c9c06fde62e0bfc83ee038d2f14826"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\test\\controller-continuity.test.mjs",
+      "bytes": 1822,
+      "sha256": "ff9d24d05d83a0c7cbdeddfbf157b0eb115387ba96c8a872e2330bc6a9767dcf"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\test\\bridge-capabilities.test.mjs",
+      "bytes": 695,
+      "sha256": "ec71c00db911257f39d37f98ee6b4bb3df86f7aa6b40032883c1befc9cf129d7"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\test\\operation-guards.test.mjs",
+      "bytes": 3279,
+      "sha256": "52799729d3575d9d602733820cd46349ecdb8d0a78226872428e9e02de5701a4"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\test\\operational-context.test.mjs",
+      "bytes": 2254,
+      "sha256": "efc2761fb11f3fc031b16aa417ea881fb229fcf1c4c1d37d399543716e6593c6"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\stellaris-player\\closure-20261029\\test\\strategic-review.test.mjs",
+      "bytes": 8916,
+      "sha256": "92efdf0d403149ad7b523cd1cce540e9d946fac875f40ec342aaf1083a6b4999"
+    }
+  ],
+  "nativeRuntime": {
+    "file": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\runtime\\cyberfish-0.6.4-shipyards\\stellaris_bridge.dll",
+    "bytes": 1796096,
+    "sha256": "82c0914d3890fc87a6f222fa38c7a2a4ba31e44271f58efbab33989c961ade5b"
+  },
+  "nativeManifest": {
+    "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\native-bridge\\construction-20261029\\manifest.json",
+    "bytes": 4022,
+    "sha256": "793e9e11fb7b13d47126b1aacbb4ff0528f878a8bdcd83791b619624829aa48f"
+  },
+  "nativeSnapshotManifest": {
+    "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\integrations\\native-bridge\\construction-20261029\\source-snapshot-manifest.json",
+    "bytes": 160874,
+    "sha256": "0cdbdfddd9f6cd2411ac7729f7fbde5a5ace33bcf7a470db90721ed9690f9dfe"
+  },
+  "program": {
+    "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\release\\dsh-closure-20261029-0.3.9\\win-unpacked\\大肥鱼 DSH.exe",
+    "bytes": 211177472,
+    "sha256": "105b1c4ff39d29fb560cfd86d85da981cafa612d8a3fa2cf4c0b57b686a9aff1"
+  },
+  "asar": {
+    "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\release\\dsh-closure-20261029-0.3.9\\win-unpacked\\resources\\app.asar",
+    "bytes": 27924740,
+    "sha256": "c847c7fe9fbe981c549087bc5031c1303dea74d3b6c9f8cb50eac571e9a25eba"
+  },
+  "artifacts": [
+    {
+      "file": "E:\\肥鱼直播\\打包成品\\复盘闭环版-0.3.9\\Cyberfish-0.3.9-Controller-Native-Source.zip",
+      "bytes": 2752189,
+      "sha256": "d694f84f110480f8f29289dc188b1f643808ea587f4a005585d08f32ca77ecfa"
+    },
+    {
+      "file": "E:\\肥鱼直播\\打包成品\\复盘闭环版-0.3.9\\Cyberfish-DSH-0.3.9-Closure-Windows-x64.exe",
+      "bytes": 93863961,
+      "sha256": "36ce83607c3ffbbd75873c93907fcad95e4d43ce80b1544f4c76e87152fe2180"
+    },
+    {
+      "file": "E:\\肥鱼直播\\打包成品\\复盘闭环版-0.3.9\\Cyberfish-DSH-0.3.9-Closure-Windows-x64.zip",
+      "bytes": 128560139,
+      "sha256": "5d641b2f037a2d6d8ddd514a8c1ab1c6bafce5102a1094b0c7c25117eeda7b10"
+    },
+    {
+      "file": "E:\\肥鱼直播\\打包成品\\复盘闭环版-0.3.9\\使用说明.txt",
+      "bytes": 1080,
+      "sha256": "d711c1744f70a8aa7cdf2fc2b6a3b192f10172e2c452cfc77701fd63831d1d9f"
+    }
+  ],
+  "logs": [
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\闭环验证日志\\browser.log",
+      "bytes": 1855,
+      "sha256": "7d4c05a94ad246edcfd3bfa9677496cdf6df2d59ae991ff89f841bb9f3faba12"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\闭环验证日志\\build.log",
+      "bytes": 639,
+      "sha256": "04047226cb5a3edd2fe23d54a54af5c159da790df84be7b9e1bc6430a2a53cae"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\闭环验证日志\\controller-sandbox-first.log",
+      "bytes": 36516,
+      "sha256": "c65ff0ee83eeff624207baa7c483ef636ab15987936d32c9f78a74c45b4df802"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\闭环验证日志\\controller-unit.log",
+      "bytes": 36182,
+      "sha256": "075b723a5f32879f940a76300a4b10f531680356a426a295b56157380a70afbf"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\闭环验证日志\\desktop-unit.log",
+      "bytes": 5719,
+      "sha256": "39959d583916753c82193aa6dd0d78403e285959e29efae6f651112a981b94ad"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\闭环验证日志\\dpapi-isolated-retest.log",
+      "bytes": 287,
+      "sha256": "4979b359da5434f924ae3832f2663bdb6ee8bdfa01648bbc78aa0e05bc53f617"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\闭环验证日志\\package.log",
+      "bytes": 1989,
+      "sha256": "e630baa18ddd602a32b319be87fb77df9e5453ffb72cc0ddf9b4a81a09584eaf"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\闭环验证日志\\packaged-smoke.log",
+      "bytes": 379,
+      "sha256": "d15acb745c041084089a9adbb023f835e7c8c41322dd08e4bc786a450f433581"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\闭环验证日志\\source-smoke.log",
+      "bytes": 379,
+      "sha256": "21672d2c9f020c6c51ef89d0681e1868e09be95ce9e313cea51824845f287b6e"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\闭环验证日志\\typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "remaining": [
+    "独立存档首府升级资源/队列/完工实测",
+    "建筑与议程同状态界面对照",
+    "实际会话音视频、平台延迟与音轨隔离证据",
+    "缺少可靠存档血缘ID，不跨会话自动续做未知订单",
+    "星基升级模块、已有专精切换、改革等未接入能力"
+  ],
+  "record": {
+    "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\闭环补齐与新版验收.md",
+    "bytes": 6960,
+    "sha256": "56587e3059a111b80ae6d2701245a311dccfa55af1b63a8a398d94e63b5b2a2c"
+  },
+  "integrity": {
+    "result": "passed",
+    "nativeSnapshotFiles": 935,
+    "nativeOverlayFiles": 20,
+    "companionZipTest": true,
+    "issueCount": 24
+  }
+}

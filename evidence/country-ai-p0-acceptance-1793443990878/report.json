@@ -1,0 +1,692 @@
+{
+  "startedAt": "2026-10-31T10:53:10.879Z",
+  "scope": "A1_paused_switch_only",
+  "modelCalls": 0,
+  "gameTimeAdvanced": false,
+  "passed": true,
+  "binding": {
+    "ok": true,
+    "pid": 56240,
+    "creationTime": "134379175411436602"
+  },
+  "before": {
+    "assigned_local_human_verified": true,
+    "autonomous_operation_verified": false,
+    "country_coverage_complete": true,
+    "country_id": 0,
+    "country_type_ai_enabled": true,
+    "country_type_ai_flags": 122879,
+    "country_type_settings_scope": "shared_country_type",
+    "execution_receipt_hooks_installed": false,
+    "execution_receipt_scheme": "session_client_sequence_payload",
+    "global_flags": {
+      "force_human_ai": false,
+      "human_ai": false,
+      "normal_ai": true
+    },
+    "human_countries": [
+      {
+        "country_id": 0,
+        "human_ids": [
+          1
+        ]
+      }
+    ],
+    "live_countries": 26,
+    "major_decision_boundary_verified": false,
+    "network_flag": 0,
+    "paused": true,
+    "pending": null,
+    "per_country_domain_settings_verified": false,
+    "precondition": {
+      "assigned_local_human_verified": true,
+      "country_address": 2662161211456,
+      "country_id": 0,
+      "date": "2217.07.01",
+      "global_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "human_countries": [
+        {
+          "country_id": 0,
+          "human_ids": [
+            1
+          ]
+        }
+      ],
+      "idler_address": 2659762339392,
+      "local_player_id": 1,
+      "network_flag": 0,
+      "sequence": 0
+    },
+    "research_only": true,
+    "scope": "global_human_countries",
+    "single_local_human_guard": true,
+    "success": true
+  },
+  "observationStart": {
+    "armed": true,
+    "binding": {
+      "assigned_local_human_verified": true,
+      "country_address": 2662161211456,
+      "country_id": 0,
+      "date": "2217.07.01",
+      "global_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "human_countries": [
+        {
+          "country_id": 0,
+          "human_ids": [
+            1
+          ]
+        }
+      ],
+      "idler_address": 2659762339392,
+      "local_player_id": 1,
+      "network_flag": 0,
+      "sequence": 0
+    },
+    "changes_ai_policy": false,
+    "events": [],
+    "execution_verified": false,
+    "last_event_sequence": 0,
+    "lost_events": 0,
+    "major_decision_boundary_verified": false,
+    "source": "native_country_ai_pending_to_session",
+    "success": true
+  },
+  "enable": {
+    "phase": "paused_confirmed",
+    "state": {
+      "assigned_local_human_verified": true,
+      "autonomous_operation_verified": false,
+      "country_coverage_complete": true,
+      "country_id": 0,
+      "country_type_ai_enabled": true,
+      "country_type_ai_flags": 122879,
+      "country_type_settings_scope": "shared_country_type",
+      "execution_receipt_hooks_installed": true,
+      "execution_receipt_scheme": "session_client_sequence_payload",
+      "global_flags": {
+        "force_human_ai": true,
+        "human_ai": true,
+        "normal_ai": true
+      },
+      "human_countries": [
+        {
+          "country_id": 0,
+          "human_ids": [
+            1
+          ]
+        }
+      ],
+      "live_countries": 26,
+      "major_decision_boundary_verified": false,
+      "network_flag": 0,
+      "paused": true,
+      "pending": {
+        "country_id": 0,
+        "desired_flags": {
+          "force_human_ai": true,
+          "human_ai": true,
+          "normal_ai": true
+        },
+        "execute_receipts": 3,
+        "force_command_identity": {
+          "client": 1,
+          "command_sequence": 8,
+          "object_address": 2662390655072,
+          "valid": true,
+          "value": 1
+        },
+        "human_command_identity": {
+          "client": 1,
+          "command_sequence": 7,
+          "object_address": 2662390654064,
+          "valid": true,
+          "value": 1
+        },
+        "identity_before": {
+          "assigned_local_human_verified": true,
+          "country_address": 2662161211456,
+          "country_id": 0,
+          "date": "2217.07.01",
+          "global_flags": {
+            "force_human_ai": false,
+            "human_ai": false,
+            "normal_ai": true
+          },
+          "human_countries": [
+            {
+              "country_id": 0,
+              "human_ids": [
+                1
+              ]
+            }
+          ],
+          "idler_address": 2659762339392,
+          "local_player_id": 1,
+          "network_flag": 0,
+          "sequence": 0
+        },
+        "identity_matches": true,
+        "observed_executions_since_post": [
+          {
+            "event": 1,
+            "identity": {
+              "client": 1,
+              "command_sequence": 7,
+              "object_address": 2662390654064,
+              "valid": true,
+              "value": 1
+            },
+            "kind": 1
+          },
+          {
+            "event": 2,
+            "identity": {
+              "client": 1,
+              "command_sequence": 8,
+              "object_address": 2662390654400,
+              "valid": true,
+              "value": 1
+            },
+            "kind": 2
+          }
+        ],
+        "original_flags": {
+          "force_human_ai": false,
+          "human_ai": false,
+          "normal_ai": true
+        },
+        "phase": "readback_confirmed",
+        "receipt_loss": 0,
+        "sequence": 1,
+        "superseded_sequence": null
+      },
+      "per_country_domain_settings_verified": false,
+      "precondition": {
+        "assigned_local_human_verified": true,
+        "country_address": 2662161211456,
+        "country_id": 0,
+        "date": "2217.07.01",
+        "global_flags": {
+          "force_human_ai": true,
+          "human_ai": true,
+          "normal_ai": true
+        },
+        "human_countries": [
+          {
+            "country_id": 0,
+            "human_ids": [
+              1
+            ]
+          }
+        ],
+        "idler_address": 2659762339392,
+        "local_player_id": 1,
+        "network_flag": 0,
+        "sequence": 1
+      },
+      "research_only": true,
+      "scope": "global_human_countries",
+      "single_local_human_guard": true,
+      "success": true
+    }
+  },
+  "duplicate": {
+    "phase": "already_observed",
+    "state": {
+      "assigned_local_human_verified": true,
+      "autonomous_operation_verified": false,
+      "country_coverage_complete": true,
+      "country_id": 0,
+      "country_type_ai_enabled": true,
+      "country_type_ai_flags": 122879,
+      "country_type_settings_scope": "shared_country_type",
+      "execution_receipt_hooks_installed": true,
+      "execution_receipt_scheme": "session_client_sequence_payload",
+      "global_flags": {
+        "force_human_ai": true,
+        "human_ai": true,
+        "normal_ai": true
+      },
+      "human_countries": [
+        {
+          "country_id": 0,
+          "human_ids": [
+            1
+          ]
+        }
+      ],
+      "live_countries": 26,
+      "major_decision_boundary_verified": false,
+      "network_flag": 0,
+      "paused": true,
+      "pending": {
+        "country_id": 0,
+        "desired_flags": {
+          "force_human_ai": true,
+          "human_ai": true,
+          "normal_ai": true
+        },
+        "execute_receipts": 3,
+        "force_command_identity": {
+          "client": 1,
+          "command_sequence": 8,
+          "object_address": 2662390655072,
+          "valid": true,
+          "value": 1
+        },
+        "human_command_identity": {
+          "client": 1,
+          "command_sequence": 7,
+          "object_address": 2662390654064,
+          "valid": true,
+          "value": 1
+        },
+        "identity_before": {
+          "assigned_local_human_verified": true,
+          "country_address": 2662161211456,
+          "country_id": 0,
+          "date": "2217.07.01",
+          "global_flags": {
+            "force_human_ai": false,
+            "human_ai": false,
+            "normal_ai": true
+          },
+          "human_countries": [
+            {
+              "country_id": 0,
+              "human_ids": [
+                1
+              ]
+            }
+          ],
+          "idler_address": 2659762339392,
+          "local_player_id": 1,
+          "network_flag": 0,
+          "sequence": 0
+        },
+        "identity_matches": true,
+        "observed_executions_since_post": [
+          {
+            "event": 1,
+            "identity": {
+              "client": 1,
+              "command_sequence": 7,
+              "object_address": 2662390654064,
+              "valid": true,
+              "value": 1
+            },
+            "kind": 1
+          },
+          {
+            "event": 2,
+            "identity": {
+              "client": 1,
+              "command_sequence": 8,
+              "object_address": 2662390654400,
+              "valid": true,
+              "value": 1
+            },
+            "kind": 2
+          }
+        ],
+        "original_flags": {
+          "force_human_ai": false,
+          "human_ai": false,
+          "normal_ai": true
+        },
+        "phase": "readback_confirmed",
+        "receipt_loss": 0,
+        "sequence": 1,
+        "superseded_sequence": null
+      },
+      "per_country_domain_settings_verified": false,
+      "precondition": {
+        "assigned_local_human_verified": true,
+        "country_address": 2662161211456,
+        "country_id": 0,
+        "date": "2217.07.01",
+        "global_flags": {
+          "force_human_ai": true,
+          "human_ai": true,
+          "normal_ai": true
+        },
+        "human_countries": [
+          {
+            "country_id": 0,
+            "human_ids": [
+              1
+            ]
+          }
+        ],
+        "idler_address": 2659762339392,
+        "local_player_id": 1,
+        "network_flag": 0,
+        "sequence": 1
+      },
+      "research_only": true,
+      "scope": "global_human_countries",
+      "single_local_human_guard": true,
+      "success": true
+    },
+    "success": true
+  },
+  "restore": {
+    "phase": "restored",
+    "state": {
+      "assigned_local_human_verified": true,
+      "autonomous_operation_verified": false,
+      "country_coverage_complete": true,
+      "country_id": 0,
+      "country_type_ai_enabled": true,
+      "country_type_ai_flags": 122879,
+      "country_type_settings_scope": "shared_country_type",
+      "execution_receipt_hooks_installed": true,
+      "execution_receipt_scheme": "session_client_sequence_payload",
+      "global_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "human_countries": [
+        {
+          "country_id": 0,
+          "human_ids": [
+            1
+          ]
+        }
+      ],
+      "live_countries": 26,
+      "major_decision_boundary_verified": false,
+      "network_flag": 0,
+      "paused": true,
+      "pending": {
+        "country_id": 0,
+        "desired_flags": {
+          "force_human_ai": false,
+          "human_ai": false,
+          "normal_ai": true
+        },
+        "execute_receipts": 3,
+        "force_command_identity": {
+          "client": 1,
+          "command_sequence": 10,
+          "object_address": 2662390654160,
+          "valid": true,
+          "value": 0
+        },
+        "human_command_identity": {
+          "client": 1,
+          "command_sequence": 9,
+          "object_address": 2662390653920,
+          "valid": true,
+          "value": 0
+        },
+        "identity_before": {
+          "assigned_local_human_verified": true,
+          "country_address": 2662161211456,
+          "country_id": 0,
+          "date": "2217.07.01",
+          "global_flags": {
+            "force_human_ai": true,
+            "human_ai": true,
+            "normal_ai": true
+          },
+          "human_countries": [
+            {
+              "country_id": 0,
+              "human_ids": [
+                1
+              ]
+            }
+          ],
+          "idler_address": 2659762339392,
+          "local_player_id": 1,
+          "network_flag": 0,
+          "sequence": 1
+        },
+        "identity_matches": true,
+        "observed_executions_since_post": [
+          {
+            "event": 3,
+            "identity": {
+              "client": 1,
+              "command_sequence": 9,
+              "object_address": 2662390655504,
+              "valid": true,
+              "value": 0
+            },
+            "kind": 1
+          },
+          {
+            "event": 4,
+            "identity": {
+              "client": 1,
+              "command_sequence": 10,
+              "object_address": 2662390654400,
+              "valid": true,
+              "value": 0
+            },
+            "kind": 2
+          }
+        ],
+        "original_flags": {
+          "force_human_ai": true,
+          "human_ai": true,
+          "normal_ai": true
+        },
+        "phase": "readback_confirmed",
+        "receipt_loss": 0,
+        "sequence": 2,
+        "superseded_sequence": null
+      },
+      "per_country_domain_settings_verified": false,
+      "precondition": {
+        "assigned_local_human_verified": true,
+        "country_address": 2662161211456,
+        "country_id": 0,
+        "date": "2217.07.01",
+        "global_flags": {
+          "force_human_ai": false,
+          "human_ai": false,
+          "normal_ai": true
+        },
+        "human_countries": [
+          {
+            "country_id": 0,
+            "human_ids": [
+              1
+            ]
+          }
+        ],
+        "idler_address": 2659762339392,
+        "local_player_id": 1,
+        "network_flag": 0,
+        "sequence": 2
+      },
+      "research_only": true,
+      "scope": "global_human_countries",
+      "single_local_human_guard": true,
+      "success": true
+    }
+  },
+  "after": {
+    "assigned_local_human_verified": true,
+    "autonomous_operation_verified": false,
+    "country_coverage_complete": true,
+    "country_id": 0,
+    "country_type_ai_enabled": true,
+    "country_type_ai_flags": 122879,
+    "country_type_settings_scope": "shared_country_type",
+    "execution_receipt_hooks_installed": true,
+    "execution_receipt_scheme": "session_client_sequence_payload",
+    "global_flags": {
+      "force_human_ai": false,
+      "human_ai": false,
+      "normal_ai": true
+    },
+    "human_countries": [
+      {
+        "country_id": 0,
+        "human_ids": [
+          1
+        ]
+      }
+    ],
+    "live_countries": 26,
+    "major_decision_boundary_verified": false,
+    "network_flag": 0,
+    "paused": true,
+    "pending": {
+      "country_id": 0,
+      "desired_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "execute_receipts": 3,
+      "force_command_identity": {
+        "client": 1,
+        "command_sequence": 10,
+        "object_address": 2662390654160,
+        "valid": true,
+        "value": 0
+      },
+      "human_command_identity": {
+        "client": 1,
+        "command_sequence": 9,
+        "object_address": 2662390653920,
+        "valid": true,
+        "value": 0
+      },
+      "identity_before": {
+        "assigned_local_human_verified": true,
+        "country_address": 2662161211456,
+        "country_id": 0,
+        "date": "2217.07.01",
+        "global_flags": {
+          "force_human_ai": true,
+          "human_ai": true,
+          "normal_ai": true
+        },
+        "human_countries": [
+          {
+            "country_id": 0,
+            "human_ids": [
+              1
+            ]
+          }
+        ],
+        "idler_address": 2659762339392,
+        "local_player_id": 1,
+        "network_flag": 0,
+        "sequence": 1
+      },
+      "identity_matches": true,
+      "observed_executions_since_post": [
+        {
+          "event": 3,
+          "identity": {
+            "client": 1,
+            "command_sequence": 9,
+            "object_address": 2662390655504,
+            "valid": true,
+            "value": 0
+          },
+          "kind": 1
+        },
+        {
+          "event": 4,
+          "identity": {
+            "client": 1,
+            "command_sequence": 10,
+            "object_address": 2662390654400,
+            "valid": true,
+            "value": 0
+          },
+          "kind": 2
+        }
+      ],
+      "original_flags": {
+        "force_human_ai": true,
+        "human_ai": true,
+        "normal_ai": true
+      },
+      "phase": "readback_confirmed",
+      "receipt_loss": 0,
+      "sequence": 2,
+      "superseded_sequence": null
+    },
+    "per_country_domain_settings_verified": false,
+    "precondition": {
+      "assigned_local_human_verified": true,
+      "country_address": 2662161211456,
+      "country_id": 0,
+      "date": "2217.07.01",
+      "global_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "human_countries": [
+        {
+          "country_id": 0,
+          "human_ids": [
+            1
+          ]
+        }
+      ],
+      "idler_address": 2659762339392,
+      "local_player_id": 1,
+      "network_flag": 0,
+      "sequence": 2
+    },
+    "research_only": true,
+    "scope": "global_human_countries",
+    "single_local_human_guard": true,
+    "success": true
+  },
+  "observationStop": {
+    "armed": false,
+    "binding": {
+      "assigned_local_human_verified": true,
+      "country_address": 2662161211456,
+      "country_id": 0,
+      "date": "2217.07.01",
+      "global_flags": {
+        "force_human_ai": false,
+        "human_ai": false,
+        "normal_ai": true
+      },
+      "human_countries": [
+        {
+          "country_id": 0,
+          "human_ids": [
+            1
+          ]
+        }
+      ],
+      "idler_address": 2659762339392,
+      "local_player_id": 1,
+      "network_flag": 0,
+      "sequence": 0
+    },
+    "changes_ai_policy": false,
+    "events": [],
+    "execution_verified": false,
+    "last_event_sequence": 0,
+    "lost_events": 0,
+    "major_decision_boundary_verified": false,
+    "source": "native_country_ai_pending_to_session",
+    "success": true
+  },
+  "finishedAt": "2026-10-31T10:53:13.346Z"
+}

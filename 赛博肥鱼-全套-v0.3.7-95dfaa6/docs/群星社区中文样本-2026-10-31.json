@@ -1,0 +1,164 @@
+{
+  "collectedAt": "2026-10-31",
+  "purpose": "学习真实语境与承接关系；不是固定回复表、模型输出或已通过的验收",
+  "quotationPolicy": "独立转述，短句术语除外；不收录用户名、现实争论和无关内容",
+  "cards": [
+    {
+      "id": "CN01", "kind": "reply_chain", "access": "search_returned_thread_and_comments",
+      "source": "https://www.ptt.cc/bbs/Paradox/M.1486647366.A.544.html",
+      "observed": "玩家说在母星招出的巨虫已被舰队击杀；回复提醒这是时之虫对原生种族的爱；玩家以敌对标记表达惊讶。",
+      "relation": "把敌对战斗记录接入事件中的爱与接纳，恐怖外观和亲密措辞错位。",
+      "learn": "先确认具体事件。时之虫、视界信号的爱与圆神的终末契约分别理解；续同一设定，不笼统换成借贷。",
+      "limit": "2017旧帖，不能用来确认当前触发方式或奖励；同帖其他长回复不在本卡摘录范围。"
+    },
+    {
+      "id": "CN02", "kind": "reply_chain", "access": "search_returned_thread_and_comments",
+      "source": "https://www.ptt.cc/bbs/Paradox/M.1495984618.A.DA3.html",
+      "observed": "PC与觉醒帝国讨论中，有人建议签终末契约，说过五十年就不卡；楼主顺着回应一起完蛋。",
+      "relation": "将消除整个运行对象包装成解决卡顿，下一句承认共同承担灾难而继续演。",
+      "learn": "优化与毁灭的关联来自具体结果；对方已经接住末日设定时继续讲它，不跳回买电脑建议。",
+      "limit": "2017历史语境。五十年是此帖中的老梗条件，当前机制另查。"
+    },
+    {
+      "id": "CN03", "kind": "discussion_with_roleplay", "access": "search_returned_thread_and_comments",
+      "source": "https://www.ptt.cc/bbs/Paradox/M.1674736269.A.946.html",
+      "observed": "逃亡奴隶起源介绍后，讨论将三个起源看成同一故事不同视角；发言者指出MSI的契约资产与公关专家理念搭配。",
+      "relation": "奴隶主、逃亡者与企业公关对同一件事的命名差异。",
+      "learn": "接MSI或契约资产梗时理解谁是资产、谁在追债、谁在做公关；不是泛泛地把任意内容改叫公司。",
+      "limit": "介绍与评论混合，不能虚构其余网友的接龙。"
+    },
+    {
+      "id": "CN04", "kind": "reply_chain", "access": "opened_full_text",
+      "source": "https://www.ptt.cc/bbs/Paradox/M.1750848091.A.FD6.html",
+      "observed": "在游戏物种处置讨论中，回复者表明亲外立场，紧接着递上义体手术同意通知；另有人只计较该操作还要花凝聚力。",
+      "relation": "善意措辞与强制同化并置；成本计算抢走了宏大立场的注意力。",
+      "learn": "礼貌的表面要延续，同时保留游戏里的强制后果；不是去认真争辩观众是否亲外。",
+      "limit": "仅学习虚构物种与机制部分，不引入该混合帖子中的现实人群讨论。"
+    },
+    {
+      "id": "CN05", "kind": "post_with_single_comment", "access": "search_returned_post",
+      "source": "https://www.pttweb.cc/bbs/Paradox/M.1543153629.A.1C8",
+      "observed": "玩家把旧版通过处理有机人口获得大量能源的经营方式称作假戴森球。",
+      "relation": "不用常规能源巨构却获得类似产出，人口与发电装置发生功能对应。",
+      "learn": "能源、人矿、并网的包袱要落在谁提供能源上；不是假设受处理的人是公司雇员。",
+      "limit": "1.6至2.2前的帖子，不能将其中数值和地块玩法当当前攻略；未取得有意义的后续接梗。"
+    },
+    {
+      "id": "CN06", "kind": "terminology", "access": "search_returned_wiki_text",
+      "source": "https://qunxing.huijiwiki.com/wiki/游戏术语",
+      "observed": "装罐用于合成人飞升；社会学加点的说法借用了观察前FTL文明的研究产出。",
+      "relation": "同一个罐字可能指机械化身体；资源提示可以变成围观的角色视角。",
+      "learn": "几年装罐常在聊飞升进度；海星与美味常在聊食物。根据前文对象选含义。",
+      "limit": "术语说明不是回复链；旧研究数值不是当前承诺。"
+    },
+    {
+      "id": "CN07", "kind": "parallel_comments", "access": "search_returned_thread_and_comments",
+      "source": "https://www.ptt.cc/bbs/Paradox/M.1742842121.A.D65.html",
+      "observed": "季票讨论里有人感叹又成了新游戏，有人把观星者中的星借指海星，也有人抱怨多轮灵能都抽不到圆神。",
+      "relation": "同一公告产生不同包袱：重学游戏、称呼借义和抽不到的体验。各回复并非同一个接龙。",
+      "learn": "回观星者的谐义就保留星与海星，回抽卡经历就接运气与执念，不用同一套天灾话术覆盖。",
+      "limit": "这些是同帖不同评论，不能拼成互相回应的三轮对话。"
+    },
+    {
+      "id": "CN08", "kind": "reply_chain", "access": "search_returned_thread_and_comments",
+      "source": "https://www.ptt.cc/bbs/Paradox/M.1557498059.A.9E4.html",
+      "observed": "预告剧情讨论后，有人盼P社拍电影，另一位称其为被游戏耽误的动画公司。",
+      "relation": "对预告的夸赞经职业反转延伸；后续仍在夸相同的动画表现。",
+      "learn": "不是每个群星梗都关于净化；剧情、音乐与预告话题也要跟着聊。",
+      "limit": "帖内对帝国归属有更正，不把早期推测当官方剧情。"
+    },
+    {
+      "id": "CN09", "kind": "translated_developer_flavor", "access": "search_returned_patch_text",
+      "source": "https://www.bilibili.com/opus/1178679862307586053",
+      "observed": "中文更新说明在泡泡后括注其他名字是命名错误的变体。",
+      "relation": "把命名偏好装成唯一正确命名，读者共享对宠物的偏爱。",
+      "learn": "泡泡与毛球不只指战斗单位，也包含取名派别与养宠感情；角色偏爱可以演。",
+      "limit": "是中文转译公告的措辞，不是已读取的评论；只采这段风味，不采其整页平衡数值。"
+    },
+    {
+      "id": "CN10", "kind": "author_humorous_prose", "access": "search_returned_article_excerpt",
+      "source": "https://www.3dmgame.com/original_42_58/",
+      "observed": "作者自我介绍时先将自己说成带美味特质的畅销食品，再改口为鉴定员；谈开发商又做一次故意改口。",
+      "relation": "在一个句子里让物种、特质与商品身份错位，表面的改口保留了真正包袱。",
+      "learn": "短暂改口可以表现游戏视角，不必每句都另加比喻；不要高频复制同一改口结构。",
+      "limit": "只读到栏目摘要，不假装有文章评论上下文。"
+    },
+    {
+      "id": "CN11", "kind": "player_first_person_prose", "access": "search_returned_blog_entry",
+      "source": "https://www.yhchub.com/blog.html",
+      "observed": "玩家先列有机体吃饭、生育和领袖寿命等负担，再转为机器人集体意识的第一人称颂扬。",
+      "relation": "通过两种物种视角对相同经营问题的反差扮演机器人。",
+      "learn": "有机体与铁罐的互相调侃要理解食物、能源、意识等对象，而不是只接血肉苦弱口号。",
+      "limit": "玩家2026-03-15主观记述，不作为当前机制完整依据；不是评论接龙。"
+    },
+    {
+      "id": "CN12", "kind": "player_post", "access": "search_returned_profile_post",
+      "source": "https://wapp.baidu.com/home/main?un=申有归",
+      "observed": "玩家自述从奴隶市场买来前FTL物种，再放进理想城享受乌托邦生活标准，并问这是否算其好结局。",
+      "relation": "奴隶市场同一机制也能用于救助，笑点与情绪依玩家实际玩法改变。",
+      "learn": "看到奴隶市场不能强制接成食物或耗材；先接对方正在演的救助、交易或压榨视角。",
+      "limit": "只有帖主叙述，没有取得楼内回复，不编造观众反应。"
+    },
+    {
+      "id": "CN13", "kind": "reply_chain", "access": "search_returned_thread_and_comments",
+      "source": "https://www.ptt.cc/bbs/Paradox/M.1463117607.A.8BA.html",
+      "observed": "玩家说抓到虫族女王并不断得到小虫；楼主说描述有点糟糕；下一位只用雷诺的名字接上。",
+      "relation": "省略式跨作品指代，依靠虫族女王与星际争霸人物关系形成会意。",
+      "learn": "观众可能只补一个名字就接梗；不必把所有背景都解释一遍，也不把跨作关系当群星本局事实。",
+      "limit": "2016旧帖，涉及的捕获与生产机制不直接用于当前操作建议；仅转述该段评论。"
+    },
+    {
+      "id": "CN14", "kind": "discussion", "access": "search_returned_thread_and_comments",
+      "source": "https://www.ptt.cc/bbs/CFantasy/M.1594521534.A.F72.html",
+      "observed": "讨论玩家为什么叫天灾时，有人转而称玩家为可收割的资源，其他评论以逐利、反复横跳与骚操作补充玩家形象。",
+      "relation": "玩家在游戏世界里是天灾，在运营者眼里又是资源，视角切换才产生反差。",
+      "learn": "能辨认一句话在用银河、玩家还是开发商的视角；不要始终自我辩白。",
+      "limit": "混合网文与游戏讨论，不用其中猜测推断术语唯一历史出处。"
+    },
+    {
+      "id":"CN15", "kind":"reply_chain", "access":"search_returned_thread_and_comments",
+      "source":"https://www.ptt.cc/bbs/Paradox/M.1728563656.A.A61.html",
+      "observed":"太空生物捕获养成介绍引出宝可梦、帕鲁联想；楼主继而设想两国各出一只生物、胜者获徽章、星际赛事增加外交力量，另有评论问大师球。",
+      "relation":"从相似玩法借入另一个作品的规则，再将那套规则接回银河外交。",
+      "learn":"跨作接梗要保留共同设定并推进后果，半句足以会意；不要每人重说一次这是宝可梦，也不要把设想赛事说成原版现有机制。",
+      "limit":"本轮搜索取得正文和评论序列；不是每条相邻评论都有明确回复关系。此前仅取得泡泡单问，现以完整可见序列更新证据；原页面直开403。"
+    },
+    {
+      "id":"CN16", "kind":"parallel_comments", "access":"opened_full_text",
+      "source":"https://www.midishow.com/midi/77913.html",
+      "observed":"群星音乐分享下，感谢与夸赞之外，也有将欣赏音乐写成科研加点、将认可作者写成外交好感的评论。",
+      "relation":"用游戏界面的资源提示和态度格式表达真实的欣赏，是玩家之间的会意。",
+      "learn":"科研加点不只用于围观混乱；也可以赞音乐、创作与知识。先看语气，再决定是夸奖还是反讽，不能见社会学就强制贬对方为土著。",
+      "limit":"简体原地址成功打开，繁体地址403；这是平行评论，不拼接成互相回复。"
+    },
+    {
+      "id":"CN17", "kind":"authored_guide", "access":"search_returned_article_excerpt",
+      "source":"https://www.bilibili.com/read/cv18878546/",
+      "observed":"作者的3.5成就指南将机械叛乱台词与转投机械国家相连。",
+      "relation":"台词发言视角是叛乱机械，对象是原有政权；不能把说话者与听话者混在一起。",
+      "learn":"被观众用作机器人角色扮演时先接其视角；后句换物种或嘲笑广播文案，要跟着新对象调整，不反复沿用自己的拔网线故事。",
+      "limit":"只有作者攻略段落，不是评论链；不采历史版本的成就做法作现行攻略。"
+    },
+    {
+      "id":"CN18", "kind":"player_followup_referencing_answer", "access":"search_returned_thread_excerpt",
+      "source":"https://forum.gamer.com.tw/C.php?bsn=28953&page=31&snA=511",
+      "observed":"玩家问不打仗驱除罪企，随后感谢警署建议，却因舍不得研究楼空间，决定改用舰队甚至巨像。",
+      "relation":"最初追求温和处理，因经营机会成本又回到更夸张手段。后果与建筑选择相连。",
+      "learn":"群星黑色幽默常来自认真算账后的升级；对方已把话题推向银河经营逻辑时跟住，不仅套一般公司欠税笑话。",
+      "limit":"只取得提问者引用建议后的跟进，未读取完整被感谢的答复，不能伪造逐句接龙；原页直开403。"
+    },
+    {
+      "id":"CN19", "kind":"authored_guide_terminology", "access":"search_returned_guide_excerpt",
+      "source":"https://www.scribd.com/document/694249208/3-4群星新手指南-群星基础Q-A-v4-0",
+      "observed":"3.4中文指南将豆浆白倒解释为天堂之战第四选项的谐音。",
+      "relation":"两边都不服的独立豪言，与加入反抗双方的不结盟组织并非相同选择。",
+      "learn":"看懂谐音后可以续杯子比喻，但不要凭反抗老帝国这一共同点就替观众改政治选择。",
+      "limit":"历史版本作者指南，不是回复链；当前选项机制另查。本轮灰机觉醒帝国页也检索到四选项介绍，不据此报当前战况。"
+    }
+  ],
+  "excludedAsDialogueEvidence": [
+    {"source":"https://www.bilibili.com/video/BV1qC41177gW/","reason":"只有标题简介；未取得视频正文、评论或弹幕"},
+    {"source":"https://www.bilibili.com/video/BV19142167mT/","reason":"只取得标题和分集列表，不能还原剧情接龙"},
+    {"source":"https://store.steampowered.com/appreviews/281990","reason":"公开接口网络超时，没有读到返回评论"}
+  ]
+}

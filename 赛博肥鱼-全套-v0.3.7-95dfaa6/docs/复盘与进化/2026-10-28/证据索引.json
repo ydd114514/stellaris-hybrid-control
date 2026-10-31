@@ -1,0 +1,2174 @@
+{
+  "schemaVersion": 1,
+  "archivedAt": "2026-10-28T15:53:11.358Z",
+  "reviewDate": "2026-10-28",
+  "timezone": "Asia/Shanghai",
+  "cutoffs": {
+    "game": "2026-10-28 23:30:22",
+    "hub": "2026-10-28 23:35:11"
+  },
+  "notes": [
+    "原始来源仍可能增长；SHA256只标识归档时读取的文件字节。",
+    "技术统计中host.cached=0为已报告数值之和；cacheUsageMissing=183表示缓存未知，不是确认零缓存。",
+    "原始日志不含完成回执的异步提交不判为完成。",
+    "仅保留游戏操作、结构化用量和来源索引；不复制观众原始姓名、真实密钥、Cookie或内部推理。"
+  ],
+  "sourceManifests": [
+    {
+      "path": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-0a8ec231-4b8a-4c45-82b4-4c56df86d175.jsonl",
+      "bytes": 6116663,
+      "sha256": "5bd8b7b36892ad95c7e45901e4c5abf490ab99c73604d6fc59f149dce279083f"
+    },
+    {
+      "path": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl",
+      "bytes": 4801916,
+      "sha256": "305447e26113e694c6b8ab2b8f005e8d503a08f04e54bfbab156c50fe357f4df"
+    },
+    {
+      "path": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-768fb890-0e79-4816-b61c-f26896801f56.jsonl",
+      "bytes": 4167726,
+      "sha256": "fd6718c81190b8896b4c484428773e28536b2a63743643564db8a1854dd445c0"
+    },
+    {
+      "path": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-85a0adeb-c333-46cd-b8b0-6f6a45bbecf7.jsonl",
+      "bytes": 5495040,
+      "sha256": "7f7b6eb685f92c9b4eaafff6382254c8ab6d05972032261bc7ba37f71ee16485"
+    },
+    {
+      "path": "E:\\肥鱼直播\\stellaris-player\\.local\\commentary\\ai-usage.jsonl",
+      "bytes": 429892,
+      "sha256": "9f1cbf130b18fadf8cc4fb660c7432af17a50bc0167a6c0a99f1f0863e38aa63"
+    },
+    {
+      "path": "E:\\肥鱼直播\\stellaris-player\\.local\\commentary\\audience.jsonl",
+      "bytes": 248510,
+      "sha256": "5ccecc6760c9dd3bf2138bbfc99ee7882cefe6ef4f5766b4ff9853324df6a22b"
+    },
+    {
+      "path": "E:\\肥鱼直播\\stellaris-player\\.local\\commentary\\host-replies.jsonl",
+      "bytes": 52874,
+      "sha256": "c510ef8185e1d3b0cc346e8f5f91dc379bb6eadba27d1c310fc6878563ebfd6a"
+    },
+    {
+      "path": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\local-compaction.jsonl",
+      "bytes": 241399,
+      "sha256": "8b58a70186c24e9b27116add74dc46ab9744d3511054f7b6876f981511050758"
+    },
+    {
+      "path": "E:\\肥鱼直播\\stellaris-player\\src\\native-game.mjs",
+      "bytes": 64770,
+      "sha256": "4f2786744048bedb4f76ae492e862adfa7b1057921f1aac64650daecf5f7bad6"
+    },
+    {
+      "path": "E:\\肥鱼直播\\stellaris-player\\src\\strategic-review.mjs",
+      "bytes": 5648,
+      "sha256": "eeac2e494f32c7bc622c9d32efb1eec4db4f9bea9028930967e01f952d3d34fd"
+    }
+  ],
+  "snapshotManifests": [
+    {
+      "file": "技术统计.json",
+      "bytes": 7360,
+      "sha256": "2add0e8fe1bb2af5923438c2441e92aaa5134980beb71a75e3effecd49b1cb3d"
+    },
+    {
+      "file": "游戏操作与运营数据.json",
+      "bytes": 464645,
+      "sha256": "21e2ec97999a4d8378608c8670eee5ef2ee9382bc637569fc1e4a03fa73adb7f"
+    }
+  ],
+  "keyNativeRecords": [
+    {
+      "at": "2026-10-28T14:10:12.939Z",
+      "type": "unknown",
+      "requestId": "b17-a13",
+      "command": "launch_council_agenda",
+      "error": "No active council agenda selected",
+      "sourceLine": 1400,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-0a8ec231-4b8a-4c45-82b4-4c56df86d175.jsonl"
+    },
+    {
+      "at": "2026-10-28T14:10:31.684Z",
+      "type": "recovery",
+      "requestId": "b17-a13",
+      "verification": {
+        "verified": false,
+        "phase": "posted_pending_observation"
+      },
+      "replayed": false,
+      "sourceLine": 1413,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-0a8ec231-4b8a-4c45-82b4-4c56df86d175.jsonl"
+    },
+    {
+      "at": "2026-10-28T14:40:12.808Z",
+      "type": "unknown",
+      "requestId": "r4-agenda-jobs",
+      "command": "launch_council_agenda",
+      "error": "No active council agenda selected",
+      "sourceLine": 40,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T14:40:25.926Z",
+      "type": "recovery",
+      "requestId": "r4-agenda-jobs",
+      "verification": {
+        "verified": false,
+        "phase": "posted_pending_observation"
+      },
+      "replayed": false,
+      "sourceLine": 52,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T11:57:30.589Z",
+      "type": "receipt",
+      "requestId": "r63-colonize",
+      "command": "colonize",
+      "response": {
+        "fleet_id": 533,
+        "message": "Colonization order posted",
+        "planet": "南门二III",
+        "planet_id": 215,
+        "queued": false,
+        "success": true
+      },
+      "verification": {
+        "verified": false,
+        "phase": "posted_pending_observation"
+      },
+      "sourceLine": 454,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-768fb890-0e79-4816-b61c-f26896801f56.jsonl"
+    },
+    {
+      "at": "2026-10-28T12:21:54.650Z",
+      "type": "receipt",
+      "requestId": "r146-colonize-sirius3",
+      "command": "colonize",
+      "response": {
+        "fleet_id": 565,
+        "message": "Colonization order posted",
+        "planet": "天狼III",
+        "planet_id": 298,
+        "queued": false,
+        "success": true
+      },
+      "verification": {
+        "verified": false,
+        "phase": "posted_pending_observation"
+      },
+      "sourceLine": 1068,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-768fb890-0e79-4816-b61c-f26896801f56.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:25:35.583Z",
+      "type": "inspect",
+      "topic": "planet",
+      "result": {
+        "planet_id": 3,
+        "colony_id": 0,
+        "name": "地球",
+        "designation": "帝国首都",
+        "designation_key": "col_capital",
+        "governor": null,
+        "overview": {
+          "colony_date": "2016.05.09",
+          "habitability_percent": 100,
+          "habitability_species_id": 385875969,
+          "planet_size": 18,
+          "planet_type": "陆地星球"
+        },
+        "kpi": {
+          "amenities": 2028.18,
+          "amenities_display": "2.0K",
+          "crime_percent": 0,
+          "growth": 10,
+          "housing": 5066,
+          "pop_capacity": 6334,
+          "pop_display": "6.3K",
+          "pop_groups": 6333,
+          "stability_percent": 83,
+          "unemployed": 0
+        },
+        "districts": [
+          {
+            "built": 7,
+            "name": "城市区划",
+            "type": "district_city",
+            "zone_slots": 3,
+            "zones": [
+              {
+                "buildings": [
+                  {
+                    "id": 0,
+                    "is_capital": true,
+                    "key": "building_capital",
+                    "name": "行星首府",
+                    "slot_index": 0,
+                    "status": "built"
+                  },
+                  {
+                    "id": 2,
+                    "is_capital": false,
+                    "key": "building_holo_theatres",
+                    "name": "全息影像剧场",
+                    "slot_index": 1,
+                    "status": "built"
+                  },
+                  {
+                    "id": 3,
+                    "is_capital": false,
+                    "key": "building_commercial_zone",
+                    "name": "商业区",
+                    "slot_index": 2,
+                    "status": "built"
+                  }
+                ],
+                "key": "zone_default",
+                "max_buildings": 6,
+                "name": "政府特区",
+                "slot_index": 0
+              },
+              {
+                "buildings": [],
+                "key": "zone_research_unity",
+                "max_buildings": 3,
+                "name": "档案馆",
+                "slot_index": 1
+              },
+              {
+                "buildings": [
+                  {
+                    "id": 1,
+                    "is_capital": false,
+                    "key": "building_factory_1",
+                    "name": "民用工业体",
+                    "slot_index": 0,
+                    "status": "built"
+                  }
+                ],
+                "key": "zone_industrial",
+                "max_buildings": 3,
+                "name": "混合工业",
+                "slot_index": 2
+              }
+            ]
+          },
+          {
+            "built": 3,
+            "name": "发电区划",
+            "type": "district_generator",
+            "zone_slots": 1,
+            "zones": []
+          },
+          {
+            "built": 5,
+            "name": "采矿区划",
+            "type": "district_mining",
+            "zone_slots": 1,
+            "zones": []
+          },
+          {
+            "built": 4,
+            "name": "农业区划",
+            "type": "district_farming",
+            "zone_slots": 1,
+            "zones": []
+          }
+        ],
+        "construction_queue": [],
+        "status_alerts": [
+          {
+            "desc": "此殖民地的建筑 首府建筑可以升级了。",
+            "id": "upgrade_available",
+            "name": "有新的首府建筑升级"
+          }
+        ],
+        "monthly_production": {
+          "net": {
+            "alloys": 81.94,
+            "consumer_goods": 35.9,
+            "energy": 36.54,
+            "engineering_research": 22.84,
+            "food": 46.11,
+            "minerals": -39.37,
+            "physics_research": 22.84,
+            "society_research": 22.84,
+            "trade": 56.3,
+            "unity": 47.08
+          },
+          "produced": {
+            "alloys": 81.94,
+            "consumer_goods": 104.07,
+            "energy": 84.24,
+            "engineering_research": 22.84,
+            "food": 109.44,
+            "minerals": 96,
+            "physics_research": 22.84,
+            "society_research": 22.84,
+            "trade": 56.3,
+            "unity": 47.08
+          },
+          "upkeep": {
+            "consumer_goods": 68.17,
+            "energy": 47.7,
+            "food": 63.34,
+            "minerals": 135.38
+          }
+        },
+        "workforce_summary": {
+          "active_jobs_count": 14,
+          "prioritized_job": "physicist",
+          "strata": [
+            {
+              "active_jobs_count": 1,
+              "effective_workforce": 230,
+              "stratum_key": "ruler",
+              "stratum_name": "精英",
+              "workforce": 200
+            },
+            {
+              "active_jobs_count": 9,
+              "effective_workforce": 4654,
+              "stratum_key": "specialist",
+              "stratum_name": "专家",
+              "workforce": 3724
+            },
+            {
+              "active_jobs_count": 3,
+              "effective_workforce": 2880,
+              "stratum_key": "worker",
+              "stratum_name": "劳工",
+              "workforce": 2400
+            },
+            {
+              "active_jobs_count": 1,
+              "effective_workforce": 11,
+              "stratum_key": "civilian",
+              "stratum_name": "平民",
+              "workforce": 9
+            }
+          ],
+          "total_effective_workforce": 7775,
+          "total_employed_workforce": 6333,
+          "unemployed": 0
+        },
+        "blockers": [],
+        "strategicDiagnosis": {
+          "version": 1,
+          "route": "regular",
+          "mode": "selective_growth",
+          "focus": "有预算地选择扩张",
+          "ordinaryExpansionAllowed": true,
+          "deficits": [
+            {
+              "resource": "consumer_goods",
+              "net": -23.9,
+              "months": 494.4
+            }
+          ],
+          "priorities": [
+            "先查消费品约494.4月余量：岗位填充→专精/特区→队列→新增产能"
+          ],
+          "resumeWhen": "经济与殖民地稳定，目标合法且有边境/资源/宜居收益才扩张",
+          "empireSize": 171,
+          "note": "本机启发式；规模不是硬上限。可执行能力以当前工具与引擎候选为准，缺失信息先查，不猜。",
+          "reviewTargets": [
+            {
+              "planetId": 215,
+              "name": "圣费尔南多",
+              "alerts": 1
+            },
+            {
+              "planetId": 298,
+              "name": "新特洛伊",
+              "alerts": 1
+            }
+          ]
+        }
+      },
+      "sourceLine": 1789,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:20:50.100Z",
+      "type": "inspect",
+      "topic": "planet",
+      "result": {
+        "planet_id": 215,
+        "colony_id": 54,
+        "name": "圣费尔南多",
+        "designation": "科技星球",
+        "designation_key": "col_research",
+        "governor": null,
+        "overview": {
+          "colony_date": "2208.03.30",
+          "habitability_percent": 100,
+          "habitability_species_id": 385875969,
+          "planet_size": 15,
+          "planet_type": "陆地星球"
+        },
+        "kpi": {
+          "amenities": 3502.64,
+          "amenities_display": "3.5K",
+          "crime_percent": 1,
+          "growth": 14,
+          "housing": 10638,
+          "pop_capacity": 3862,
+          "pop_display": "3.9K",
+          "pop_groups": 3860,
+          "stability_percent": 99,
+          "unemployed": 0
+        },
+        "districts": [
+          {
+            "built": 11,
+            "name": "城市区划",
+            "type": "district_city",
+            "zone_slots": 3,
+            "zones": [
+              {
+                "buildings": [],
+                "key": "zone_default",
+                "max_buildings": 6,
+                "name": "政府特区",
+                "slot_index": 113
+              },
+              {
+                "buildings": [],
+                "key": "zone_research",
+                "max_buildings": 3,
+                "name": "科研聚落",
+                "slot_index": 139
+              }
+            ]
+          },
+          {
+            "built": 1,
+            "name": "采矿区划",
+            "type": "district_mining",
+            "zone_slots": 1,
+            "zones": []
+          },
+          {
+            "built": 3,
+            "name": "发电区划",
+            "type": "district_generator",
+            "zone_slots": 1,
+            "zones": []
+          },
+          {
+            "built": 1,
+            "name": "农业区划",
+            "type": "district_farming",
+            "zone_slots": 1,
+            "zones": []
+          }
+        ],
+        "construction_queue": [],
+        "status_alerts": [
+          {
+            "desc": "此殖民地的建筑 首府建筑可以升级了。",
+            "id": "upgrade_available",
+            "name": "有新的首府建筑升级"
+          }
+        ],
+        "monthly_production": {
+          "net": {
+            "consumer_goods": -40.4,
+            "energy": 37.77,
+            "engineering_research": 56.51,
+            "exotic_gases": 0.4,
+            "food": -9.57,
+            "minerals": 2.97,
+            "physics_research": 56.51,
+            "society_research": 61.1,
+            "trade": 11.39
+          },
+          "produced": {
+            "consumer_goods": 25.7,
+            "energy": 77.37,
+            "engineering_research": 56.51,
+            "exotic_gases": 0.4,
+            "food": 29.04,
+            "minerals": 15.51,
+            "physics_research": 56.51,
+            "society_research": 61.1,
+            "trade": 11.39
+          },
+          "upkeep": {
+            "consumer_goods": 66.09,
+            "energy": 39.6,
+            "food": 38.61,
+            "minerals": 12.54
+          }
+        },
+        "workforce_summary": {
+          "active_jobs_count": 9,
+          "prioritized_job": "artisan",
+          "strata": [
+            {
+              "active_jobs_count": 4,
+              "effective_workforce": 3280,
+              "stratum_key": "specialist",
+              "stratum_name": "专家",
+              "workforce": 2648
+            },
+            {
+              "active_jobs_count": 4,
+              "effective_workforce": 1260,
+              "stratum_key": "worker",
+              "stratum_name": "劳工",
+              "workforce": 1200
+            },
+            {
+              "active_jobs_count": 1,
+              "effective_workforce": 13,
+              "stratum_key": "civilian",
+              "stratum_name": "平民",
+              "workforce": 13
+            }
+          ],
+          "total_effective_workforce": 4553,
+          "total_employed_workforce": 3861,
+          "unemployed": 0
+        },
+        "blockers": [],
+        "strategicDiagnosis": {
+          "version": 1,
+          "route": "regular",
+          "mode": "selective_growth",
+          "focus": "有预算地选择扩张",
+          "ordinaryExpansionAllowed": true,
+          "deficits": [
+            {
+              "resource": "consumer_goods",
+              "net": -23.9,
+              "months": 540
+            }
+          ],
+          "priorities": [
+            "先查消费品约540月余量：岗位填充→专精/特区→队列→新增产能"
+          ],
+          "resumeWhen": "经济与殖民地稳定，目标合法且有边境/资源/宜居收益才扩张",
+          "empireSize": 171,
+          "note": "本机启发式；规模不是硬上限。可执行能力以当前工具与引擎候选为准，缺失信息先查，不猜。",
+          "reviewTargets": []
+        }
+      },
+      "sourceLine": 1630,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:30:10.765Z",
+      "type": "inspect",
+      "topic": "planet",
+      "result": {
+        "planet_id": 298,
+        "colony_id": 63,
+        "name": "新特洛伊",
+        "designation": "科技星球",
+        "designation_key": "col_research",
+        "governor": null,
+        "overview": {
+          "colony_date": "2218.10.27",
+          "habitability_percent": 100,
+          "habitability_species_id": 385875969,
+          "planet_size": 24,
+          "planet_type": "陆地星球"
+        },
+        "kpi": {
+          "amenities": 5773.49,
+          "amenities_display": "5.8K",
+          "crime_percent": 0,
+          "growth": 11,
+          "housing": 15881,
+          "pop_capacity": 5419,
+          "pop_display": "5.4K",
+          "pop_groups": 5418,
+          "stability_percent": 100,
+          "unemployed": 0
+        },
+        "districts": [
+          {
+            "built": 16,
+            "name": "城市区划",
+            "type": "district_city",
+            "zone_slots": 3,
+            "zones": [
+              {
+                "buildings": [],
+                "key": "zone_default",
+                "max_buildings": 6,
+                "name": "政府特区",
+                "slot_index": 16777325
+              },
+              {
+                "buildings": [],
+                "key": "zone_research",
+                "max_buildings": 3,
+                "name": "科研聚落",
+                "slot_index": 135
+              }
+            ]
+          },
+          {
+            "built": 2,
+            "name": "采矿区划",
+            "type": "district_mining",
+            "zone_slots": 1,
+            "zones": []
+          },
+          {
+            "built": 5,
+            "name": "发电区划",
+            "type": "district_generator",
+            "zone_slots": 1,
+            "zones": []
+          },
+          {
+            "built": 2,
+            "name": "农业区划",
+            "type": "district_farming",
+            "zone_slots": 1,
+            "zones": []
+          }
+        ],
+        "construction_queue": [],
+        "status_alerts": [
+          {
+            "desc": "此殖民地的建筑 首府建筑可以升级了。",
+            "id": "upgrade_available",
+            "name": "有新的首府建筑升级"
+          }
+        ],
+        "monthly_production": {
+          "net": {
+            "consumer_goods": -30.17,
+            "energy": 76.95,
+            "engineering_research": 64.94,
+            "exotic_gases": 0.4,
+            "food": 0.09,
+            "minerals": 10.2,
+            "physics_research": 64.94,
+            "rare_crystals": 0.4,
+            "society_research": 64.94,
+            "trade": 15.46,
+            "unity": 2.34
+          },
+          "produced": {
+            "consumer_goods": 51.48,
+            "energy": 129.15,
+            "engineering_research": 64.94,
+            "exotic_gases": 0.4,
+            "food": 54.29,
+            "minerals": 35.28,
+            "physics_research": 64.94,
+            "rare_crystals": 0.4,
+            "society_research": 64.94,
+            "trade": 15.46,
+            "unity": 2.34
+          },
+          "upkeep": {
+            "consumer_goods": 81.65,
+            "energy": 52.2,
+            "food": 54.19,
+            "minerals": 25.08
+          }
+        },
+        "workforce_summary": {
+          "active_jobs_count": 10,
+          "prioritized_job": "artisan",
+          "strata": [
+            {
+              "active_jobs_count": 5,
+              "effective_workforce": 4170,
+              "stratum_key": "specialist",
+              "stratum_name": "专家",
+              "workforce": 3408
+            },
+            {
+              "active_jobs_count": 4,
+              "effective_workforce": 2100,
+              "stratum_key": "worker",
+              "stratum_name": "劳工",
+              "workforce": 2000
+            },
+            {
+              "active_jobs_count": 1,
+              "effective_workforce": 10,
+              "stratum_key": "civilian",
+              "stratum_name": "平民",
+              "workforce": 10
+            }
+          ],
+          "total_effective_workforce": 6280,
+          "total_employed_workforce": 5418,
+          "unemployed": 0
+        },
+        "blockers": [],
+        "strategicDiagnosis": {
+          "version": 1,
+          "route": "regular",
+          "mode": "selective_growth",
+          "focus": "有预算地选择扩张",
+          "ordinaryExpansionAllowed": true,
+          "deficits": [
+            {
+              "resource": "consumer_goods",
+              "net": -23.9,
+              "months": 514.8
+            }
+          ],
+          "priorities": [
+            "先查消费品约514.8月余量：岗位填充→专精/特区→队列→新增产能"
+          ],
+          "resumeWhen": "经济与殖民地稳定，目标合法且有边境/资源/宜居收益才扩张",
+          "empireSize": 171,
+          "note": "本机启发式；规模不是硬上限。可执行能力以当前工具与引擎候选为准，缺失信息先查，不猜。",
+          "reviewTargets": [
+            {
+              "planetId": 3,
+              "name": "地球",
+              "alerts": 1
+            },
+            {
+              "planetId": 215,
+              "name": "圣费尔南多",
+              "alerts": 1
+            }
+          ]
+        }
+      },
+      "sourceLine": 2025,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:30:14.105Z",
+      "type": "inspect",
+      "topic": "buildings",
+      "result": {
+        "colony_id": 0,
+        "planet_id": 3,
+        "success": true,
+        "zones": [
+          {
+            "buildable": [],
+            "buildings": 6,
+            "district": "district_city",
+            "max_buildings": 6,
+            "zone": "zone_default",
+            "zone_id": 0,
+            "zone_name": "政府特区"
+          },
+          {
+            "buildable": [],
+            "buildings": 3,
+            "district": "district_city",
+            "max_buildings": 3,
+            "zone": "zone_research_unity",
+            "zone_id": 1,
+            "zone_name": "档案馆"
+          },
+          {
+            "buildable": [],
+            "buildings": 3,
+            "district": "district_city",
+            "max_buildings": 3,
+            "zone": "zone_industrial",
+            "zone_id": 2,
+            "zone_name": "混合工业"
+          }
+        ]
+      },
+      "sourceLine": 2027,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:27:25.313Z",
+      "type": "inspect",
+      "topic": "buildings",
+      "result": {
+        "colony_id": 54,
+        "planet_id": 215,
+        "success": true,
+        "zones": [
+          {
+            "buildable": [],
+            "buildings": 6,
+            "district": "district_city",
+            "max_buildings": 6,
+            "zone": "zone_default",
+            "zone_id": 113,
+            "zone_name": "政府特区"
+          },
+          {
+            "buildable": [],
+            "buildings": 3,
+            "district": "district_city",
+            "max_buildings": 3,
+            "zone": "zone_research",
+            "zone_id": 139,
+            "zone_name": "科研聚落"
+          }
+        ]
+      },
+      "sourceLine": 1888,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:30:03.921Z",
+      "type": "inspect",
+      "topic": "buildings",
+      "result": {
+        "colony_id": 63,
+        "planet_id": 298,
+        "success": true,
+        "zones": [
+          {
+            "buildable": [],
+            "buildings": 6,
+            "district": "district_city",
+            "max_buildings": 6,
+            "zone": "zone_default",
+            "zone_id": 16777325,
+            "zone_name": "政府特区"
+          },
+          {
+            "buildable": [],
+            "buildings": 3,
+            "district": "district_city",
+            "max_buildings": 3,
+            "zone": "zone_research",
+            "zone_id": 135,
+            "zone_name": "科研聚落"
+          }
+        ]
+      },
+      "sourceLine": 2020,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:29:55.205Z",
+      "type": "inspect",
+      "topic": "jobs",
+      "result": {
+        "colony_id": 0,
+        "planet_id": 3,
+        "strata": [
+          {
+            "jobs": [
+              {
+                "bonus_workforce": 30,
+                "can_prioritize": true,
+                "current_workforce": 200,
+                "effective_workforce": 230,
+                "is_prioritized": false,
+                "job_key": "politician",
+                "job_name": "政客",
+                "max_workforce": 200,
+                "workforce_limit": 200
+              }
+            ],
+            "stratum_key": "ruler",
+            "stratum_name": "精英",
+            "total_effective_workforce": 230,
+            "total_workforce": 200
+          },
+          {
+            "jobs": [
+              {
+                "bonus_workforce": 87,
+                "can_prioritize": true,
+                "current_workforce": 348,
+                "effective_workforce": 435,
+                "is_prioritized": true,
+                "job_key": "physicist",
+                "job_name": "物理学家",
+                "max_workforce": 348,
+                "workforce_limit": 348
+              },
+              {
+                "bonus_workforce": 87,
+                "can_prioritize": true,
+                "current_workforce": 348,
+                "effective_workforce": 435,
+                "is_prioritized": false,
+                "job_key": "biologist",
+                "job_name": "生物学家",
+                "max_workforce": 348,
+                "workforce_limit": 348
+              },
+              {
+                "bonus_workforce": 87,
+                "can_prioritize": true,
+                "current_workforce": 348,
+                "effective_workforce": 435,
+                "is_prioritized": false,
+                "job_key": "engineer",
+                "job_name": "工程学家",
+                "max_workforce": 348,
+                "workforce_limit": 348
+              },
+              {
+                "bonus_workforce": 70,
+                "can_prioritize": true,
+                "current_workforce": 280,
+                "effective_workforce": 350,
+                "is_prioritized": false,
+                "job_key": "bureaucrat",
+                "job_name": "官僚",
+                "max_workforce": 280,
+                "workforce_limit": 280
+              },
+              {
+                "bonus_workforce": 25,
+                "can_prioritize": true,
+                "current_workforce": 100,
+                "effective_workforce": 125,
+                "is_prioritized": false,
+                "job_key": "enforcer",
+                "job_name": "执法者",
+                "max_workforce": 100,
+                "workforce_limit": 100
+              },
+              {
+                "bonus_workforce": 50,
+                "can_prioritize": true,
+                "current_workforce": 200,
+                "effective_workforce": 250,
+                "is_prioritized": false,
+                "job_key": "entertainer",
+                "job_name": "演艺人员",
+                "max_workforce": 200,
+                "workforce_limit": 200
+              },
+              {
+                "bonus_workforce": 50,
+                "can_prioritize": true,
+                "current_workforce": 200,
+                "effective_workforce": 250,
+                "is_prioritized": false,
+                "job_key": "trader",
+                "job_name": "商贩",
+                "max_workforce": 200,
+                "workforce_limit": 200
+              },
+              {
+                "bonus_workforce": 287,
+                "can_prioritize": true,
+                "current_workforce": 1150,
+                "effective_workforce": 1437,
+                "is_prioritized": false,
+                "job_key": "foundry",
+                "job_name": "冶金师",
+                "max_workforce": 1150,
+                "workforce_limit": 1150
+              },
+              {
+                "bonus_workforce": 187,
+                "can_prioritize": true,
+                "current_workforce": 750,
+                "effective_workforce": 937,
+                "is_prioritized": false,
+                "job_key": "artisan",
+                "job_name": "工匠",
+                "max_workforce": 750,
+                "workforce_limit": 750
+              }
+            ],
+            "stratum_key": "specialist",
+            "stratum_name": "专家",
+            "total_effective_workforce": 4654,
+            "total_workforce": 3724
+          },
+          {
+            "jobs": [
+              {
+                "bonus_workforce": 120,
+                "can_prioritize": true,
+                "current_workforce": 600,
+                "effective_workforce": 720,
+                "is_prioritized": false,
+                "job_key": "technician",
+                "job_name": "技工",
+                "max_workforce": 600,
+                "workforce_limit": 600
+              },
+              {
+                "bonus_workforce": 200,
+                "can_prioritize": true,
+                "current_workforce": 1000,
+                "effective_workforce": 1200,
+                "is_prioritized": false,
+                "job_key": "miner",
+                "job_name": "矿工",
+                "max_workforce": 1000,
+                "workforce_limit": 1000
+              },
+              {
+                "bonus_workforce": 160,
+                "can_prioritize": true,
+                "current_workforce": 800,
+                "effective_workforce": 960,
+                "is_prioritized": false,
+                "job_key": "farmer",
+                "job_name": "农夫",
+                "max_workforce": 800,
+                "workforce_limit": 800
+              }
+            ],
+            "stratum_key": "worker",
+            "stratum_name": "劳工",
+            "total_effective_workforce": 2880,
+            "total_workforce": 2400
+          },
+          {
+            "jobs": [
+              {
+                "bonus_workforce": 2,
+                "can_prioritize": false,
+                "current_workforce": 9,
+                "effective_workforce": 11,
+                "is_prioritized": false,
+                "job_key": "civilian",
+                "job_name": "平民",
+                "max_workforce": 9,
+                "workforce_limit": 9
+              }
+            ],
+            "stratum_key": "civilian",
+            "stratum_name": "平民",
+            "total_effective_workforce": 11,
+            "total_workforce": 9
+          }
+        ],
+        "success": true,
+        "total_workforce": 6333
+      },
+      "sourceLine": 2012,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:29:56.895Z",
+      "type": "inspect",
+      "topic": "jobs",
+      "result": {
+        "colony_id": 54,
+        "planet_id": 215,
+        "strata": [
+          {
+            "jobs": [
+              {
+                "bonus_workforce": 204,
+                "can_prioritize": true,
+                "current_workforce": 816,
+                "effective_workforce": 1020,
+                "is_prioritized": false,
+                "job_key": "physicist",
+                "job_name": "物理学家",
+                "max_workforce": 816,
+                "workforce_limit": 816
+              },
+              {
+                "bonus_workforce": 204,
+                "can_prioritize": true,
+                "current_workforce": 816,
+                "effective_workforce": 1020,
+                "is_prioritized": false,
+                "job_key": "biologist",
+                "job_name": "生物学家",
+                "max_workforce": 816,
+                "workforce_limit": 816
+              },
+              {
+                "bonus_workforce": 204,
+                "can_prioritize": true,
+                "current_workforce": 816,
+                "effective_workforce": 1020,
+                "is_prioritized": false,
+                "job_key": "engineer",
+                "job_name": "工程学家",
+                "max_workforce": 816,
+                "workforce_limit": 816
+              },
+              {
+                "bonus_workforce": 20,
+                "can_prioritize": true,
+                "current_workforce": 200,
+                "effective_workforce": 220,
+                "is_prioritized": true,
+                "job_key": "artisan",
+                "job_name": "工匠",
+                "max_workforce": 200,
+                "workforce_limit": 200
+              }
+            ],
+            "stratum_key": "specialist",
+            "stratum_name": "专家",
+            "total_effective_workforce": 3280,
+            "total_workforce": 2648
+          },
+          {
+            "jobs": [
+              {
+                "bonus_workforce": 10,
+                "can_prioritize": true,
+                "current_workforce": 200,
+                "effective_workforce": 210,
+                "is_prioritized": false,
+                "job_key": "colonist",
+                "job_name": "殖民者",
+                "max_workforce": 200,
+                "workforce_limit": 200
+              },
+              {
+                "bonus_workforce": 10,
+                "can_prioritize": true,
+                "current_workforce": 200,
+                "effective_workforce": 210,
+                "is_prioritized": false,
+                "job_key": "farmer",
+                "job_name": "农夫",
+                "max_workforce": 200,
+                "workforce_limit": 200
+              },
+              {
+                "bonus_workforce": 10,
+                "can_prioritize": true,
+                "current_workforce": 200,
+                "effective_workforce": 210,
+                "is_prioritized": false,
+                "job_key": "miner",
+                "job_name": "矿工",
+                "max_workforce": 200,
+                "workforce_limit": 200
+              },
+              {
+                "bonus_workforce": 30,
+                "can_prioritize": true,
+                "current_workforce": 600,
+                "effective_workforce": 630,
+                "is_prioritized": false,
+                "job_key": "technician",
+                "job_name": "技工",
+                "max_workforce": 600,
+                "workforce_limit": 600
+              }
+            ],
+            "stratum_key": "worker",
+            "stratum_name": "劳工",
+            "total_effective_workforce": 1260,
+            "total_workforce": 1200
+          },
+          {
+            "jobs": [
+              {
+                "bonus_workforce": 0,
+                "can_prioritize": false,
+                "current_workforce": 9,
+                "effective_workforce": 9,
+                "is_prioritized": false,
+                "job_key": "civilian",
+                "job_name": "平民",
+                "max_workforce": 9,
+                "workforce_limit": 9
+              }
+            ],
+            "stratum_key": "civilian",
+            "stratum_name": "平民",
+            "total_effective_workforce": 9,
+            "total_workforce": 9
+          }
+        ],
+        "success": true,
+        "total_workforce": 3857
+      },
+      "sourceLine": 2014,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:29:56.923Z",
+      "type": "inspect",
+      "topic": "jobs",
+      "result": {
+        "colony_id": 63,
+        "planet_id": 298,
+        "strata": [
+          {
+            "jobs": [
+              {
+                "bonus_workforce": 234,
+                "can_prioritize": true,
+                "current_workforce": 936,
+                "effective_workforce": 1170,
+                "is_prioritized": false,
+                "job_key": "physicist",
+                "job_name": "物理学家",
+                "max_workforce": 936,
+                "workforce_limit": 936
+              },
+              {
+                "bonus_workforce": 234,
+                "can_prioritize": true,
+                "current_workforce": 936,
+                "effective_workforce": 1170,
+                "is_prioritized": false,
+                "job_key": "biologist",
+                "job_name": "生物学家",
+                "max_workforce": 936,
+                "workforce_limit": 936
+              },
+              {
+                "bonus_workforce": 234,
+                "can_prioritize": true,
+                "current_workforce": 936,
+                "effective_workforce": 1170,
+                "is_prioritized": false,
+                "job_key": "engineer",
+                "job_name": "工程学家",
+                "max_workforce": 936,
+                "workforce_limit": 936
+              },
+              {
+                "bonus_workforce": 20,
+                "can_prioritize": true,
+                "current_workforce": 200,
+                "effective_workforce": 220,
+                "is_prioritized": false,
+                "job_key": "entertainer",
+                "job_name": "演艺人员",
+                "max_workforce": 200,
+                "workforce_limit": 200
+              },
+              {
+                "bonus_workforce": 40,
+                "can_prioritize": true,
+                "current_workforce": 400,
+                "effective_workforce": 440,
+                "is_prioritized": true,
+                "job_key": "artisan",
+                "job_name": "工匠",
+                "max_workforce": 400,
+                "workforce_limit": 400
+              }
+            ],
+            "stratum_key": "specialist",
+            "stratum_name": "专家",
+            "total_effective_workforce": 4170,
+            "total_workforce": 3408
+          },
+          {
+            "jobs": [
+              {
+                "bonus_workforce": 10,
+                "can_prioritize": true,
+                "current_workforce": 200,
+                "effective_workforce": 210,
+                "is_prioritized": false,
+                "job_key": "colonist",
+                "job_name": "殖民者",
+                "max_workforce": 200,
+                "workforce_limit": 200
+              },
+              {
+                "bonus_workforce": 20,
+                "can_prioritize": true,
+                "current_workforce": 400,
+                "effective_workforce": 420,
+                "is_prioritized": false,
+                "job_key": "miner",
+                "job_name": "矿工",
+                "max_workforce": 400,
+                "workforce_limit": 400
+              },
+              {
+                "bonus_workforce": 50,
+                "can_prioritize": true,
+                "current_workforce": 1000,
+                "effective_workforce": 1050,
+                "is_prioritized": false,
+                "job_key": "technician",
+                "job_name": "技工",
+                "max_workforce": 1000,
+                "workforce_limit": 1000
+              },
+              {
+                "bonus_workforce": 20,
+                "can_prioritize": true,
+                "current_workforce": 400,
+                "effective_workforce": 420,
+                "is_prioritized": false,
+                "job_key": "farmer",
+                "job_name": "农夫",
+                "max_workforce": 400,
+                "workforce_limit": 400
+              }
+            ],
+            "stratum_key": "worker",
+            "stratum_name": "劳工",
+            "total_effective_workforce": 2100,
+            "total_workforce": 2000
+          },
+          {
+            "jobs": [
+              {
+                "bonus_workforce": 0,
+                "can_prioritize": false,
+                "current_workforce": 9,
+                "effective_workforce": 9,
+                "is_prioritized": false,
+                "job_key": "civilian",
+                "job_name": "平民",
+                "max_workforce": 9,
+                "workforce_limit": 9
+              }
+            ],
+            "stratum_key": "civilian",
+            "stratum_name": "平民",
+            "total_effective_workforce": 9,
+            "total_workforce": 9
+          }
+        ],
+        "success": true,
+        "total_workforce": 5417
+      },
+      "sourceLine": 2015,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:30:15.937Z",
+      "type": "inspect",
+      "topic": "military",
+      "result": {
+        "fleet_count": 2,
+        "fleets": [
+          {
+            "can_reinforce": false,
+            "command_limit": 370,
+            "designs": [
+              {
+                "actual_count": 48,
+                "deficit": 0,
+                "design_id": 469763914,
+                "design_name": "护卫舰",
+                "naval_size": 5,
+                "target_quota": 48
+              },
+              {
+                "actual_count": 1,
+                "deficit": 0,
+                "design_id": 503316795,
+                "design_name": "巡洋舰",
+                "naval_size": 20,
+                "target_quota": 1
+              }
+            ],
+            "fleet_id": 3,
+            "military_power": 6206.8828125,
+            "name": "第1舰队",
+            "template_id": 0,
+            "template_size": 260,
+            "total_quota": 49,
+            "total_ships": 51,
+            "capacity_check": {
+              "known": true,
+              "actual_naval_size": 290,
+              "command_limit": 370,
+              "untemplated_naval_size": 30,
+              "reinforcement_naval_size": 0,
+              "projected_naval_size": 290,
+              "fits_reinforcements": true
+            }
+          },
+          {
+            "can_reinforce": true,
+            "command_limit": 370,
+            "designs": [
+              {
+                "actual_count": 0,
+                "deficit": 1,
+                "design_id": 67109318,
+                "design_name": "巡洋舰",
+                "naval_size": 20,
+                "target_quota": 1
+              },
+              {
+                "actual_count": 13,
+                "deficit": 0,
+                "design_id": 469763914,
+                "design_name": "护卫舰",
+                "naval_size": 5,
+                "target_quota": 13
+              },
+              {
+                "actual_count": 5,
+                "deficit": 0,
+                "design_id": 301992306,
+                "design_name": "驱逐舰",
+                "naval_size": 10,
+                "target_quota": 5
+              },
+              {
+                "actual_count": 1,
+                "deficit": 0,
+                "design_id": 503316795,
+                "design_name": "巡洋舰",
+                "naval_size": 20,
+                "target_quota": 1
+              }
+            ],
+            "fleet_id": 16777251,
+            "military_power": 6850.671875,
+            "name": "第2舰队",
+            "template_id": 16777224,
+            "template_size": 155,
+            "total_quota": 20,
+            "total_ships": 23,
+            "capacity_check": {
+              "known": true,
+              "actual_naval_size": 215,
+              "command_limit": 370,
+              "untemplated_naval_size": 80,
+              "reinforcement_naval_size": 20,
+              "projected_naval_size": 235,
+              "fits_reinforcements": true
+            }
+          }
+        ],
+        "fleets_count": 2,
+        "tactics": {
+          "fleets": [
+            {
+              "actual_naval_size": 290,
+              "available_to_merge": true,
+              "command_limit": 370,
+              "fleet_id": 3,
+              "power_ui_text": "6206.88",
+              "status": "无指令",
+              "system_id": 1,
+              "total_ships": 51
+            },
+            {
+              "actual_naval_size": 215,
+              "available_to_merge": true,
+              "command_limit": 370,
+              "fleet_id": 16777251,
+              "power_ui_text": "6850.67",
+              "status": "无指令",
+              "system_id": 1,
+              "total_ships": 23
+            }
+          ],
+          "merge_candidates": []
+        },
+        "empire_naval_capacity": {
+          "capacity": 512,
+          "used": 505
+        },
+        "expansion_policy": "按当前容量和经济预算安排扩军；船坞排队仍会消耗未来容量。"
+      },
+      "sourceLine": 2028,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:30:08.662Z",
+      "type": "inspect",
+      "topic": "government",
+      "result": {
+        "agenda": {
+          "key": "",
+          "name": "",
+          "progress": 0,
+          "cost": 0,
+          "is_ready": false
+        },
+        "authority": "auth_democratic",
+        "authority_name": "民主制",
+        "available_agendas": [],
+        "civics": [
+          {
+            "key": "civic_beacon_of_liberty",
+            "name": "自由灯塔"
+          },
+          {
+            "key": "civic_idealistic_foundation",
+            "name": "理想本心"
+          }
+        ],
+        "council_seats": [
+          {
+            "is_assigned": true,
+            "is_ruler": true,
+            "leader": {
+              "age": 0,
+              "class_key": "official",
+              "class_name": "行政官",
+              "ethic_key": "ethic_egalitarian",
+              "ethic_name": "平等主义",
+              "id": 301989888,
+              "level": 6,
+              "name": "贝尔德特拉维斯",
+              "trait_options": [],
+              "trait_selections_available": 0,
+              "trait_upgrade_options": [],
+              "traits": [
+                {
+                  "key": "leader_trait_reformer_2",
+                  "name": "leader_trait_reformer_2",
+                  "tier": 2
+                },
+                {
+                  "key": "leader_trait_spycraft",
+                  "name": "谍战专家",
+                  "tier": 1
+                },
+                {
+                  "key": "leader_trait_entrepreneur_2",
+                  "name": "实业家 II",
+                  "tier": 2
+                },
+                {
+                  "key": "leader_trait_adaptable",
+                  "name": "适应力强",
+                  "tier": 1
+                }
+              ]
+            },
+            "position_id": 4294967295,
+            "position_key": "ruler",
+            "position_name": "统治者",
+            "seat_index": 0
+          },
+          {
+            "is_assigned": true,
+            "is_ruler": false,
+            "leader": {
+              "age": 0,
+              "class_key": "commander",
+              "class_name": "指挥官",
+              "ethic_key": "ethic_militarist",
+              "ethic_name": "军国主义",
+              "id": 50332140,
+              "level": 1,
+              "name": "哈斯克太拉戈",
+              "trait_options": [],
+              "trait_selections_available": 0,
+              "trait_upgrade_options": [],
+              "traits": [
+                {
+                  "key": "leader_trait_resilient",
+                  "name": "坚韧不拔",
+                  "tier": 1
+                }
+              ]
+            },
+            "position_id": 2248146945,
+            "position_key": "councilor_defense",
+            "position_name": "国防部长",
+            "seat_index": 1
+          },
+          {
+            "is_assigned": true,
+            "is_ruler": false,
+            "leader": {
+              "age": 0,
+              "class_key": "scientist",
+              "class_name": "科学官",
+              "ethic_key": "ethic_egalitarian",
+              "ethic_name": "平等主义",
+              "id": 83886492,
+              "level": 6,
+              "name": "苏皮",
+              "trait_options": [],
+              "trait_selections_available": 0,
+              "trait_upgrade_options": [],
+              "traits": [
+                {
+                  "key": "leader_trait_expertise_psionics",
+                  "name": "专长：灵能理论",
+                  "tier": 1
+                },
+                {
+                  "key": "leader_trait_spark_of_genius_2",
+                  "name": "leader_trait_spark_of_genius_2",
+                  "tier": 2
+                },
+                {
+                  "key": "leader_trait_engineer",
+                  "name": "工程师",
+                  "tier": 1
+                },
+                {
+                  "key": "leader_trait_eager",
+                  "name": "求知若渴",
+                  "tier": 1
+                },
+                {
+                  "key": "leader_trait_resilient",
+                  "name": "坚韧不拔",
+                  "tier": 1
+                },
+                {
+                  "key": "leader_trait_adaptable",
+                  "name": "适应力强",
+                  "tier": 1
+                },
+                {
+                  "key": "leader_trait_reclusive",
+                  "name": "深藏功名",
+                  "tier": 1
+                }
+              ]
+            },
+            "position_id": 3120562178,
+            "position_key": "councilor_research",
+            "position_name": "首席科学官",
+            "seat_index": 2
+          },
+          {
+            "is_assigned": true,
+            "is_ruler": false,
+            "leader": {
+              "age": 0,
+              "class_key": "official",
+              "class_name": "行政官",
+              "ethic_key": "ethic_authoritarian",
+              "ethic_name": "威权主义",
+              "id": 16777676,
+              "level": 4,
+              "name": "哈斯克维里克",
+              "trait_options": [],
+              "trait_selections_available": 0,
+              "trait_upgrade_options": [],
+              "traits": [
+                {
+                  "key": "leader_trait_ambassador_research_pact_focus_2",
+                  "name": "leader_trait_ambassador_research_pact_focus_2",
+                  "tier": 2
+                },
+                {
+                  "key": "leader_trait_resolution_category_divinity_focus",
+                  "name": "专精：生命之神圣",
+                  "tier": 1
+                },
+                {
+                  "key": "leader_trait_adaptable",
+                  "name": "适应力强",
+                  "tier": 1
+                },
+                {
+                  "key": "leader_trait_private_mines",
+                  "name": "私有矿业",
+                  "tier": 1
+                },
+                {
+                  "key": "leader_trait_excessive",
+                  "name": "贪得无厌",
+                  "tier": 1
+                }
+              ]
+            },
+            "position_id": 3137339395,
+            "position_key": "councilor_state",
+            "position_name": "国务卿",
+            "seat_index": 3
+          }
+        ],
+        "ethics": [
+          {
+            "key": "ethic_fanatic_egalitarian",
+            "name": "极端平等主义"
+          },
+          {
+            "key": "ethic_xenophile",
+            "name": "亲外主义"
+          }
+        ],
+        "government_type": "gov_representative_democracy",
+        "government_type_name": "代议民主制",
+        "origin": "origin_default",
+        "origin_name": "繁荣一统",
+        "ruler": {
+          "age": 0,
+          "class_key": "official",
+          "class_name": "行政官",
+          "ethic_key": "ethic_egalitarian",
+          "ethic_name": "平等主义",
+          "id": 301989888,
+          "level": 6,
+          "name": "贝尔德特拉维斯"
+        },
+        "summary": {
+          "active_agenda": "",
+          "active_agenda_name": "",
+          "agenda_cost": 0,
+          "agenda_progress": 0,
+          "agenda_ready": false,
+          "councilor_count": 4,
+          "ruler_name": "贝尔德特拉维斯"
+        },
+        "agenda_candidate_policy": "仅列已核验的当前思潮议程；其他脚本前提尚未接通，不把原生命令候选冒充合法界面候选",
+        "appointments": {
+          "candidates": []
+        }
+      },
+      "sourceLine": 2024,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:30:18.213Z",
+      "type": "intent",
+      "requestId": "r214-navy",
+      "orders": [
+        {
+          "command": "reinforce_fleet",
+          "arguments": {
+            "fleet_id": 16777251
+          }
+        },
+        {
+          "command": "merge_fleets",
+          "arguments": {
+            "fleet_ids": [
+              3,
+              16777251
+            ]
+          }
+        }
+      ],
+      "explanation": "两支舰队都停在首都闲着，先补上第二队缺的那艘巡洋舰，再让它们并成一股更有威慑力。",
+      "sourceLine": 2029,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:30:18.314Z",
+      "type": "rejected",
+      "requestId": "r214-navy",
+      "command": "reinforce_fleet",
+      "error": "这批军舰需新增20点，当前海军505/512，会超过容量；缩小批次或先发展容量。",
+      "sourceLine": 2030,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:30:18.789Z",
+      "type": "receipt",
+      "requestId": "r214-navy",
+      "command": "merge_fleets",
+      "response": {
+        "error": "Combined fleet would exceed command limit; keep separate task groups",
+        "success": false
+      },
+      "sourceLine": 2033,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T14:15:02.194Z",
+      "type": "intent",
+      "requestId": "b18-a34",
+      "orders": [
+        {
+          "command": "build_district",
+          "arguments": {
+            "district_key": "district_city",
+            "planet_id": 298
+          }
+        }
+      ],
+      "explanation": "新特洛伊槽位不够用，先补一片城市区划，后面才好继续加工业建筑。",
+      "sourceLine": 1666,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-0a8ec231-4b8a-4c45-82b4-4c56df86d175.jsonl"
+    },
+    {
+      "at": "2026-10-28T14:21:12.603Z",
+      "type": "intent",
+      "requestId": "b19-a22",
+      "orders": [
+        {
+          "command": "build_district",
+          "arguments": {
+            "district_key": "district_city",
+            "planet_id": 298
+          }
+        }
+      ],
+      "explanation": "新特洛伊的研究岗都满了，先扩一块城市区划，为以后加科研特区腾地方。",
+      "sourceLine": 1914,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-0a8ec231-4b8a-4c45-82b4-4c56df86d175.jsonl"
+    },
+    {
+      "at": "2026-10-28T14:31:15.853Z",
+      "type": "intent",
+      "requestId": "b22-a03",
+      "orders": [
+        {
+          "command": "build_district",
+          "arguments": {
+            "district_key": "district_city",
+            "planet_id": 298
+          }
+        }
+      ],
+      "explanation": "新特洛伊还能扩城市区划，早点建好，以后开工业特区才有地方。",
+      "sourceLine": 2318,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-0a8ec231-4b8a-4c45-82b4-4c56df86d175.jsonl"
+    },
+    {
+      "at": "2026-10-28T14:32:27.738Z",
+      "type": "intent",
+      "requestId": "b22-a10",
+      "orders": [
+        {
+          "command": "build_district",
+          "arguments": {
+            "district_key": "district_city",
+            "planet_id": 298
+          }
+        }
+      ],
+      "explanation": "新特洛伊再加一块城市区划，开特区给工业和科研留位置，矿反正也爆仓。",
+      "sourceLine": 2386,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-0a8ec231-4b8a-4c45-82b4-4c56df86d175.jsonl"
+    },
+    {
+      "at": "2026-10-28T14:33:39.577Z",
+      "type": "intent",
+      "requestId": "b23-a04",
+      "orders": [
+        {
+          "command": "build_district",
+          "arguments": {
+            "district_key": "district_city",
+            "planet_id": 298
+          }
+        }
+      ],
+      "explanation": "新特洛伊再加一块城市区划，多开特区槽，后面好放工业和科研。",
+      "sourceLine": 2427,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-0a8ec231-4b8a-4c45-82b4-4c56df86d175.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:04:18.750Z",
+      "type": "intent",
+      "requestId": "r112-city",
+      "orders": [
+        {
+          "command": "build_district",
+          "arguments": {
+            "district_key": "district_city",
+            "planet_id": 3
+          }
+        }
+      ],
+      "explanation": "矿物快满了，地球再铺区域城市区划，为后续岗位和科研留出空间。",
+      "sourceLine": 995,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:05:28.124Z",
+      "type": "intent",
+      "requestId": "r118-city-agenda",
+      "orders": [
+        {
+          "command": "launch_council_agenda",
+          "arguments": {
+            "agenda_key": "agenda_open_arms"
+          }
+        },
+        {
+          "command": "build_district",
+          "arguments": {
+            "district_key": "district_city",
+            "planet_id": 215
+          }
+        }
+      ],
+      "explanation": "敞开怀抱议程已经蓄满，先启动它；圣费尔南多再加一块城市地，为工业片区腾地方。",
+      "sourceLine": 1057,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:07:45.845Z",
+      "type": "intent",
+      "requestId": "r128-city",
+      "orders": [
+        {
+          "command": "build_district",
+          "arguments": {
+            "district_key": "district_city",
+            "planet_id": 298
+          }
+        }
+      ],
+      "explanation": "新特洛伊还有城建空位，先把城市区划铺上，等有了新区就能开工业特区。",
+      "sourceLine": 1149,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:27:04.670Z",
+      "type": "receipt",
+      "requestId": "r203-stations",
+      "command": "build_stations",
+      "response": {
+        "error": "不能在这个恒星系中任何一个行星周围建设这种空间站",
+        "success": false
+      },
+      "sourceLine": 1856,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:29:49.557Z",
+      "type": "receipt",
+      "requestId": "r212-stations",
+      "command": "build_stations",
+      "response": {
+        "error": "不能在这个恒星系中任何一个行星周围建设这种空间站",
+        "success": false
+      },
+      "sourceLine": 2000,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:29:50.569Z",
+      "type": "receipt",
+      "requestId": "r212-stations",
+      "command": "build_stations",
+      "response": {
+        "error": "不能在这个恒星系中任何一个行星周围建设这种空间站",
+        "success": false
+      },
+      "sourceLine": 2004,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:29:52.790Z",
+      "type": "receipt",
+      "requestId": "r213-stations2",
+      "command": "build_stations",
+      "response": {
+        "error": "不能在这个恒星系中任何一个行星周围建设这种空间站",
+        "success": false
+      },
+      "sourceLine": 2008,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    },
+    {
+      "at": "2026-10-28T15:29:53.245Z",
+      "type": "receipt",
+      "requestId": "r213-stations2",
+      "command": "build_stations",
+      "response": {
+        "error": "不能在这个恒星系中任何一个行星周围建设这种空间站",
+        "success": false
+      },
+      "sourceLine": 2010,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl"
+    }
+  ],
+  "hubSamples": {
+    "firstFailure": {
+      "requestId": "6c0bb2b2-4eb7-44b4-a14d-6ab74cab1382",
+      "agentId": "host",
+      "role": "host",
+      "providerId": "custom",
+      "model": "claude-opus-4-6-thinking",
+      "promptChars": 3822,
+      "systemHash": "c4f7cfad289c4fd4d94ff1e5dd7c9469c98740b7b776fd4c570a60b61c72c33f",
+      "at": 1793189708290,
+      "stage": "failed",
+      "latencyMs": 1400,
+      "usage": null,
+      "sourceLine": 210,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\commentary\\ai-usage.jsonl"
+    },
+    "lastFailure": {
+      "requestId": "65e4ac8b-fd86-4461-aa7a-fc025f8018c9",
+      "agentId": "host",
+      "role": "host",
+      "providerId": "custom",
+      "model": "claude-opus-4-6-thinking",
+      "promptChars": 3752,
+      "systemHash": "c4f7cfad289c4fd4d94ff1e5dd7c9469c98740b7b776fd4c570a60b61c72c33f",
+      "at": 1793201710456,
+      "stage": "failed",
+      "latencyMs": 653,
+      "usage": null,
+      "sourceLine": 1414,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\commentary\\ai-usage.jsonl"
+    },
+    "lastHostSuccess": {
+      "requestId": "e634894a-df38-48e1-ade4-96217e5338d4",
+      "agentId": "host",
+      "role": "host",
+      "providerId": "custom",
+      "model": "claude-opus-4-6-thinking",
+      "promptChars": 3774,
+      "systemHash": "c4f7cfad289c4fd4d94ff1e5dd7c9469c98740b7b776fd4c570a60b61c72c33f",
+      "at": 1793197236236,
+      "stage": "completed",
+      "latencyMs": 6220,
+      "usage": {
+        "inputTokens": 3855,
+        "outputTokens": 193
+      },
+      "sourceLine": 874,
+      "sourceFile": "E:\\肥鱼直播\\stellaris-player\\.local\\commentary\\ai-usage.jsonl"
+    }
+  },
+  "timeline": [
+    {
+      "at": "2026-10-28T11:39:29.678Z",
+      "date": "2200.01.01",
+      "systems": 1,
+      "colonies": 1,
+      "navalCapacity": {
+        "capacity": 75,
+        "used": 15
+      },
+      "sciencePerMonth": 46.230000000000004
+    },
+    {
+      "at": "2026-10-28T12:02:55.258Z",
+      "date": "2210.01.02",
+      "systems": 2,
+      "colonies": 2,
+      "navalCapacity": {
+        "capacity": 75,
+        "used": 80
+      },
+      "sciencePerMonth": 70.74
+    },
+    {
+      "at": "2026-10-28T12:26:23.401Z",
+      "date": "2220.01.19",
+      "systems": 6,
+      "colonies": 3,
+      "navalCapacity": {
+        "capacity": 112,
+        "used": 110
+      },
+      "sciencePerMonth": 147.7
+    },
+    {
+      "at": "2026-10-28T12:50:34.062Z",
+      "date": "2230.01.22",
+      "systems": 12,
+      "colonies": 3,
+      "navalCapacity": {
+        "capacity": 187,
+        "used": 180
+      },
+      "sciencePerMonth": 243.10000000000002
+    },
+    {
+      "at": "2026-10-28T13:15:04.807Z",
+      "date": "2240.01.13",
+      "systems": 12,
+      "colonies": 3,
+      "navalCapacity": {
+        "capacity": 187,
+        "used": 185
+      },
+      "sciencePerMonth": 260.07
+    },
+    {
+      "at": "2026-10-28T13:38:28.214Z",
+      "date": "2250.01.05",
+      "systems": 19,
+      "colonies": 3,
+      "navalCapacity": {
+        "capacity": 187,
+        "used": 185
+      },
+      "sciencePerMonth": 341.95
+    },
+    {
+      "at": "2026-10-28T14:02:09.955Z",
+      "date": "2260.02.05",
+      "systems": 24,
+      "colonies": 3,
+      "navalCapacity": {
+        "capacity": 300,
+        "used": 300
+      },
+      "sciencePerMonth": 397.1700000000001
+    },
+    {
+      "at": "2026-10-28T14:19:44.365Z",
+      "date": "2270.02.07",
+      "systems": 27,
+      "colonies": 3,
+      "navalCapacity": {
+        "capacity": 300,
+        "used": 300
+      },
+      "sciencePerMonth": 486.21
+    },
+    {
+      "at": "2026-10-28T14:32:45.098Z",
+      "date": "2280.01.03",
+      "systems": 27,
+      "colonies": 3,
+      "navalCapacity": {
+        "capacity": 300,
+        "used": 300
+      },
+      "sciencePerMonth": 562.34
+    },
+    {
+      "at": "2026-10-28T14:46:21.827Z",
+      "date": "2290.04.20",
+      "systems": 27,
+      "colonies": 3,
+      "navalCapacity": {
+        "capacity": 450,
+        "used": 380
+      },
+      "sciencePerMonth": 588.8
+    },
+    {
+      "at": "2026-10-28T14:58:50.234Z",
+      "date": "2300.01.01",
+      "systems": 27,
+      "colonies": 3,
+      "navalCapacity": {
+        "capacity": 450,
+        "used": 460
+      },
+      "sciencePerMonth": 587.78
+    },
+    {
+      "at": "2026-10-28T15:11:51.518Z",
+      "date": "2310.01.14",
+      "systems": 27,
+      "colonies": 3,
+      "navalCapacity": {
+        "capacity": 450,
+        "used": 460
+      },
+      "sciencePerMonth": 609.88
+    },
+    {
+      "at": "2026-10-28T15:24:17.716Z",
+      "date": "2320.01.01",
+      "systems": 27,
+      "colonies": 3,
+      "navalCapacity": {
+        "capacity": 512,
+        "used": 505
+      },
+      "sciencePerMonth": 611.98
+    },
+    {
+      "at": "2026-10-28T15:30:19.092Z",
+      "date": "2324.03.25",
+      "systems": 27,
+      "colonies": 3,
+      "navalCapacity": {
+        "capacity": 512,
+        "used": 505
+      },
+      "sciencePerMonth": 611.98
+    }
+  ]
+}

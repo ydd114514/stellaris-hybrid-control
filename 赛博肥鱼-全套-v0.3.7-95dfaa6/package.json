@@ -1,0 +1,109 @@
+{
+  "name": "cyber-fish-shop",
+  "version": "0.3.7",
+  "private": true,
+  "description": "赛博肥鱼 · 全天小店直播工作台",
+  "type": "module",
+  "main": "dist/electron/main.cjs",
+  "license": "AGPL-3.0-or-later",
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {
+    "build:dsh": "node scripts/build-dsh.mjs",
+    "package:dsh:win": "node scripts/build-dsh.mjs && electron-builder --config electron-builder.stellaris.json --win nsis --x64",
+    "dev": "node scripts/dev.mjs",
+    "dev:web": "vite --host 127.0.0.1",
+    "build": "node scripts/build.mjs",
+    "typecheck": "vue-tsc --noEmit && tsc -p tsconfig.electron.json --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "check": "pnpm typecheck && pnpm test",
+    "package": "pnpm build && electron-builder --mac dmg --arm64",
+    "package:dir": "pnpm build && electron-builder --mac dir --arm64",
+    "package:win": "pnpm build && electron-builder --win nsis --x64",
+    "package:win:dir": "pnpm build && electron-builder --win dir --x64",
+    "test:electron": "node scripts/smoke-electron.mjs",
+    "package:dsh:basic": "node scripts/prepare-basic-bundle.mjs && node scripts/build-dsh.mjs --basic && electron-builder --config electron-builder.basic.json --win nsis zip --x64"
+  },
+  "dependencies": {
+    "@yakult-green-tea/qq-music-api": "3.3.5",
+    "vue": "3.5.22",
+    "ws": "8.22.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "@types/node": "24.7.2",
+    "@types/ws": "8.18.2",
+    "@vitejs/plugin-vue": "6.0.1",
+    "electron": "38.2.0",
+    "electron-builder": "26.0.12",
+    "esbuild": "0.25.11",
+    "typescript": "5.9.3",
+    "vite": "7.1.12",
+    "vitest": "3.2.4",
+    "vue-tsc": "3.1.1"
+  },
+  "build": {
+    "appId": "cn.cyberfish.nightshop",
+    "productName": "赛博肥鱼",
+    "asarUnpack": [
+      "dist/electron/native/**"
+    ],
+    "extraResources": [
+      {
+        "from": "assets/app-icon.png",
+        "to": "app-icon.png"
+      }
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json",
+      "LICENSE",
+      "licenses/**/*",
+      "THIRD_PARTY_NOTICES.md"
+    ],
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "identity": null,
+      "icon": "assets/app-icon.icns"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "CyberFish-${version}-Windows-${arch}-Setup.${ext}",
+      "icon": "assets/app-icon.png",
+      "signAndEditExecutable": true
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "赛博肥鱼",
+      "deleteAppDataOnUninstall": false
+    },
+    "dmg": {
+      "title": "赛博肥鱼 0.3.7",
+      "window": {
+        "width": 540,
+        "height": 380
+      }
+    }
+  }
+}

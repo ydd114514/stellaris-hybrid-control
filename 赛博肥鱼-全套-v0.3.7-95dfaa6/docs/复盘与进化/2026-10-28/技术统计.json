@@ -1,0 +1,288 @@
+{
+  "scope": "2026-10-28 evening controller and hub only; daytime tests excluded",
+  "start": "2026-10-28 19:39:29",
+  "end": "2026-10-28 23:30:22",
+  "durationMinutes": 230.9,
+  "nativeTypes": {
+    "state": 1833,
+    "inspect": 2688,
+    "intent": 1076,
+    "presentation_panel": 431,
+    "receipt": 1212,
+    "presentation": 636,
+    "picture_evidence": 135,
+    "presentation_complete": 395,
+    "strategy_advice_read": 105,
+    "rejected": 171,
+    "decision_guard_pause": 32,
+    "modal_deferred": 9,
+    "stop": 3,
+    "unknown": 2,
+    "recovery": 2
+  },
+  "game": {
+    "steps": 3778,
+    "uncachedInput": 4786333,
+    "cachedInput": 80419456,
+    "totalInput": 85205789,
+    "output": 497232,
+    "cachePercent": 94.38,
+    "meanInput": 22553,
+    "maxInput": 33023,
+    "perMinute": 16.36,
+    "toolResultStatuses": {
+      "completed": 4517,
+      "error": 150
+    }
+  },
+  "orders": {
+    "accepted": 945,
+    "verified": 676,
+    "acceptedUnverified": 269,
+    "engineFalse": 267,
+    "guardRejected": 171,
+    "engineErrors": [
+      [
+        "build_stations:不能在这个恒星系中任何一个行星周围建设这种空间站",
+        222
+      ],
+      [
+        "merge_fleets:Combined fleet would exceed command limit; keep separate task groups",
+        11
+      ],
+      [
+        "market_trade:undefined",
+        7
+      ],
+      [
+        "survey:已经调查完毕！",
+        5
+      ],
+      [
+        "reinforce_fleet:undefined",
+        4
+      ],
+      [
+        "survey:请为此船配置一名科学官",
+        2
+      ],
+      [
+        "build_stations:✗ 缺少矿物 62",
+        1
+      ],
+      [
+        "build_district:Cannot be queued: ✗ 缺少矿物 332",
+        1
+      ],
+      [
+        "build_stations:✗ 缺少矿物 118",
+        1
+      ],
+      [
+        "build_stations:✗ 缺少矿物 80",
+        1
+      ],
+      [
+        "build_district:Cannot be queued: ✗ 缺少矿物 372",
+        1
+      ],
+      [
+        "build_stations:✗ 缺少矿物 57",
+        1
+      ],
+      [
+        "build_stations:✗ 缺少矿物 24",
+        1
+      ],
+      [
+        "build_stations:✗ 缺少矿物 325",
+        1
+      ],
+      [
+        "build_stations:✗ 缺少矿物 171",
+        1
+      ],
+      [
+        "build_district:Cannot be queued: 星球正在殖民中。",
+        1
+      ],
+      [
+        "build_district:Cannot be queued: ✓ 工程学 机械化开采\n星球正在殖民中。",
+        1
+      ],
+      [
+        "build_district:Cannot be queued: ✗ 缺少矿物 207\n✓ 工程学 机械化开采",
+        1
+      ],
+      [
+        "build_district:Cannot be queued: ✗ 缺少矿物 91\n✓ 社会学 农业工业化",
+        1
+      ],
+      [
+        "build_district:Cannot be queued: ✗ 缺少矿物 52\n✓ 社会学 农业工业化\n该殖民地只能支持18个区划",
+        1
+      ]
+    ],
+    "rejectedByCommand": {
+      "build_ship": 2,
+      "increase_fleet_quota": 10,
+      "resolve_event": 1,
+      "decrease_fleet_quota": 5,
+      "survey": 9,
+      "hire_leader": 3,
+      "open_alert": 1,
+      "build_building": 23,
+      "reinforce_fleet": 30,
+      "build_outpost": 8,
+      "market_trade": 36,
+      "set_district_zone": 9,
+      "set_job_priority": 2,
+      "build_stations": 2,
+      "select_research": 4,
+      "set_council_agenda": 2,
+      "respond_diplomacy": 1,
+      "assign_councilor": 7,
+      "move_fleet": 1,
+      "upgrade_fleet": 12,
+      "adopt_tradition": 2,
+      "assign_scientist": 1
+    },
+    "acceptedByCommand": {
+      "select_research": 187,
+      "survey": 168,
+      "increase_fleet_quota": 15,
+      "reinforce_fleet": 17,
+      "clear_blocker": 9,
+      "resolve_event": 60,
+      "adopt_tradition": 19,
+      "build_stations": 55,
+      "launch_council_agenda": 9,
+      "set_council_agenda": 6,
+      "build_district": 46,
+      "build_outpost": 28,
+      "build_building": 24,
+      "move_fleet": 24,
+      "market_trade": 61,
+      "build_ship": 14,
+      "set_job_priority": 61,
+      "adopt_ascension_perk": 3,
+      "colonize": 2,
+      "decrease_fleet_quota": 12,
+      "hire_leader": 12,
+      "assign_scientist": 11,
+      "set_district_zone": 2,
+      "set_speed": 20,
+      "open_alert": 10,
+      "merge_fleets": 5,
+      "diplomacy": 36,
+      "respond_diplomacy": 24,
+      "assign_councilor": 5
+    }
+  },
+  "compaction": {
+    "count": 193,
+    "averageBefore": 32636,
+    "averageAfter": 19292,
+    "minAfter": 17952,
+    "maxAfter": 21729,
+    "modelCalls": 0
+  },
+  "hub": {
+    "strategist": {
+      "stages": {
+        "started": 106,
+        "completed": 106
+      },
+      "first": "2026-10-28 19:39:38",
+      "last": "2026-10-28 23:31:40",
+      "lastSuccess": "2026-10-28 23:31:40",
+      "input": 269503,
+      "cached": 82176,
+      "output": 82009,
+      "meanLatencyMs": 4383,
+      "p95LatencyMs": 5066,
+      "unknownUsage": 0,
+      "cacheUsageMissing": 0,
+      "hourly": {
+        "19:completed": 9,
+        "20:completed": 25,
+        "21:completed": 31,
+        "22:completed": 30,
+        "23:completed": 11
+      }
+    },
+    "host": {
+      "stages": {
+        "started": 601,
+        "completed": 183,
+        "failed": 418
+      },
+      "first": "2026-10-28 19:42:07",
+      "last": "2026-10-28 23:35:10",
+      "lastSuccess": "2026-10-28 22:20:36",
+      "input": 679377,
+      "cached": 0,
+      "output": 39720,
+      "meanLatencyMs": 8074,
+      "p95LatencyMs": 12231,
+      "unknownUsage": 418,
+      "cacheUsageMissing": 183,
+      "hourly": {
+        "19:completed": 37,
+        "20:completed": 48,
+        "20:failed": 109,
+        "21:failed": 63,
+        "21:completed": 37,
+        "22:completed": 61,
+        "22:failed": 119,
+        "23:failed": 127
+      }
+    }
+  },
+  "audience": {
+    "count": 631,
+    "origins": {
+      "bilibili-web": 631
+    },
+    "types": {
+      "chat": 631
+    },
+    "publishedReplies": 240,
+    "replyTypes": {
+      "host": 240
+    },
+    "lastReply": "2026-10-28 22:20:36"
+  },
+  "endpoints": [
+    {
+      "time": "2026-10-28 19:39:29",
+      "date": "2200.01.01",
+      "systems": 1,
+      "colonies": 1
+    },
+    {
+      "time": "2026-10-28 23:30:19",
+      "date": "2324.03.25",
+      "systems": 27,
+      "colonies": 3
+    }
+  ],
+  "cleanup": {
+    "paused": true,
+    "date": "2324.05.01"
+  },
+  "hubCutoff": "2026-10-28 23:35:11",
+  "sources": {
+    "nativeSessions": [
+      "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-0a8ec231-4b8a-4c45-82b4-4c56df86d175.jsonl",
+      "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-2e9d7736-b7ec-4d15-8daa-45a5890ca663.jsonl",
+      "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-768fb890-0e79-4816-b61c-f26896801f56.jsonl",
+      "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\session-85a0adeb-c333-46cd-b8b0-6f6a45bbecf7.jsonl"
+    ],
+    "dshDirectory": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\dsh",
+    "hub": "E:\\肥鱼直播\\stellaris-player\\.local\\commentary\\ai-usage.jsonl",
+    "audience": "E:\\肥鱼直播\\stellaris-player\\.local\\commentary\\audience.jsonl",
+    "replies": "E:\\肥鱼直播\\stellaris-player\\.local\\commentary\\host-replies.jsonl",
+    "compaction": "E:\\肥鱼直播\\stellaris-player\\.local\\native-bridge\\local-compaction.jsonl"
+  }
+}

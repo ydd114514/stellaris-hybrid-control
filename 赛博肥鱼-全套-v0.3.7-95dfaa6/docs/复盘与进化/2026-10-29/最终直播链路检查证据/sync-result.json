@@ -1,0 +1,707 @@
+{
+  "schemaVersion": 1,
+  "mode": "zero-fee-caption-sync-interfaces",
+  "startedAt": "2026-10-29T03:32:32.865Z",
+  "passed": true,
+  "newModelRequests": 0,
+  "newTtsRequests": 0,
+  "realCredentialsRead": false,
+  "desktopControl": false,
+  "mouseKeyboardInput": false,
+  "visibleWindows": false,
+  "physicalMicrophoneCaptured": false,
+  "systemDefaultChanged": false,
+  "blockedExternalRequests": 0,
+  "offlineSynthCalls": 3,
+  "checks": {
+    "initialPlanHidden": true,
+    "generatingHidden": true,
+    "readyHidden": true,
+    "planCannotOverwritePlaying": true,
+    "singlePlaybackLease": true,
+    "pauseClears": true,
+    "resumeRestores": true,
+    "naturalEndClears": true,
+    "captionTiming": true,
+    "standaloneHostFollowsPlaying": true,
+    "oldEndedCannotClearNew": true,
+    "stopClears": true,
+    "errorClears": true,
+    "realVirtualAudioSignal": true,
+    "noDesktopInterference": true
+  },
+  "timings": {
+    "enqueueToActualPlayingMs": 864,
+    "playingToCaptionMs": 4,
+    "endedToCaptionClearMs": 2,
+    "thresholdMs": 250,
+    "note": "Local interface/DOM timing from one replay; not a guarantee of OBS or viewer latency.",
+    "playingToHostCaptionMs": 4,
+    "endedToHostCaptionClearMs": 2,
+    "ungatedQueueToPlayingMs": 29,
+    "ungatedLatencyScope": "Offline PCM returns immediately; measures only application queue/audio scheduling, excluding real text-model and TTS generation."
+  },
+  "injectedFaults": [
+    {
+      "kind": "stale-old-ended-callback",
+      "purpose": "Only checks that a stale callback cannot clear the new reply; never counted as natural playback completion."
+    },
+    {
+      "kind": "404-audio-source",
+      "purpose": "Produces a natural media error in the isolated test; no paid request or desktop action."
+    }
+  ],
+  "fixture": {
+    "sourcePaidRun": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\.local\\live-api-20261029\\run-1793244593846-794ae2fc",
+    "raw": {
+      "duration": 12.8,
+      "sha256": "cc7e360d61616f1f392362298324ad9243e06daf408b33a1788bfe6bc84b70a6"
+    },
+    "served": {
+      "duration": 12.8,
+      "sha256": "2a70aad04c50098761667e11c23aff6feab9344408d376a8f253b40a44b0df50"
+    },
+    "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。"
+  },
+  "captionLog": [
+    {
+      "at": 1793244754304,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "-1",
+      "sessionId": ""
+    },
+    {
+      "at": 1793244754305,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "1",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244755495,
+      "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。",
+      "id": "sync-natural-e1f94b96-31fb-475e-9bc2-37f2e64e2c3b",
+      "status": "playing",
+      "sequence": "2",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244755725,
+      "text": "",
+      "id": "",
+      "status": "paused",
+      "sequence": "3",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244755756,
+      "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。",
+      "id": "sync-natural-e1f94b96-31fb-475e-9bc2-37f2e64e2c3b",
+      "status": "playing",
+      "sequence": "4",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768386,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "5",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768423,
+      "text": "",
+      "id": "",
+      "status": "paused",
+      "sequence": "6",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768424,
+      "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。",
+      "id": "sync-stop-aa6e3126-879d-4e1d-8814-b9971758b496",
+      "status": "playing",
+      "sequence": "7",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768555,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "8",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768561,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "9",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768581,
+      "text": "",
+      "id": "",
+      "status": "paused",
+      "sequence": "10",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768582,
+      "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。",
+      "id": "sync-error-92153594-1443-4868-94bf-9392c4354a49",
+      "status": "playing",
+      "sequence": "11",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768620,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "12",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768620,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "13",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    }
+  ],
+  "competingCaptionLog": [
+    {
+      "at": 1793244754544,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "1",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244755495,
+      "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。",
+      "id": "sync-natural-e1f94b96-31fb-475e-9bc2-37f2e64e2c3b",
+      "status": "playing",
+      "sequence": "2",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244755725,
+      "text": "",
+      "id": "",
+      "status": "paused",
+      "sequence": "3",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244755756,
+      "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。",
+      "id": "sync-natural-e1f94b96-31fb-475e-9bc2-37f2e64e2c3b",
+      "status": "playing",
+      "sequence": "4",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768386,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "5",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768423,
+      "text": "",
+      "id": "",
+      "status": "paused",
+      "sequence": "6",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768424,
+      "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。",
+      "id": "sync-stop-aa6e3126-879d-4e1d-8814-b9971758b496",
+      "status": "playing",
+      "sequence": "7",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768555,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "8",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768561,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "9",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768581,
+      "text": "",
+      "id": "",
+      "status": "paused",
+      "sequence": "10",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768582,
+      "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。",
+      "id": "sync-error-92153594-1443-4868-94bf-9392c4354a49",
+      "status": "playing",
+      "sequence": "11",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768620,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "12",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768620,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "13",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    }
+  ],
+  "hostCaptionLog": [
+    {
+      "at": 1793244754627,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "",
+      "sessionId": ""
+    },
+    {
+      "at": 1793244754628,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "1",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244755495,
+      "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。",
+      "id": "sync-natural-e1f94b96-31fb-475e-9bc2-37f2e64e2c3b",
+      "status": "playing",
+      "sequence": "2",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244755725,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "3",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244755756,
+      "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。",
+      "id": "sync-natural-e1f94b96-31fb-475e-9bc2-37f2e64e2c3b",
+      "status": "playing",
+      "sequence": "4",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768386,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "5",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768423,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "6",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768424,
+      "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。",
+      "id": "sync-stop-aa6e3126-879d-4e1d-8814-b9971758b496",
+      "status": "playing",
+      "sequence": "7",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768555,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "8",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768561,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "9",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768581,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "10",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768582,
+      "text": "接口测试员，按上次游戏记录，欢迎上舰！当时食品和消费品都在疯狂赤字，合金倒还行。所以先把后勤窟窿堵上，稳住了再挑地方扩，不然越扩越崩。",
+      "id": "sync-error-92153594-1443-4868-94bf-9392c4354a49",
+      "status": "playing",
+      "sequence": "11",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768620,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "12",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    },
+    {
+      "at": 1793244768620,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "13",
+      "sessionId": "b3956d4e-3cdb-4356-ab8c-afc408045103"
+    }
+  ],
+  "leaseResponses": [
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244754534
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244755256
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244756267
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244757261
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244758252
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244759262
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244759535
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244760262
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244761257
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244762267
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244763262
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244764257
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244764545
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244765265
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244766257
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244767253
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244768260
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244769256
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793244769543
+    }
+  ],
+  "audio": {
+    "outputLabel": "CABLE Input (VB-Audio Virtual Cable)",
+    "inputLabel": "CABLE Output (VB-Audio Virtual Cable)",
+    "physicalMicrophoneCaptured": false,
+    "systemDefaultChanged": false,
+    "visibleWindow": false,
+    "baselineRms": 0.000008651406819866098,
+    "playRmsPeak": 0.27326030944347096,
+    "playSamples": 261,
+    "stoppedRms": 0.00001040350755973288,
+    "samples": 303,
+    "media": [
+      {
+        "kind": "loadedmetadata",
+        "at": 1793244755160,
+        "time": 0,
+        "duration": 12.8,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "playing",
+        "at": 1793244755491,
+        "time": 0,
+        "duration": 12.8,
+        "paused": false,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "pause",
+        "at": 1793244755723,
+        "time": 0.170135,
+        "duration": 12.8,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "playing",
+        "at": 1793244755755,
+        "time": 0.201737,
+        "duration": 12.8,
+        "paused": false,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "pause",
+        "at": 1793244768384,
+        "time": 12.8,
+        "duration": 12.8,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "ended",
+        "at": 1793244768384,
+        "time": 12.8,
+        "duration": 12.8,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "loadedmetadata",
+        "at": 1793244768420,
+        "time": 0,
+        "duration": null,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": false
+      },
+      {
+        "kind": "playing",
+        "at": 1793244768422,
+        "time": 0,
+        "duration": null,
+        "paused": false,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "loadedmetadata",
+        "at": 1793244768579,
+        "time": 0,
+        "duration": null,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": false
+      },
+      {
+        "kind": "playing",
+        "at": 1793244768580,
+        "time": 0,
+        "duration": null,
+        "paused": false,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "error",
+        "at": 1793244768619,
+        "time": 0,
+        "duration": null,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      }
+    ],
+    "feedback": [
+      {
+        "id": "sync-natural-e1f94b96-31fb-475e-9bc2-37f2e64e2c3b",
+        "kind": "started",
+        "at": 1793244755491
+      },
+      {
+        "id": "sync-natural-e1f94b96-31fb-475e-9bc2-37f2e64e2c3b",
+        "kind": "started",
+        "at": 1793244755755
+      },
+      {
+        "id": "sync-natural-e1f94b96-31fb-475e-9bc2-37f2e64e2c3b",
+        "kind": "ended",
+        "at": 1793244768384
+      },
+      {
+        "id": "sync-stop-aa6e3126-879d-4e1d-8814-b9971758b496",
+        "kind": "started",
+        "at": 1793244768422
+      },
+      {
+        "id": "sync-error-92153594-1443-4868-94bf-9392c4354a49",
+        "kind": "started",
+        "at": 1793244768580
+      },
+      {
+        "id": "sync-error-92153594-1443-4868-94bf-9392c4354a49",
+        "kind": "error",
+        "at": 1793244768619
+      }
+    ],
+    "activeAudioCount": 0,
+    "finished": true,
+    "isVisible": false,
+    "isFocused": false,
+    "neverShown": true,
+    "neverFocused": true,
+    "recording": {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\.local\\caption-sync-20261029\\run-1793244752726-9128\\virtual-loopback.webm",
+      "bytes": 256151,
+      "mime": "audio/webm;codecs=opus"
+    }
+  },
+  "windowFacts": [
+    {
+      "label": "readonly-overlay",
+      "neverShown": true,
+      "neverFocused": true
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "neverShown": true,
+      "neverFocused": true
+    },
+    {
+      "label": "standalone-host-overlay",
+      "neverShown": true,
+      "neverFocused": true
+    }
+  ],
+  "audioDisposed": true,
+  "aiDisposed": true,
+  "speechDisposed": true,
+  "finishedAt": "2026-10-29T03:32:50.163Z",
+  "childExitCode": 0,
+  "isolatedProfileRemoved": true,
+  "fixtureDataRemoved": true
+}

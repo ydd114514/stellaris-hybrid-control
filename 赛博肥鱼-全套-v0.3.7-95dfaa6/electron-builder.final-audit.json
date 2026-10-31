@@ -1,0 +1,1 @@
+{"extends":"./electron-builder.stellaris.json","extraMetadata":{"version":"0.3.13"},"directories":{"output":"release/dsh-caption-sync-20261029-0.3.13"},"win":{"target":[{"target":"dir","arch":["x64"]}]}}

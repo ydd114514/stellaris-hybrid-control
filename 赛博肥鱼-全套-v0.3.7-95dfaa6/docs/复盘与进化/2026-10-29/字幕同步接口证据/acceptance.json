@@ -1,0 +1,695 @@
+{
+  "schemaVersion": 1,
+  "mode": "zero-fee-caption-sync-interfaces",
+  "startedAt": "2026-10-29T03:16:17.282Z",
+  "passed": true,
+  "newModelRequests": 0,
+  "newTtsRequests": 0,
+  "realCredentialsRead": false,
+  "desktopControl": false,
+  "mouseKeyboardInput": false,
+  "visibleWindows": false,
+  "physicalMicrophoneCaptured": false,
+  "systemDefaultChanged": false,
+  "blockedExternalRequests": 0,
+  "offlineSynthCalls": 3,
+  "checks": {
+    "initialPlanHidden": true,
+    "generatingHidden": true,
+    "readyHidden": true,
+    "planCannotOverwritePlaying": true,
+    "singlePlaybackLease": true,
+    "pauseClears": true,
+    "resumeRestores": true,
+    "naturalEndClears": true,
+    "captionTiming": true,
+    "standaloneHostFollowsPlaying": true,
+    "oldEndedCannotClearNew": true,
+    "stopClears": true,
+    "errorClears": true,
+    "realVirtualAudioSignal": true,
+    "noDesktopInterference": true
+  },
+  "timings": {
+    "enqueueToActualPlayingMs": 867,
+    "playingToCaptionMs": 4,
+    "endedToCaptionClearMs": 2,
+    "thresholdMs": 250,
+    "note": "Local interface/DOM timing from one replay; not a guarantee of OBS or viewer latency.",
+    "playingToHostCaptionMs": 4,
+    "endedToHostCaptionClearMs": 3,
+    "ungatedQueueToPlayingMs": 30,
+    "ungatedLatencyScope": "Offline PCM returns immediately; measures only application queue/audio scheduling, excluding real text-model and TTS generation."
+  },
+  "injectedFaults": [
+    {
+      "kind": "stale-old-ended-callback",
+      "purpose": "Only checks that a stale callback cannot clear the new reply; never counted as natural playback completion."
+    },
+    {
+      "kind": "404-audio-source",
+      "purpose": "Produces a natural media error in the isolated test; no paid request or desktop action."
+    }
+  ],
+  "fixture": {
+    "sourcePaidRun": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\.local\\live-api-20261029\\run-1793242326419-b86a3453",
+    "raw": {
+      "duration": 12.96,
+      "sha256": "1caf00eb5940448444a097a4f0f8ad0e29325c9f172db3de414972695133296f"
+    },
+    "served": {
+      "duration": 12.96,
+      "sha256": "d02cd8266786d3a0a196bb1669db802c4395dfbc0b1e681727cdeff00bc2deee"
+    },
+    "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。"
+  },
+  "captionLog": [
+    {
+      "at": 1793243778731,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "-1",
+      "sessionId": ""
+    },
+    {
+      "at": 1793243778745,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "1",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243779943,
+      "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "id": "sync-natural-9832696f-03b3-4ef7-9c24-1690421e8262",
+      "status": "playing",
+      "sequence": "2",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243780175,
+      "text": "",
+      "id": "",
+      "status": "paused",
+      "sequence": "3",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243780206,
+      "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "id": "sync-natural-9832696f-03b3-4ef7-9c24-1690421e8262",
+      "status": "playing",
+      "sequence": "4",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243792981,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "5",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793037,
+      "text": "",
+      "id": "",
+      "status": "paused",
+      "sequence": "6",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793038,
+      "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "id": "sync-stop-0e6064fa-15ea-4d2f-8d38-a7e56283353e",
+      "status": "playing",
+      "sequence": "7",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793173,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "8",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793179,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "9",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793200,
+      "text": "",
+      "id": "",
+      "status": "paused",
+      "sequence": "10",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793201,
+      "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "id": "sync-error-e73e8f33-a448-4c64-a421-cee26e9754f5",
+      "status": "playing",
+      "sequence": "11",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793238,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "12",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793238,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "13",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    }
+  ],
+  "competingCaptionLog": [
+    {
+      "at": 1793243778973,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "1",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243779943,
+      "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "id": "sync-natural-9832696f-03b3-4ef7-9c24-1690421e8262",
+      "status": "playing",
+      "sequence": "2",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243780175,
+      "text": "",
+      "id": "",
+      "status": "paused",
+      "sequence": "3",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243780206,
+      "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "id": "sync-natural-9832696f-03b3-4ef7-9c24-1690421e8262",
+      "status": "playing",
+      "sequence": "4",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243792981,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "5",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793037,
+      "text": "",
+      "id": "",
+      "status": "paused",
+      "sequence": "6",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793038,
+      "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "id": "sync-stop-0e6064fa-15ea-4d2f-8d38-a7e56283353e",
+      "status": "playing",
+      "sequence": "7",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793173,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "8",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793179,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "9",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793200,
+      "text": "",
+      "id": "",
+      "status": "paused",
+      "sequence": "10",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793201,
+      "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "id": "sync-error-e73e8f33-a448-4c64-a421-cee26e9754f5",
+      "status": "playing",
+      "sequence": "11",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793238,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "12",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793238,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "13",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    }
+  ],
+  "hostCaptionLog": [
+    {
+      "at": 1793243779072,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "",
+      "sessionId": ""
+    },
+    {
+      "at": 1793243779073,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "1",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243779943,
+      "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "id": "sync-natural-9832696f-03b3-4ef7-9c24-1690421e8262",
+      "status": "playing",
+      "sequence": "2",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243780175,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "3",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243780206,
+      "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "id": "sync-natural-9832696f-03b3-4ef7-9c24-1690421e8262",
+      "status": "playing",
+      "sequence": "4",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243792982,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "5",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793037,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "6",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793038,
+      "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "id": "sync-stop-0e6064fa-15ea-4d2f-8d38-a7e56283353e",
+      "status": "playing",
+      "sequence": "7",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793173,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "8",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793179,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "9",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793200,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "10",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793201,
+      "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "id": "sync-error-e73e8f33-a448-4c64-a421-cee26e9754f5",
+      "status": "playing",
+      "sequence": "11",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793238,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "12",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    },
+    {
+      "at": 1793243793238,
+      "text": "",
+      "id": "",
+      "status": "idle",
+      "sequence": "13",
+      "sessionId": "b5b15f0f-c7de-4eda-89fb-6e2aa0e768fa"
+    }
+  ],
+  "leaseResponses": [
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243778967
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243780266
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243781260
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243782254
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243783266
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243783975
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243785259
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243786255
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243787267
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243788258
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243788964
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243790264
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243791259
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243792254
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 200,
+      "at": 1793243793267
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 409,
+      "at": 1793243793971
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "path": "/player/poll",
+      "status": 200,
+      "at": 1793243793974
+    }
+  ],
+  "audio": {
+    "outputLabel": "CABLE Input (VB-Audio Virtual Cable)",
+    "inputLabel": "CABLE Output (VB-Audio Virtual Cable)",
+    "physicalMicrophoneCaptured": false,
+    "systemDefaultChanged": false,
+    "visibleWindow": false,
+    "baselineRms": 0.00000855128985278588,
+    "playRmsPeak": 0.2611060446741989,
+    "playSamples": 265,
+    "stoppedRms": 0.000010374478700499419,
+    "samples": 306,
+    "media": [
+      {
+        "kind": "loadedmetadata",
+        "at": 1793243779615,
+        "time": 0,
+        "duration": 12.96,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "playing",
+        "at": 1793243779939,
+        "time": 0,
+        "duration": 12.96,
+        "paused": false,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "pause",
+        "at": 1793243780174,
+        "time": 0.187737,
+        "duration": 12.96,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "playing",
+        "at": 1793243780205,
+        "time": 0.218847,
+        "duration": 12.96,
+        "paused": false,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "pause",
+        "at": 1793243792979,
+        "time": 12.96,
+        "duration": 12.96,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "ended",
+        "at": 1793243792979,
+        "time": 12.96,
+        "duration": 12.96,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "loadedmetadata",
+        "at": 1793243793035,
+        "time": 0,
+        "duration": null,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": false
+      },
+      {
+        "kind": "playing",
+        "at": 1793243793037,
+        "time": 0,
+        "duration": null,
+        "paused": false,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "loadedmetadata",
+        "at": 1793243793198,
+        "time": 0,
+        "duration": null,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": false
+      },
+      {
+        "kind": "playing",
+        "at": 1793243793199,
+        "time": 0,
+        "duration": null,
+        "paused": false,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "error",
+        "at": 1793243793237,
+        "time": 0,
+        "duration": null,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      }
+    ],
+    "feedback": [
+      {
+        "id": "sync-natural-9832696f-03b3-4ef7-9c24-1690421e8262",
+        "kind": "started",
+        "at": 1793243779939
+      },
+      {
+        "id": "sync-natural-9832696f-03b3-4ef7-9c24-1690421e8262",
+        "kind": "started",
+        "at": 1793243780205
+      },
+      {
+        "id": "sync-natural-9832696f-03b3-4ef7-9c24-1690421e8262",
+        "kind": "ended",
+        "at": 1793243792980
+      },
+      {
+        "id": "sync-stop-0e6064fa-15ea-4d2f-8d38-a7e56283353e",
+        "kind": "started",
+        "at": 1793243793037
+      },
+      {
+        "id": "sync-error-e73e8f33-a448-4c64-a421-cee26e9754f5",
+        "kind": "started",
+        "at": 1793243793199
+      },
+      {
+        "id": "sync-error-e73e8f33-a448-4c64-a421-cee26e9754f5",
+        "kind": "error",
+        "at": 1793243793237
+      }
+    ],
+    "activeAudioCount": 0,
+    "finished": true,
+    "isVisible": false,
+    "isFocused": false,
+    "neverShown": true,
+    "neverFocused": true,
+    "recording": {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\.local\\caption-sync-20261029\\run-1793243777120-34016\\virtual-loopback.webm",
+      "bytes": 258083,
+      "mime": "audio/webm;codecs=opus"
+    }
+  },
+  "windowFacts": [
+    {
+      "label": "readonly-overlay",
+      "neverShown": true,
+      "neverFocused": true
+    },
+    {
+      "label": "competing-iframe-overlay",
+      "neverShown": true,
+      "neverFocused": true
+    },
+    {
+      "label": "standalone-host-overlay",
+      "neverShown": true,
+      "neverFocused": true
+    }
+  ],
+  "audioDisposed": true,
+  "aiDisposed": true,
+  "speechDisposed": true,
+  "finishedAt": "2026-10-29T03:16:34.711Z",
+  "childExitCode": 0,
+  "isolatedProfileRemoved": true,
+  "fixtureDataRemoved": true
+}

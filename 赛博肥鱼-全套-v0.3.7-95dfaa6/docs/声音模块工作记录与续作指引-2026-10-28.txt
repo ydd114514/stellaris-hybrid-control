@@ -1,0 +1,253 @@
+大肥鱼声音模块工作记录与续作指引
+记录日期：2026-10-28（北京时间）
+状态：用户要求暂缓声音工作；保存交接记录，等待用户以后明确要求继续。
+
+一、先读结论
+
+1. 舰长语音、游戏公开行动解说、弹幕聊天人设和20版试听选择页的代码已实现，并做过离线测试与隔离界面验证。
+2. 用户指定的 fishcute3 音色仍未真实合成成功，最终试听音频为 0/20。不能把20份表达指令或界面模拟样本当成20份有效音频。
+3. 新百炼 Key 已做真实对照：同一 qwen-audio-3.1-tts-flash 模型使用系统音色成功，使用用户指定的 fishcute3 音色失败。因此不能继续笼统判断“余额不足”或“整个模型不可用”。
+4. 定制音色的归属账号、业务空间、状态和可调用权限尚未核实。查询音色接口还返回 AllocationQuota.FreeTierOnly；这与TTS合成接口的验证结果要分别看待。
+5. 本会话没有替换现用DSH安装包、没有重启游戏或正式开播，也没有替用户确认最终音色。代码存在不等于已经完成直播端部署和验收。
+6. 现在不要继续真实API调用、自动重试、生成试听或启动语音。等用户恢复此项任务后再继续。
+
+二、用户最终需求与声音参数
+
+用户希望大肥鱼不只显示游戏行动打算，还能语音念出；同时作为正在玩《群星》的大肥鱼舰长，结合当前局进程和背景，回复实时弹幕。
+
+角色方向：活泼、嘴贫的女声，清亮软糯、俏皮可爱，自然聊天，轻快但吐字清楚。角色知道当前局信息，但不得把过期快照当成实时战报。
+
+固定模型：qwen-audio-3.1-tts-flash
+固定音色ID：qwen-audio-3.1-tts-flash-vd-fishcute3-3f9794a44cc2469596448c0d06c8c6b3
+固定语速：1.0
+基础表达指令：清亮软糯、俏皮可爱，自然聊天，轻快但吐字清楚
+
+用户要求在同一音色基础上做20版细致表达差分，让用户最后敲定。不要擅自换成系统音色，也不要自动选定某一版。
+
+统一试听台词：
+各位舰员，我是大肥鱼。这片星系先不急着拿，我得把科研和后勤稳住。哎，弹幕里的军师，你说得有点道理嘛。
+
+20个表达版本：
+01 原始基准；02 含笑聊天；03 软糯轻量；04 柔软亲近；05 清亮通透；
+06 俏皮轻挑；07 嘴贫克制；08 嘴硬心软；09 活泼元气；10 轻松松弛；
+11 舰长笃定；12 军师互动；13 短停利落；14 转折细腻；15 重音细致；
+16 尾音干净；17 尾音轻扬；18 低糖可爱；19 陪伴耐听；20 均衡综合。
+
+三、目录与并行工作边界
+
+主仓库：
+E:\肥鱼直播\赛博肥鱼-全套-v0.3.7-95dfaa6
+
+相邻游戏控制器与网页框面（不属于上述Git仓库）：
+E:\肥鱼直播\stellaris-player
+
+现用DSH用户数据：
+C:\Users\YDD\Documents\大肥鱼 DSH\.local\dsh-desktop
+
+本会话最后观察到的现用程序：
+C:\Users\YDD\AppData\Local\Programs\CyberfishDSH\0.3.5\大肥鱼 DSH.exe
+主线程可能继续打包更新；恢复时应重新核对实际版本，不依据本记录认定现用程序仍是0.3.5。
+
+这是声音模块侧会话。主线程同期修改群星战略、AI中枢、身份隔离、模拟直播和打包文件；不得回滚、覆盖或把这些变化都算成声音模块改动。本会话未进行Git暂存、提交、推送。
+
+开发命令按AGENTS偏好显式使用 C:\Program Files\Git\bin\bash.exe。
+Windows管理命令使用 C:\Program Files\PowerShell\7\pwsh.exe；保持Bash与PowerShell的语法和路径分开。
+
+四、已实现的代码与设计
+
+以下路径相对主仓库根目录。
+
+新增文件：
+- packages/shared/src/stellaris-speech.ts：语音配置、状态和IPC动作类型；公开状态不含Key。
+- packages/core/src/stellaris-voice-presets.ts：固定音色、20版表达指令、统一试听台词。
+- packages/core/src/stellaris-captain.ts：舰长人设、当前局摘要、公开播报文本过滤。
+- packages/core/src/captain-speech-queue.ts：有界语音队列、优先级、去重、过期处理。
+- apps/desktop/electron/stellaris-speech.ts：TTS、加密凭据、预算、播放器租约、试听服务。
+- apps/desktop/electron/captain-pages.ts：本机播放器页、20版试听与确认页面。
+- apps/desktop/src/StellarisSpeech.vue：舰长语音与聊天配置面板。
+- tests/captain-speech.test.ts：模块离线测试。
+- docs/舰长语音与弹幕聊天.md：使用与实现说明。
+
+已接入既有文件：
+- packages/shared/src/stellaris.ts
+- apps/desktop/electron/stellaris-preload.ts
+- apps/desktop/electron/stellaris-ai.ts
+- apps/desktop/electron/stellaris-main.ts
+- apps/desktop/electron/stellaris-broadcast.ts
+- apps/desktop/src/StellarisDesktop.vue
+- packages/core/src/ai-director.ts
+- tests/stellaris-broadcast.test.ts
+
+相邻目录的改动：
+E:\肥鱼直播\stellaris-player\public\commentary.html
+接入隐藏语音播放器、实际播放字幕、静音预览和播放器重新连接。该文件不随主仓库Git提交自动保存，部署和备份必须覆盖它；不要覆盖主线程后来对同一文件的修改。
+
+实现约束：
+- 只播报游戏日志中公开的 intent.explanation，不读取或朗读DSH内部thinking、reasoning、完整推演。
+- 新启动从当前日志尾开始，避免重播旧行动。
+- 舰长聊天取当前局星历、帝国、经济、殖民地、战争、事件和战略焦点等有界摘要；旧快照明确标为历史信息。
+- 弹幕是聊天数据，不能成为游戏命令或Shell指令。
+- 队列最多8条；旧游戏计划合并为最新一条；30秒过期；相同游戏文本60秒去重。
+- 观众回复优先，但连续两条观众回复后，会照顾等待中的游戏播报，防止长期饿死。
+- 合成和播放串行，只有实际播放器在线才发送收费TTS请求。
+- 同时只有一个播放器租约，避免后台预览和多个浏览器源重复播放。
+- 默认每小时240次TTS上限，可调；连续3次失败停止模块；失败已报告的用量照实记录，未知用量不虚构为0。
+- 停止会取消在途请求、清空队列、停止播放；迟到回调不得恢复旧声音。
+- 只停止本模块顺带启动的场控，不关闭用户原本独立运行的场控。
+- 20版试听支持收藏、循环、顺序对比；仅真实音频就绪的版本能确认；确认不自动开启直播语音。
+
+五、地址、资料与部署状态
+
+语音服务设计地址：http://127.0.0.1:17661
+播放器：http://127.0.0.1:17661/player
+试听页：http://127.0.0.1:17661/auditions
+直播浏览器源：http://127.0.0.1:17655/overlay?voice=1
+本地网页预览默认静音；OBS导出已加入浏览器源音频路由配置。
+
+曾单独启动无收费能力的试听预览：
+http://127.0.0.1:17662/auditions
+该预览不读取真实Key，不合成音频。恢复时自行检查进程是否仍存在，不保证一直常驻，不要因此启动或重启主DSH。
+
+实际试听持久目录：
+C:\Users\YDD\Documents\大肥鱼 DSH\.local\dsh-desktop\captain-auditions
+
+本地生成工作目录：
+主仓库\.local\captain-voice-20
+
+真实DSH配置文件 captain-speech.json 在写日志时尚不存在，用户尚未选定表达版本。
+语音默认关闭，开启状态不持久保存。
+本会话尚未完成真实弹幕、定制音色、直播软件录制的整条链路验收。
+
+六、真实千问排查结果（最关键）
+
+旧项目设置读取来源：主仓库\.local\user-data\config.json 的voice字段。
+旧配置接口为 https://trial.cn-beijing.maas.aliyuncs.com，workspaceId为空；旧模型曾为plus系统音色。试听脚本已强制使用用户指定的flash模型和fishcute3音色。
+旧密钥为本项目原有加密凭据，没有读取其他项目的Key。
+
+历史批量试听：
+- manifest.json 记录 requests=7、maximumRequests=26、ready=0、failed=7。
+- 多次返回 HTTP 400、InvalidParameter、[cosyvoice]Engine error [411]: TTS speak operation failed。
+- 已尝试标准流式PCM和简化的非流式WAV，均未得到指定音色的有效试听。
+- 一次失败即停止当轮，不自动连续重试20遍。
+
+用户说已充值、已关闭免费额度限制，但不确定是否与创建fishcute3的是同一账号。
+随后提供了一组云AccessKey，以及一枚新的百炼API Key。
+云AccessKey没有被用于接口调用或写入项目文件。
+新百炼Key已通过进程管道交给Electron，使用Windows安全存储加密保存；不记录明文值。
+
+新Key对照测试结果（北京时间）：
+2026-10-28 18:52:53：
+- 模型 qwen-audio-3.1-tts-flash
+- 系统音色 longanhuan_v3.1
+- 短台词“大肥鱼测试。”
+- 成功返回 HTTP 200、PCM 61,440字节。
+- 服务端报告 inputTokens=6、outputTokens=16、characters=11，按实际报告记录。
+- 这只是诊断音频，未保存为20版最终试听，也不能冒充用户定制音色。
+
+2026-10-28 18:53:13：
+- 相同模型、短台词和接口，仅换成指定fishcute3音色。
+- HTTP层200，但流内报告合成错误，最终结果失败；HTTP 200不能单独当成合成成功。
+- 本次未保留流内原始错误码，不把它强行记成已确认的411。
+- 未报告用量，费用未知，不能认定失败请求免费。
+
+音色查询：
+- 旧Key、新Key的 query_voice 都曾返回 HTTP 403、AllocationQuota.FreeTierOnly。
+- 使用 voice-enrollment 的音色查询与TTS合成是不同接口；前者403不能推出TTS整体不可用。
+- 查询失败时输出中 voiceMatches=false 是没有拿到音色资料，不代表已确认音色不存在。
+- 同样不能仅凭上述结果断定用户充值无效、Key属于另一个账号，或音色已经删除。
+
+最近可复核资料（均位于主仓库\.local，不应当作可迁移的正式发布资产）：
+- captain-account-check.json：两次对照测试，1成功、1失败，诊断请求上限2已用完。
+- captain-voice-20/manifest.json：历史7次失败，0个就绪样本。
+- captain-samples.log：只保留最近一轮输出；每次运行会覆盖，不是完整历史账单。
+- captain-ui-verification.log：隔离桌面和试听页验证结果。
+- captain-preview.log：独立试听预览启动地址。
+
+七、密钥状态与安全注意
+
+本日志不包含任何AccessKey、Secret或API Key明文。
+用户曾把云AccessKey和新百炼Key发到聊天，已提醒不要继续发送。后续建议在相应控制台轮换这些凭据；不要自动停用账号或删除Key，避免影响用户其他业务。
+
+旧Key加密文件：
+主仓库\.local\user-data\credentials.enc.json
+
+新Key候选加密文件：
+主仓库\.local\captain-credential-candidate.enc.json
+
+DSH语音模块加密文件：
+C:\Users\YDD\Documents\大肥鱼 DSH\.local\dsh-desktop\captain-speech-key.enc.json
+该文件此前导入的是旧Key。新候选Key尚未替换该文件，切勿误以为新Key已经在现用DSH中启用。
+
+解密新候选文件的本机加密资料源：
+主仓库\.local\user-data\session\Local State
+本机DPAPI与Electron加密资料配套，不是复制一个enc.json到其他电脑就能使用。
+临时profile内复制的Local State片段已在本轮结束时清理；原始资料未删除。
+
+恢复时不得输出Key、密文全文、签名音频URL、Authorization；也不要把它们放进命令参数、源码、普通日志、Git提交或此交接文档。
+
+八、离线验证记录与局限
+
+此前已通过独立类型检查、隔离构建、模块测试，以及Electron离线界面验证。
+最近模块测试记录为 tests/captain-speech.test.ts 的11项通过。
+此前相关4个文件合计35项通过：captain-speech、ai-director、stellaris-ai、stellaris-broadcast。
+此前全项目一次测试通过70文件、679项、2项跳过；这是历史记录，主线程之后仍有修改，不能当成当前工作区的最新全量验收。
+
+隔离界面日志：
+- desktopOffline=true、modelExact=true、realAuditionsReady=0。
+- fixtureUiCards=20、favorites=true、selectionMocked=true。
+- liveConfigChanged=false、pageErrors=[]、paidRequests=0。
+20张模拟卡片只用于验证收藏和确认交互，实际音频仍是0。
+
+本地独立构建：.local/build-captain-module.mjs
+界面验证：.local/verify-captain-module.mjs
+隔离产物：.local/captain-build
+界面截图：.local/artifacts/captain-module-offline.png、captain-auditions-pending.png
+这些操作不替换主线程构建目录或安装包。
+
+九、恢复后建议按此顺序做
+
+1. 先读本记录、AGENTS.md、当前git status及相关源文件，确认主线程的新改动。不要重置、清理或覆盖现有工作区。
+2. 问清用户是否已轮换Key；如已轮换，通过本机安全输入更新，不能继续拿已停用Key反复测试。
+3. 核对fishcute3的创建账号、地域、所属业务空间、API Host、目标模型和状态。当前缺的就是这份音色详情，必要时请用户发遮住所有密钥的截图。
+4. 优先只查音色资料。状态需可用，目标模型应是用户指定的flash。若账号或空间不同，使用对应空间的Key与API Host；不要猜测空间ID。
+5. 若查询仍403但系统TTS可用，应分别检查voice-enrollment服务限制和定制音色权限。不要重复要求用户充值，也不要把全部问题归为余额。
+6. 定制音色验证通过后再合成20版。现有脚本总请求上限26，已经用了7次，只剩19次，直接运行不足以完成20版。需先按明确预算修正上限，例如保留7次历史失败并允许新增20次，总上限27；不清零历史、不无限重试。两次诊断另有独立记录。
+7. 每版保持同模型、同音色、语速1.0、同台词，仅表达指令不同；串行生成，保存真实WAV与manifest。
+8. 验证20个文件可解码、有有效音量与时长，核对哈希和版本映射；展示真实就绪数量，再让用户试听并选定。不要擅自确认。
+9. 把验证过的新Key通过安全迁移写入DSH模块加密存储，使用匹配的API Host；不要覆盖其他AI提供商密钥。
+10. 结合当前主线程代码重新构建、做相关离线检查，确认相邻commentary.html也已一起部署。最后做本地录制，验证实际声音、字幕、弹幕回复和停止行为，仍不正式开播。
+
+相关脚本提醒：
+- .local/run-captain-samples.mjs：构建并启动隔离Electron，结束清理临时加密片段。
+- .local/captain-samples-main.cjs：默认读取旧Key；必须显式指定 CAPTAIN_CANDIDATE=1 才读新候选Key。
+- .local/captain-samples.ts：20版生成与音色查询，固定模型与音色；无成功样本时不会伪造文件。
+- .local/captain-account-check.ts：短对照测试，两次上限已经用完，不能直接再跑诊断。
+- .local/import-captain-key.mjs 与 captain-key-helper.cjs：当前默认迁移旧Key，并用wx避免覆盖已有文件；不是新Key自动更新工具，切勿盲跑。
+
+用户明确恢复后，可先进行的音色只读查询命令（从主仓库目录执行，仍会访问真实服务）：
+& 'C:\Program Files\Git\bin\bash.exe' -lc 'CAPTAIN_CANDIDATE=1 CAPTAIN_QUERY=1 node .local/run-captain-samples.mjs'
+随后查看已脱敏的 .local/captain-samples.log。不要现在执行；当前声音任务已暂缓。
+
+十、电脑操作阻塞与官方参考
+
+尝试读取百炼控制台时，内置浏览器多次超时。最后电脑操作工具因无法可靠识别Windows浏览器的当前网址而停止本轮电脑操作。
+没有绕过此限制，也没有替用户修改支付设置、权限或删除凭据。后续若仍无法读取控制台，需要用户提供非敏感的音色详情，不应通过读取浏览器Cookie或登录资料绕过。
+
+官方百炼Key管理：
+https://bailian.console.aliyun.com/cn-beijing/model/settings/api-key
+获取API Key：
+https://help.aliyun.com/zh/model-studio/get-api-key/
+千问语音HTTP接口：
+https://help.aliyun.com/en/model-studio/qwen-audio-tts-http-api
+声音设计与音色查询：
+https://help.aliyun.com/en/model-studio/voice-design-api-references
+系统音色与模型匹配说明（包含411错误提示）：
+https://help.aliyun.com/en/model-studio/qwen-audio-tts-voice-list
+免费额度开关说明：
+https://help.aliyun.com/zh/model-studio/new-free-quota/
+
+十一、下次可直接给助手的话
+
+请先读取《声音模块工作记录与续作指引-2026-10-28.txt》，继续大肥鱼声音模块。
+先核实fishcute3音色归属与调用权限，再生成同一音色的20版细致差分让我试听选择。
+保留当前群星和AI中枢的并行修改，不要擅自选音色，不要正式开播，不要打印或让我在聊天里发送密钥。

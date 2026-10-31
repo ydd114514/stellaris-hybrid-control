@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-29",
+  "timezone": "Asia/Shanghai",
+  "status": "passed_for_controlled_interfaces_and_audio",
+  "productVersion": "0.3.11",
+  "actualPlatformExchange": false,
+  "platformReadOnlyConnection": {
+    "roomId": 7322535,
+    "connected": true,
+    "heartbeatReceived": true,
+    "liveStatusAtTest": 0,
+    "newMessagesReceived": 0
+  },
+  "input": {
+    "mode": "controlled-local-injection",
+    "text": "舰长你好，今天先稳后勤还是急着扩张？用两句话说说你的打算。"
+  },
+  "realRequests": {
+    "model": 1,
+    "tts": 1
+  },
+  "automaticPaidRetries": 0,
+  "reply": {
+    "id": "say-mvsy78gp-3",
+    "to": "接口测试员",
+    "text": "欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+    "at": 1793242359961,
+    "queued": true
+  },
+  "modelUsage": {
+    "prompt_tokens": 3018,
+    "completion_tokens": 152,
+    "total_tokens": 3170
+  },
+  "ttsUsage": {
+    "inputTokens": 64,
+    "outputTokens": 162
+  },
+  "ttsCharacters": {
+    "reported": true,
+    "value": 121
+  },
+  "voice": "longanlingxi_v3.1",
+  "ttsModel": "qwen-audio-3.1-tts-flash",
+  "audio": {
+    "duration": 12.96,
+    "sha256": "d02cd8266786d3a0a196bb1669db802c4395dfbc0b1e681727cdeff00bc2deee",
+    "volume": 0.8,
+    "baselineRms": 0.000008378846165065569,
+    "playRmsPeak": 0.24212798885371647,
+    "playSamples": 260,
+    "stoppedRms": 0.00001433179767582916,
+    "naturalFeedback": [
+      {
+        "id": "say-mvsy78gp-3",
+        "kind": "started",
+        "at": 1793242601522
+      },
+      {
+        "id": "say-mvsy78gp-3",
+        "kind": "ended",
+        "at": 1793242614528
+      }
+    ],
+    "serverPlayingObserved": true,
+    "serverCurrentCleared": true,
+    "exactVirtualOutput": true,
+    "muted": false
+  },
+  "noDesktopControl": {
+    "mouseKeyboardInput": false,
+    "neverShown": true,
+    "neverFocused": true
+  },
+  "cleanup": {
+    "realRunRecovered": true,
+    "replayCompleted": true,
+    "isolatedProfilesRemoved": true,
+    "sixNamedSourceFilesUnchanged": true
+  },
+  "initialRealReport": {
+    "isIntermediate": true,
+    "finalizationIncomplete": true,
+    "preservedWithoutEditing": true,
+    "completionLogPresent": true
+  },
+  "limitations": [
+    "测试时房间未开播且无新弹幕，实际平台提问到回答尚未验收",
+    "实际模型使用了历史快照但口头用了现在，T13待改，不能当实时战报",
+    "虚拟音频输出已验证；扬声器主观听感和OBS/平台送音未验收",
+    "没有重复收费以修补测试收尾记录；补充播放只重放本轮新生成PCM"
+  ]
+}

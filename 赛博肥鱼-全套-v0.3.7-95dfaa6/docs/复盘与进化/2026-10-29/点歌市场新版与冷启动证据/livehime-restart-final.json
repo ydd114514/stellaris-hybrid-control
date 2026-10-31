@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-29T12:21:10.5644048+08:00",
+  "userConfirmedExit": true,
+  "noResidualProcessBeforeConfiguration": true,
+  "newPids": [
+    35856,
+    33948
+  ],
+  "restartVerified": true,
+  "persistedSourcesVerified": true,
+  "inMemorySourcesAndFinalMixVerified": false,
+  "OBSRecordingVerified": true,
+  "desktopControl": false,
+  "publicBroadcast": false
+}

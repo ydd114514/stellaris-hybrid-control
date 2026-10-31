@@ -1,0 +1,56 @@
+{
+  "at": "2026-10-29T12:21:10.5644048+08:00",
+  "relatedApplicationsOpen": true,
+  "temporaryDebugInterfaceClosed": true,
+  "desktopInput": false,
+  "processes": [
+    {
+      "name": "stellaris.exe",
+      "pid": 26488,
+      "exe": "D:\\SteamLibrary\\steamapps\\common\\Stellaris\\stellaris.exe",
+      "temporaryDebugInterface": false
+    },
+    {
+      "name": "obs64.exe",
+      "pid": 6720,
+      "exe": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\OBS Studio\\bin\\64bit\\obs64.exe",
+      "temporaryDebugInterface": false
+    },
+    {
+      "name": "大肥鱼 DSH.exe",
+      "pid": 37164,
+      "exe": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.14\\大肥鱼 DSH.exe",
+      "temporaryDebugInterface": false
+    },
+    {
+      "name": "大肥鱼 DSH.exe",
+      "pid": 10600,
+      "exe": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.14\\大肥鱼 DSH.exe",
+      "temporaryDebugInterface": false
+    },
+    {
+      "name": "大肥鱼 DSH.exe",
+      "pid": 32468,
+      "exe": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.14\\大肥鱼 DSH.exe",
+      "temporaryDebugInterface": false
+    },
+    {
+      "name": "大肥鱼 DSH.exe",
+      "pid": 35208,
+      "exe": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.14\\大肥鱼 DSH.exe",
+      "temporaryDebugInterface": false
+    },
+    {
+      "name": "livehime.exe",
+      "pid": 35856,
+      "exe": null,
+      "temporaryDebugInterface": false
+    },
+    {
+      "name": "livehime.exe",
+      "pid": 33948,
+      "exe": null,
+      "temporaryDebugInterface": false
+    }
+  ]
+}

@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "mode": "playback-only-of-new-real-tts",
+  "startedAt": "2026-10-29T02:56:39.734Z",
+  "passed": true,
+  "newModelRequests": 0,
+  "newTtsRequests": 0,
+  "realCredentialsRead": false,
+  "sourceProfileModified": false,
+  "desktopControl": false,
+  "visibleWindows": false,
+  "mouseKeyboardInput": false,
+  "physicalMicrophoneCaptured": false,
+  "defaultAudioDevicesChanged": false,
+  "blockedExternalRequests": 0,
+  "offlineSynthCalls": 1,
+  "sourcePaidRun": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\.local\\live-api-20261029\\run-1793242326419-b86a3453",
+  "expectedSha256": "d02cd8266786d3a0a196bb1669db802c4395dfbc0b1e681727cdeff00bc2deee",
+  "rawAudio": {
+    "duration": 12.96,
+    "sha256": "1caf00eb5940448444a097a4f0f8ad0e29325c9f172db3de414972695133296f"
+  },
+  "reply": {
+    "id": "say-mvsy78gp-3",
+    "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+    "duration": 12.96
+  },
+  "preflight": {
+    "outputLabel": "CABLE Input (VB-Audio Virtual Cable)",
+    "inputLabel": "CABLE Output (VB-Audio Virtual Cable)",
+    "physicalMicrophoneCaptured": false,
+    "systemDefaultChanged": false,
+    "visibleWindow": false,
+    "baselineRms": 0.000008378846165065569,
+    "playRmsPeak": 0,
+    "playSamples": 0,
+    "stoppedRms": null,
+    "samples": 0,
+    "media": [],
+    "feedback": [],
+    "activeAudioCount": 0,
+    "finished": false,
+    "isVisible": false,
+    "isFocused": false,
+    "neverShown": true,
+    "neverFocused": true
+  },
+  "servedAudio": {
+    "duration": 12.96,
+    "sha256": "d02cd8266786d3a0a196bb1669db802c4395dfbc0b1e681727cdeff00bc2deee"
+  },
+  "audio": {
+    "outputLabel": "CABLE Input (VB-Audio Virtual Cable)",
+    "inputLabel": "CABLE Output (VB-Audio Virtual Cable)",
+    "physicalMicrophoneCaptured": false,
+    "systemDefaultChanged": false,
+    "visibleWindow": false,
+    "baselineRms": 0.000008378846165065569,
+    "playRmsPeak": 0.24212798885371647,
+    "playSamples": 260,
+    "stoppedRms": 0.00001433179767582916,
+    "samples": 271,
+    "media": [
+      {
+        "kind": "loadedmetadata",
+        "at": 1793242601521,
+        "time": 0,
+        "duration": null,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": false
+      },
+      {
+        "kind": "playing",
+        "at": 1793242601522,
+        "time": 0,
+        "duration": null,
+        "paused": false,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "pause",
+        "at": 1793242614528,
+        "time": 12.885333,
+        "duration": 12.885333,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "ended",
+        "at": 1793242614528,
+        "time": 12.885333,
+        "duration": 12.885333,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      }
+    ],
+    "feedback": [
+      {
+        "id": "say-mvsy78gp-3",
+        "kind": "started",
+        "at": 1793242601522
+      },
+      {
+        "id": "say-mvsy78gp-3",
+        "kind": "ended",
+        "at": 1793242614528
+      }
+    ],
+    "activeAudioCount": 0,
+    "finished": true,
+    "isVisible": false,
+    "isFocused": false,
+    "neverShown": true,
+    "neverFocused": true,
+    "recording": {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\.local\\live-api-20261029\\audio-replay\\run-1793242599600-12064\\virtual-loopback.webm",
+      "bytes": 230069,
+      "mime": "audio/webm;codecs=opus"
+    }
+  },
+  "serverPlayingObserved": true,
+  "beforeFinish": {
+    "outputLabel": "CABLE Input (VB-Audio Virtual Cable)",
+    "inputLabel": "CABLE Output (VB-Audio Virtual Cable)",
+    "physicalMicrophoneCaptured": false,
+    "systemDefaultChanged": false,
+    "visibleWindow": false,
+    "baselineRms": 0.000008378846165065569,
+    "playRmsPeak": 0.24212798885371647,
+    "playSamples": 260,
+    "stoppedRms": null,
+    "samples": 271,
+    "media": [
+      {
+        "kind": "loadedmetadata",
+        "at": 1793242601521,
+        "time": 0,
+        "duration": null,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": false
+      },
+      {
+        "kind": "playing",
+        "at": 1793242601522,
+        "time": 0,
+        "duration": null,
+        "paused": false,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "pause",
+        "at": 1793242614528,
+        "time": 12.885333,
+        "duration": 12.885333,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      },
+      {
+        "kind": "ended",
+        "at": 1793242614528,
+        "time": 12.885333,
+        "duration": 12.885333,
+        "paused": true,
+        "volume": 0.8,
+        "muted": false,
+        "outputExact": true
+      }
+    ],
+    "feedback": [
+      {
+        "id": "say-mvsy78gp-3",
+        "kind": "started",
+        "at": 1793242601522
+      },
+      {
+        "id": "say-mvsy78gp-3",
+        "kind": "ended",
+        "at": 1793242614528
+      }
+    ],
+    "activeAudioCount": 0,
+    "finished": false,
+    "isVisible": false,
+    "isFocused": false,
+    "neverShown": true,
+    "neverFocused": true
+  },
+  "finishCompleted": true,
+  "serverCurrentCleared": true,
+  "audioDisposed": true,
+  "speechDisposed": true,
+  "finishedAt": "2026-10-29T02:56:55.350Z",
+  "childExitCode": 0,
+  "isolatedProfileRemoved": true,
+  "offlineFixtureRemoved": true
+}

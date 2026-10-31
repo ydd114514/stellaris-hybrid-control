@@ -1,0 +1,26 @@
+{
+  "readOnly": true,
+  "liveLoaded": false,
+  "exeSha256": "400df27c82ddc845aa9dce79bd468d81f18f060d299cd263e3afa93aef4f7a83",
+  "factoryAndTokenChecks": [
+    {
+      "factoryAssignmentRva": "0xab5c1b",
+      "vtableRva": "0x23a39d8",
+      "getTokenRva": "0x8c5f70",
+      "token": "0x3dfb"
+    },
+    {
+      "factoryAssignmentRva": "0xb0652d",
+      "vtableRva": "0x23c47e0",
+      "getTokenRva": "0xb0cc80",
+      "token": "0x3dfd"
+    }
+  ],
+  "independentOrbitableOffsets": [
+    "0x540",
+    "0x544",
+    "0x548"
+  ],
+  "shipDesignRef": "implementation+0x530 = buildable+0x538",
+  "scope": "ordinary owner-type-zero static starbase shipyard and colony ships; other factory branches not admitted"
+}

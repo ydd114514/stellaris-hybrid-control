@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';import {readFile,writeFile} from 'node:fs/promises';import {join,resolve} from 'node:path';
+import {analyzeControlEvidence} from '../src/control-evidence.mjs';
+import {decodeDshToolResult} from '../src/dsh-tool-evidence.mjs';
+if(!process.argv[2])throw Error('需要实际run目录');
+const dir=resolve(process.argv[2]),read=async p=>JSON.parse(await readFile(join(dir,p),'utf8'));
+const checkpoint=await read('native/latest-session.json'),report=await read('report.json'),manifest=await read('manifest.json');
+assert.match(checkpoint.sessionId,/^[a-zA-Z0-9_-]{1,100}$/);
+const rows=async p=>(await readFile(p,'utf8')).trim().split('\n').filter(Boolean).map(JSON.parse);
+const native=await rows(join(dir,'native',`session-${checkpoint.sessionId}.jsonl`));
+const current=await read('native/dsh/current.json'),tools=await rows(current.events),calls=new Map(),decoded=[],omitted={};
+for(const e of tools){if(e.type==='tool_call')calls.set(e.callId,e);if(e.type==='tool_result'){const d=decodeDshToolResult(e);if(d.kind==='json'&&e.status==='completed')decoded.push({call:calls.get(e.callId),value:d.value});else omitted[d.kind]=(omitted[d.kind]??0)+1;}}
+const checks={},routes=decoded.flatMap(r=>(r.value?.orders??[]).map(order=>({call:r.call,order,state:r.value.state}))).filter(r=>r.order.status==='deferred'&&r.order.nativeWriteAttempted===false&&r.order.candidateFeedback?.kind==='survey_routing'&&r.order.candidateFeedback.decision==='delegate');
+checks.realDeferredFeedback=routes.length>0;
+checks.modelUsedExactNextCall=routes.some(r=>{const next=r.order.candidateFeedback.nextCall;return [...calls.values()].some(c=>c.truncated!==true&&c.tool?.endsWith('__survey_control')&&c.input?.operation==='delegate'&&c.input.fleetId===next.arguments.fleetId&&c.input.snapshotId===next.arguments.snapshotId&&c.input.snapshotId===r.state?.snapshotId);});
+checks.nativeChildObserved=native.some(e=>e.type==='survey_control'&&e.operation==='delegate'&&e.control?.sessionId===checkpoint.sessionId&&e.control.owner==='native'&&e.control.pending===false&&e.control.observation?.known===true&&e.control.observation.automation_enabled===true&&e.control.observation.order_chain_complete===true&&e.control.observation.orders?.some(o=>o.automation===false));
+checks.actual60SecondWait=decoded.some(r=>{const p=r.value?.waitPolicy??r.value?.changes?.waitPolicy;return r.call?.tool?.endsWith('__watch')&&p?.effectiveSeconds===60&&p.nativeWorkConfirmed===true;});
+checks.noManualSurveyWrites=native.filter(e=>e.type==='rpc_write'&&e.method==='survey').length===0;
+const stop=native.findLast(e=>e.type==='stop'),control=analyzeControlEvidence(native);
+checks.nativeStopReclaimed=stop?.cleanup?.pauseConfirmed===true&&stop.cleanup.bindingConfirmed===true&&stop.cleanup.survey?.some(r=>r.fleetId===1&&r.confirmed===true&&r.state?.known===true&&r.state.automation_enabled===false&&r.state.order_chain_complete===true&&r.state.orders?.length===0);
+checks.terminal=checkpoint.stopped===true&&report.exitCode===0&&report.stopReason==='normal_hybrid_deadline';
+checks.budget=Number.isSafeInteger(report.model?.forwardedRequests)&&report.model.forwardedRequests<=manifest.maxRequests;
+checks.stopBoundary=control.writeBoundaryComplete===true&&control.forbiddenWritesAfterStop===0;
+const result={passed:Object.values(checks).every(Boolean),scope:'single scoped feedback-to-model-delegation-to-native-work-to-stop acceptance',checks,sessionId:checkpoint.sessionId,modelRequests:report.model?.forwardedRequests,omittedLogProjections:omitted,finalDate:stop?.cleanup?.date??checkpoint.cleanup?.date,limitations:['不是同工作量A/B效率对照，不据此宣称模型请求减半。','60秒是一次已确认原生工作的等待，不是连续60分钟验收。','本轮只证原生子任务，调查完成与后续衔接复用已有独立证据。','带truncated标记的JSON日志预览和工具错误不作完整状态解释。']};
+await writeFile(join(dir,'routing-acceptance.json'),JSON.stringify(result,null,2)+'\n');
+console.log(JSON.stringify(result));if(!result.passed)process.exitCode=1;

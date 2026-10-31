@@ -1,0 +1,22 @@
+✖ the model-facing MCP schema advertises reviewed route, industry and job capabilities without opening the game (52.8176ms)
+✔ disabled MCP retains recovery tools while new delegation stays outside its schema (106.7095ms)
+✔ enabled MCP advertises the same recovery operations plus scoped delegation (98.8427ms)
+✔ delivered desktop feature flags expose bounded upgrades, monthly conditions and local queue waiting (102.5277ms)
+✔ MCP exposes bounded construction sections and current upgrade availability without old pending-only wording (100.4439ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 478.6557
+
+✖ failing tests:
+
+test at stellaris-player\test\native-mcp-schema.test.mjs:4:1
+✖ the model-facing MCP schema advertises reviewed route, industry and job capabilities without opening the game (52.8176ms)
+  Error: MCP schema process failed
+      at ChildProcess.<anonymous> (file:///E:/%E8%82%A5%E9%B1%BC%E7%9B%B4%E6%92%AD/stellaris-player/test/native-mcp-schema.test.mjs:8:124)
+      at ChildProcess.emit (node:events:514:28)
+      at ChildProcess._handle.onexit (node:internal/child_process:324:12)

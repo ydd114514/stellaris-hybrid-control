@@ -1,0 +1,78 @@
+BOUNDED PINNED WINDOW; includes split unwind ranges; not a function invocation
+0x1aff0b0 mov qword ptr [rsp + 0x18], rbp
+0x1aff0b5 push rsi
+0x1aff0b6 push r14
+0x1aff0b8 push r15
+0x1aff0ba sub rsp, 0x30
+0x1aff0be movsxd r14, edx
+0x1aff0c1 mov esi, r9d
+0x1aff0c4 mov ebp, r8d
+0x1aff0c7 mov r15, rcx
+0x1aff0ca cmp r14d, 0x20
+0x1aff0ce ja 0x1aff172
+0x1aff0d4 cmp byte ptr [rsp + 0x78], 0
+0x1aff0d9 mov qword ptr [rsp + 0x58], rdi
+0x1aff0de mov edi, dword ptr [rsp + 0x80]
+0x1aff0e5 jne 0x1aff123
+0x1aff0e7 lea r10, [r14 + r14*2]
+0x1aff0eb xor r9d, r9d
+0x1aff0ee movsxd rax, dword ptr [rcx + r10*8 + 0x1c]
+0x1aff0f3 test eax, eax
+0x1aff0f5 jle 0x1aff123
+0x1aff0f7 mov r8, rax
+0x1aff0fa mov edx, r9d
+0x1aff0fd mov rax, qword ptr [rcx + r10*8 + 0x10]
+0x1aff102 mov rcx, qword ptr [rax]
+0x1aff105 cmp dword ptr [rcx + 8], ebp
+0x1aff108 jne 0x1aff114
+0x1aff10a cmp dword ptr [rcx + 4], esi
+0x1aff10d jne 0x1aff114
+0x1aff10f cmp dword ptr [rcx + 0xc], edi
+0x1aff112 je 0x1aff181
+0x1aff114 inc r9d
+0x1aff117 inc rdx
+0x1aff11a add rax, 8
+0x1aff11e cmp rdx, r8
+0x1aff121 jl 0x1aff102
+0x1aff123 mov qword ptr [rsp + 0x50], rbx
+0x1aff128 mov ebx, dword ptr [rsp + 0x70]
+0x1aff12c test ebx, ebx
+0x1aff12e jle 0x1aff168
+0x1aff130 mov ecx, 0x10
+0x1aff135 call 0x2021868
+0x1aff13a mov qword ptr [rsp + 0x20], rax
+0x1aff13f lea rcx, [r14*2 + 1]
+0x1aff147 add rcx, r14
+0x1aff14a mov qword ptr [rsp + 0x20], rax
+0x1aff14f lea rdx, [rsp + 0x20]
+0x1aff154 mov dword ptr [rax], ebx
+0x1aff156 mov dword ptr [rax + 4], esi
+0x1aff159 lea rcx, [r15 + rcx*8]
+0x1aff15d mov dword ptr [rax + 8], ebp
+0x1aff160 mov dword ptr [rax + 0xc], edi
+0x1aff163 call 0x227770
+0x1aff168 mov rbx, qword ptr [rsp + 0x50]
+0x1aff16d mov rdi, qword ptr [rsp + 0x58]
+0x1aff172 mov rbp, qword ptr [rsp + 0x60]
+0x1aff177 add rsp, 0x30
+0x1aff17b pop r15
+0x1aff17d pop r14
+0x1aff17f pop rsi
+0x1aff180 ret 
+0x1aff181 mov eax, dword ptr [rsp + 0x70]
+0x1aff185 add dword ptr [rcx], eax
+0x1aff187 cmp dword ptr [rcx], 1
+0x1aff18a jge 0x1aff16d
+0x1aff18c mov r8, qword ptr [r15 + r10*8 + 0x10]
+0x1aff191 movsxd rax, dword ptr [r15 + r10*8 + 0x1c]
+0x1aff196 movsxd rdx, r9d
+0x1aff199 mov rax, qword ptr [r8 + rax*8 - 8]
+0x1aff19e mov qword ptr [r8 + rdx*8], rax
+0x1aff1a2 mov eax, dword ptr [r15 + r10*8 + 0x1c]
+0x1aff1a7 test eax, eax
+0x1aff1a9 je 0x1aff1b2
+0x1aff1ab dec eax
+0x1aff1ad mov dword ptr [r15 + r10*8 + 0x1c], eax
+0x1aff1b2 mov edx, 0x10
+0x1aff1b7 call 0x20218a4
+0x1aff1bc jmp 0x1aff16d

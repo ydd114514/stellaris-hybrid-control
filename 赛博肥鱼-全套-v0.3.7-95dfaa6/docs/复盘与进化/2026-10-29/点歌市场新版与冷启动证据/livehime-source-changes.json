@@ -1,0 +1,22 @@
+{
+  "changes": [
+    {
+      "file": "untitledv2.json",
+      "name": "大肥鱼 · 蓝白框面与解说",
+      "role": "captions-only/shared-app-player"
+    },
+    {
+      "file": "Scene Collection/support_group_collection.json",
+      "name": "大肥鱼 · 蓝白框面与解说",
+      "role": "captions-only/shared-app-player"
+    },
+    {
+      "file": "Scene Collection/support_group_collection.json",
+      "name": "大肥鱼 · QQ音乐（独立程序声音）",
+      "role": "real-app-music-and-speech"
+    }
+  ],
+  "globalAudioChanged": false,
+  "canonicalPlayer": "大肥鱼 · 本机语音播放器",
+  "publicBroadcast": false
+}

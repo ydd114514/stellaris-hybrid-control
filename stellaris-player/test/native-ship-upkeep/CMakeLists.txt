@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.20)
+project(native_ship_upkeep_policy LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+add_executable(native_ship_upkeep main.cpp)
+target_include_directories(native_ship_upkeep PRIVATE "E:/肥鱼直播/.local/research/stellaris-mcp-native/stellaris_bridge/include")
+# Keep assertions active for the Release test executable.
+if(MSVC)
+ target_compile_options(native_ship_upkeep PRIVATE /UNDEBUG)
+else()
+ target_compile_options(native_ship_upkeep PRIVATE -UNDEBUG)
+endif()
+enable_testing()
+add_test(NAME engine_capacity_formula_boundaries COMMAND native_ship_upkeep)

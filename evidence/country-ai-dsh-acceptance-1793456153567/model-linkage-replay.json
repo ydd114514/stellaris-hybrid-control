@@ -1,0 +1,14 @@
+{
+  "offlineReplay": true,
+  "externalCalls": 0,
+  "strictOriginalRunPassed": false,
+  "linkageVerified": true,
+  "delegations": 2,
+  "takeoverBeforeIntervention": true,
+  "modelInterventionVerified": true,
+  "returnAfterIntervention": true,
+  "resumedAt": 1793456188261,
+  "selectedKey": "tech_shields_4",
+  "keyRetained": true,
+  "ordinaryWorkDuringNative": 0
+}

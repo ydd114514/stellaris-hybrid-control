@@ -1,0 +1,1439 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0ff520a..80b9ac0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,7 +10,8 @@ include(FetchContent)
+ FetchContent_Declare(
+     minhook
+     GIT_REPOSITORY https://github.com/TsudaKageyu/minhook.git
+-    GIT_TAG        master
++    GIT_TAG        v1.3.4
++    GIT_SHALLOW    TRUE
+ )
+ FetchContent_MakeAvailable(minhook)
+ 
+@@ -19,6 +20,7 @@ FetchContent_Declare(
+     nlohmann_json
+     GIT_REPOSITORY https://github.com/nlohmann/json.git
+     GIT_TAG        v3.11.3
++    GIT_SHALLOW    TRUE
+ )
+ FetchContent_MakeAvailable(nlohmann_json)
+ 
+diff --git a/stellaris_bridge/CMakeLists.txt b/stellaris_bridge/CMakeLists.txt
+index 1633220..4444a02 100644
+--- a/stellaris_bridge/CMakeLists.txt
++++ b/stellaris_bridge/CMakeLists.txt
+@@ -24,6 +24,10 @@ add_library(stellaris_bridge SHARED
+     src/market_manager.cpp
+     src/discoveries_manager.cpp
+     src/contacts_manager.cpp
++    src/cyberfish_diplomacy.cpp
++    src/cyberfish_picture.cpp
++    src/cyberfish_society.cpp
++    src/cyberfish_war.cpp
+     src/outliner_manager.cpp
+ )
+ 
+diff --git a/stellaris_bridge/include/cyberfish_diplomacy.hpp b/stellaris_bridge/include/cyberfish_diplomacy.hpp
+new file mode 100644
+index 0000000..90aea1b
+--- /dev/null
++++ b/stellaris_bridge/include/cyberfish_diplomacy.hpp
+@@ -0,0 +1,7 @@
++#pragma once
++#include "common.hpp"
++namespace bridge::cyberfish {
++nlohmann::json Diplomacy(uint32_t country_id, const std::string& action, bool execute);
++nlohmann::json PendingDiplomacy();
++nlohmann::json RespondDiplomacy(const std::string& proposal, bool accept);
++}
+diff --git a/stellaris_bridge/include/cyberfish_picture.hpp b/stellaris_bridge/include/cyberfish_picture.hpp
+new file mode 100644
+index 0000000..220df95
+--- /dev/null
++++ b/stellaris_bridge/include/cyberfish_picture.hpp
+@@ -0,0 +1,10 @@
++#pragma once
++#include "common.hpp"
++namespace bridge::cyberfish {
++void OnPresent(IDXGISwapChain* chain);
++nlohmann::json PictureState();
++nlohmann::json CaptureFrame();
++nlohmann::json FocusFleet(uint32_t fleet_id);
++nlohmann::json FocusPlanet(uint32_t planet_id);
++nlohmann::json ShowPanel(const std::string& panel);
++}
+diff --git a/stellaris_bridge/include/cyberfish_society.hpp b/stellaris_bridge/include/cyberfish_society.hpp
+new file mode 100644
+index 0000000..5e1d0f9
+--- /dev/null
++++ b/stellaris_bridge/include/cyberfish_society.hpp
+@@ -0,0 +1,8 @@
++#pragma once
++#include "common.hpp"
++namespace bridge::cyberfish {
++nlohmann::json SocietyCandidates(bool ascension);
++nlohmann::json AdoptAscension(const std::string& key);
++nlohmann::json CouncilCandidates();
++nlohmann::json AssignCouncilor(uint32_t leader,uint32_t seat);
++}
+diff --git a/stellaris_bridge/include/cyberfish_war.hpp b/stellaris_bridge/include/cyberfish_war.hpp
+new file mode 100644
+index 0000000..01622bd
+--- /dev/null
++++ b/stellaris_bridge/include/cyberfish_war.hpp
+@@ -0,0 +1,10 @@
++#pragma once
++#include "common.hpp"
++namespace bridge::cyberfish {
++nlohmann::json Wars();
++nlohmann::json WarGoalCandidates(uint32_t war_id);
++nlohmann::json SetDefenderWarGoal(uint32_t war_id,const std::string& key);
++nlohmann::json CloseWarGoals();
++bool IsWarDeclarationNotice(void* view);
++nlohmann::json AcknowledgeWarDeclaration(void* view);
++}
+diff --git a/stellaris_bridge/include/fleet_access.hpp b/stellaris_bridge/include/fleet_access.hpp
+index 5a8fe1d..9a5f913 100644
+--- a/stellaris_bridge/include/fleet_access.hpp
++++ b/stellaris_bridge/include/fleet_access.hpp
+@@ -52,6 +52,8 @@ void* Find(uintptr_t base, uint32_t fleet_id);
+ 
+ // Fleets the country owns (CCountryFleetsManager::owned_fleets).
+ std::vector<uint32_t> Owned(void* country);
++// A leader location of type 2 refers to CShip, not CFleet.
++std::vector<uint32_t> ShipIds(void* fleet);
+ 
+ ShipClass ClassOf(void* fleet);
+ double MilitaryPower(void* fleet);   // CFleet::military_power, normalized
+diff --git a/stellaris_bridge/include/fleet_manager.hpp b/stellaris_bridge/include/fleet_manager.hpp
+index 7561dde..7486582 100644
+--- a/stellaris_bridge/include/fleet_manager.hpp
++++ b/stellaris_bridge/include/fleet_manager.hpp
+@@ -13,6 +13,7 @@ struct ShipDesignQuotaInfo {
+     uint32_t actual_count{ 0 };
+     uint32_t target_quota{ 0 };
+     int32_t deficit{ 0 };
++    double naval_size{ 0.0 };
+ };
+ 
+ struct FleetInfo {
+@@ -23,6 +24,8 @@ struct FleetInfo {
+     uint32_t total_ships{ 0 };
+     uint32_t total_quota{ 0 };
+     bool can_reinforce{ false };
++    int32_t command_limit{ 0 };
++    double template_size{ 0.0 };
+     std::vector<ShipDesignQuotaInfo> designs;
+ };
+ 
+diff --git a/stellaris_bridge/include/galaxy_manager.hpp b/stellaris_bridge/include/galaxy_manager.hpp
+index afa339f..68b8fe2 100644
+--- a/stellaris_bridge/include/galaxy_manager.hpp
++++ b/stellaris_bridge/include/galaxy_manager.hpp
+@@ -25,6 +25,8 @@ public:
+     nlohmann::json GetMapJson(uint32_t center_system, int jumps);
+     // L2: one system
+     nlohmann::json GetSystemJson(uint32_t system_id);
++    // Bounded own-territory scan; foreign ships require native intel >= 3.
++    nlohmann::json GetDefenseScanJson();
+ 
+     // L3: fleet orders
+     nlohmann::json MoveFleet(uint32_t fleet_id, uint32_t system_id, bool queue);
+@@ -32,6 +34,7 @@ public:
+     nlohmann::json Survey(uint32_t fleet_id, uint32_t system_id, uint32_t planet_id, bool queue);
+     // a construction ship builds an outpost (starbase) in the system
+     nlohmann::json BuildOutpost(uint32_t fleet_id, uint32_t system_id, bool queue);
++    nlohmann::json BuildStations(uint32_t fleet_id, uint32_t system_id, const std::string& station_type, bool queue);
+     // a colony ship colonizes the planet
+     nlohmann::json Colonize(uint32_t fleet_id, uint32_t planet_id, bool queue);
+     // cancel every order of these fleets (they stop where they are)
+diff --git a/stellaris_bridge/include/government_manager.hpp b/stellaris_bridge/include/government_manager.hpp
+index 6ad9b46..fe275e5 100644
+--- a/stellaris_bridge/include/government_manager.hpp
++++ b/stellaris_bridge/include/government_manager.hpp
+@@ -25,6 +25,7 @@ struct LeaderDetail {
+ 
+ struct CouncilSeatDetail {
+     uint32_t seat_index{ 0 };
++    uint32_t position_id{ 0xFFFFFFFFu };
+     std::string position_key;
+     std::string position_name;
+     bool is_ruler{ false };
+diff --git a/stellaris_bridge/include/sdk/stellaris_sdk.hpp b/stellaris_bridge/include/sdk/stellaris_sdk.hpp
+index 202a89e..39e31a4 100644
+--- a/stellaris_bridge/include/sdk/stellaris_sdk.hpp
++++ b/stellaris_bridge/include/sdk/stellaris_sdk.hpp
+@@ -200,7 +200,7 @@ namespace glob {
+     inline constexpr uintptr_t TPdxNullObject_CColonyType_pInstance = 0x3112EC0;  // TPdxNullObject<CColonyType>::_pInstance  score=anchor live=anchor
+     inline constexpr uintptr_t TPdxNullObject_CConstructionQueue_pInstance = 0x3113FE8;  // TPdxNullObject<CConstructionQueue>::_pInstance  score=1.0 live=static
+     inline constexpr uintptr_t TPdxNullObject_CConstructionQueueItem_pInstance = 0x3113FD8;  // TPdxNullObject<CConstructionQueueItem>::_pInstance  score=1.0 live=static
+-    inline constexpr uintptr_t TPdxNullObject_CCouncilPosition_pInstance = 0x3114BA8;  // TPdxNullObject<CCouncilPosition>::_pInstance  score=1.0 live=static
++    inline constexpr uintptr_t TPdxNullObject_CCouncilPosition_pInstance = 0x3114220;  // Manually corrected: native AddToCouncil IsValid 0x6BE630.
+     inline constexpr uintptr_t TPdxNullObject_CCountry_pInstance = 0x3112EA0;  // TPdxNullObject<CCountry>::_pInstance  score=0.67 live=static
+     inline constexpr uintptr_t TPdxNullObject_CEdict_pInstance = 0x31136B8;  // TPdxNullObject<CEdict>::_pInstance  score=1.0 live=static
+     inline constexpr uintptr_t TPdxNullObject_CEspionageOperation_pInstance = 0x3114C88;  // TPdxNullObject<CEspionageOperation>::_pInstance  score=1.0 live=static
+@@ -235,7 +235,7 @@ namespace glob {
+     inline constexpr uintptr_t TPdxRef_CConstructionQueueItem_pDatabase = 0x3114B90;  // TPdxRef<CConstructionQueueItem>::_pDatabase  score=1.0 live=static
+     inline constexpr uintptr_t TPdxRef_CCosmicStorm_pDatabase = 0x3114DF0;  // TPdxRef<CCosmicStorm>::_pDatabase  score=anchor live=anchor
+     inline constexpr uintptr_t TPdxRef_CCosmicStormInfluenceField_pDatabase = 0x3114B80;  // TPdxRef<CCosmicStormInfluenceField>::_pDatabase  score=anchor live=anchor
+-    inline constexpr uintptr_t TPdxRef_CCouncilPosition_pDatabase = 0x3114220;  // TPdxRef<CCouncilPosition>::_pDatabase  score=1.0 live=static
++    inline constexpr uintptr_t TPdxRef_CCouncilPosition_pDatabase = 0x3114BA8;  // Manually corrected: native lookup and live full position handles.
+     inline constexpr uintptr_t TPdxRef_CCountry_pDatabase = 0x3114C38;  // TPdxRef<CCountry>::_pDatabase  score=0.668 live=static
+     inline constexpr uintptr_t TPdxRef_CCountryFocusCard_pDatabase = 0x3114BD0;  // TPdxRef<CCountryFocusCard>::_pDatabase  score=anchor live=anchor
+     inline constexpr uintptr_t TPdxRef_CDebris_pDatabase = 0x3114CB0;  // TPdxRef<CDebris>::_pDatabase  score=anchor live=anchor
+@@ -299,7 +299,7 @@ namespace db {
+     inline constexpr uintptr_t CConstructionQueueItem = 0x3114B90;
+     inline constexpr uintptr_t CCosmicStorm = 0x3114DF0;
+     inline constexpr uintptr_t CCosmicStormInfluenceField = 0x3114B80;
+-    inline constexpr uintptr_t CCouncilPosition = 0x3114220;
++    inline constexpr uintptr_t CCouncilPosition = 0x3114BA8;
+     inline constexpr uintptr_t CCountry = 0x3114C38;
+     inline constexpr uintptr_t CCountryFocusCard = 0x3114BD0;
+     inline constexpr uintptr_t CDebris = 0x3114CB0;
+diff --git a/stellaris_bridge/src/contacts_manager.cpp b/stellaris_bridge/src/contacts_manager.cpp
+index 436e255..15f294f 100644
+--- a/stellaris_bridge/src/contacts_manager.cpp
++++ b/stellaris_bridge/src/contacts_manager.cpp
+@@ -137,7 +137,7 @@ nlohmann::json ContactsManager::GetContactsInfo(const std::string& mode) {
+ 
+     uint32_t known_count = 0;
+ 
+-    for (uint32_t i = 0; i < rel_cnt && rel_arr; ++i) {
++    for (uint32_t i = 0; i < rel_cnt && i < 65536 && rel_arr; ++i) {
+         void* rel = nullptr;
+         if (!SafeReadPtr((const void*)((uintptr_t)rel_arr + i * 8), &rel) || !rel) continue;
+ 
+@@ -153,6 +153,8 @@ nlohmann::json ContactsManager::GetContactsInfo(const std::string& mode) {
+ 
+         void* other_ptr = nullptr;
+         if (!SafeReadPtr((const void*)((uintptr_t)carr + other_id * 16 + 8), &other_ptr) || !other_ptr) continue;
++        uint32_t live_ref = 0xFFFFFFFF;
++        if (!SafeReadU32((const void*)((uintptr_t)other_ptr + sdk::rt::CCountry_id), &live_ref) || live_ref != other_ref) continue;
+ 
+         uint8_t f0 = 0, f1 = 0, f2 = 0;
+         // the relation's state bits (contact, communications, pacts ...) start at CRelation::contact
+@@ -185,7 +187,7 @@ nlohmann::json ContactsManager::GetContactsInfo(const std::string& mode) {
+         if (has_comm) {
+             known_count++;
+             empires.push_back({
+-                {"country_id", other_id},
++                {"country_id", other_ref},
+                 {"name", loc_name},
+                 {"name_key", name_key},
+                 {"country_type", country_type},
+@@ -199,7 +201,7 @@ nlohmann::json ContactsManager::GetContactsInfo(const std::string& mode) {
+         } else if (has_contact) {
+             // First contact in progress
+             first_contacts.push_back({
+-                {"country_id", other_id},
++                {"country_id", other_ref},
+                 {"name", loc_name},
+                 {"country_type", country_type},
+                 {"status", "first_contact_in_progress"}
+diff --git a/stellaris_bridge/src/cyberfish_diplomacy.cpp b/stellaris_bridge/src/cyberfish_diplomacy.cpp
+new file mode 100644
+index 0000000..b608ef0
+--- /dev/null
++++ b/stellaris_bridge/src/cyberfish_diplomacy.cpp
+@@ -0,0 +1,119 @@
++// Windows 4.5.2 only: engine-owned proposal factory + normal IsValid/PostCommand.
++#include "cyberfish_diplomacy.hpp"
++#include "command_builder.hpp"
++#include "game_state.hpp"
++#include "contacts_manager.hpp"
++#include <array>
++#include <charconv>
++#include <vector>
++
++namespace bridge::cyberfish {
++namespace {
++struct Action {const char* name; uint32_t token;};
++constexpr Action actions[] = {
++    {"improve_relations",0x351D}, {"establish_embassy",0x3383},
++    {"open_borders",0x3696}, {"close_borders",0x3695},
++    {"research_agreement",0x2A2D}, {"commercial_pact",0x3CB4},
++    {"non_aggression_pact",0x40DA}
++};
++struct Context {uintptr_t base; uint32_t token; void* result;};
++void CreateAction(void* p, void*) {
++    auto* ctx = (Context*)p;
++    // Located from CDiploActionProposeCommand::ReadMembers, not Linux offsets.
++    ctx->result = ((void*(*)(uint32_t))(ctx->base+0x9A9860))(ctx->token);
++}
++NativeCommand Proposal(uint32_t country, uint32_t token) {
++    auto& builder = CommandBuilder::Get();
++    auto command = builder.Create(sdk::cmd::diplo_action_propose_command::kSpec);
++    if (!command) return command;
++    Context context{builder.Base(),token,nullptr};
++    if (!builder.CallGuarded(CreateAction,&context) || !context.result) return command;
++    auto* action = (uint8_t*)context.result;
++    *(uint32_t*)(action+sdk::ent::CDiplomaticAction::actor) = GameState::Get().GetPlayerCountryId();
++    *(uint32_t*)(action+sdk::ent::CDiplomaticAction::recipient) = country;
++    // Factory command starts with a null scoped action; its normal destructor
++    // and PostCommand now own the factory allocation, including query-only calls.
++    command.Set<void*>(0x20,context.result);
++    return command;
++}
++struct Incoming {uint64_t id; uint32_t actor,recipient,token;void* type;};
++bool ReadIncoming(std::vector<Incoming>& rows) {
++    __try {
++        auto* country=(uint8_t*)GameState::Get().GetPlayerCountry();
++        if(!country) return false;
++        const auto offset=sdk::ent::CCountry::incoming_actions;
++        auto* entries=*(uint8_t**)(country+offset);
++        const auto count=*(uint32_t*)(country+offset+0xC);
++        if(count>128 || (count && !entries)) return false;
++        for(uint32_t i=0;i<count;++i) {
++            auto* action=*(uint8_t**)(entries+i*0x10+8);
++            if(!action) continue;
++            auto* type=*(uint8_t**)(action+0x40);
++            Incoming row{*(uint64_t*)(action+0x30),*(uint32_t*)(action+0x20),*(uint32_t*)(action+0x24),type?*(uint32_t*)(type+0x50):0,type};
++            if(row.id && row.recipient==GameState::Get().GetPlayerCountryId()) rows.push_back(row);
++        }
++        return true;
++    } __except(EXCEPTION_EXECUTE_HANDLER) {return false;}
++}
++NativeCommand Response(uint64_t proposal,bool accept) {
++    namespace response=sdk::cmd::diplo_action_respond_command;
++    auto command=CommandBuilder::Get().Create(response::kSpec);
++    command.Set<uint64_t>(response::id,proposal).Set<uint8_t>(response::accept,accept?1:0);
++    return command;
++}
++}
++nlohmann::json Diplomacy(uint32_t country_id, const std::string& requested, bool execute) {
++    auto& builder = CommandBuilder::Get();
++    if (!builder.SdkMatchesExe() || !GameState::Get().GetPlayerCountry())
++        return {{"success",false},{"error","Supported single-player world required"}};
++    const auto contacts = ContactsManager::Get().GetContactsInfo("empires");
++    bool known = false;
++    for (const auto& contact : contacts.value("empires",nlohmann::json::array()))
++        if (contact.value("country_id",0xFFFFFFFFu)==country_id) known=true;
++    if (!known || country_id == GameState::Get().GetPlayerCountryId())
++        return {{"success",false},{"error","Target is not a current known foreign empire"}};
++    nlohmann::json options = nlohmann::json::array();
++    for (const auto& action : actions) {
++        if (!requested.empty() && requested != action.name) continue;
++        auto proposal = Proposal(country_id,action.token);
++        std::string reason;
++        const bool legal = proposal.IsValid(&reason);
++        if (!execute) {options.push_back({{"action",action.name},{"legal",legal},{"reason",reason}}); continue;}
++        if (!legal) return {{"success",false},{"error",reason.empty()?"Native diplomacy conditions not met":reason}};
++        if (!proposal.Post()) return {{"success",false},{"error",proposal.error()}};
++        return {{"success",true},{"country_id",country_id},{"action",action.name},{"phase","proposal_posted"},
++                {"note","Recipient acceptance and any treaty must be observed separately"}};
++    }
++    if (execute) return {{"success",false},{"error","Unsupported diplomatic action"}};
++    return {{"country_id",country_id},{"options",options}};
++}
++nlohmann::json PendingDiplomacy() {
++    std::vector<Incoming> rows;
++    if(!ReadIncoming(rows)) return {{"error","Cannot validate incoming proposal array"}};
++    nlohmann::json result=nlohmann::json::array();
++    for(const auto& row:rows) {
++        auto accept=Response(row.id,true); auto reject=Response(row.id,false);
++        std::string action="unknown_"+std::to_string(row.token);
++        for(const auto& type:actions) if(type.token==row.token) action=type.name;
++        const auto key=row.type?*(std::string*)((uint8_t*)row.type+0x20):std::string();
++        result.push_back({{"proposal",std::to_string(row.id)},{"actor_country_id",row.actor},
++            {"recipient_country_id",row.recipient},{"action",action},
++            {"action_key",key},{"action_name",SafeLocalize(CommandBuilder::Get().Base(),key)},
++            {"can_accept",accept.IsValid()},{"can_reject",reject.IsValid()}});
++    }
++    return {{"pending",result}};
++}
++nlohmann::json RespondDiplomacy(const std::string& proposal,bool accept) {
++    uint64_t identifier=0;
++    auto parsed=std::from_chars(proposal.data(),proposal.data()+proposal.size(),identifier);
++    if(parsed.ec!=std::errc() || parsed.ptr!=proposal.data()+proposal.size() || identifier==0)
++        return {{"success",false},{"error","Invalid proposal identifier"}};
++    std::vector<Incoming> rows;
++    if(!ReadIncoming(rows)) return {{"success",false},{"error","Incoming proposal state unavailable"}};
++    bool known=false; for(const auto& row:rows) if(row.id==identifier) known=true;
++    if(!known) return {{"success",false},{"error","Proposal is no longer pending for this player"}};
++    auto command=Response(identifier,accept);
++    if(!command.Post()) return {{"success",false},{"error",command.error()}};
++    return {{"success",true},{"proposal",proposal},{"accept",accept},{"phase","response_posted"}};
++}
++}
+diff --git a/stellaris_bridge/src/cyberfish_picture.cpp b/stellaris_bridge/src/cyberfish_picture.cpp
+new file mode 100644
+index 0000000..8946e3d
+--- /dev/null
++++ b/stellaris_bridge/src/cyberfish_picture.cpp
+@@ -0,0 +1,153 @@
++// Evidence comes from the game's own rendered backbuffer, never the desktop.
++#include "cyberfish_picture.hpp"
++#include <filesystem>
++#include <fstream>
++#include <vector>
++#include <wrl/client.h>
++#include "fleet_access.hpp"
++#include "game_state.hpp"
++#include "command_builder.hpp"
++#include <algorithm>
++
++namespace bridge::cyberfish {
++using Microsoft::WRL::ComPtr;
++namespace {IDXGISwapChain* current = nullptr; uint64_t frames=0; void* managed_view=nullptr;}
++void OnPresent(IDXGISwapChain* chain) {current=chain; ++frames;}
++nlohmann::json PictureState() {
++    DXGI_SWAP_CHAIN_DESC desc{};
++    if (!current || FAILED(current->GetDesc(&desc))) return {{"rendering",false}};
++    HWND window=desc.OutputWindow;
++    RECT rect{}; GetClientRect(window,&rect);
++    DWORD process=0; GetWindowThreadProcessId(window,&process);
++    const bool visible=IsWindowVisible(window) && !IsIconic(window) &&
++        process==GetCurrentProcessId() && rect.right>128 && rect.bottom>128;
++    return {{"rendering",true},{"frames",frames},{"visible",visible},
++            {"minimized",!!IsIconic(window)},{"foreground",GetForegroundWindow()==window},
++            {"width",rect.right},{"height",rect.bottom}};
++}
++nlohmann::json CaptureFrame() {
++    const auto picture=PictureState();
++    if (!picture.value("visible",false)) return {{"success",false},{"error","Game picture is not visible"},{"picture",picture}};
++    ComPtr<ID3D11Texture2D> buffer, staging, resolved;
++    ComPtr<ID3D11Device> device; ComPtr<ID3D11DeviceContext> context;
++    if (FAILED(current->GetBuffer(0,__uuidof(ID3D11Texture2D),(void**)buffer.GetAddressOf())))
++        return {{"success",false},{"error","Game backbuffer unavailable"}};
++    buffer->GetDevice(&device); device->GetImmediateContext(&context);
++    D3D11_TEXTURE2D_DESC desc{}; buffer->GetDesc(&desc);
++    if (desc.Width>4096 || desc.Height>2160 ||
++        (desc.Format!=DXGI_FORMAT_R8G8B8A8_UNORM && desc.Format!=DXGI_FORMAT_B8G8R8A8_UNORM &&
++         desc.Format!=DXGI_FORMAT_R8G8B8A8_UNORM_SRGB && desc.Format!=DXGI_FORMAT_B8G8R8A8_UNORM_SRGB))
++        return {{"success",false},{"error","Unsupported evidence buffer format"},{"format",desc.Format}};
++    const bool rgba=desc.Format==DXGI_FORMAT_R8G8B8A8_UNORM || desc.Format==DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
++    if (desc.SampleDesc.Count>1) {
++        auto single=desc; single.SampleDesc.Count=1; single.SampleDesc.Quality=0;
++        single.BindFlags=0; single.MiscFlags=0;
++        if (FAILED(device->CreateTexture2D(&single,nullptr,&resolved))) return {{"success",false},{"error","Resolve allocation failed"}};
++        context->ResolveSubresource(resolved.Get(),0,buffer.Get(),0,desc.Format);
++    }
++    auto copy=desc; copy.SampleDesc.Count=1; copy.SampleDesc.Quality=0;
++    copy.Usage=D3D11_USAGE_STAGING; copy.BindFlags=0; copy.CPUAccessFlags=D3D11_CPU_ACCESS_READ; copy.MiscFlags=0;
++    if (FAILED(device->CreateTexture2D(&copy,nullptr,&staging))) return {{"success",false},{"error","Staging allocation failed"}};
++    context->CopyResource(staging.Get(),resolved ? resolved.Get() : buffer.Get());
++    D3D11_MAPPED_SUBRESOURCE mapped{};
++    if (FAILED(context->Map(staging.Get(),0,D3D11_MAP_READ,0,&mapped))) return {{"success",false},{"error","Evidence map failed"}};
++    std::vector<uint8_t> pixels(desc.Width*desc.Height*4);
++    for (UINT y=0;y<desc.Height;++y) {
++        const auto* src=(const uint8_t*)mapped.pData+y*mapped.RowPitch;
++        auto* dst=pixels.data()+y*desc.Width*4;
++        memcpy(dst,src,desc.Width*4);
++        for (UINT x=0;x<desc.Width;++x) {if(rgba) std::swap(dst[x*4],dst[x*4+2]); dst[x*4+3]=255;}
++    }
++    context->Unmap(staging.Get(),0);
++    wchar_t temp[MAX_PATH]{}; GetTempPathW(MAX_PATH,temp);
++    const auto folder=std::filesystem::path(temp)/L"Cyberfish"/L"native-frames";
++    std::filesystem::create_directories(folder);
++    const auto path=folder/(std::to_wstring(GetCurrentProcessId())+L"-"+std::to_wstring(frames)+L".bmp");
++    BITMAPFILEHEADER header{}; BITMAPINFOHEADER info{};
++    header.bfType=0x4D42; header.bfOffBits=sizeof(header)+sizeof(info); header.bfSize=header.bfOffBits+(DWORD)pixels.size();
++    info.biSize=sizeof(info); info.biWidth=desc.Width; info.biHeight=-(LONG)desc.Height;
++    info.biPlanes=1; info.biBitCount=32; info.biCompression=BI_RGB; info.biSizeImage=(DWORD)pixels.size();
++    std::ofstream file(path,std::ios::binary);
++    file.write((const char*)&header,sizeof(header)); file.write((const char*)&info,sizeof(info));
++    file.write((const char*)pixels.data(),pixels.size()); file.close();
++    if (!file) return {{"success",false},{"error","Cannot save game frame"}};
++    const auto utf8=path.u8string();
++    return {{"success",true},{"path",std::string(utf8.begin(),utf8.end())},{"picture",picture}};
++}
++nlohmann::json FocusFleet(uint32_t fleet_id) {
++    auto& builder=CommandBuilder::Get();
++    const auto owned=fleets::Owned(GameState::Get().GetPlayerCountry());
++    if (!builder.SdkMatchesExe() || std::find(owned.begin(),owned.end(),fleet_id)==owned.end())
++        return {{"success",false},{"error","Owned fleet required"}};
++    auto* fleet=(uint8_t*)fleets::Find(builder.Base(),fleet_id);
++    auto* idler=(uint8_t*)GameState::Get().GetInGameIdler();
++    if (!fleet || !idler) return {{"success",false},{"error","Fleet or active game missing"}};
++    struct Context {uintptr_t base; void* camera; void* target; int kind;};
++    Context ctx{builder.Base(),idler+0x218,fleet+sdk::rt::CFleet_coordinate_base,-1};
++    auto run=[](void* p,void*) {
++        auto* x=(Context*)p;
++        auto vt=*(void***)x->target;
++        x->kind=((int(*)(void*))vt[5])(x->target);
++        if(x->kind==3) ((void(*)(void*,void*))(x->base+0xF32A40))(x->camera,x->target);
++    };
++    if(!builder.CallGuarded(run,&ctx) || ctx.kind!=3)
++        return {{"success",false},{"error","Verified fleet camera interface unavailable"}};
++    // Camera target at +0x288/+0x28C, assigned by the audited function above.
++    uint32_t selected=*(uint32_t*)(idler+0x4A4);
++    return {{"success",selected==fleet_id},{"fleet_id",fleet_id},{"camera_target_id",selected},
++            {"camera_target_type",*(uint32_t*)(idler+0x4A0)},{"picture",PictureState()}};
++}
++nlohmann::json FocusPlanet(uint32_t planet_id) {
++    auto& builder=CommandBuilder::Get();
++    struct Context {uintptr_t base; uint32_t planet,country; void* idler; bool found;};
++    Context ctx{builder.Base(),planet_id,GameState::Get().GetPlayerCountryId(),GameState::Get().GetInGameIdler(),false};
++    auto run=[](void* p,void*) {
++        auto* x=(Context*)p;
++        auto* db=*(uint8_t**)(x->base+sdk::db::CPlanet);
++        if(!db || !x->idler || (x->planet&0xFFFFFF)>=*(uint32_t*)(db+0x20)) return;
++        auto* arr=*(uint8_t**)(db+0x18);
++        auto* planet=*(uint8_t**)(arr+(x->planet&0xFFFFFF)*16+8);
++        // Actual CPlanet lookup compares +0x18; generated rt::CPlanet_id is a
++        // secondary-base offset and must not be used for a primary pointer.
++        if(!planet || *(uint32_t*)(planet+0x18)!=x->planet || *(uint32_t*)(planet+sdk::ent::CPlanet::owner)!=x->country) return;
++        auto* target=planet+0x20; auto vt=*(void***)target;
++        if(((int(*)(void*))vt[5])(target)!=2) return;
++        ((void(*)(void*,void*))(x->base+0xF32A40))((uint8_t*)x->idler+0x218,target);
++        x->found=true;
++    };
++    if(!builder.SdkMatchesExe() || !builder.CallGuarded(run,&ctx) || !ctx.found)
++        return {{"success",false},{"error","Owned planet camera target unavailable"}};
++    auto* idler=(uint8_t*)ctx.idler;
++    const uint32_t target=*(uint32_t*)(idler+0x4A4);
++    return {{"success",target==planet_id},{"planet_id",planet_id},{"camera_target_id",target},{"camera_target_type",*(uint32_t*)(idler+0x4A0)}};
++}
++nlohmann::json ShowPanel(const std::string& panel) {
++    struct Panel {const char* key; size_t member; uintptr_t vtable;};
++    static constexpr Panel panels[]={
++        {"research",0xD50,0x23F4110},{"fleets",0xD78,0x24106B8},
++        {"contacts",0xD80,0x23F6F98},{"market",0xDC0,0x241B4B8},
++        {"traditions",0xD48,0x241AC98},{"government",0xD40,0x2438858},
++        {"leaders",0xD58,0x23F5778}
++    };
++    auto& builder=CommandBuilder::Get();
++    auto* idler=(uint8_t*)GameState::Get().GetInGameIdler();
++    if(!idler || !builder.SdkMatchesExe()) return {{"success",false},{"error","Game not ready"}};
++    struct Context {void* view; bool show; bool shown;};
++    auto call=[](void* p,void*) {
++        auto* x=(Context*)p; auto vt=*(void***)x->view;
++        ((void(*)(void*))vt[x->show?6:7])(x->view);
++        auto* ui=*(uint8_t**)((uint8_t*)x->view+0x78);
++        x->shown=ui && *(uint8_t*)(ui+0x41)!=0;
++    };
++    void* next=nullptr;
++    for(const auto& candidate:panels) if(panel==candidate.key) {
++        next=*(void**)(idler+candidate.member);
++        if(!next || *(uintptr_t*)next!=builder.Base()+candidate.vtable) return {{"success",false},{"error","View type mismatch"}};
++    }
++    if(panel!="game" && !next) return {{"success",false},{"error","Unknown presentation panel"}};
++    if(managed_view && managed_view!=next) {Context hide{managed_view,false,false}; if(!builder.CallGuarded(call,&hide)) return {{"success",false},{"error","Cannot close managed panel"}};}
++    if(next) {Context show{next,true,false}; if(!builder.CallGuarded(call,&show) || !show.shown) return {{"success",false},{"error","Panel did not become visible"}};}
++    managed_view=next;
++    return {{"success",true},{"panel",panel},{"shown",next!=nullptr},{"picture",PictureState()}};
++}
++}
+diff --git a/stellaris_bridge/src/cyberfish_society.cpp b/stellaris_bridge/src/cyberfish_society.cpp
+new file mode 100644
+index 0000000..3286aea
+--- /dev/null
++++ b/stellaris_bridge/src/cyberfish_society.cpp
+@@ -0,0 +1,103 @@
++#include "cyberfish_society.hpp"
++#include "command_builder.hpp"
++#include "game_state.hpp"
++#include "government_manager.hpp"
++#include "leader_manager.hpp"
++#include <vector>
++
++namespace bridge::cyberfish {
++namespace {
++struct Definition {void* object; void* category;};
++bool ReadDefinitions(bool ascension,std::vector<Definition>& definitions) {
++    __try {
++        auto base=CommandBuilder::Get().Base();
++        auto address=ascension ? sdk::glob::TGameDatabase_CAscensionPerkDatabase_pInstance : sdk::glob::TGameDatabase_CTraditionTypeDatabase_pInstance;
++        auto* database=*(uint8_t**)(base+address);
++        if(!database) return false;
++        auto** array=*(void***)(database+0x50); uint32_t count=*(uint32_t*)(database+0x5C);
++        if(count>1024 || (count && !array)) return false;
++        for(uint32_t i=0;i<count;++i) if(array[i]) {
++            definitions.push_back({array[i],ascension?nullptr:*(void**)((uint8_t*)array[i]+0x50)});
++        }
++        return true;
++    } __except(EXCEPTION_EXECUTE_HANDLER) {return false;}
++}
++std::string Key(void* p) {
++    if(!p) return "";
++    // Only used for definitions obtained from the bounded native databases.
++    return *(std::string*)((uint8_t*)p+0x20);
++}
++NativeCommand Candidate(const Definition& definition,bool ascension) {
++    auto cmd=CommandBuilder::Get().Create(ascension ? sdk::cmd::activate_ascension_perk_command::kSpec : sdk::cmd::activate_tradition_command::kSpec);
++    cmd.Set<uint32_t>(0x20,GameState::Get().GetPlayerCountryId()).Set<void*>(0x28,definition.object);
++    return cmd;
++}
++}
++nlohmann::json SocietyCandidates(bool ascension) {
++    std::vector<Definition> definitions;
++    if(!GameState::Get().GetPlayerCountry() || !ReadDefinitions(ascension,definitions)) return {{"error","Native society definition database unavailable"}};
++    nlohmann::json candidates=nlohmann::json::array();
++    for(const auto& definition:definitions) {
++        auto command=Candidate(definition,ascension); std::string reason;
++        if(!command.IsValid(&reason)) continue;
++        auto key=Key(definition.object);
++        if(!ascension && (key.ends_with("_finish") || key.ends_with("_finisher"))) continue;
++        nlohmann::json row={{"key",key},{"name",SafeLocalize(CommandBuilder::Get().Base(),key)},{"legal",true}};
++        if(definition.category) {auto category=Key(definition.category); row["tree_key"]=category;}
++        candidates.push_back(row);
++    }
++    return {{"candidates",candidates},{"kind",ascension?"ascension_perk":"tradition"},
++            {"note","Only candidates accepted by the normal native command's IsValid"}};
++}
++nlohmann::json AdoptAscension(const std::string& key) {
++    std::vector<Definition> definitions;
++    if(!ReadDefinitions(true,definitions)) return {{"success",false},{"error","Ascension database unavailable"}};
++    for(const auto& definition:definitions) if(Key(definition.object)==key) {
++        auto command=Candidate(definition,true);
++        if(!command.Post()) return {{"success",false},{"error",command.error()}};
++        return {{"success",true},{"perk_key",key},{"phase","ascension_posted"}};
++    }
++    return {{"success",false},{"error","Unknown ascension key"}};
++}
++nlohmann::json CouncilCandidates() {
++    const auto government=GovernmentManager::Get().GetGovernmentJson();
++    const auto leaders=LeaderManager::Get().GetLeadersJson();
++    nlohmann::json candidates=nlohmann::json::array();
++    for(const auto& seat:government.value("council_seats",nlohmann::json::array())) {
++        if(seat.value("is_ruler",true) || seat.value("is_assigned",true)) continue;
++        // Only these vanilla positions have audited class requirements. Other
++        // civic/modded seats remain unavailable until their native UI predicate
++        // is adapted; command IsValid alone only validates the two handles.
++        const auto key=seat.value("position_key",std::string());
++        const std::string required=key=="councilor_research"?"scientist":key=="councilor_defense"?"commander":key=="councilor_state"?"official":"";
++        if(required.empty() || seat.value("position_id",0xFFFFFFFFu)==0xFFFFFFFFu) continue;
++        for(const auto& leader:leaders.value("hired_leaders",nlohmann::json::array())) {
++            if(leader.value("assignment_type",std::string())!="unassigned") continue;
++            if(leader.value("class",std::string())!=required) continue;
++            bool assigned=false;
++            for(const auto& occupied:government.value("council_seats",nlohmann::json::array()))
++                if(occupied.contains("leader") && occupied["leader"].is_object() && occupied["leader"].value("id",0xFFFFFFFFu)==leader.value("id",0xFFFFFFFFu)) assigned=true;
++            if(assigned) continue;
++            namespace assign=sdk::cmd::add_to_council_command;
++            auto command=CommandBuilder::Get().Create(assign::kSpec);
++            command.Set<uint32_t>(assign::leader,leader.value("id",0xFFFFFFFFu))
++                .Set<uint32_t>(assign::council_position,seat.value("position_id",0xFFFFFFFFu));
++            if(command.IsValid()) candidates.push_back({{"leader_id",leader["id"]},{"seat_index",seat["seat_index"]},
++                {"position_id",seat["position_id"]},{"leader_name",leader.value("name",std::string())},
++                {"position",seat.value("position_name",std::string())},{"legal",true}});
++        }
++    }
++    return {{"candidates",candidates}};
++}
++nlohmann::json AssignCouncilor(uint32_t leader,uint32_t seat) {
++    const auto current=CouncilCandidates();
++    for(const auto& row:current["candidates"]) if(row["leader_id"]==leader && row["seat_index"]==seat) {
++        namespace C=sdk::cmd::add_to_council_command;
++        auto cmd=CommandBuilder::Get().Create(C::kSpec);
++        cmd.Set<uint32_t>(C::leader,leader).Set<uint32_t>(C::council_position,row["position_id"].get<uint32_t>());
++        if(!cmd.Post()) return {{"success",false},{"error",cmd.error()}};
++        return {{"success",true},{"leader_id",leader},{"seat_index",seat},{"position_id",row["position_id"]},{"phase","council_assignment_posted"}};
++    }
++    return {{"success",false},{"error","No current owned, vacant, compatible council appointment"}};
++}
++}
+diff --git a/stellaris_bridge/src/cyberfish_war.cpp b/stellaris_bridge/src/cyberfish_war.cpp
+new file mode 100644
+index 0000000..ace786a
+--- /dev/null
++++ b/stellaris_bridge/src/cyberfish_war.cpp
+@@ -0,0 +1,137 @@
++// Pinned Windows 4.5.2: normal defender goal commands, always on TaskQueue.
++#include "cyberfish_war.hpp"
++#include "command_builder.hpp"
++#include "game_state.hpp"
++#include <vector>
++
++namespace bridge::cyberfish {
++namespace {
++constexpr uint32_t invalid=0xFFFFFFFFu;
++struct War {uint32_t id,attacker,defender; void* attacker_type; void* defender_type; bool chosen; int64_t a_exhaustion,d_exhaustion;};
++bool ReadWars(std::vector<War>& rows) {
++    __try {
++        auto base=CommandBuilder::Get().Base();
++        auto* db=*(uint8_t**)(base+0x3114D10);
++        if(!db) return false;
++        auto* slots=*(uint8_t**)(db+0x18); auto count=*(uint32_t*)(db+0x20);
++        if(count>4096 || (count && !slots)) return false;
++        auto own=GameState::Get().GetPlayerCountryId();
++        for(uint32_t slot=0;slot<count;++slot) {
++            auto* p=*(uint8_t**)(slots+slot*16+8); if(!p) continue;
++            auto id=*(uint32_t*)(p+0x20); if(id==invalid || (id&0xFFFFFF)!=slot) continue;
++            auto* a=*(uint8_t**)(p+0x88); auto ac=*(uint32_t*)(p+0x94);
++            auto* d=*(uint8_t**)(p+0xA0); auto dc=*(uint32_t*)(p+0xAC);
++            if(!a || !d || ac==0 || dc==0 || ac>128 || dc>128) continue;
++            auto attacker=*(uint32_t*)(a+8),defender=*(uint32_t*)(d+8);
++            if(own!=attacker && own!=defender) continue;
++            rows.push_back({id,attacker,defender,*(void**)(p+0xD8),*(void**)(p+0xF8),*(uint8_t*)(p+0x110)!=0,
++                *(int64_t*)(p+0x118),*(int64_t*)(p+0x120)});
++        }
++        return true;
++    } __except(EXCEPTION_EXECUTE_HANDLER) {return false;}
++}
++bool GoalTypes(std::vector<void*>& rows) {
++    __try {
++        auto* db=*(uint8_t**)(CommandBuilder::Get().Base()+sdk::glob::TGameDatabase_CWarGoalTypeDatabase_pInstance);
++        if(!db) return false;
++        auto** data=*(void***)(db+0x50); auto count=*(uint32_t*)(db+0x5C);
++        if(count>512 || (count && !data)) return false;
++        for(uint32_t i=0;i<count;++i) if(data[i]) rows.push_back(data[i]);
++        return true;
++    } __except(EXCEPTION_EXECUTE_HANDLER) {return false;}
++}
++std::string Key(void* type) {return type?*(std::string*)((uint8_t*)type+0x20):std::string();}
++void* VisibleView() {
++    __try {
++        auto base=CommandBuilder::Get().Base(); auto* idler=*(uint8_t**)(base+sdk::glob::g_CurrentInGameIdler);
++        if(!idler) return nullptr;
++        auto* view=*(uint8_t**)(idler+0xC18);
++        if(!view || *(uintptr_t*)view!=base+0x240F2D0) return nullptr;
++        auto* window=*(uint8_t**)(view+0x78);
++        return window && *(uint8_t*)(window+0x41) ? view : nullptr;
++    } __except(EXCEPTION_EXECUTE_HANDLER) {return nullptr;}
++}
++NativeCommand GoalCommand(uint32_t war,void* type) {
++    namespace C=sdk::cmd::diplo_action_set_defender_war_goal_command;
++    auto cmd=CommandBuilder::Get().Create(C::kSpec);
++    // UI keeps the other embedded CWarGoal fields at factory defaults. IsValid
++    // verifies primary defender, current full war handle and legal goal type.
++    cmd.Set<uint32_t>(C::country,GameState::Get().GetPlayerCountryId()).Set<uint32_t>(C::war,war)
++        .Set<void*>(C::defender_war_goal+8,type);
++    return cmd;
++}
++bool PendingDefender(uint32_t war) {
++    std::vector<War> rows; if(!ReadWars(rows)) return false;
++    for(const auto& row:rows) if(row.id==war && row.defender==GameState::Get().GetPlayerCountryId() && !row.chosen) return true;
++    return false;
++}
++void HideView(void* ctx,void*) {auto* view=ctx; auto** vt=*(void***)view; ((void(*)(void*))vt[7])(view);}
++}
++nlohmann::json Wars() {
++    std::vector<War> rows;
++    if(!CommandBuilder::Get().SdkMatchesExe() || !ReadWars(rows)) return {{"error","Primary-war state unavailable"}};
++    nlohmann::json result=nlohmann::json::array();
++    auto own=GameState::Get().GetPlayerCountryId();
++    for(const auto& row:rows) result.push_back({{"war_id",row.id},{"player_side",row.attacker==own?"attacker":"defender"},
++        {"primary_attacker_id",row.attacker},{"primary_defender_id",row.defender},
++        {"attacker_goal",{{"key",Key(row.attacker_type)}}},{"defender_goal",{{"key",Key(row.defender_type)}}},
++        {"have_defender_war_goal",row.chosen},{"attacker_exhaustion",row.a_exhaustion/100000.0},{"defender_exhaustion",row.d_exhaustion/100000.0}});
++    return {{"wars",result},{"warGoalsWindow",VisibleView()!=nullptr},{"scope","primary_participant"}};
++}
++nlohmann::json WarGoalCandidates(uint32_t war_id) {
++    if(!PendingDefender(war_id)) return {{"war_id",war_id},{"candidates",nlohmann::json::array()},{"reason","No unselected local primary-defender goal"}};
++    std::vector<void*> types;
++    if(!GoalTypes(types)) return {{"error","War goal database unavailable"}};
++    nlohmann::json result=nlohmann::json::array();
++    for(auto* type:types) {
++        auto cmd=GoalCommand(war_id,type); if(!cmd.IsValid()) continue;
++        auto key=Key(type); result.push_back({{"key",key},{"name",SafeLocalize(CommandBuilder::Get().Base(),key)},{"legal",true}});
++    }
++    return {{"war_id",war_id},{"candidates",result}};
++}
++nlohmann::json SetDefenderWarGoal(uint32_t war_id,const std::string& key) {
++    if(!PendingDefender(war_id)) return {{"success",false},{"error","No unselected local primary-defender goal"}};
++    if(!VisibleView()) return {{"success",false},{"error","Open the normal war-goals window before choosing a goal"}};
++    std::vector<void*> types; if(!GoalTypes(types)) return {{"success",false},{"error","War goal database unavailable"}};
++    for(auto* type:types) if(Key(type)==key) {
++        auto cmd=GoalCommand(war_id,type);
++        if(!cmd.Post()) return {{"success",false},{"error",cmd.error()}};
++        return {{"success",true},{"war_id",war_id},{"goal_key",key},{"phase","goal_posted"}};
++    }
++    return {{"success",false},{"error","Unknown war goal key"}};
++}
++nlohmann::json CloseWarGoals() {
++    std::vector<War> rows; if(!ReadWars(rows)) return {{"success",false},{"error","War state unavailable"}};
++    for(const auto& row:rows) if(row.defender==GameState::Get().GetPlayerCountryId() && !row.chosen)
++        return {{"success",false},{"error","Choose the local defender war goal first"}};
++    auto* view=VisibleView();
++    if(view && !CommandBuilder::Get().CallGuarded(HideView,view)) return {{"success",false},{"error","Normal war-goals hide failed"}};
++    return {{"success",VisibleView()==nullptr},{"warGoalsWindow",VisibleView()!=nullptr}};
++}
++bool IsWarDeclarationNotice(void* view) {
++    __try {
++        auto base=CommandBuilder::Get().Base();
++        if(!view || *(uintptr_t*)view!=base+0x2416E00) return false;
++        auto* action=*(uint8_t**)((uint8_t*)view+0x4E8);
++        if(!action || *(uint64_t*)((uint8_t*)view+0x4F0)!=0) return false;
++        auto* type=*(uint8_t**)(action+0x40);
++        return type && *(uint32_t*)(type+0x50)==0x2D52 &&
++            *(uint32_t*)(action+0x24)==GameState::Get().GetPlayerCountryId();
++    } __except(EXCEPTION_EXECUTE_HANDLER) {return false;}
++}
++nlohmann::json AcknowledgeWarDeclaration(void* view) {
++    if(!IsWarDeclarationNotice(view)) return {{"success",false},{"error","Not a current local informational declaration of war"}};
++    auto wars=Wars();
++    if(wars.value("warGoalsWindow",false)) return {{"success",false},{"error","Handle the war-goals window first"}};
++    auto actor=*(uint32_t*)(*(uint8_t**)((uint8_t*)view+0x4E8)+0x20);
++    bool goalChosen=false;
++    for(const auto& row:wars.value("wars",nlohmann::json::array())) if(row["primary_attacker_id"]==actor && row.value("player_side",std::string())=="defender" && row.value("have_defender_war_goal",false)) goalChosen=true;
++    if(!goalChosen) return {{"success",false},{"error","Read and choose the defender goal before acknowledging this declaration"}};
++    // Audited button callback: proposal==0 means this informational notice only
++    // closes its own view. Nonzero incoming proposals are deliberately excluded.
++    struct Context {uintptr_t base;void* view;}; Context ctx{CommandBuilder::Get().Base(),view};
++    auto confirm=[](void* p,void*) {auto* x=(Context*)p; ((void(*)(void*))(x->base+0x117FB70))(x->view);};
++    if(!CommandBuilder::Get().CallGuarded(confirm,&ctx)) return {{"success",false},{"error","War declaration confirmation raised an exception"}};
++    return {{"success",true},{"message","Informational war declaration acknowledged with its normal confirm callback"}};
++}
++}
+diff --git a/stellaris_bridge/src/event_manager.cpp b/stellaris_bridge/src/event_manager.cpp
+index 2159cc6..60c8d67 100644
+--- a/stellaris_bridge/src/event_manager.cpp
++++ b/stellaris_bridge/src/event_manager.cpp
+@@ -2,6 +2,7 @@
+ #include "game_state.hpp"
+ #include "command_builder.hpp"
+ #include "sdk/stellaris_sdk.hpp"
++#include "cyberfish_war.hpp"
+ 
+ namespace bridge {
+ 
+@@ -614,6 +615,17 @@ std::vector<EventInfo> EventManager::GetActiveEvents() {
+         void* ui_window = nullptr;
+         SafeReadPtr((const void*)((uintptr_t)win + 0x78), &ui_window);
+ 
++        if(cyberfish::IsWarDeclarationNotice(win)) {
++            auto* heading=FindChildByName(ui_window,"heading");
++            auto* text=FindChildByName(ui_window,"alien_message");
++            info.title=(heading?ExtractPdxString((uint8_t*)heading+0x168):std::string())+" 宣战通知";
++            info.description=text?ExtractPdxString((uint8_t*)text+0x168):std::string();
++            info.event_key="cyberfish.war_declaration_notice";
++            info.options.push_back({0,"确认（已选择战争目标后关闭通知）",true});
++            events.push_back(info);
++            continue;
++        }
++
+         if (ui_window) {
+             // Extract Title
+             void* title_ctrl = FindChildByName(ui_window, "title");
+@@ -798,6 +810,13 @@ nlohmann::json EventManager::ResolveEvent(uint32_t window_id, int option_index)
+         };
+     }
+ 
++    if(cyberfish::IsWarDeclarationNotice(target_win)) {
++        if(option_index!=0) return fail(-32009,"Only confirmation option 0 is available for this informational declaration");
++        auto response=cyberfish::AcknowledgeWarDeclaration(target_win);
++        response["resolved_window_id"]=window_id;response["selected_option"]=option_index;
++        return response;
++    }
++
+     if (!fn_select_option_) {
+         return {
+             {"error", {
+diff --git a/stellaris_bridge/src/fleet_access.cpp b/stellaris_bridge/src/fleet_access.cpp
+index 217c8df..bf40c6f 100644
+--- a/stellaris_bridge/src/fleet_access.cpp
++++ b/stellaris_bridge/src/fleet_access.cpp
+@@ -100,9 +100,29 @@ ShipClass ClassOf(void* fleet) {
+     return fleet && Read((const void*)((uintptr_t)fleet + sdk::ent::CFleet::ship_class), &c) ? (ShipClass)c : ShipClass::Unknown;
+ }
+ 
++std::vector<uint32_t> ShipIds(void* fleet) {
++    std::vector<uint32_t> ids;
++    uintptr_t data = 0;
++    uint32_t count = 0;
++    const uintptr_t ships = (uintptr_t)fleet + sdk::ent::CFleet::ships;
++    if (!fleet || !Read((const void*)ships, &data) || !data ||
++        !Read((const void*)(ships + 0xC), &count) || count > 4096) return ids;
++    for (uint32_t i = 0; i < count; ++i) {
++        uint32_t id = 0xFFFFFFFF;
++        if (Read((const void*)(data + i * sizeof(uint32_t)), &id) && id != 0xFFFFFFFF) ids.push_back(id);
++    }
++    return ids;
++}
++
+ double MilitaryPower(void* fleet) {
+-    int64_t raw = 0;
+-    return fleet && Read((const void*)((uintptr_t)fleet + sdk::ent::CFleet::military_power), &raw) ? raw / 100000.0 : 0.0;
++    if (!fleet) return 0;
++    struct Power {void* fleet; uintptr_t base; int64_t value;};
++    Power context{fleet,CommandBuilder::Get().Base(),0};
++    auto calculate=[](void* p,void*) {
++        auto* x=(Power*)p;
++        ((int64_t*(*)(void*,int64_t*,int,bool))(x->base+sdk::fn::CFleet_CalcMilitaryPower))(x->fleet,&x->value,0,false);
++    };
++    return CommandBuilder::Get().CallGuarded(calculate,&context) ? context.value/100000.0 : 0;
+ }
+ 
+ uint32_t TemplateId(void* fleet) {
+diff --git a/stellaris_bridge/src/fleet_manager.cpp b/stellaris_bridge/src/fleet_manager.cpp
+index bf1e835..25d91a8 100644
+--- a/stellaris_bridge/src/fleet_manager.cpp
++++ b/stellaris_bridge/src/fleet_manager.cpp
+@@ -6,6 +6,7 @@
+ #include "game_state.hpp"
+ #include <windows.h>
+ #include <sstream>
++#include <algorithm>
+ 
+ namespace bridge {
+ 
+@@ -180,6 +181,33 @@ FleetSummary FleetManager::GetFleetSummary() {
+     return summary;
+ }
+ 
++// These are the same queries used by the normal reinforcement/quotas UI.
++// No template or resource fields are changed by this helper.
++static bool ReadDesignCapacity(void* fleet,void* implementation,int64_t* size,uint32_t* actual) {
++    struct Context {void* fleet;void* implementation;uintptr_t base;int64_t size;uint32_t count;};
++    Context ctx{fleet,implementation,CommandBuilder::Get().Base(),0,0};
++    auto query=[](void* p,void*) {
++        auto* x=(Context*)p;auto* impl=(uint8_t*)x->implementation;
++        auto vt=*(void***)impl;auto* variants=(uint8_t*)((void*(*)(void*))vt[2])(impl);
++        if(!variants) return;
++        int count=*(int*)(variants+0x2C),index=*(int*)(impl+0x52C);
++        auto* data=*(uint8_t**)(variants+0x20);
++        if(count<=0 || count>256 || !data) return;
++        if(index<0 || index>=count) index=0;
++        auto* ship_size=*(uint8_t**)(data+index*0x110+8);
++        if(!ship_size) return;
++        x->size=*(int64_t*)(ship_size+0x670);
++        if(x->fleet) x->count=((uint32_t(*)(void*,void*))(x->base+0xE4B380))(x->fleet,impl);
++    };
++    if(!CommandBuilder::Get().CallGuarded(query,&ctx) || ctx.size<=0 || ctx.size>1000000000ll || ctx.count>10000) return false;
++    *size=ctx.size;*actual=ctx.count;return true;
++}
++static int ReadCommandLimit(void* fleet) {
++    struct Context {uintptr_t base;void* fleet;int result;};
++    Context ctx{CommandBuilder::Get().Base(),fleet,0};
++    auto query=[](void* p,void*) {auto* x=(Context*)p;x->result=((int(*)(void*,void*))(x->base+0xC6BD70))(x->fleet,nullptr);};
++    return fleet && CommandBuilder::Get().CallGuarded(query,&ctx) && ctx.result>0 && ctx.result<100000?ctx.result:0;
++}
+ std::vector<FleetInfo> FleetManager::GetFleets(bool include_civilian, uint32_t specific_fleet_id) {
+     std::vector<FleetInfo> result;
+     void* country = GetPlayerCountry();
+@@ -204,7 +232,7 @@ std::vector<FleetInfo> FleetManager::GetFleets(bool include_civilian, uint32_t s
+         uint32_t associated_fleet_id = 0;
+         SafeReadU32((const void*)((uintptr_t)ft_obj + 0x88), &associated_fleet_id);
+ 
+-        if (specific_fleet_id != 0xFFFFFFFF && associated_fleet_id != specific_fleet_id && template_id != specific_fleet_id) {
++        if (specific_fleet_id != 0xFFFFFFFF && associated_fleet_id != specific_fleet_id) {
+             continue;
+         }
+ 
+@@ -214,6 +242,9 @@ std::vector<FleetInfo> FleetManager::GetFleets(bool include_civilian, uint32_t s
+ 
+         // Try reading fleet name
+         void* fleet_obj = FindFleet(associated_fleet_id);
++        const auto owned=fleets::Owned(country);
++        if(!fleet_obj || std::find(owned.begin(),owned.end(),associated_fleet_id)==owned.end()) continue;
++        info.command_limit=ReadCommandLimit(fleet_obj);
+         if (fleet_obj) {
+             info.name = fleets::Name(fleet_obj);
+             if (info.name.empty()) {
+@@ -234,14 +265,14 @@ std::vector<FleetInfo> FleetManager::GetFleets(bool include_civilian, uint32_t s
+                 uintptr_t d_entry = (uintptr_t)designs_arr + d * 0x560;
+                 ShipDesignQuotaInfo d_info{};
+ 
+-                SafeReadU32((const void*)(d_entry + 0x28), &d_info.design_id);
++                // +0x28 is a changing implementation cache value, NOT a design ID.
++                SafeReadU32((const void*)(d_entry + 0x20 + sdk::rt::CShipDesignImplementation_design), &d_info.design_id);
+                 
+                 // Read actual count of ships of this design
+-                uint32_t actual = 0;
+-                if (!SafeReadU32((const void*)(d_entry + 0x4b0), &actual) || actual == 0) {
+-                    SafeReadU32((const void*)(d_entry + 0x108), &actual);
++                uint32_t actual = 0; int64_t naval=0;
++                if(ReadDesignCapacity(fleet_obj,(void*)(d_entry+0x20),&naval,&actual)) {
++                    d_info.actual_count=actual;d_info.naval_size=naval/100000.0;
+                 }
+-                d_info.actual_count = actual;
+                 SafeReadU32((const void*)(d_entry + 0x558), &d_info.target_quota);
+ 
+                 d_info.deficit = (int32_t)d_info.target_quota - (int32_t)d_info.actual_count;
+@@ -262,10 +293,12 @@ std::vector<FleetInfo> FleetManager::GetFleets(bool include_civilian, uint32_t s
+ 
+                 info.total_ships += d_info.actual_count;
+                 info.total_quota += d_info.target_quota;
++                info.template_size+=d_info.naval_size*d_info.target_quota;
+                 info.designs.push_back(d_info);
+             }
+         }
+ 
++        if (fleet_obj) info.total_ships=(uint32_t)fleets::ShipIds(fleet_obj).size();
+         result.push_back(info);
+     }
+ 
+@@ -294,44 +327,25 @@ std::vector<FleetInfo> FleetManager::GetFleets(bool include_civilian, uint32_t s
+ }
+ 
+ bool FleetManager::ReinforceFleet(uint32_t fleet_id, std::string& out_message) {
++    void* own_country = GetPlayerCountry();
++    const auto owned = fleets::Owned(own_country);
++    if (std::find(owned.begin(), owned.end(), fleet_id) == owned.end()) {
++        out_message = "Not one of the player's fleets";
++        return false;
++    }
+     void* fleet_obj = FindFleet(fleet_id);
+-    if (!fleet_obj) {
+-        // Also check if fleet_id is template_id
+-        void* ft_obj = FindFleetTemplate(fleet_id);
+-        if (!ft_obj) {
+-            out_message = "Fleet or template ID " + std::to_string(fleet_id) + " not found";
+-            return false;
+-        }
+-        uint32_t assoc = 0;
+-        if (SafeReadU32((const void*)((uintptr_t)ft_obj + 0x88), &assoc) && assoc != 0xFFFFFFFF) {
+-            fleet_id = assoc;
+-        }
++    if (!fleet_obj || fleets::ClassOf(fleet_obj) != fleets::ShipClass::Military) {
++        out_message = "Not an owned military fleet";
++        return false;
+     }
+-
+-    uint32_t template_id = fleet_id;
+-    void* country = GetPlayerCountry();
+-    if (country) {
+-        void* vec_ptr = nullptr;
+-        uint32_t vec_cnt = 0;
+-        if (SafeReadPtr((const void*)((uintptr_t)country + sdk::ent::CCountry::fleet_template_manager + 0x8 + 8), &vec_ptr) && vec_ptr &&
+-            SafeReadU32((const void*)((uintptr_t)country + sdk::ent::CCountry::fleet_template_manager + 0x8 + 0x14), &vec_cnt)) {
+-            for (uint32_t i = 0; i < vec_cnt; ++i) {
+-                uint32_t tid = 0;
+-                if (SafeReadU32((const void*)((uintptr_t)vec_ptr + i * 4), &tid)) {
+-                    void* candidate = FindFleetTemplate(tid);
+-                    if (candidate) {
+-                        uint32_t assoc = 0;
+-                        SafeReadU32((const void*)((uintptr_t)candidate + 0x88), &assoc);
+-                        if (tid == fleet_id || assoc == fleet_id) {
+-                            template_id = tid;
+-                            break;
+-                        }
+-                    }
+-                }
+-            }
+-        }
++    const uint32_t own_template_id = fleets::TemplateId(fleet_obj);
++    void* own_template = FindFleetTemplate(own_template_id);
++    uint32_t own_associated = 0xFFFFFFFF;
++    if (!own_template || !SafeReadU32((const void*)((uintptr_t)own_template + 0x88), &own_associated) || own_associated != fleet_id) {
++        out_message = "Owned fleet template could not be verified";
++        return false;
+     }
+-
++    const uint32_t template_id = own_template_id;
+     namespace reinforce = sdk::cmd::reinforce_fleet_command;
+     auto cmd = CommandBuilder::Get().Create(reinforce::kSpec);
+     cmd.Set<uint32_t>(reinforce::country, GameState::Get().GetPlayerCountryId())
+@@ -347,73 +361,89 @@ bool FleetManager::ReinforceFleet(uint32_t fleet_id, std::string& out_message) {
+ }
+ 
+ bool FleetManager::SetFleetTemplateQuota(uint32_t fleet_id, uint32_t design_id, uint32_t target_quota, std::string& out_message) {
+-    void* ft_obj = nullptr;
+-    // Search player's own templates vector first to avoid colliding with AI empires
++    // No direct quota writes: use the UI's add/remove commands and owned template.
+     void* country = GetPlayerCountry();
+-    if (country) {
+-        void* vec_ptr = nullptr;
+-        uint32_t vec_cnt = 0;
+-        if (SafeReadPtr((const void*)((uintptr_t)country + sdk::ent::CCountry::fleet_template_manager + 0x8 + 8), &vec_ptr) && vec_ptr &&
+-            SafeReadU32((const void*)((uintptr_t)country + sdk::ent::CCountry::fleet_template_manager + 0x8 + 0x14), &vec_cnt)) {
+-            for (uint32_t i = 0; i < vec_cnt; ++i) {
+-                uint32_t tid = 0;
+-                if (SafeReadU32((const void*)((uintptr_t)vec_ptr + i * 4), &tid)) {
+-                    void* candidate = FindFleetTemplate(tid);
+-                    if (candidate) {
+-                        uint32_t assoc = 0;
+-                        SafeReadU32((const void*)((uintptr_t)candidate + 0x88), &assoc);
+-                        if (tid == fleet_id || assoc == fleet_id) {
+-                            ft_obj = candidate;
+-                            break;
+-                        }
+-                    }
+-                }
++    const auto owned = fleets::Owned(country);
++    if (std::find(owned.begin(), owned.end(), fleet_id) == owned.end()) {
++        out_message = "Not one of the player's fleets"; return false;
++    }
++    void* fleet = FindFleet(fleet_id);
++    if (!fleet || fleets::ClassOf(fleet) != fleets::ShipClass::Military) {
++        out_message = "Not an owned military fleet"; return false;
++    }
++    const uint32_t template_id = fleets::TemplateId(fleet);
++    void* own_template = FindFleetTemplate(template_id);
++    uint32_t associated = 0xFFFFFFFF;
++    if (!own_template || !SafeReadU32((const void*)((uintptr_t)own_template + 0x88), &associated) || associated != fleet_id) {
++        out_message = "Owned template could not be verified"; return false;
++    }
++    void* entries = nullptr; uint32_t count = 0;
++    if (!SafeReadPtr((const void*)((uintptr_t)own_template + 0x28), &entries) || !entries ||
++        !SafeReadU32((const void*)((uintptr_t)own_template + 0x34), &count) || count > 64) {
++        out_message = "Template design array invalid"; return false;
++    }
++    uintptr_t entry = 0;
++    for (uint32_t i = 0; i < count; ++i) {
++        uint32_t current = 0xFFFFFFFF;
++        auto candidate = (uintptr_t)entries + i * 0x560;
++        if (SafeReadU32((const void*)(candidate + 0x20 + sdk::rt::CShipDesignImplementation_design), &current) && current == design_id) {entry = candidate; break;}
++    }
++    uint32_t before = 0;
++    if (!entry || !SafeReadU32((const void*)(entry + 0x558), &before)) {
++        out_message = "Design is not in this fleet's template"; return false;
++    }
++    const bool increasing=target_quota>before;
++    const uint32_t delta=increasing?target_quota-before:before-target_quota;
++    if (target_quota==0 || target_quota>80 || delta==0 || delta>20) {
++        out_message = "Change an existing design quota by 1..20, keeping 1..80"; return false;
++    }
++    if(increasing) {
++        int64_t total=0,selected=0;
++        for(uint32_t i=0;i<count;++i) {
++            auto candidate=(uintptr_t)entries+i*0x560;int64_t size=0;uint32_t actual=0,quota=0;
++            if(!ReadDesignCapacity(fleet,(void*)(candidate+0x20),&size,&actual) || !SafeReadU32((void*)(candidate+0x558),&quota) || quota>10000) {
++                out_message="Cannot verify native design naval size";return false;
+             }
++            total+=size*quota;if(candidate==entry) selected=size;
+         }
+-    }
+-
+-    if (!ft_obj) {
+-        ft_obj = FindFleetTemplate(fleet_id);
+-    }
+-
+-    if (!ft_obj) {
+-        out_message = "Could not find fleet template for fleet ID " + std::to_string(fleet_id);
+-        return false;
+-    }
+-
+-    void* designs_arr = nullptr;
+-    uint32_t designs_cnt = 0;
+-    if (!SafeReadPtr((const void*)((uintptr_t)ft_obj + 0x28), &designs_arr) || !designs_arr ||
+-        !SafeReadU32((const void*)((uintptr_t)ft_obj + 0x34), &designs_cnt) || designs_cnt == 0) {
+-        out_message = "Fleet template has no design entries";
+-        return false;
+-    }
+-
+-    // Locate design entry
+-    uintptr_t target_entry = 0;
+-    for (uint32_t d = 0; d < designs_cnt; ++d) {
+-        uintptr_t entry = (uintptr_t)designs_arr + d * 0x560;
+-        uint32_t did = 0;
+-        if (SafeReadU32((const void*)(entry + 0x28), &did) && did == design_id) {
+-            target_entry = entry;
+-            break;
++        int limit=ReadCommandLimit(fleet);
++        if(limit<=0 || selected<=0 || total+selected*delta>int64_t(limit)*100000) {
++            out_message="Target template exceeds the current fleet command limit; reduce its quota or build another fleet";return false;
+         }
+     }
+-
+-    if (!target_entry) {
+-        out_message = "Design ID " + std::to_string(design_id) + " not found in template";
+-        return false;
+-    }
+-
+-    // Direct write to target_entry + 0x558 (already executing on main thread via TaskQueue)
+-    if (SafeWriteU32((void*)(target_entry + 0x558), target_quota)) {
+-        out_message = "Fleet template quota updated to " + std::to_string(target_quota) + " for design " + std::to_string(design_id);
+-        LOGF("[FLEET_MGR] Set quota to %u for design %u", target_quota, design_id);
+-        return true;
++    namespace add = sdk::cmd::add_design_to_fleet_template_command;
++    namespace remove = sdk::cmd::remove_design_from_fleet_template_command;
++    const auto& spec=increasing?add::kSpec:remove::kSpec;
++    const auto payload=increasing?add::ship_design:remove::ship_design;
++    auto prototype = CommandBuilder::Get().Create(spec);
++    if (!prototype) {out_message = prototype.error(); return false;}
++    // Borrow the template's implementation in a non-owning byte view. Clone
++    // deep-copies its engine strings/arrays. Never destroy the borrowed view as
++    // a game object. Exact 4.5.2 Clone and ExecuteLocal audited in analysis/.
++    std::vector<uint8_t> borrowed(spec.size);
++    if (!SafeCopyChars((char*)borrowed.data(), (const char*)prototype.get(), borrowed.size()) ||
++        !SafeCopyChars((char*)borrowed.data()+payload, (const char*)(entry+0x20), 0x538)) {
++        out_message = "Cannot copy verified design implementation"; return false;
++    }
++    *(uint32_t*)(borrowed.data()+(increasing?add::fleet_template:remove::fleet_template))=template_id;
++    if(increasing) *(uint32_t*)(borrowed.data()+add::country)=GameState::Get().GetPlayerCountryId();
++    *(uint8_t*)(borrowed.data()+(increasing?add::is_human_request:remove::is_human_request))=1;
++    *(uint32_t*)(borrowed.data()+(increasing?add::tok_c:remove::tok_c))=delta;
++    struct CloneContext {void* source; void* clone;};
++    CloneContext context{borrowed.data(), nullptr};
++    auto clone = [](void* p, void*) {
++        auto* x = (CloneContext*)p;
++        auto vt = *(void***)x->source;
++        x->clone = ((void*(*)(void*))vt[12])(x->source);
++    };
++    if (!CommandBuilder::Get().CallGuarded(clone, &context) || !context.clone) {
++        out_message = "Native deep clone failed"; return false;
+     }
++    auto command = CommandBuilder::Get().Adopt(spec, context.clone);
++    if (!command.Post()) {out_message = command.error(); return false;}
++    out_message = "Native fleet quota change posted; read back template before reinforcement";
++    return true;
+ 
+-    out_message = "Exception writing to fleet template memory";
+-    return false;
+ }
+ 
+ nlohmann::json FleetManager::GetSummaryJson() {
+@@ -447,6 +477,7 @@ nlohmann::json FleetManager::GetFleetsJson(const nlohmann::json& params) {
+                 {"actual_count", d.actual_count},
+                 {"target_quota", d.target_quota},
+                 {"deficit", d.deficit}
++                ,{"naval_size",d.naval_size}
+             });
+         }
+         arr.push_back({
+@@ -457,6 +488,7 @@ nlohmann::json FleetManager::GetFleetsJson(const nlohmann::json& params) {
+             {"total_ships", f.total_ships},
+             {"total_quota", f.total_quota},
+             {"can_reinforce", f.can_reinforce},
++            {"command_limit",f.command_limit},{"template_size",f.template_size},
+             {"designs", d_arr}
+         });
+     }
+diff --git a/stellaris_bridge/src/galaxy_manager.cpp b/stellaris_bridge/src/galaxy_manager.cpp
+index d133818..11653f5 100644
+--- a/stellaris_bridge/src/galaxy_manager.cpp
++++ b/stellaris_bridge/src/galaxy_manager.cpp
+@@ -643,6 +643,36 @@ nlohmann::json GalaxyManager::GetMapJson(uint32_t center, int jumps) {
+     };
+ }
+ 
++nlohmann::json GalaxyManager::GetDefenseScanJson() {
++    Snapshot s=Take();if(!s.player) return {{"error","No local player"}};
++    nlohmann::json result=nlohmann::json::array();uint32_t scanned=0,total=0;
++    const auto capital=CapitalSystem(s);
++    std::stable_sort(s.systems.begin(),s.systems.end(),[capital](const auto& a,const auto& b){return a.id==capital && b.id!=capital;});
++    for(const auto& sys:s.systems) {
++        if(Owner(sys.obj)!=s.player_id) continue;
++        ++total;if(scanned>=64) continue;++scanned;
++        if(Intel(s,sys.obj)<3) continue;
++        nlohmann::json foreign=nlohmann::json::array();
++        for(const auto fid:FleetIds(sys.obj)) {
++            auto* fleet=fleets::Find(base_address_,fid);if(!fleet) continue;
++            // Audited normal ReinforceFleet IsValid compares owner/controller
++            // at +448/+44C to the local country's complete handle.
++            const auto owner=ReadOr<uint32_t>((uintptr_t)fleet+0x448,kInvalidId);
++            if(owner==s.player_id || owner==kInvalidId) continue;
++            const auto cls=fleets::ClassOf(fleet);
++            if(cls!=fleets::ShipClass::Military && cls!=fleets::ShipClass::MilitarySpecial && cls!=fleets::ShipClass::Transport && cls!=fleets::ShipClass::Starbase) continue;
++            auto* country=RefLookup(base_address_,sdk::db::CCountry,owner);
++            if(!country) continue;
++            foreign.push_back({{"id",fid},{"name",fleets::Name(fleet)},{"own",false},{"owner_id",owner},
++                {"owner_name",CountryName(owner)},{"owner_type",KeyOf((uintptr_t)country+sdk::ent::CCountry::type,kTypeKey)},
++                {"ship_class",fleets::ShipClassKey(cls)},{"military_power",fleets::MilitaryPower(fleet)}});
++        }
++        if(!foreign.empty()) result.push_back({{"system_id",sys.id},{"name",SystemName(sys.id,sys.obj)},
++            {"is_capital",sys.id==capital},{"foreign_fleets",foreign}});
++    }
++    return {{"systems",result},{"scanned_owned_systems",scanned},{"total_owned_systems",total},{"truncated",total>scanned},
++        {"note","Visible foreign fleets in own territory; foreign does not imply hostile. Check wars/owner type and normal order legality."}};
++}
+ nlohmann::json GalaxyManager::GetSystemJson(uint32_t system_id) {
+     Snapshot s = Take();
+     if (!s.player) return { {"error", "No player country (not in game?)"} };
+@@ -738,6 +768,7 @@ nlohmann::json GalaxyManager::GetSystemJson(uint32_t system_id) {
+         void* f = fleets::Find(base_address_, fid);
+         if (!f) continue;
+         nlohmann::json fj = { {"id", fid}, {"name", fleets::Name(f)}, {"own", own},
++                              {"owner_id",ReadOr<uint32_t>((uintptr_t)f+0x448,kInvalidId)},
+                               {"ship_class", fleets::ShipClassKey(fleets::ClassOf(f))},
+                               {"military_power", fleets::MilitaryPower(f)} };
+         if (own) {
+@@ -1462,6 +1493,32 @@ nlohmann::json GalaxyManager::Colonize(uint32_t fleet_id, uint32_t planet_id, bo
+              {"queued", queue}, {"message", "Colonization order posted"} };
+ }
+ 
++nlohmann::json GalaxyManager::BuildStations(uint32_t fleet_id, uint32_t system_id,
++                                            const std::string& station_type, bool queue) {
++    Snapshot s = Take();
++    if (!s.player || !OwnFleet(s, fleet_id)) return {{"success", false}, {"error", "Not an owned construction fleet"}};
++    if (!s.index.count(system_id) || Owner(s.systems[s.index[system_id]].obj) != s.player_id)
++        return {{"success", false}, {"error", "Resource stations require an owned system"}};
++    const auto cls = station_type == "mining" ? fleets::ShipClass::MiningStation :
++                     station_type == "research" ? fleets::ShipClass::ResearchStation : fleets::ShipClass::Unknown;
++    if (cls == fleets::ShipClass::Unknown) return {{"success", false}, {"error", "station_type must be mining or research"}};
++    // Same current-build command/factory as outposts. With no single deposit holder,
++    // galactic_object requests the system-wide construction order, as the map menu does.
++    namespace ob = sdk::cmd::build_orbital_station_order;
++    auto cmd = CommandBuilder::Get().Create(ob::kSpec);
++    cmd.Set<uint32_t>(ob::fleet, fleet_id)
++       .Set<uint32_t>(ob::galactic_object, system_id)
++       .Set<uint8_t>(ob::class_, (uint8_t)cls)
++       .Set<uint8_t>(ob::queue, queue ? 1 : 0)
++       .Set<uint8_t>(ob::queue_to_front, 0);
++    std::string why;
++    if (!cmd.IsValid(&why)) return {{"success", false}, {"error", why.empty() ? "No legal resource station order" : why}};
++    if (!cmd.Post(NativeCommand::Check::EngineGate)) return {{"success", false}, {"error", cmd.error()}};
++    return {{"success", true}, {"fleet_id", fleet_id}, {"system_id", system_id},
++            {"system", SystemName(system_id, s.systems[s.index[system_id]].obj)},
++            {"station_type", station_type}, {"queued", queue}, {"message", "Station order posted; verify construction and resource changes"}};
++}
++
+ nlohmann::json GalaxyManager::FindSystems(const std::string& purpose, uint32_t from, int limit, uint32_t fleet_id,
+                                           const std::string& resource, uint32_t species_id) {
+     Snapshot s = Take();
+diff --git a/stellaris_bridge/src/government_manager.cpp b/stellaris_bridge/src/government_manager.cpp
+index 1f24550..c018404 100644
+--- a/stellaris_bridge/src/government_manager.cpp
++++ b/stellaris_bridge/src/government_manager.cpp
+@@ -366,6 +366,9 @@ FullGovernmentState GovernmentManager::GetGovernmentState() {
+                 }
+                 CouncilSeatDetail seat{};
+                 seat.seat_index = (uint32_t)state.seats.size();
++                // CAddToCouncilCommand::IsValid compares the primary id at +8.
++                if(!SafeReadU32((const void*)((uintptr_t)pos+8),&seat.position_id) ||
++                   seat.position_id==0xFFFFFFFFu || (seat.position_id&0xFFFFFF)!=i) continue;
+                 void* type = nullptr;
+                 if (SafeReadPtr((const void*)((uintptr_t)pos + P::type), &type) && type) {
+                     SafeReadPdxString((const void*)((uintptr_t)type + 0x20), seat.position_key);
+@@ -401,6 +404,7 @@ nlohmann::json GovernmentManager::GetGovernmentJson() {
+     for (const auto& seat : s.seats) {
+         nlohmann::json sj = {
+             {"seat_index", seat.seat_index},
++            {"position_id", seat.position_id},
+             {"position_key", seat.position_key},
+             {"position_name", seat.position_name},
+             {"is_ruler", seat.is_ruler},
+diff --git a/stellaris_bridge/src/hook_manager.cpp b/stellaris_bridge/src/hook_manager.cpp
+index 61442ee..3e00080 100644
+--- a/stellaris_bridge/src/hook_manager.cpp
++++ b/stellaris_bridge/src/hook_manager.cpp
+@@ -1,6 +1,7 @@
+ #include "hook_manager.hpp"
+ #include "task_queue.hpp"
+ #include "plugin.hpp"
++#include "cyberfish_picture.hpp"
+ 
+ namespace bridge {
+ 
+@@ -12,6 +13,7 @@ HookManager& HookManager::Get() {
+ }
+ 
+ HRESULT __stdcall HookManager::Hooked_Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags) {
++    cyberfish::OnPresent(pSwapChain);
+     // Process all queued main-thread tasks
+     TaskQueue::Get().ProcessAll();
+     // config\stellaris_mcp.ini edited while the game runs (checked every couple of seconds)
+diff --git a/stellaris_bridge/src/ipc_server.cpp b/stellaris_bridge/src/ipc_server.cpp
+index 114fce8..e5ee559 100644
+--- a/stellaris_bridge/src/ipc_server.cpp
++++ b/stellaris_bridge/src/ipc_server.cpp
+@@ -19,6 +19,10 @@
+ #include "discoveries_manager.hpp"
+ #include "contacts_manager.hpp"
+ #include "outliner_manager.hpp"
++#include "cyberfish_diplomacy.hpp"
++#include "cyberfish_picture.hpp"
++#include "cyberfish_society.hpp"
++#include "cyberfish_war.hpp"
+ 
+ namespace bridge {
+ 
+@@ -68,6 +72,63 @@ void IPCServer::Stop() {
+     LOG("[IPC] Named Pipe server stopped.");
+ }
+ 
++static std::future<nlohmann::json> EnqueueCyberfishRequest(const std::string& method,const nlohmann::json& params) {
++    std::future<nlohmann::json> fut;
++    if (method == "get_defense_scan") {
++        fut=TaskQueue::Get().Enqueue([]() {return GalaxyManager::Get().GetDefenseScanJson();});
++    } else if (method == "get_wars") {
++        fut=TaskQueue::Get().Enqueue([]() {return cyberfish::Wars();});
++    } else if (method == "get_war_goal_candidates") {
++        const uint32_t war=params.value("war_id",0xFFFFFFFFu);
++        fut=TaskQueue::Get().Enqueue([war]() {return cyberfish::WarGoalCandidates(war);});
++    } else if (method == "set_defender_war_goal") {
++        const uint32_t war=params.value("war_id",0xFFFFFFFFu);
++        const std::string key=params.value("goal_key",std::string());
++        fut=TaskQueue::Get().Enqueue([war,key]() {return cyberfish::SetDefenderWarGoal(war,key);});
++    } else if (method == "close_war_goals") {
++        fut=TaskQueue::Get().Enqueue([]() {return cyberfish::CloseWarGoals();});
++    } else if (method == "get_council_candidates") {
++        fut=TaskQueue::Get().Enqueue([]() {return cyberfish::CouncilCandidates();});
++    } else if (method == "assign_councilor") {
++        const uint32_t leader=params.value("leader_id",0xFFFFFFFFu),seat=params.value("seat_index",0xFFFFFFFFu);
++        fut=TaskQueue::Get().Enqueue([leader,seat]() {return cyberfish::AssignCouncilor(leader,seat);});
++    } else if (method == "get_tradition_candidates" || method == "get_ascension_candidates") {
++        const bool ascension=method=="get_ascension_candidates";
++        fut=TaskQueue::Get().Enqueue([ascension]() {return cyberfish::SocietyCandidates(ascension);});
++    } else if (method == "adopt_ascension_perk") {
++        const std::string key=params.value("perk_key",std::string());
++        fut=TaskQueue::Get().Enqueue([key]() {return cyberfish::AdoptAscension(key);});
++    } else if (method == "show_panel") {
++        const std::string panel=params.value("panel",std::string());
++        fut=TaskQueue::Get().Enqueue([panel]() {return cyberfish::ShowPanel(panel);});
++    } else if (method == "focus_planet") {
++        const uint32_t planet=params.value("planet_id",0xFFFFFFFFu);
++        fut=TaskQueue::Get().Enqueue([planet]() {return cyberfish::FocusPlanet(planet);});
++    } else if (method == "focus_fleet") {
++        const uint32_t fleet=params.value("fleet_id",0xFFFFFFFFu);
++        fut=TaskQueue::Get().Enqueue([fleet]() {return cyberfish::FocusFleet(fleet);});
++    } else if (method == "get_picture_state" || method == "capture_game_frame") {
++        const bool capture = method == "capture_game_frame";
++        fut = TaskQueue::Get().Enqueue([capture]() {
++            return capture ? cyberfish::CaptureFrame() : cyberfish::PictureState();
++        });
++    } else if (method == "get_pending_diplomacy") {
++        fut=TaskQueue::Get().Enqueue([]() {return cyberfish::PendingDiplomacy();});
++    } else if (method == "respond_diplomacy") {
++        const std::string proposal=params.value("proposal",std::string());
++        const bool accept=params.value("accept",false);
++        fut=TaskQueue::Get().Enqueue([proposal,accept]() {return cyberfish::RespondDiplomacy(proposal,accept);});
++    } else if (method == "get_diplomacy_options" || method == "diplomacy_action") {
++        const uint32_t country = params.value("country_id",0xFFFFFFFFu);
++        const std::string action = params.value("action",std::string());
++        const bool execute = method == "diplomacy_action";
++        fut = TaskQueue::Get().Enqueue([country,action,execute]() {
++            return cyberfish::Diplomacy(country,action,execute);
++        });
++    }
++    return fut;
++}
++
+ nlohmann::json IPCServer::ProcessRequest(const nlohmann::json& req) {
+     auto id = req.value("id", nlohmann::json(nullptr));
+     std::string method = req.value("method", "");
+@@ -81,9 +142,11 @@ nlohmann::json IPCServer::ProcessRequest(const nlohmann::json& req) {
+         };
+     }
+ 
+-    std::future<nlohmann::json> fut;
++    auto fut=EnqueueCyberfishRequest(method,params);
+ 
+-    if (method == "self_test_purecall_guard") {
++    if (fut.valid()) {
++        // Already queued by the fork dispatcher.
++    } else if (method == "self_test_purecall_guard") {
+         fut = TaskQueue::Get().Enqueue([]() {
+             return CommandBuilder::Get().SelfTestPurecallGuard();
+         });
+@@ -202,6 +265,14 @@ nlohmann::json IPCServer::ProcessRequest(const nlohmann::json& req) {
+         fut = TaskQueue::Get().Enqueue([fleet_id, system_id, queue]() {
+             return GalaxyManager::Get().BuildOutpost(fleet_id, system_id, queue);
+         });
++    } else if (method == "build_stations") {
++        const uint32_t fleet_id = params.value("fleet_id", 0xFFFFFFFFu);
++        const uint32_t system_id = params.value("system_id", 0xFFFFFFFFu);
++        const std::string station_type = params.value("station_type", "");
++        const bool queue = params.value("queue", false);
++        fut = TaskQueue::Get().Enqueue([fleet_id, system_id, station_type, queue]() {
++            return GalaxyManager::Get().BuildStations(fleet_id, system_id, station_type, queue);
++        });
+     } else if (method == "get_megastructure") {
+         uint32_t id = params.value("megastructure_id", 0xFFFFFFFFu);
+         fut = TaskQueue::Get().Enqueue([id]() { return GalaxyManager::Get().GetMegastructureJson(id); });
+diff --git a/stellaris_bridge/src/outliner_manager.cpp b/stellaris_bridge/src/outliner_manager.cpp
+index fe5d7fe..64f4aeb 100644
+--- a/stellaris_bridge/src/outliner_manager.cpp
++++ b/stellaris_bridge/src/outliner_manager.cpp
+@@ -1151,8 +1151,11 @@ nlohmann::json OutlinerManager::GetCivilianFleetsJson() {
+             {"ship_class", fleets::ShipClassKey(cls)},
+             {"status", fleets::OrdersText(flt)}
+         };
+-        auto leader = fleet_leader_map.find(fid);
++        const auto ships = fleets::ShipIds(flt);
++        if (ships.size() == 1) entry["ship_id"] = ships.front();
++        auto leader = ships.empty() ? fleet_leader_map.end() : fleet_leader_map.find(ships.front());
+         if (leader != fleet_leader_map.end()) {
++            entry["leader_id"] = leader->second.id;
+             entry["leader_name"] = leader->second.name;
+             entry["leader_level"] = leader->second.level;
+         }
+diff --git a/stellaris_bridge/src/ship_designer.cpp b/stellaris_bridge/src/ship_designer.cpp
+index 58d6a67..2a5612b 100644
+--- a/stellaris_bridge/src/ship_designer.cpp
++++ b/stellaris_bridge/src/ship_designer.cpp
+@@ -1442,6 +1442,10 @@ nlohmann::json ShipDesigner::UpdateShipDesignJson(const nlohmann::json& params)
+ 
+ bool ShipDesigner::UpgradeFleet(uint32_t fleet_id, uint32_t starbase_id, uint32_t target_design_id,
+                                std::string& out_message) {
++    const auto owned = fleets::Owned(GameState::Get().GetPlayerCountry());
++    if (std::find(owned.begin(),owned.end(),fleet_id)==owned.end()) {
++        out_message="Not one of the player's fleets"; return false;
++    }
+     void* fleet = FindFleet(fleet_id);
+     if (!fleet) {
+         out_message = "Fleet ID " + std::to_string(fleet_id) + " not found";

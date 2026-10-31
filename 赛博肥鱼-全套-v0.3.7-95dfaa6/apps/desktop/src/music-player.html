@@ -1,0 +1,26 @@
+<!doctype html><html lang="zh-CN"><meta charset="UTF-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; media-src shop-qqmusic:; connect-src shop-qqmusic:"><title>群星控制器大肥鱼 · QQ音乐</title>
+<style>body{background:#edf7ff;color:#265c8a;font:14px system-ui;margin:20px}small{display:block;color:#7b9eb9;margin-top:9px}audio{width:100%;margin-top:15px}</style>
+<b id="title">QQ 音乐待命</b><small id="status">仅这个大肥鱼程序输出音乐。关闭窗口会停止音乐。</small><audio id="audio"></audio>
+<script>
+const api=window.stellaris.music,title=document.querySelector('#title');
+let audio=document.querySelector('audio'),generation='',polling=false,stopped=false,enabled=false,changedAt=0,lastProgress=0,lastPosition=0,finished=false;
+function clear(){generation='';audio.pause();audio.removeAttribute('src');audio.load()}
+function finish(id,media,kind){if(!finished&&id===generation&&media===audio&&enabled&&!stopped){finished=true;void api.feedback(id,kind)}}
+async function poll(){if(polling||stopped)return;polling=true;try{const v=await api.view();if(stopped)return;enabled=v.enabled;audio.volume=v.volume;
+const c=v.state.current,t=v.state.tracks.find(x=>x.id===c?.trackId);
+title.textContent=t?`${c.isBgm?'背景音乐':'观众点歌'} · ${t.title} · ${t.artist}`:'QQ 音乐待命';
+if(!enabled||!c||!t||v.state.status!=='playing'){clear();return}
+if(generation!==c.generationId){
+ clear();const media=document.createElement('audio');audio.replaceWith(media);audio=media;audio.volume=v.volume;
+ generation=c.generationId;const id=generation;finished=false;changedAt=lastProgress=Date.now();lastPosition=0;
+ media.addEventListener('playing',()=>{if(id===generation&&media===audio&&enabled&&!finished)void api.feedback(id,'started')});
+ media.addEventListener('ended',()=>finish(id,media,'ended'));media.addEventListener('error',()=>finish(id,media,'error'));
+ media.src=t.source;media.play().catch(()=>finish(id,media,'error'));
+}else{
+ if(audio.currentTime>lastPosition+.02){lastPosition=audio.currentTime;lastProgress=Date.now()}
+ const elapsed=Date.now()-lastProgress;
+ if(elapsed>(c.startedAt?20000:30000))finish(generation,audio,'error');
+}
+}catch{clear()}finally{polling=false}}
+window.addEventListener('beforeunload',()=>{stopped=true;clear()});setInterval(poll,500);void poll();
+</script></html>

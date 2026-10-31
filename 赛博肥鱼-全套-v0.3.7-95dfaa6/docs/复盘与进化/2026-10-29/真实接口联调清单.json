@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-29",
+  "timezone": "Asia/Shanghai",
+  "productVersion": "0.3.11",
+  "status": "passed_for_controlled_interfaces_and_audio",
+  "realModelRequests": 1,
+  "realTtsRequests": 1,
+  "paidRetries": 0,
+  "actualPlatformExchange": false,
+  "softwarePackageChanged": false,
+  "report": {
+    "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实弹幕回复与语音接口联调.md",
+    "bytes": 9897,
+    "sha256": "ef6fbeb52427241885b54ff3a153ccc10bd9af006a6bedbeb506bdcd619fd17d"
+  },
+  "evidence": [
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\api-acceptance.json",
+      "bytes": 2714,
+      "sha256": "56ad3ec3184ba8a740613e17e758c3410c4b84a0d1a40dbcbf1ab0ce3a68d937"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\audio-replay-log.txt",
+      "bytes": 146,
+      "sha256": "b9cef28e595ec34377fd151756a313cf73d002c97ce0a9067244803205c6a9ca"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\audio-replay-result.json",
+      "bytes": 5694,
+      "sha256": "808d47061aa85d355fe9e84fec3b1ea9648208a23b2e18fe9c13c2b8d0eb7856"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\audio-zero-cost-preflight.json",
+      "bytes": 1274,
+      "sha256": "f5d8da7eadb3695b83f3d5325da7a4283cb6f8a882da2782632ea3d9521b1938"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\cleanup.json",
+      "bytes": 413,
+      "sha256": "f80b0ebee6105979ddc8055252df64ebe52c28329f85d491b58c09cb4afe6507"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\initial-virtual-loopback.webm",
+      "bytes": 783603,
+      "sha256": "d027b09741de03b907dad5b927d1f752042a7460ab54c82f2a1f9193ada777a1"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\new-reply-played.wav",
+      "bytes": 622124,
+      "sha256": "d02cd8266786d3a0a196bb1669db802c4395dfbc0b1e681727cdeff00bc2deee"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\new-tts-raw.wav",
+      "bytes": 622124,
+      "sha256": "1caf00eb5940448444a097a4f0f8ad0e29325c9f172db3de414972695133296f"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\original-real-runner.cjs",
+      "bytes": 402618,
+      "sha256": "1f12026cfe8c8ddbfb73a99eee5f516e9886be9646fd7c0e851c0f908e7ba604"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\real-input-delivery.jsonl",
+      "bytes": 265,
+      "sha256": "471d0f6902c0dff60d791b4d6f543348343ae7b4df7f5f95eda29ff0352975de"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\real-launcher-manifest.json",
+      "bytes": 1117,
+      "sha256": "c377be55183952955b481fdfd13e5bbc5e417980ed8edc361ccfb23954663deb"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\real-launcher-result.json",
+      "bytes": 708,
+      "sha256": "15e1d10325718824b4819b34a43986427dd64741c5be0edd7b7a0dfccbcc4021"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\real-public-reply.jsonl",
+      "bytes": 264,
+      "sha256": "f6b6f7a256a004918af547c4c5c40da790ae23720286c45245b21a491d828ae5"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\real-service-model-usage.jsonl",
+      "bytes": 621,
+      "sha256": "2949d70704cda9fd9d31c44511e9130b5d8619e77b1df5068e260f3aee4ea080"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\real-service-result.json",
+      "bytes": 4990,
+      "sha256": "5f381f47db06c2d0027c83597fc4a0fd9dd64681dff66499264f9739da7f8ff2"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\real-service-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\real-service-stdout.log",
+      "bytes": 358,
+      "sha256": "1f0724e769b9032859b92ac0ca3a8f04cb010a1244cbae640b0cfa80e5490e32"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\runner-types.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\safe-storage-zero-cost-probe.json",
+      "bytes": 495,
+      "sha256": "760d78f7e75edb63acb747a2f42b009f46d46e23be8f8a92b69557d37b54fa6e"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\scripts\\captain-interface-audio.ts",
+      "bytes": 10706,
+      "sha256": "2e35736259f59234d9ce6398e52d2ce13c15f16dfc3cc48720c67734fcca4e47"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\scripts\\captain-live-interfaces-runner.ts",
+      "bytes": 19526,
+      "sha256": "dc285481923d47b495e4c421e12523ef9f92aa374e2133f6e70767b8596bf0df"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\scripts\\replay-captain-interface-audio.mjs",
+      "bytes": 2564,
+      "sha256": "620b3b4dbf497d5e90438bd4dcceb3a1b1ad6e67e589d8d8a6bc648eee8ffd4d"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\scripts\\replay-captain-interface-audio.ts",
+      "bytes": 7577,
+      "sha256": "6dda0ec20a13816b7564cc81ad65c879b425376ab1ed130fb8f0d40959bd842c"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\scripts\\test-captain-live-interfaces.mjs",
+      "bytes": 6264,
+      "sha256": "6cc20169bfe1ad5876fc31886cb5eb8219d01eb56d58fdd4208fbbe3f97d62d5"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\source-integrity.json",
+      "bytes": 1799,
+      "sha256": "d4006350255552851129dac4b7bd86f3c99ac9e613332d6c5b144c50773848fd"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\virtual-loopback.webm",
+      "bytes": 230069,
+      "sha256": "f55ff66dca41f72efe342e680b83f0436f079f3a82fe2e29d051fa4cc61dea45"
+    },
+    {
+      "file": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\docs\\复盘与进化\\2026-10-29\\真实接口联调证据\\zero-cost-initial-failure.json",
+      "bytes": 2259,
+      "sha256": "ead570cfb5107df3bc64ad3cb6a56fac8af42fc02c155275e916f0c63364300a"
+    }
+  ],
+  "issues": {
+    "T12": "fixed_pending_live_validation",
+    "T13": "open"
+  },
+  "recordingScope": "exact VB-CABLE virtual input only; no physical microphone",
+  "desktopControl": false
+}

@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-29",
+  "timezone": "Asia/Shanghai",
+  "startedAt": "2026-10-29T02:52:06.591Z",
+  "limits": {
+    "modelRequests": 1,
+    "ttsRequests": 1,
+    "automaticRetries": 0
+  },
+  "desktopControl": false,
+  "visibleWindows": false,
+  "mouseKeyboardInput": false,
+  "defaultAudioDevicesChanged": false,
+  "physicalMicrophoneCaptured": false,
+  "publicBroadcast": false,
+  "platformChatSent": false,
+  "sourceProfileModified": false,
+  "passed": false,
+  "models": {
+    "host": "claude-opus-4-6-thinking",
+    "hostProviderId": "custom",
+    "hostProtocol": "openai",
+    "voice": "longanlingxi_v3.1",
+    "tts": "qwen-audio-3.1-tts-flash"
+  },
+  "gameContext": {
+    "mode": "historical-stopped-copy",
+    "originalObservedAt": 1793237125628.6204,
+    "gameDate": "2288.07.01"
+  },
+  "audioPreflight": {
+    "outputLabel": "CABLE Input (VB-Audio Virtual Cable)",
+    "inputLabel": "CABLE Output (VB-Audio Virtual Cable)",
+    "physicalMicrophoneCaptured": false,
+    "systemDefaultChanged": false,
+    "visibleWindow": false,
+    "baselineRms": 0.000008646360734829906,
+    "playRmsPeak": 0,
+    "playSamples": 0,
+    "stoppedRms": null,
+    "samples": 0,
+    "media": [],
+    "feedback": [],
+    "activeAudioCount": 0,
+    "finished": false,
+    "isVisible": false,
+    "isFocused": false,
+    "neverShown": true,
+    "neverFocused": true
+  },
+  "platform": {
+    "roomId": 7322535,
+    "startAccepted": true,
+    "anonymous": true,
+    "cookiesRead": false,
+    "status": "connected",
+    "loggedIn": false,
+    "message": "已连接真实直播间（未登录，平台可能隐藏昵称；建议扫码登录）。",
+    "received": 0,
+    "lastHeartbeatAt": 1793242328384,
+    "realMessageReceived": false
+  },
+  "input": {
+    "source": "controlled-local-injection",
+    "platformEvent": false,
+    "reason": "本轮只读平台接口未取得新弹幕",
+    "eventIdSha256": "9710457dc0a29313fe42b3a427c5a74a0a21ecdc043def8db0071f901a11f1ba",
+    "text": "舰长你好，今天先稳后勤还是急着扩张？用两句话说说你的打算。"
+  },
+  "audio": {
+    "outputLabel": "CABLE Input (VB-Audio Virtual Cable)",
+    "inputLabel": "CABLE Output (VB-Audio Virtual Cable)",
+    "physicalMicrophoneCaptured": false,
+    "systemDefaultChanged": false,
+    "visibleWindow": false,
+    "baselineRms": 0.000008646360734829906,
+    "playRmsPeak": 0,
+    "playSamples": 0,
+    "stoppedRms": null,
+    "samples": 668,
+    "media": [],
+    "feedback": [],
+    "activeAudioCount": 0,
+    "finished": false,
+    "isVisible": false,
+    "isFocused": false,
+    "neverShown": true,
+    "neverFocused": true
+  },
+  "playedAudio": {
+    "duration": 12.96,
+    "sha256": "d02cd8266786d3a0a196bb1669db802c4395dfbc0b1e681727cdeff00bc2deee",
+    "text": "接口测试员，欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+    "id": "say-mvsy78gp-3"
+  },
+  "counts": {
+    "model": 1,
+    "tts": 1
+  },
+  "calls": [
+    {
+      "kind": "model",
+      "model": "claude-opus-4-6-thinking",
+      "providerId": "custom",
+      "at": 1793242353578,
+      "status": "completed",
+      "httpStatus": 200,
+      "usage": {
+        "prompt_tokens": 3018,
+        "completion_tokens": 152,
+        "total_tokens": 3170
+      },
+      "finishedAt": 1793242359960
+    },
+    {
+      "kind": "tts",
+      "model": "qwen-audio-3.1-tts-flash",
+      "voice": "longanlingxi_v3.1",
+      "at": 1793242360158,
+      "status": "completed",
+      "httpStatus": 200,
+      "finishedAt": 1793242361442,
+      "usage": {
+        "inputTokens": 64,
+        "outputTokens": 162
+      },
+      "characters": 121,
+      "charactersReported": true,
+      "rawAudio": {
+        "duration": 12.96,
+        "sha256": "1caf00eb5940448444a097a4f0f8ad0e29325c9f172db3de414972695133296f"
+      }
+    }
+  ],
+  "platformRequests": [
+    {
+      "host": "api.live.bilibili.com",
+      "path": "/room/v1/Room/room_init",
+      "at": 1793242327941,
+      "httpStatus": 200,
+      "serviceCode": 0,
+      "liveStatus": 0
+    },
+    {
+      "host": "api.bilibili.com",
+      "path": "/x/frontend/finger/spi",
+      "at": 1793242328039,
+      "httpStatus": 200,
+      "serviceCode": 0
+    },
+    {
+      "host": "api.bilibili.com",
+      "path": "/x/web-interface/nav",
+      "at": 1793242328102,
+      "httpStatus": 200,
+      "serviceCode": -101
+    },
+    {
+      "host": "api.live.bilibili.com",
+      "path": "/xlive/web-room/v1/index/getDanmuInfo",
+      "at": 1793242328151,
+      "httpStatus": 200,
+      "serviceCode": 0
+    }
+  ],
+  "published": [
+    {
+      "id": "say-mvsy78gp-3",
+      "to": "接口测试员",
+      "text": "欢迎上舰！现在食物和消费品都是负的，得先把后勤窟窿堵上，稳住了再往外铺。手里十三颗星球不少了，先吃饱再说扩张的事嘛。",
+      "at": 1793242359961,
+      "queued": true
+    }
+  ]
+}

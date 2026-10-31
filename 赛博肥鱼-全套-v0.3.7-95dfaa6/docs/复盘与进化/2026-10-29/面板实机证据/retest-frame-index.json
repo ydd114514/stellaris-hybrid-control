@@ -1,0 +1,420 @@
+{
+  "frames": [
+    {
+      "label": "setup",
+      "stage": "baseline",
+      "at": 2256.0242,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\001-setup-baseline.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16085,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\001-setup-baseline.png"
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "opened",
+      "at": 3678.0573,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\002-fleet-increase-opened.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16114,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\002-fleet-increase-opened.png"
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "hold-1000",
+      "at": 5467.0263,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\003-fleet-increase-hold-1000.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16150,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\003-fleet-increase-hold-1000.png"
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "operation-returned",
+      "at": 6278.7021,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\004-fleet-increase-operation-returned.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16166,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\004-fleet-increase-operation-returned.png"
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "hold-3500",
+      "at": 7375.5386,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\005-fleet-increase-hold-3500.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16188,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\005-fleet-increase-hold-3500.png"
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "hold-6500",
+      "at": 10382.8575,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\006-fleet-increase-hold-6500.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16249,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\006-fleet-increase-hold-6500.png"
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "hold-9000",
+      "at": 13390.5757,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\007-fleet-increase-hold-9000.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16310,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\007-fleet-increase-hold-9000.png"
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "closed",
+      "at": 14285.6067,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\008-fleet-increase-closed.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16328,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\008-fleet-increase-closed.png"
+    },
+    {
+      "label": "fleet-increase",
+      "stage": "after-settle",
+      "at": 15331.8043,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\009-fleet-increase-after-settle.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16349,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\009-fleet-increase-after-settle.png"
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "opened",
+      "at": 16712.2102,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\010-fleet-restore-opened.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16377,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\010-fleet-restore-opened.png"
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "hold-1000",
+      "at": 18505.6908,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\011-fleet-restore-hold-1000.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16413,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\011-fleet-restore-hold-1000.png"
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "operation-returned",
+      "at": 19307.0772,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\012-fleet-restore-operation-returned.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16429,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\012-fleet-restore-operation-returned.png"
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "hold-3500",
+      "at": 20423.5495,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\013-fleet-restore-hold-3500.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16451,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\013-fleet-restore-hold-3500.png"
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "hold-6500",
+      "at": 23414.4142,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\014-fleet-restore-hold-6500.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16512,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\014-fleet-restore-hold-6500.png"
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "hold-9000",
+      "at": 26426.1371,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\015-fleet-restore-hold-9000.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16573,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\015-fleet-restore-hold-9000.png"
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "closed",
+      "at": 27282.4116,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\016-fleet-restore-closed.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16590,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\016-fleet-restore-closed.png"
+    },
+    {
+      "label": "fleet-restore",
+      "stage": "after-settle",
+      "at": 28271.7076,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\017-fleet-restore-after-settle.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16610,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\017-fleet-restore-after-settle.png"
+    },
+    {
+      "label": "market-buy",
+      "stage": "opened",
+      "at": 29768.2619,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\018-market-buy-opened.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16640,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\018-market-buy-opened.png"
+    },
+    {
+      "label": "market-buy",
+      "stage": "hold-1000",
+      "at": 31546.3816,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\019-market-buy-hold-1000.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16676,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\019-market-buy-hold-1000.png"
+    },
+    {
+      "label": "market-buy",
+      "stage": "operation-returned",
+      "at": 32342.6728,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\020-market-buy-operation-returned.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16692,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\020-market-buy-operation-returned.png"
+    },
+    {
+      "label": "market-buy",
+      "stage": "hold-3500",
+      "at": 33444.8695,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\021-market-buy-hold-3500.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16714,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\021-market-buy-hold-3500.png"
+    },
+    {
+      "label": "market-buy",
+      "stage": "hold-6500",
+      "at": 36478.985,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\022-market-buy-hold-6500.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16775,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\022-market-buy-hold-6500.png"
+    },
+    {
+      "label": "market-buy",
+      "stage": "hold-9000",
+      "at": 38859.6541,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\023-market-buy-hold-9000.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16820,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\023-market-buy-hold-9000.png"
+    },
+    {
+      "label": "market-buy",
+      "stage": "closed",
+      "at": 40452.4407,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\024-market-buy-closed.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16849,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\024-market-buy-closed.png"
+    },
+    {
+      "label": "market-buy",
+      "stage": "after-settle",
+      "at": 41956.5282,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\025-market-buy-after-settle.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16877,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\025-market-buy-after-settle.png"
+    },
+    {
+      "label": "market-buy",
+      "stage": "final-paused",
+      "at": 42135.9287,
+      "file": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\026-market-buy-final-paused.bmp",
+      "picture": {
+        "foreground": true,
+        "frames": 16880,
+        "height": 1440,
+        "minimized": false,
+        "rendering": true,
+        "visible": true,
+        "width": 2560
+      },
+      "png": "E:\\肥鱼直播\\stellaris-player\\.local\\presentation-live-20261029\\settle-retest\\frames\\026-market-buy-final-paused.png"
+    }
+  ]
+}

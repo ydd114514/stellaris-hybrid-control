@@ -1,0 +1,23 @@
+RVA 0x6cc6e0; extent=bounded_leaf_or_thunk
+0x6cc6e0 mov rdx, qword ptr [rip + 0x2a48551]
+0x6cc6e7 mov r9, rcx
+0x6cc6ea test rdx, rdx
+0x6cc6ed je 0x6cc719
+0x6cc6ef mov r8d, dword ptr [rcx + 0x20]
+0x6cc6f3 mov eax, r8d
+0x6cc6f6 and eax, 0xffffff
+0x6cc6fb cmp eax, dword ptr [rdx + 0x20]
+0x6cc6fe jae 0x6cc719
+0x6cc700 mov ecx, eax
+0x6cc702 mov rax, qword ptr [rdx + 0x18]
+0x6cc706 add rcx, rcx
+0x6cc709 mov rcx, qword ptr [rax + rcx*8 + 8]
+0x6cc70e test rcx, rcx
+0x6cc711 je 0x6cc719
+0x6cc713 cmp dword ptr [rcx + 0x20], r8d
+0x6cc717 je 0x6cc720
+0x6cc719 mov rcx, qword ptr [rip + 0x2a46780]
+0x6cc720 mov r8d, dword ptr [r9 + 0x28]
+0x6cc724 mov edx, dword ptr [r9 + 0x24]
+0x6cc728 mov rcx, qword ptr [rcx + 0x1b28]
+0x6cc72f jmp 0xb7e9f0

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "runId": "run-1793244593846-794ae2fc",
+  "runDirectory": "E:\\肥鱼直播\\赛博肥鱼-全套-v0.3.7-95dfaa6\\.local\\live-api-20261029\\run-1793244593846-794ae2fc",
+  "finishedAt": "2026-10-29T03:30:43.690Z",
+  "elapsedMs": 49787,
+  "processId": 33036,
+  "exitCode": 0,
+  "signal": null,
+  "spawnFailed": false,
+  "interrupted": false,
+  "runnerExitedSuccessfully": true,
+  "passed": true,
+  "automaticRetries": 0,
+  "limits": {
+    "modelRequests": 1,
+    "ttsRequests": 1,
+    "automaticRetries": 0
+  },
+  "desktopControl": false,
+  "realServiceResult": "See the runner report; launcher exit alone does not prove platform input, model reply, synthesis, or audible playback."
+}

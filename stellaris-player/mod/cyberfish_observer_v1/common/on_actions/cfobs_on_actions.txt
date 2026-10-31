@@ -1,0 +1,4 @@
+# Additive hooks; never replace the vanilla 00_on_actions.txt.
+on_game_start_country = { events = { cfobs.1 } }
+on_single_player_save_game_load = { events = { cfobs.2 } }
+on_monthly_pulse_country = { events = { cfobs.1 } }

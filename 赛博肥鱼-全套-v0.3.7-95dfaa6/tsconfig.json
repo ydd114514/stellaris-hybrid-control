@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", "module": "ESNext", "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"], "strict": true,
+    "esModuleInterop": true, "resolveJsonModule": true, "skipLibCheck": true,
+    "types": ["vite/client", "node"], "allowJs": true, "checkJs": false,
+    "baseUrl": ".", "paths": { "@shared": ["packages/shared/src/index.ts"], "@core/*": ["packages/core/src/*"] },
+    "noEmit": true
+  },
+  "include": ["apps/desktop/src/**/*.ts", "apps/desktop/src/**/*.vue", "apps/stage/**/*.vue", "apps/stage/**/*.ts", "packages/**/*.ts"]
+}

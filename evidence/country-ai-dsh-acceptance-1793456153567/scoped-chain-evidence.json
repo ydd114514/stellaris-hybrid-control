@@ -1,0 +1,29 @@
+{
+  "modelStrategyChainVerified": true,
+  "postReturnNativeConstructionVerified": true,
+  "ordinaryWorkDuringNative": 0,
+  "originalStrictRunPassed": false,
+  "originalExitCode": 1,
+  "quotaStopCleanupConfirmed": true,
+  "coreGoalComplete": false,
+  "externalRequests": 10,
+  "allUpstreamCompleted": true,
+  "beforeReturn": {
+    "at": "2026-10-31T14:16:24.936Z",
+    "planetId": 152,
+    "hasConstruction": false
+  },
+  "newWork": {
+    "generation": 5,
+    "trackingId": 6,
+    "queueId": 2014,
+    "itemId": 402653204,
+    "key": "district_city"
+  },
+  "evidence": {
+    "report.json": "d368a7c439d4e4e10fddc7b619c5c33fc893e26e7d34fc3ba16d3e42e105dde1",
+    "native-lease-after-stop.json": "408c87f6a2a5928cb51d8b1c7a361a761b4ec285b1caab96651bbe81559a91c7",
+    "post-return-construction-readback.json": "fb35aedfb175fb2bf58f260320be50df10db69c7a9ace17f77620d8d69f61f3e"
+  },
+  "stopFix": "offline_tested_evidence_early_stop_and_cooperative_limit_no_429; not re-run with external model"
+}

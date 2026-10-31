@@ -1,0 +1,11 @@
+{
+  "gamePath": "D:/SteamLibrary/steamapps/common/Stellaris/stellaris.exe",
+  "pythonPath": "C:/Program Files/Python315/python.exe",
+  "documentsPath": "C:/Users/YDD/Documents/Paradox Interactive/Stellaris",
+  "baseUrl": "https://api.deepseek.com",
+  "model": "deepseek-flash",
+  "maxSteps": 12,
+  "requestTimeoutMs": 30000,
+  "maxObservationAgeMs": 45000,
+  "goal": "正常游玩当前单人帝国。先检查当前局势，选择合适的科研项目，安排科研船调查，处理经济短缺并通过实际建造队列发展。保持暂停思考，完成操作后短暂推进并检查结果。"
+}

@@ -1,0 +1,15 @@
+{
+  "scope": "research_and_planet_construction_pilot_only",
+  "coreGoalComplete": false,
+  "realDSHModelTest": "blocked_before_start_pending_egress_authorization",
+  "evidence": [
+    {
+      "path": "E:\\肥鱼直播\\stellaris-player\\.local\\country-ai-p1-acceptance-1793453223229\\report.json",
+      "sha256": "98b8bac4810d59ad8191592ef2cd847393a036fb672dee86b259e8d569e5c92f"
+    },
+    {
+      "path": "E:\\肥鱼直播\\stellaris-player\\.local\\country-ai-p1-acceptance-1793453223229\\construction-readback-supplement.json",
+      "sha256": "680726570c9594be2467ffe760d863b7843e0228845e32618660534f8018ec26"
+    }
+  ]
+}

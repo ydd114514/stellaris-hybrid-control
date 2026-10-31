@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-29",
+  "version": "0.3.14",
+  "applicationTests": {
+    "passed": 777,
+    "skipped": 2,
+    "files": 84
+  },
+  "controllerTests": 445,
+  "loaderTests": 5,
+  "market": {
+    "engine": "Windows 4.5.2 pinned executable",
+    "bridge": "cyberfish-0.6.5-marketquotes-r2",
+    "dllSha256": "247259c0c4a8e83387bbe47aad21be01f4213ccca309db9b5001b09ab8a1e029",
+    "nativeTrades": 5,
+    "expectedReserveRejections": 3,
+    "controllerTrades": 2,
+    "coldQuote": 87.08324,
+    "pausedAndWholeTransaction": true
+  },
+  "coldStart": {
+    "realInstalledPrograms": true,
+    "initialDefaultStopped": true,
+    "dateBefore": "2288.07.01",
+    "dateAfter": "2288.12.26",
+    "orders": 4,
+    "verified": 3,
+    "rejected": 1,
+    "durationSeconds": 99.8,
+    "video": "1920x1080 H264 30fps",
+    "recording": "E:/肥鱼直播/赛博肥鱼-全套-v0.3.7-95dfaa6/.local/artifacts/live-rehearsal/Cyberfish-2026-10-29-12-07-19.mkv",
+    "finalRouteRecording": "E:/肥鱼直播/赛博肥鱼-全套-v0.3.7-95dfaa6/.local/artifacts/live-rehearsal/Cyberfish-2026-10-29-12-13-40.mkv",
+    "decodeErrors": 0,
+    "actualQqMusic": true,
+    "actualVoice": true,
+    "publicBroadcast": false,
+    "platformMessagesReceived": 0,
+    "localRehearsalQuestion": true,
+    "livehimeOpened": true,
+    "livehimeRecordingVerified": false,
+    "OBSRecorded": true,
+    "mouseKeyboardInput": false
+  },
+  "captionSync": {
+    "enqueueToActualPlayingMs": 858,
+    "playingToCaptionMs": 5,
+    "endedToCaptionClearMs": 2,
+    "thresholdMs": 250,
+    "note": "Local interface/DOM timing from one replay; not a guarantee of OBS or viewer latency.",
+    "playingToHostCaptionMs": 5,
+    "endedToHostCaptionClearMs": 2,
+    "ungatedQueueToPlayingMs": 29,
+    "ungatedLatencyScope": "Offline PCM returns immediately; measures only application queue/audio scheduling, excluding real text-model and TTS generation."
+  },
+  "sourceSaveUnchanged": true,
+  "continuePointerRestored": true,
+  "keyAndVoiceConfigUnchanged": {
+    "ai-keys.enc.json": true,
+    "captain-speech-key.enc.json": true,
+    "captain-speech.json": true
+  },
+  "normalRuntimeBlackboardUpdated": true,
+  "remaining": [
+    "真实平台观众问答与观众端同步",
+    "整晚生产与多人并发市场交易未覆盖",
+    "直播姬音源依赖QQ音乐窗口：启动时须先创建并保留窗口，依赖尚未消除；未覆盖分轨隔离或完整最终混音"
+  ],
+  "finalState": {
+    "allRelatedApplicationsOpen": true,
+    "temporaryDebugInterfaceClosed": true,
+    "OBSPublicStreamStopped": true,
+    "OBSRecordingStopped": true,
+    "asarSha256": "5ad2bc0c0cd7c0f84157af608fdb94117c0e3b7be65ece4df3286cce8d1da3a9",
+    "livehimeRestartVerified": true,
+    "livehimeSourceReloadInMemoryVerified": false,
+    "livehimeStopDeniedPreviously": true,
+    "livehimeUserExitResolved": true
+  },
+  "localLivehimeAudioFollowup": {
+    "date": "2026-10-29",
+    "recording": "C:/Users/YDD/Videos/20261029-122822.mp4",
+    "duration": 297.9,
+    "voiceRecorded": true,
+    "correlation": 0.7787376075022381,
+    "conditionalPass": true,
+    "requiresQqMusicWindow": true,
+    "startupDependencyFixed": false,
+    "viewerCaptionSyncVerified": false,
+    "report": "直播姬本地收音验证-20261029.md"
+  }
+}

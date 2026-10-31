@@ -1,0 +1,162 @@
+{
+  "status": "passed_for_documented_presentation_scope",
+  "date": "2026-10-29",
+  "version": "0.3.10",
+  "panelVisibilityOnly": [
+    {
+      "panel": "research",
+      "elapsedMs": 11006.6273,
+      "mode": "visibility_only",
+      "gameplayOrders": 0
+    },
+    {
+      "panel": "fleets",
+      "elapsedMs": 10996.8304,
+      "mode": "visibility_only",
+      "gameplayOrders": 0
+    },
+    {
+      "panel": "market",
+      "elapsedMs": 10992.263899999998,
+      "mode": "visibility_only",
+      "gameplayOrders": 0
+    },
+    {
+      "panel": "traditions",
+      "elapsedMs": 11004.8488,
+      "mode": "visibility_only",
+      "gameplayOrders": 0
+    },
+    {
+      "panel": "contacts",
+      "elapsedMs": 11039.665799999995,
+      "mode": "visibility_only",
+      "gameplayOrders": 0
+    },
+    {
+      "panel": "leaders",
+      "elapsedMs": 11215.533399999993,
+      "mode": "visibility_only",
+      "gameplayOrders": 0
+    },
+    {
+      "panel": "government",
+      "elapsedMs": 11010.781300000002,
+      "mode": "visibility_only",
+      "gameplayOrders": 0
+    }
+  ],
+  "firstRun": [
+    {
+      "name": "fleet-increase",
+      "panel": "fleets",
+      "previewMs": 2707.0559000000067,
+      "shownMs": 10702.646000000008,
+      "callMs": 12511.164699999994,
+      "verified": true,
+      "source": "real monotonic RPC timestamps"
+    },
+    {
+      "name": "fleet-restore",
+      "panel": "fleets",
+      "previewMs": 2523.8352000000014,
+      "shownMs": 10559.8027,
+      "callMs": 11982.184200000003,
+      "verified": true,
+      "source": "real monotonic RPC timestamps"
+    },
+    {
+      "name": "market-buy",
+      "panel": "market",
+      "previewMs": 2526.0913,
+      "shownMs": 10550.176800000001,
+      "callMs": 11982.61510000001,
+      "verified": true,
+      "source": "real monotonic RPC timestamps"
+    }
+  ],
+  "closeSettleRetest": [
+    {
+      "name": "fleet-increase",
+      "panel": "fleets",
+      "previewMs": 2546.885,
+      "shownMs": 10566.1926,
+      "callMs": 12438.4888,
+      "verified": true,
+      "source": "real monotonic RPC timestamps"
+    },
+    {
+      "name": "fleet-restore",
+      "panel": "fleets",
+      "previewMs": 2545.3356999999996,
+      "shownMs": 10519.047600000002,
+      "callMs": 12349.8713,
+      "verified": true,
+      "source": "real monotonic RPC timestamps"
+    },
+    {
+      "name": "market-buy",
+      "panel": "market",
+      "previewMs": 2533.724399999999,
+      "shownMs": 10607.593399999998,
+      "callMs": 12995.240400000002,
+      "verified": true,
+      "source": "real monotonic RPC timestamps"
+    }
+  ],
+  "frameCount": 91,
+  "visualReview": {
+    "panels": [
+      "research",
+      "fleets",
+      "market",
+      "traditions",
+      "contacts",
+      "leaders",
+      "government"
+    ],
+    "fleetQuota": "4/4 -> 4/5 -> 4/4",
+    "market": "consumer goods 3.6K -> 3.7K; trade 38908 -> 38651",
+    "afterSettle": "three after-settle frames show completely closed panels",
+    "rawCapture": "native D3D game frames, losslessly archived PNG",
+    "desktopAndObsCaptureValidated": false
+  },
+  "cleanup": {
+    "at": "2026-10-29T01:27:29.672Z",
+    "continueRestored": true,
+    "originalSourceUnchanged": true,
+    "isolatedInitialSaveUnchanged": true,
+    "sourceSha256": "b64962fa59b26e1c558d788d22cc4d505da00b4d8ad8c4a53295c3ce0179d839",
+    "game": {
+      "date": {
+        "day": 1,
+        "formatted": "2288.07.01",
+        "month": 7,
+        "year": 2288
+      },
+      "paused": true,
+      "in_game": true
+    },
+    "gameLeftOpen": true,
+    "controllerStopped": true,
+    "archivedFrameFormat": "lossless PNG; raw-copy BMPs removed",
+    "removedBmp": 91,
+    "unrelatedDesktopCaptureRemoved": true,
+    "modelApiCalls": 0,
+    "liveBroadcastStarted": false
+  },
+  "modelApiCalls": 0,
+  "knownLimits": [
+    "Only parent panels, no pointer/button animation or guaranteed selection of resource/target subpage",
+    "Market base quotes are estimates; two actual 50-unit trades cost 256.92 and 258.22, not guaranteed by base estimate",
+    "Planet/civilian presentation remains camera-only",
+    "No live battle, cancellation race, hidden-window branch or long broadcast measurement coverage"
+  ],
+  "originalReports": [
+    "live-result.json",
+    "settle-retest/live-result.json",
+    "frame-index.json",
+    "settle-retest/frame-index.json",
+    "cleanup.json"
+  ]
+}

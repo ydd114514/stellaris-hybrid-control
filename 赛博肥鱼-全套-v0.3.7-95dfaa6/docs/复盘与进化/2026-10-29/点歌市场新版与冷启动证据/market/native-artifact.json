@@ -1,0 +1,8 @@
+{
+  "file": ".local/native-bridge/runtime/cyberfish-0.6.5-marketquotes-r2/stellaris_bridge.dll",
+  "sha256": "247259c0c4a8e83387bbe47aad21be01f4213ccca309db9b5001b09ab8a1e029",
+  "version": "cyberfish-0.6.5-marketquotes-r2",
+  "quoteFunctionRva": "0x8F3A00",
+  "buyExecuteRva": "0x1D11190",
+  "sellExecuteRva": "0x1D11510"
+}

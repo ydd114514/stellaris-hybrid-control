@@ -1,0 +1,31 @@
+{
+  "candidateVersion": "cyberfish-0.6.17-country-ai-economy-wip",
+  "candidateLoaded": false,
+  "loaderAdmissionAdded": false,
+  "defaultBridgeVersion": "cyberfish-0.6.16-country-ai-p1-r2",
+  "defaultBridgeSha256": "53356faf2a90c123b3ba39a03498518ebd231b6e093530d4cad8f6241cbb7368",
+  "hookPreflightCount": 14,
+  "checks": {
+    "nativeReleaseBuild": true,
+    "targetedHostTests": 16,
+    "existingHostRegressionTests": 147,
+    "nativePolicyAndLifecycleTests": 3
+  },
+  "additionalModelCalls": 0,
+  "desktopControlUsed": false,
+  "coreGoalComplete": false,
+  "next": [
+    "NativeGame/MCP candidate integration",
+    "strategic protection entry",
+    "internal planner and starbase production audit",
+    "unified live acceptance after necessary manual restart"
+  ],
+  "sourceHashes": {
+    ".local\\research\\stellaris-mcp-native\\stellaris_bridge\\src\\country_ai_routine_gate.cpp": "319697e794c75d874e8e6b7c2164d6e1f7c25c14d993dff917abd3e7540ef39b",
+    ".local\\research\\stellaris-mcp-native\\stellaris_bridge\\src\\country_ai_observation.cpp": "2a5b8639d2099614f033cd38e624193bbbd8b2a87a42f62b01ff3415b8b94044",
+    ".local\\research\\stellaris-mcp-native\\stellaris_bridge\\src\\country_ai_lease.cpp": "01d33750e07da62026833a23a9c8c1db8459e8eb317caac21710c92a29e5db4f",
+    "stellaris-player\\src\\native-country-ai.mjs": "8938ecf8e42bafaa5dce9fe1616fbbca2f725e2abe2b3e817d8fafe507b1f8cc",
+    "stellaris-player\\src\\native-country-ai-economic-policy.mjs": "636aac8e5e0e108ee890be6be8eee9947c30991c724916fff13c361f3218eca9",
+    "stellaris-player\\src\\native-country-ai-economic-evidence.mjs": "53b1336780f52a7716cd779ec5a5af154a206ca492a2f678e4dd624b6ecba945"
+  }
+}

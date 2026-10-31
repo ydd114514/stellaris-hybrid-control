@@ -1,0 +1,19 @@
+适用于 .NET Framework MSBuild 版本 17.14.60+43b635718
+
+  minhook.vcxproj -> E:\肥鱼直播\stellaris-player\.local\native-bridge\build\_deps\minhook-build\Release\minhook.x64.lib
+  country_ai_routine_gate.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\memory(3947,17): warning C4996: 'std::atomic_load_explicit': warning STL4029: std::atomic_*() overloads for shared_ptr are deprecated in C++20. The shared_ptr specialization of std::atomic provides superior functionality. You can define _SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING or _SILENCE_ALL_CXX20_DEPRECATION_WARNINGS to suppress this warning. [E:\肥鱼直播\stellaris-player\.local\native-bridge\build\stellaris_bridge\stellaris_bridge.vcxproj]
+  (编译源文件“../../../../../.local/research/stellaris-mcp-native/stellaris_bridge/src/country_ai_routine_gate.cpp”)
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\memory(3947,17):
+      模板实例化上下文(最早的实例化上下文)为
+          E:\肥鱼直播\.local\research\stellaris-mcp-native\stellaris_bridge\src\country_ai_routine_gate.cpp(77,34):
+          查看对正在编译的函数 模板 实例化“std::shared_ptr<const bridge::cyberfish::`anonymous-namespace'::ProtectedTargets> std::atomic_load<const bridge::cyberfish::`anonymous-namespace'::ProtectedTargets>(const std::shared_ptr<const bridge::cyberfish::`anonymous-namespace'::ProtectedTargets> *)”的引用
+  
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\memory(3961,10): warning C4996: 'std::atomic_store_explicit': warning STL4029: std::atomic_*() overloads for shared_ptr are deprecated in C++20. The shared_ptr specialization of std::atomic provides superior functionality. You can define _SILENCE_CXX20_OLD_SHARED_PTR_ATOMIC_SUPPORT_DEPRECATION_WARNING or _SILENCE_ALL_CXX20_DEPRECATION_WARNINGS to suppress this warning. [E:\肥鱼直播\stellaris-player\.local\native-bridge\build\stellaris_bridge\stellaris_bridge.vcxproj]
+  (编译源文件“../../../../../.local/research/stellaris-mcp-native/stellaris_bridge/src/country_ai_routine_gate.cpp”)
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\memory(3961,10):
+      模板实例化上下文(最早的实例化上下文)为
+          E:\肥鱼直播\.local\research\stellaris-mcp-native\stellaris_bridge\src\country_ai_routine_gate.cpp(224,18):
+          查看对正在编译的函数 模板 实例化“void std::atomic_store<const bridge::cyberfish::`anonymous-namespace'::ProtectedTargets>(std::shared_ptr<const bridge::cyberfish::`anonymous-namespace'::ProtectedTargets> *,std::shared_ptr<const bridge::cyberfish::`anonymous-namespace'::ProtectedTargets>)”的引用
+  
+  stellaris_bridge.vcxproj -> E:\肥鱼直播\stellaris-player\.local\native-bridge\build\stellaris_bridge\Release\stellaris_bridge.dll

@@ -1,0 +1,384 @@
+{
+  "version": "0.3.11",
+  "directory": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.11",
+  "shortcut": "C:\\Users\\YDD\\Desktop\\大肥鱼 DSH.lnk",
+  "executable": "C:\\Users\\YDD\\AppData\\Local\\Programs\\CyberfishDSH\\0.3.11\\大肥鱼 DSH.exe",
+  "previousVersionsPreserved": true,
+  "files": [
+    {
+      "path": "大肥鱼 DSH.exe",
+      "bytes": 211177472,
+      "sha256": "f2a3547e97781d31d9705ec60469ea6279b32b09da61db4d25d82e515ec6f451"
+    },
+    {
+      "path": "chrome_100_percent.pak",
+      "bytes": 167306,
+      "sha256": "0d27d5591c72721ce399133e104114aa802caf3070814570ad205987a51a8ff7"
+    },
+    {
+      "path": "chrome_200_percent.pak",
+      "bytes": 258328,
+      "sha256": "fa1fce57396b3e21776659e50fb1c12fd4c010c9f56f161be6f4437207d21241"
+    },
+    {
+      "path": "d3dcompiler_47.dll",
+      "bytes": 4916728,
+      "sha256": "289767b49dc8525bce262ea06fee4ef9fced2e131a55b25654ce871c1f0498b2"
+    },
+    {
+      "path": "ffmpeg.dll",
+      "bytes": 3054080,
+      "sha256": "0d21de0f4497f126b9aad67c57b045225185c70aad2308a25db01d6086e4d5a7"
+    },
+    {
+      "path": "icudtl.dat",
+      "bytes": 10467680,
+      "sha256": "5070de99fbd8a48378543511fb7a072f85bf36f94b4f4e1d420d54be1435d6f1"
+    },
+    {
+      "path": "libEGL.dll",
+      "bytes": 504320,
+      "sha256": "dfd53ccbfce55510f2afdb52703037452370eb5bdf33143829a8b06253015625"
+    },
+    {
+      "path": "libGLESv2.dll",
+      "bytes": 8099328,
+      "sha256": "b348ceedd275843cbe344a29dd8550b18e5d433abff695cdf5658470c1e71c67"
+    },
+    {
+      "path": "LICENSE.electron.txt",
+      "bytes": 1096,
+      "sha256": "5154e165bd6c2cc0cfbcd8916498c7abab0497923bafcd5cb07673fe8480087d"
+    },
+    {
+      "path": "LICENSES.chromium.html",
+      "bytes": 15168645,
+      "sha256": "a683de33a700d9b4989416e1cd394169154574e83773e009a71daf9dd8e1ab96"
+    },
+    {
+      "path": "resources.pak",
+      "bytes": 6158532,
+      "sha256": "ca47fceab76d2220a66dd5c55a444bbdb1f2300b1bd3b180693509327442b292"
+    },
+    {
+      "path": "snapshot_blob.bin",
+      "bytes": 337714,
+      "sha256": "9a10e7b6d4a4a19e9e825217b2eaab2e47df86fe85a70e74e6f660c89ddb0fb6"
+    },
+    {
+      "path": "v8_context_snapshot.bin",
+      "bytes": 712173,
+      "sha256": "546db668f31be13f2a70cb2282f8073a88ad51be77eef468e1ad7a9450738da6"
+    },
+    {
+      "path": "vk_swiftshader_icd.json",
+      "bytes": 106,
+      "sha256": "32d83ff113fef532a9f97e0d2831f8656628ab1c99e9060f0332b1532839afd9"
+    },
+    {
+      "path": "vk_swiftshader.dll",
+      "bytes": 5572608,
+      "sha256": "c753107d8827525306b83d3c35da988b0954caebc4ab806d4ca6f27b7a0d8bdf"
+    },
+    {
+      "path": "vulkan-1.dll",
+      "bytes": 939520,
+      "sha256": "40e39b8cd62c3292f7c5ad6a2d863f6e3bd3d2c0b1b3a2a0e4d41a61d2a8f758"
+    },
+    {
+      "path": "locales\\af.pak",
+      "bytes": 576493,
+      "sha256": "7efae5393f523d0b23dd355e5cb165a14a4a5eb9d102f8fd7e1592fde0d81590"
+    },
+    {
+      "path": "locales\\am.pak",
+      "bytes": 933754,
+      "sha256": "108ac040ce13b53af88bc45f3e5b13086c1d435839dfdbabb19d6877d9daad96"
+    },
+    {
+      "path": "locales\\ar.pak",
+      "bytes": 1032000,
+      "sha256": "69a43e3592c8cabfe8fdef53c963bca7ee137e093d20f12767df89862c0eccd8"
+    },
+    {
+      "path": "locales\\bg.pak",
+      "bytes": 1065369,
+      "sha256": "f4e5ceabc00d8d66a100f78540d81762e67bcd7482df116ee2545507a45de25d"
+    },
+    {
+      "path": "locales\\bn.pak",
+      "bytes": 1373777,
+      "sha256": "66e568b1fbb31391786dcd2af632866894fd6a23bef0b408a59587a144bd0353"
+    },
+    {
+      "path": "locales\\ca.pak",
+      "bytes": 649200,
+      "sha256": "bdcc6f6404dc686148977e41330461e89d5739afcf123f03557239d93b911e03"
+    },
+    {
+      "path": "locales\\cs.pak",
+      "bytes": 670557,
+      "sha256": "56b0e1723259bcf6abdda080ece8877f4b1586b49d3c13ef8908619e2a118972"
+    },
+    {
+      "path": "locales\\da.pak",
+      "bytes": 605685,
+      "sha256": "c7a554e9644dda72071d7af1dcf077b783b52af926e99b507d79a664df4acc33"
+    },
+    {
+      "path": "locales\\de.pak",
+      "bytes": 649059,
+      "sha256": "de5422f48522a52248ba835d4e7ef860a734b54d2ee41c9a87cd73e7e947c318"
+    },
+    {
+      "path": "locales\\el.pak",
+      "bytes": 1170409,
+      "sha256": "aa9b5d10422054e87bcd6068be5a2b085b8fd3ecb1d998eabe282a72c6520570"
+    },
+    {
+      "path": "locales\\en-GB.pak",
+      "bytes": 525608,
+      "sha256": "e2eef21ab7b088c122b6990f66dd22ce0c7e1191c64e9ac8424435c3a6749cbe"
+    },
+    {
+      "path": "locales\\en-US.pak",
+      "bytes": 531236,
+      "sha256": "3cd05f6512ed5d09076253dcdfd4ccc5eedfab44e1703cf3e015597dd31220c1"
+    },
+    {
+      "path": "locales\\es-419.pak",
+      "bytes": 639746,
+      "sha256": "3fb38e2a38ef336a407fe91813986522e89696bcf3d6f78c68d60c921f741db4"
+    },
+    {
+      "path": "locales\\es.pak",
+      "bytes": 637434,
+      "sha256": "e381793151b6bb9e87e954d2ead53fac523dda92912d4d14ecf46885f86ce441"
+    },
+    {
+      "path": "locales\\et.pak",
+      "bytes": 581514,
+      "sha256": "19245d259d70ec459d210cc01eb6e6d05298073dead915e164aa7aedf3b873ca"
+    },
+    {
+      "path": "locales\\fa.pak",
+      "bytes": 955843,
+      "sha256": "bab2b590f945b1d864c38ebcc7167b74ba325b0ac7f3d611cd1728a53a5fb99a"
+    },
+    {
+      "path": "locales\\fi.pak",
+      "bytes": 592846,
+      "sha256": "41137434ee1d2b1aa3603fc134e8cd52455731dfb3eec44bd7f3e36df57e4f15"
+    },
+    {
+      "path": "locales\\fil.pak",
+      "bytes": 671375,
+      "sha256": "8a9e1a72a7d067654df9e4a761f5c06cfac267680e00c45d9d52a929b318b435"
+    },
+    {
+      "path": "locales\\fr.pak",
+      "bytes": 690981,
+      "sha256": "477771211fdff1fc9c8e002476e2440c1c14ce4ce69976a0993c99f2f5b47505"
+    },
+    {
+      "path": "locales\\gu.pak",
+      "bytes": 1354549,
+      "sha256": "51635a11ad7349ae131927156c50f6935c38cb6628cd8d2f8a5fb6715f6140e8"
+    },
+    {
+      "path": "locales\\he.pak",
+      "bytes": 838376,
+      "sha256": "0ecf199553289880d0fa590fcab56d2165e4e571de0b77970619a244cc0285f5"
+    },
+    {
+      "path": "locales\\hi.pak",
+      "bytes": 1434098,
+      "sha256": "5197062239f1780dff514326ca5894c39e4e4e2b4bb2c6e73f619122db31630f"
+    },
+    {
+      "path": "locales\\hr.pak",
+      "bytes": 647116,
+      "sha256": "ea68d33fd264a2a3cb0c78f7b92ac79af7cc1ca27fc50427ca100fc468ae40ec"
+    },
+    {
+      "path": "locales\\hu.pak",
+      "bytes": 694488,
+      "sha256": "91d754bd252cd411fcc3513e04513d5e4d8165f36eace12f88d84fd7e352e857"
+    },
+    {
+      "path": "locales\\id.pak",
+      "bytes": 573211,
+      "sha256": "e78831cb31a4d2ab77cbe47bcc5439be3bc7d66fba7799779d5ab3e1d004115f"
+    },
+    {
+      "path": "locales\\it.pak",
+      "bytes": 628942,
+      "sha256": "c5feff891ed9a00cdd7e0349b187cc2d26248ae468f076a09099312e04b23c21"
+    },
+    {
+      "path": "locales\\ja.pak",
+      "bytes": 765089,
+      "sha256": "30ea0122899ef914ee799d92667af4ae54c18cdc6e5bb780719a3f6a5dfc6435"
+    },
+    {
+      "path": "locales\\kn.pak",
+      "bytes": 1550466,
+      "sha256": "b00058366c4e2febd46df14debda4ef777ddfe2c004d08f528dd17eaf8d4c17e"
+    },
+    {
+      "path": "locales\\ko.pak",
+      "bytes": 649323,
+      "sha256": "2f26d1e6f3f505d95c26dd0a4d61c2621d8109d871bdb30fdb4718b802f10d20"
+    },
+    {
+      "path": "locales\\lt.pak",
+      "bytes": 701231,
+      "sha256": "473fb2217995c4c4bafc23a9d418b3cd393604248ed19d06588e719519122c2e"
+    },
+    {
+      "path": "locales\\lv.pak",
+      "bytes": 699808,
+      "sha256": "7b589f1bc446b15d315fcd81b446b47e15ec533043abe56b1d060ab4a727b56c"
+    },
+    {
+      "path": "locales\\ml.pak",
+      "bytes": 1605761,
+      "sha256": "9b874b08ffe56813efce14d03e840f948f6e0ac9fb5fdef1163098d0d7ddf91f"
+    },
+    {
+      "path": "locales\\mr.pak",
+      "bytes": 1328077,
+      "sha256": "ab04bcdd9287640b1ce017eec44b6701e44a2e050c51eb1c9859b6367759d848"
+    },
+    {
+      "path": "locales\\ms.pak",
+      "bytes": 602700,
+      "sha256": "7d408f4f45fcdb66efcaf7beae9cb07e0c42a26e237461500cfc4403cdc88690"
+    },
+    {
+      "path": "locales\\nb.pak",
+      "bytes": 581148,
+      "sha256": "b44a1be560c7138a4d2b6b08a93fa529192e54a2256dac2695c901019cc66bce"
+    },
+    {
+      "path": "locales\\nl.pak",
+      "bytes": 602729,
+      "sha256": "262bf074055e830d0e4d361ca24e74f0170cd55938236163d96c6b48929b6d26"
+    },
+    {
+      "path": "locales\\pl.pak",
+      "bytes": 671716,
+      "sha256": "4994a5ad97534bc91b73ad528abc1771628848005c950bbac279d5e2b3e03465"
+    },
+    {
+      "path": "locales\\pt-BR.pak",
+      "bytes": 630259,
+      "sha256": "e90d7ca40487d8f5299c85f86b5f20f7188d94c3f0e8b5368495f9a73c29cd40"
+    },
+    {
+      "path": "locales\\pt-PT.pak",
+      "bytes": 634482,
+      "sha256": "97b06698596cf084533ac7990ae73cd72b3b851927e0fc5747cd0cab4f681079"
+    },
+    {
+      "path": "locales\\ro.pak",
+      "bytes": 657303,
+      "sha256": "757990528d01554f5a1e476929ed3b4fd0bee20cbae07db442923cb477358d9d"
+    },
+    {
+      "path": "locales\\ru.pak",
+      "bytes": 1085196,
+      "sha256": "7aaf8f96500bc8eb8883e46a10b84ebdc17ffdf34fe3d972cb3d69b29ed04776"
+    },
+    {
+      "path": "locales\\sk.pak",
+      "bytes": 682394,
+      "sha256": "1101256328b7dce3d388abfafa44e27ca416136187f366809ada6fabe1def449"
+    },
+    {
+      "path": "locales\\sl.pak",
+      "bytes": 653752,
+      "sha256": "eef2f7c2f3aa5572456274004104d0c79911834f002fa1fdcd5063b60a3225a5"
+    },
+    {
+      "path": "locales\\sr.pak",
+      "bytes": 1005589,
+      "sha256": "9184460cb3dc15e5babf7d96c0816d4068e411a376dc7314e84c722761788538"
+    },
+    {
+      "path": "locales\\sv.pak",
+      "bytes": 586046,
+      "sha256": "bcc5a1a2405dd2cdb4adcdc0fd9236645de378ea179ea558b44908fdf708f93b"
+    },
+    {
+      "path": "locales\\sw.pak",
+      "bytes": 619277,
+      "sha256": "dd7ec69741e67b471df0555096dcf3affe5a40f68753ccebae75d0cf11b07c60"
+    },
+    {
+      "path": "locales\\ta.pak",
+      "bytes": 1595175,
+      "sha256": "70a31eee3dc00ae51d9ae04945ad3db12de70f44a1fa913d88d599506e27c6b8"
+    },
+    {
+      "path": "locales\\te.pak",
+      "bytes": 1476570,
+      "sha256": "1447c02054e3d9ea084311c86c010834b44d7b0863f515cc4b83ce43201787e6"
+    },
+    {
+      "path": "locales\\th.pak",
+      "bytes": 1240063,
+      "sha256": "426a8e74828089ffb36b6ed19462eb645e407ae0352906f7f08ee19a3a5eb97a"
+    },
+    {
+      "path": "locales\\tr.pak",
+      "bytes": 629843,
+      "sha256": "62c8ace3604a27fab3455e5e86a74f4eaca0a80c1d25a6c24a9656d0e8c37ec5"
+    },
+    {
+      "path": "locales\\uk.pak",
+      "bytes": 1088226,
+      "sha256": "e8c4c4c982f28789f7e710ff7e941b37179966cdc6b9a480f60b03bef866886b"
+    },
+    {
+      "path": "locales\\ur.pak",
+      "bytes": 945998,
+      "sha256": "7e8c8a47ab450c0165602160712d0430fc751c5703de655c0d543558e54c63fd"
+    },
+    {
+      "path": "locales\\vi.pak",
+      "bytes": 747188,
+      "sha256": "6f898771f587d9c7742e3f4779eaa23fc0db554803701b698965a672dcdd6e04"
+    },
+    {
+      "path": "locales\\zh-CN.pak",
+      "bytes": 536515,
+      "sha256": "622f645c6b0a9cb8df6fc92c7a8e52ab2f5118a3f1b324d1910942ce34d180b8"
+    },
+    {
+      "path": "locales\\zh-TW.pak",
+      "bytes": 530905,
+      "sha256": "da8923f485868aeb83f57a1b5991db7ae6474d2418e389d71512e3e5227367ee"
+    },
+    {
+      "path": "resources\\app-icon.png",
+      "bytes": 282523,
+      "sha256": "90072f2ae5ef84d452bcbb47abd99a2caff8d6e3904f126909ebdb36bab126ef"
+    },
+    {
+      "path": "resources\\app-update.yml",
+      "bytes": 113,
+      "sha256": "b0379a005e28696a08a2da901ebcb7dec741431c35c767ec76a9fcbe7c1c93b5"
+    },
+    {
+      "path": "resources\\app.asar",
+      "bytes": 28407170,
+      "sha256": "3712552276406834b50775cf614e7b905dd608db1da16f855870af34145eb76a"
+    },
+    {
+      "path": "resources\\elevate.exe",
+      "bytes": 107520,
+      "sha256": "9b1fbf0c11c520ae714af8aa9af12cfd48503eedecd7398d8992ee94d1b4dc37"
+    }
+  ]
+}
