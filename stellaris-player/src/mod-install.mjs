@@ -2,6 +2,7 @@ import { lstat, mkdir, readFile, writeFile, realpath, readdir } from 'node:fs/pr
 import { join, resolve, relative, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
+import { generateSteeringZoneOverrides } from './steering-zone-overrides.mjs'
 
 export const MOD_NAME = 'cyberfish_observer_v1'
 const modSource = name => fileURLToPath(new URL(`../mod/${name}/`, import.meta.url))
@@ -21,7 +22,7 @@ async function checkedParents(root, path) {
 }
 
 /** Install only this named local mod; never edit enabled_mods or launcher SQLite. */
-export async function installLocalMod({ documentsPath, dryRun = false, modName=MOD_NAME } = {}) {
+export async function installLocalMod({ documentsPath, dryRun = false, modName=MOD_NAME, gameDirectory } = {}) {
   if(![MOD_NAME,'cyberfish_steering_v1'].includes(modName))throw Error('不支持的本地Mod名称');
   const source=modSource(modName), files=[];
   async function visit(prefix=''){
@@ -42,6 +43,10 @@ export async function installLocalMod({ documentsPath, dryRun = false, modName=M
   if (rootInfo && (!rootInfo.isDirectory() || rootInfo.isSymbolicLink())) throw new Error('群星 mod 目录不是普通目录，未写入任何文件。')
   const plans = []
   for (const file of files) plans.push({ path: resolve(target, file), content: await readFile(resolve(source, file)) })
+  if(modName==='cyberfish_steering_v1'&&gameDirectory){
+    const generated=await generateSteeringZoneOverrides(gameDirectory);
+    plans.push({path:resolve(target,generated.path),content:generated.content});
+  }
   const descriptor = (await readFile(join(source, 'descriptor.mod'), 'utf8')) + `path="mod/${modName}"\n`
   plans.push({ path: join(modRoot, `${modName}.mod`), content: Buffer.from(descriptor, 'utf8') })
   for (const plan of plans) {

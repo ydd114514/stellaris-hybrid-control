@@ -55,7 +55,7 @@ try {
     console.log(JSON.stringify(result, null, 2))
     if (!result.ok) process.exitCode = 1
   } else if (command === 'install-mod' || command === 'install-steering-mod') {
-    const installation = await (command==='install-steering-mod'?installSteeringMod:installObserverMod)({ documentsPath, dryRun: flag('--dry-run') })
+    const installation = await (command==='install-steering-mod'?installSteeringMod:installObserverMod)({...(command==='install-steering-mod'?{gameDirectory:argument('--game-dir')||'D:/SteamLibrary/steamapps/common/Stellaris'}:{}), documentsPath, dryRun: flag('--dry-run') })
     if (!installation.dryRun) { await mkdir(local, { recursive: true }); await writeFile(join(local, 'mod-installation.json'), JSON.stringify(installation, null, 2), { mode: 0o600 }) }
     console.log(JSON.stringify(installation, null, 2))
   } else if (command === 'observe') {
