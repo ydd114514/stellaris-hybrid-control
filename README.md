@@ -1,6 +1,6 @@
 # 群星原生国家 AI 混合控制 · Claude 交接快照
 
-2026-10-31 当前开发状态的源码交接，**不是已验收成品**。先读 [CLAUDE.md](CLAUDE.md)、[HANDOFF.md](HANDOFF.md)、[v1.4计划](STELLARIS_HYBRID_CONTROL_PLAN.md)。
+2026-10-31 当前开发状态的源码交接，**不是已验收成品**。先读 [CLAUDE.md](CLAUDE.md)、[HANDOFF.md](HANDOFF.md)、[v1.5计划](STELLARIS_HYBRID_CONTROL_PLAN.md)（替代v1.4，交付优先）。
 
 目标：游戏电脑玩家的原生国家 AI 持续运营玩家帝国；大肥鱼决定战略，实际接管关键干预，完成后交还。逐条调用接口、本地经营脚本或自动调查不能替代这一目标。
 

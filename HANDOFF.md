@@ -1,5 +1,7 @@
 # 当前交接状态 · 2026-10-31
 
+> **方向修正（v1.5）：** 本页“下一步”已作废，改按 [STELLARIS_HYBRID_CONTROL_PLAN.md](STELLARIS_HYBRID_CONTROL_PLAN.md) v1.5 第五节执行。门控从“白名单逐项放行”改为“默认放行＋保留清单”，新增引导 mod 和战略契约；交付优先，全部写完后只做一次合并实测。下文“实际状态”“已有证据”“关键代码”仍有效。
+
 ## 实际状态
 
 整帝国经营＋战略接管交还核心**未完成**。P0开关、r2限定科研/建设、真实接管交还和失联收权已有实机证据；经济候选尚未加载。
@@ -41,7 +43,7 @@
 - MCP schema测试须cwd=stellaris-player；曾从父目录运行找不到src/native-mcp.mjs，正确cwd后5项通过，不是产品故障。
 - evidence/research-20261031/economy-batch-progress.json是前批次历史清单，未涵盖最新NativeGame/MCP/protect；本页补充，不改写原证据。
 
-## 下一步
+## 下一步（已作废，见 v1.5 第五节）
 
 1. 审查候选实际入口，继续集中补生产和必要内部计划维护，形成一个固定候选桥，再统一验收，不逐个小改要重启。
 2. 内部维护：虚表slot8是IsValid、slot9才Execute。ai_remove_diplo_action经B7E9F0操作AI集合；ai_add_strategy经1AFF0B0操作计划容器；战况刷新仍有下游调用。目前均未因此放行。要放行须完整副作用边界、类型化Execute/Clone/析构与排空证据，不能制造未跟踪命令的假未释放。分段unwind可能只覆盖首片，不能误判全函数无副作用。
