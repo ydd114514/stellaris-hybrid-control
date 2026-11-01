@@ -1,3 +1,6 @@
+## 最新：新开局委派仍受阻，禁止再称可直播运行（2026-11-01）
+用户重启DSH后schema已过，但当前蜂巢新档2200.01.01在prepare返回routine_gate_existing_native_queue_not_proven_empty，AI从未开启；模型反复重试，已请求停止且进程退出。只读现有字段：PID30168，country_address=2919872647232，+0x1b28对象vtable_rva=0x233e8e8（门控期望0x23c9240）、owner=0xffffffff、queue_size=0；不可据size=0跳过对象身份检查。底层新开局兼容问题尚未修复，不要求用户反复启动。已修JS明确拒绝且fresh idle/off/unarmed时释放假未确认状态，委派失败自动停本轮并显示具体类别，必要测试/DSH构建通过；未新发模型请求、未改游戏开关或推进日期。
+
 ## 最新：真实启动工具定义拒绝已修（2026-11-01）
 原生模式筛选apply_orders时丢掉enum后备分支，产生anyOf=[]导致模型INVALID_REQUEST；已改为从保留命令字段重新生成schema，真实MCP tools/list离线回归通过。该错误不再自动重试，桌面显示脱敏启动错误；类型检查、定向UI测试和DSH重建通过，未重新发起模型请求。失败进程已退出，独立只读确认当前2200.01.01暂停、humanAI/forceHumanAI关闭；用户重开DSH后再启动即可，无需重启游戏。
 

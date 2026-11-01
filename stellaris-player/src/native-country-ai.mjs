@@ -81,6 +81,7 @@ export class NativeCountryAI {
     try{return await work;}finally{this.operation=undefined;}
   }
   async performDelegate(options) {
+    let prepareRejected=false;
     try {
       await this.capabilities();
       if(!this.fullGateVerified&&(options.policy.startsWith('economy')||Object.values(options.protectedTargets).some(refs=>refs.length)))throw Error('实际加载桥未确认经济范围与保护能力');
@@ -91,6 +92,7 @@ export class NativeCountryAI {
       await this.journal({type:'country_ai_delegate_intent',policy:options.policy,before},{required:true});
       const prepared=await this.call('country_ai_lease',{action:'prepare',expected:before.precondition,policy:options.policy,max_game_days:options.maxGameDays,max_wall_ms:options.maxWallMs,stop_at_review:options.stopAtReview,
         ...(this.fullGateVerified?{protected_targets:options.protectedTargets}:{})});
+      if(prepared?.success===false)prepareRejected=true;
       if(prepared?.success!==true||prepared.phase!=='prepared'||!Number.isSafeInteger(prepared.generation))throw Error(prepared?.error||'国家 AI 未准备好');
       this.generation=prepared.generation;this.last=prepared;
       await this.journal({type:'country_ai_lease_acquired',generation:this.generation,scope:this.saved.scope},{required:true});
@@ -112,6 +114,13 @@ export class NativeCountryAI {
     } catch(error) {
       this.phase=this.active?'unconfirmed':'human';await this.journal({type:'country_ai_delegate_failed',message:error.message});
       if(this.generation!==undefined)try {await this.stopNative();}catch(cleanup){error.countryAICleanupError=cleanup.message;}
+      else if(prepareRejected)try {
+        const state=await this.state(),native=state.last_native_state;
+        if(state.phase==='idle'&&native?.success===true&&native.paused===true&&off(native)&&
+          same(scope(native),this.saved.scope)&&state.routine_gate?.armed!==true&&state.observation?.armed!==true){
+          this.active=false;this.phase='human';this.setDispatchFence(false);
+        }
+      }catch{} // Transport uncertainty and an armed/foreign lease remain fenced.
       // Without native-generation acquisition, an unexpected pre-existing AI
       // remains fenced; never declare it human-owned after an ambiguous failure.
       throw error;

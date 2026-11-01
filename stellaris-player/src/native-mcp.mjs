@@ -7,6 +7,8 @@ import {colonyUpgradePolicySchema} from './colony-upgrade-routine.mjs';
 import {orderInputSchema} from './order-input-schema.mjs';
 import {decisionReview} from './decision-review.mjs';
 import {StringDecoder} from 'node:string_decoder';
+import {writeFile} from 'node:fs/promises';
+import {join} from 'node:path';
 import {ModelView} from "./model-view.mjs";
 import {NativeGame, ORDER_FIELDS} from './native-game.mjs';
 import {SerialWork} from './serial-work.mjs';
@@ -64,7 +66,15 @@ async function handle(request) {
         if(name==="observe" || name==="watch") value=modelView.project({...value,decisionReview:game.nativeCountryAIEnabled?{mode:'native_strategy',reviewEveryGameDays:180,wakeReasons:value.strategyWakeReasons??[],instruction:'方针和保留决定用strategy_contract；日常经营交原生AI'}:decisionReview(value,{sessionId:game.sessionId,observedAt:game.snapshotAt})},{full:name==="observe"});
         if(value.state)value={...value,state:modelView.project({...value.state,decisionReview:decisionReview(value.state,{sessionId:game.sessionId,observedAt:game.snapshotAt})})};
         result = {content: [{type: 'text', text: JSON.stringify(value)}]};
-      } catch (error) {result = {isError: true, content: [{type: 'text', text: error.message}]};}
+      } catch (error) {
+        const call=request.params;
+        if(game.nativeCountryAIEnabled&&call?.name==='country_ai_control'&&['delegate','resume'].includes(call.arguments?.operation)){
+          await game.requestStop('国家 AI 委派失败，停止本轮，不让模型重复尝试');
+          await writeFile(join(game.directory,'startup-error.json'),JSON.stringify({started:game.started,at:Date.now(),code:'country_ai_startup',message:'原生国家 AI 委派失败，已停止自动重试。'}));
+          await writeFile('.local/STOP',new Date().toISOString());
+        }
+        result = {isError: true, content: [{type: 'text', text: error.message}]};
+      }
     } else throw new Error('不支持的 MCP 方法');
     emit({jsonrpc: '2.0', id: request.id, result});
   } catch (error) {emit({jsonrpc: '2.0', id: request.id, error: {code: -32601, message: error.message}});}

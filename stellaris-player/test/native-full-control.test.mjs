@@ -23,6 +23,21 @@ test('full native default keeps routine dispatch fenced, admits reserved player 
  assert.throws(()=>NativeGame.prototype.assertRpcAllowed.call(host,'toggle_edict',{edict_key:'unknown',enabled:true}));
  await f.c.takeover();assert.equal(f.state().global_flags.human_ai,false);assert.equal(f.state().paused,true);
 });
+test('explicit pre-lease refusal restores human state only after fresh idle, off and unarmed readback',async()=>{
+ for(const ambiguous of [false,true]){
+  const f=make(),original=f.c.rpc;
+  f.c.rpc=async(m,p={})=>{
+   if(m==='country_ai_lease'&&p.action==='prepare'){
+    if(ambiguous)throw Error('pipe timeout');
+    return {success:false,error:'routine_gate_existing_native_queue_not_proven_empty'};
+   }
+   return original(m,p);
+  };
+  await assert.rejects(f.c.delegate());
+  assert.equal(f.c.active,ambiguous);assert.equal(f.c.view().owner,ambiguous?'unconfirmed':'human');
+  assert.equal(f.calls.some(x=>x.p.action==='enable'||x.p.action==='stop'),false);
+ }
+});
 test('StrategyContract changes direction and issues a reserved action while native AI stays on; request IDs do not replay',async()=>{
  const f=make();await f.c.delegate();const active=new Set(),orders=[];
  const host={countryAI:f.c,nativeCountryAIEnabled:true,strategyReceipts:new Map(),now:()=>1,

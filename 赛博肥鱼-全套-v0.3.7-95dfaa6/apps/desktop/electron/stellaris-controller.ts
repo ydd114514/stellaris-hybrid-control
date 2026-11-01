@@ -137,7 +137,7 @@ export function createStellarisController(options: Options) {
       phase = fresh ? snapshot?.pendingEvents ? 'attention' : 'running' : 'starting'
       message = fresh ? snapshot?.pendingEvents ? '正在处理游戏中的事件。' : '大肥鱼正在控制当前游戏。' : '正在启动官方 DSH 和群星控制器。'
     } else if(current.startupError?.started>=current.desktop?.started&&typeof current.startupError?.message==='string') {
-      phase='error';message='模型拒绝了控制工具的参数定义，控制器已停止；请更新后重新启动。'
+      phase='error';message=current.startupError.code==='country_ai_startup'?'原生国家 AI 委派失败，控制器已停止，不会自动重试；需要修复当前存档的启动兼容性。':'模型拒绝了控制工具的参数定义，控制器已停止；请更新后重新启动。'
     } else if (lastError) { phase = 'error'; message = lastError }
     const taskState=state?.gestalt
     if(taskState&&Array.isArray(taskState.tasks)) {
