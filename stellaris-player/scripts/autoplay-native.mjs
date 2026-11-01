@@ -37,6 +37,7 @@ try {
     child = spawn(process.execPath, ['scripts/play-native-dsh.mjs', '60'], {cwd: root, windowsHide: true, stdio: 'inherit'});
     const code = await new Promise((resolve, reject) => {child.on('error', reject); child.on('exit', resolve);});
     if (await stopRequested()) break;
+    if(code===78){console.log('模型工具定义不合法，已停止；修复后由用户重新启动，不自动重试。');process.exitCode=78;break;}
     const checkpoint=JSON.parse(await readFile('.local/native-bridge/latest-session.json','utf8').catch(()=> 'null'));
     if(checkpoint?.state?.terminal) {console.log(checkpoint.state.terminal.message);break;}
     // A completed DSH response after failed startup is not a successful run.

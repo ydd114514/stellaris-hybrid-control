@@ -37,9 +37,7 @@ if(game.nativeCountryAIEnabled){
  const apply=tools.find(t=>t.name==='apply_orders');
  if(apply){
   const allowed=['declare_war','offer_peace','diplomacy','respond_diplomacy'];
-  const item=apply.inputSchema.properties.orders.items;
-  if(item.anyOf)item.anyOf=item.anyOf.filter(b=>allowed.includes(b.properties?.command?.const));
-  if(item.properties?.command)item.properties.command.enum=allowed;
+  apply.inputSchema.properties.orders.items=orderInputSchema(Object.fromEntries(allowed.map(name=>[name,ORDER_FIELDS[name]])));
   delete apply.inputSchema.properties.strategicResearchOverride;
   apply.description='仅保留决定：宣战、议和、外交提议/回应，原生国家AI继续运行。优先使用strategy_contract统一提交战略；日常经营不由模型派单。';
  }

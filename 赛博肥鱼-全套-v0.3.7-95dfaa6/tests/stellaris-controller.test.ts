@@ -27,6 +27,15 @@ async function fixture(now?:()=>number,onStopSleep?:(root:string)=>Promise<void>
   return { root, data, manager, living, preflight, launch, children, enginePackagePath }
 }
 describe('manual desktop DSH lifecycle, entirely offline', () => {
+  it('shows a current startup schema failure without exposing raw model errors or stale failures',async()=>{
+    const f=await fixture();
+    await writeFile(join(f.root,'.local/desktop-controller.json'),JSON.stringify({pid:1234,started:1000,source:'cyberfish-desktop',stoppedAt:1100}));
+    const path=join(f.root,'.local/native-bridge/startup-error.json');
+    await writeFile(path,JSON.stringify({started:1000,message:'private raw model error'}));
+    const status=await f.manager.getStatus();expect(status.phase).toBe('error');expect(status.message).toContain('参数定义');expect(status.message).not.toContain('private');
+    await writeFile(path,JSON.stringify({started:999,message:'old error'}));
+    expect((await f.manager.getStatus()).phase).toBe('stopped');
+  });
   it('publishes only survey counts and stops presenting dead actors as working', async () => {
     const f=await fixture(()=>1000);f.living.add(1234)
     await writeFile(join(f.root,'.local/native-bridge/controller.lock'),JSON.stringify({pid:1234}))

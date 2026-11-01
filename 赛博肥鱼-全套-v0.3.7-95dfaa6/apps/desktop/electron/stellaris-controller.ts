@@ -89,10 +89,11 @@ export function createStellarisController(options: Options) {
   async function runtime() {
     if (!root) return { active: false, pids: [] as number[] }
     const base = join(root, '.local/native-bridge')
-    const [desktop, lock, preflight, dsh, checkpoint,quality] = await Promise.all([
+    const [desktop, lock, preflight, dsh, checkpoint,quality,startupError] = await Promise.all([
       json(join(root, '.local/desktop-controller.json')), json(join(base, 'controller.lock')),
       json(join(base, 'preflight.json')), json(join(base, 'dsh/current.json')), json(join(base, 'latest-session.json')),
       json(join(base,'quality-latest.json')),
+      json(join(base,'startup-error.json')),
     ])
     // Old current.json files outlive their actors. A stopped checkpoint or stale
     // preflight cannot turn a reused OS PID into a running controller.
@@ -100,7 +101,7 @@ export function createStellarisController(options: Options) {
     const pids = [...new Set([managed?.pid, desktop?.source === 'cyberfish-desktop' && !desktop.stoppedAt ? desktop.pid : undefined,
       !checkpoint?.stopped ? lock?.pid : undefined, pendingPicture ? preflight.pid : undefined,
       checkpoint?.stopped === false ? dsh?.pid : undefined].filter((pid): pid is number => Number.isSafeInteger(pid) && isAlive(pid)))]
-    return { active: pids.length > 0, pids, preflight, checkpoint, desktop, dsh, lock,quality }
+    return { active: pids.length > 0, pids, preflight, checkpoint, desktop, dsh, lock,quality,startupError }
   }
   async function getStatus(): Promise<StellarisStatus> {
     if (options.disabled) return { phase: 'unavailable', localTest: true, canStart: false, canStop: false, message: '当前为独立本地测试，不读取真实控制器或启动游戏。' }
@@ -135,6 +136,8 @@ export function createStellarisController(options: Options) {
       const fresh = checkpoint?.stopped === false && (!current.desktop?.started || checkpoint.started >= current.desktop.started)
       phase = fresh ? snapshot?.pendingEvents ? 'attention' : 'running' : 'starting'
       message = fresh ? snapshot?.pendingEvents ? '正在处理游戏中的事件。' : '大肥鱼正在控制当前游戏。' : '正在启动官方 DSH 和群星控制器。'
+    } else if(current.startupError?.started>=current.desktop?.started&&typeof current.startupError?.message==='string') {
+      phase='error';message='模型拒绝了控制工具的参数定义，控制器已停止；请更新后重新启动。'
     } else if (lastError) { phase = 'error'; message = lastError }
     const taskState=state?.gestalt
     if(taskState&&Array.isArray(taskState.tasks)) {

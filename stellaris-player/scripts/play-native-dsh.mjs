@@ -59,6 +59,8 @@ const marketQueryBrief='已选定交易资源、方向和数量时，用inspect 
 const scoped=process.env.CYBERFISH_SURVEY_PILOT==='1';
 const runBrief=nativeCountryAI?nativeCountryAIBrief(minutes):
  (scoped?'本轮只验证科研船调查委派。以当前独立试验目标为准，保留已有施工与生产，不建立其他经营目标。':conquestBrief+'\n'+constructionQueryBrief+'\n'+task+'\n'+persistentGoals+'\n'+marketQueryBrief)+'\n'+delegationBrief.replace('watch 60秒','watch '+nativeWatchSeconds+'秒')+'\n'+arrivalBrief;
+let modelStderr='';
+child.stderr.on('data',chunk=>{modelStderr=(modelStderr+chunk.toString()).slice(-8192);});
 child.stdout.pipe(stdout); child.stderr.pipe(stderr); child.stdin.end(runBrief+'\n'+(process.env.CYBERFISH_LIVE_BRIEF||''));
 console.log(JSON.stringify({stage: 'started', pid: child.pid, minutes, events: prefix + '.jsonl'}));
 await writeFile(join(nativeDirectory,'dsh/current.json'), JSON.stringify({pid: child.pid, minutes, events: prefix + '.jsonl', stderr: prefix + '.stderr.log'}, null, 2));
@@ -93,4 +95,7 @@ catch (error) {finalCleanup = {paused: false, error: error.message};}
 finally {bridge.close();}
 await writeFile(prefix + '.cleanup.json', JSON.stringify(finalCleanup, null, 2));
 console.log(JSON.stringify({stage: 'finished', exitCode: code, cleanup: finalCleanup, events: prefix + '.jsonl'}));
-process.exitCode = code || 0;
+if(/INVALID_REQUEST[\s\S]*Invalid schema for function/.test(modelStderr)){
+ await writeFile(join(nativeDirectory,'startup-error.json'),JSON.stringify({started:bootstrapAt,at:Date.now(),message:'模型拒绝了控制工具的参数定义，控制器已停止；请更新源码后重新启动，不会自动重试模型请求。'}));
+ process.exitCode=78;
+}else process.exitCode = code || 0;
