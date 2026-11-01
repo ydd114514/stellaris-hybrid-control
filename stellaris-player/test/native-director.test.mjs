@@ -41,7 +41,7 @@ test('full galaxy is mandatory initially and at 120 seconds, overriding an ordin
  let now=0;const scenes=[],d=new NativeDirector({now:()=>now});
  const ctx={control:{owner:'native',paused:false,commandCounts:{}},state:{},status:{},emit:async e=>scenes.push({...e,at:now}),rpc:async m=>m==='get_active_events'?[]:m==='get_wars'?{wars:[]}:{success:true,full_galaxy:true}};
  await d.tick(ctx);assert.equal(scenes[0].topic,'galaxy');assert.equal(d.next,15000);
- now=119000;await d.tick(ctx);assert.notEqual(scenes.at(-1).topic,'galaxy');
+  now=114000;await d.tick(ctx);assert.notEqual(scenes.at(-1).topic,'galaxy');
  now=120000;await d.tick(ctx);assert.equal(scenes.at(-1).topic,'galaxy');assert.equal(d.lastGalaxyAt,120000);
  now=240000;await d.tick({...ctx,mode:'fixed'});assert.equal(d.lastGalaxyAt,120000);
  await d.tick(ctx);assert.equal(d.lastGalaxyAt,240000);

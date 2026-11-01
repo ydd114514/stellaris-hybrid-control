@@ -3,7 +3,9 @@ export class NativeDirector {
  constructor({now=Date.now}={}){this.now=now;this.counts={};this.next=0;this.lastTopic='';this.pending=new Map();this.shown=new Map();this.targets=new Map();this.cursor=0;this.lastGalaxyAt=null;this.galaxyRetryAt=0;}
  async tick({rpc,control,state,status,mode='auto',stopped=false,emit=async()=>{}}){
   const now=this.now();
-  const galaxyDue=this.lastGalaxyAt===null||now-this.lastGalaxyAt>=120000;
+  // Schedule five seconds early to allow the game-thread calls/readback to
+  // finish within the user's two-minute limit, rather than starting at it.
+  const galaxyDue=this.lastGalaxyAt===null||now-this.lastGalaxyAt>=115000;
   const attemptGalaxy=galaxyDue&&now>=this.galaxyRetryAt;
   if(stopped||mode!=='auto'||control.owner!=='native'||control.paused!==false||now<this.next&&!attemptGalaxy)return;
   this.next=now+3000;
