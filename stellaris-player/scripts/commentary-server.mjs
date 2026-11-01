@@ -72,6 +72,7 @@ async function poll(){
     if(state.game?.ended)state.phase='本局结束';else if(!active || checkpoint.stopped)state.phase='游戏控制已暂停';
     await nativeTail.read(resolve('.local/native-bridge',`session-${checkpoint.sessionId}.jsonl`),row=>{
       notebook.consume(row);
+      if(row.type==='director_scene'&&active&&!checkpoint.stopped)line({kind:'intent',phase:'星海导播',text:row.text,priority:0,speak:false});
       if(row.type==='intent')line(planCaption(row),planHistoryItem(row,notebook.previous?.date));
       if(row.type==='survey_control')line(surveyCaptions.consume(row));
       if(row.type==='picture_evidence')acceptFrame(row.frame);
@@ -97,7 +98,7 @@ const server=http.createServer(async(req,res)=>{
   if(req.method==='GET' && url.pathname==='/preview/game.bmp'){
     try{if(!previewPath)throw 0;const info=await stat(previewPath);if(info.size>32*1024*1024)throw 0;const bytes=await readFile(previewPath);res.writeHead(200,{'content-type':'image/bmp','cache-control':'no-store'});return res.end(bytes);}catch{return json(404,{error:'No recent game preview'});}
   }
-  if(req.method==='GET' && url.pathname==='/health')return json(200,{application:'cyberfish-commentary',version:'0.3',captionProtocol:'actual-playback-v1',pid:process.pid});
+  if(req.method==='GET' && url.pathname==='/health')return json(200,{application:'cyberfish-commentary',version:'0.3',captionProtocol:'actual-playback-director-v2',pid:process.pid});
   if(req.method==='GET' && url.pathname==='/api/state')return json(200,state);
   if(req.method==='GET' && url.pathname==='/events'){
     res.writeHead(200,{'content-type':'text/event-stream; charset=utf-8','cache-control':'no-cache','connection':'keep-alive'});res.write(`data: ${JSON.stringify(state)}\n\n`);clients.add(res);req.on('close',()=>clients.delete(res));return;

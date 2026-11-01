@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 
-export const COMMENTARY_CAPTION_PROTOCOL='actual-playback-v1';
+export const COMMENTARY_CAPTION_PROTOCOL='actual-playback-director-v2';
 
 /** Own overlay lifecycle only; injectable dependencies keep tests offline. */
 export async function ensureCommentary(options={}) {

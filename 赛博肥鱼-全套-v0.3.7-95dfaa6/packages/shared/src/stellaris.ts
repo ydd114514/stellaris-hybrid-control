@@ -27,6 +27,7 @@ export interface StellarisBridge {
   stop(): Promise<StellarisResult>
   setHybridSurvey?(enabled:boolean): Promise<StellarisResult>
   setNativeCountryAI?(enabled:boolean): Promise<StellarisResult>
+  presentationMode?(mode?:'auto'|'fixed'):Promise<'auto'|'fixed'>
   chooseProject(): Promise<StellarisResult>
   saveGameKey?(key: string): Promise<StellarisResult>
   music?: {

@@ -4,6 +4,7 @@ const bridge: StellarisBridge = {
   getStatus: () => ipcRenderer.invoke('dsh:status'),
   setHybridSurvey: enabled => ipcRenderer.invoke('dsh:set-hybrid-survey',enabled),
   setNativeCountryAI: enabled => ipcRenderer.invoke('dsh:set-native-country-ai',enabled),
+  presentationMode: mode => ipcRenderer.invoke('dsh:director-mode',mode),
   start: () => ipcRenderer.invoke('dsh:start'),
   stop: () => ipcRenderer.invoke('dsh:stop'),
   chooseProject: () => ipcRenderer.invoke('dsh:choose-project'),

@@ -18,6 +18,7 @@ import {replaceCheckpoint} from './checkpoint-replace.mjs';
 import {surveyWatchWindow} from './survey-watch-window.mjs';
 import {surveyGameDay} from './survey-idle-policy.mjs';
 import {open, readFile, appendFile, mkdir, stat, unlink, writeFile} from 'node:fs/promises';
+import {NativeDirector} from './native-director.mjs';
 import {randomUUID} from 'node:crypto';
 import {resolve} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
@@ -152,6 +153,7 @@ export class NativeGame {
       if(category!=='read')this.queueEvidence({type:'rpc_write',sequence:++this.writeSequence,method,category,afterStop:!!(this.stoppingRequested||this.stopped)});
     };
     this.sessionId = randomUUID(); this.started = now(); this.ends = this.started + minutes * 60000;
+    this.nativeDirector=new NativeDirector({now});
     this.controllerRunId=process.env.CYBERFISH_CONTROLLER_RUN;
     this.receipts = new Map(); this.cooldowns = new Map(); this.uncertain = false; this.revision = 0;
     this.trackedIntentKeys=new Map();
@@ -253,7 +255,7 @@ export class NativeGame {
   }
   assertRpcAllowed(method,params={}) {
     const countryRead=['country_ai_lease','country_ai_observation','country_ai_routine_gate'].includes(method)&&params.action==='status';
-    if(this.nativeCountryAIFence&&!(this.countryAI?.view().owner==='native'&&(reservedRPC(method)||steeringRPC(method,params)))&&rpcEvidenceCategory(method,params)!=='read'&&!(method==='set_paused'&&params.paused===true)&&method!=='country_ai_lease')throw Error('原生国家 AI 持权或交接待确认；本地派单已封口，先接管并回读后再干预');
+    if(this.nativeCountryAIFence&&!(this.countryAI?.view().owner==='native'&&(reservedRPC(method)||steeringRPC(method,params)||rpcEvidenceCategory(method,params)==='presentation'))&&rpcEvidenceCategory(method,params)!=='read'&&!(method==='set_paused'&&params.paused===true)&&method!=='country_ai_lease')throw Error('原生国家 AI 持权或交接待确认；本地派单已封口，先接管并回读后再干预');
     if((this.stoppingRequested||this.stopped)&&!(/^(get_|find_)/.test(method)||method==='ping'||countryRead||method==='country_ai_lease'&&params.action==='stop'||method==='set_paused'&&params.paused===true||method==='set_survey_automation'&&params.enabled===false||method==='set_monthly_trade'&&params.cancel===true&&(this.monthlyExecution?.owns(params.order_id)||recoveryOwnsOrder(this.gestalt.data.monthlyTrades||[],this.sessionId,params.order_id))))
       throw Error('控制会话正在停止，只允许状态核对、暂停与收权');
   }
@@ -1607,7 +1609,13 @@ export class NativeGame {
           }
           const due=this.strategyReview.due(this.lastState);
           if(control.reviewDue||due.length){this.nativeStrategicReviewDue=true;this.lastState.strategyWakeReasons=due;}
-          await this.publishRuntimeHeartbeat();return;
+          await this.publishRuntimeHeartbeat();
+          try{
+            let mode='auto';
+            try{mode=JSON.parse(await readFile(resolve(this.directory,'director-settings.json'),'utf8')).mode;}catch(error){if(error.code!=='ENOENT')mode='fixed';}
+            await this.nativeDirector.tick({rpc:(m,p)=>this.rpc(m,p),control,state:this.lastState,status,mode,stopped:this.stoppingRequested||this.stopped,emit:e=>this.log(e)});
+          }catch{} // Presentation cannot fail the native control loop.
+          return;
         }
         this.needsDecisionRefresh=true;this.decisionPause={at:this.now(),reasons:['native_country_ai_review'],control};
       }catch(error){

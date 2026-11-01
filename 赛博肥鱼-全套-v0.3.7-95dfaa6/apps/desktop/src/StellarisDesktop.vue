@@ -13,6 +13,12 @@ const view = ref<'game' | 'live' | 'ai' | 'speech'>(requestedPanel==='speech'?'s
 const status = ref<StellarisStatus>({ phase: 'unavailable', message: '正在读取本机控制器状态…', canStart: false, canStop: false })
 const busy = ref(false), notice = ref(''), error = ref(false), loading = ref(false)
 const gameKey = ref('')
+const directorMode=ref<'auto'|'fixed'>('auto')
+async function changeDirector(){
+  if(!api?.presentationMode)return
+  try{directorMode.value=await api.presentationMode(directorMode.value==='auto'?'fixed':'auto')}
+  catch{notice.value='导播模式保存失败，请重试。';error.value=true}
+}
 async function saveGameKey() {
   if (!api?.saveGameKey || busy.value) return
   busy.value = true
@@ -68,6 +74,7 @@ onMounted(async () => {
   mounted = true
   if (!api) { status.value = { phase: 'unavailable', message: '这里是界面预览，请使用「群星控制器大肥鱼.exe」连接本机控制器。', canStart: false, canStop: false }; return }
   await refresh(); if (mounted) timer = setInterval(() => void refresh(), 2000)
+  if(api.presentationMode)directorMode.value=await api.presentationMode()
 })
 onUnmounted(() => { mounted = false; clearInterval(timer) })
 </script>
@@ -95,6 +102,7 @@ onUnmounted(() => { mounted = false; clearInterval(timer) })
           <div class="hybrid-mode" data-testid="hybrid-settings">
             <label><input type="checkbox" :checked="status.hybrid?.nativeCountryAIEnabled === true" :disabled="busy || active || !api?.setNativeCountryAI || status.localTest" @change="changeCountryAI">原生国家 AI 托管：全面日常运营</label>
             <p v-if="status.hybrid?.nativeCountryAIEnabled">原生AI自己经营、扩张和调兵；大肥鱼用方针引导，仅决定宣战、议和和外交。停止会关闭原生AI。</p>
+            <button v-if="status.hybrid?.nativeCountryAIEnabled" class="secondary" :disabled="!api?.presentationMode" @click="changeDirector">{{directorMode==='auto'?'自动导播中 · 点击固定当前画面':'画面已固定 · 点击恢复自动导播'}}</button>
             <template v-else>
               <label><input type="checkbox" :checked="status.hybrid?.surveyEnabled === true" :disabled="busy || active || !api?.setHybridSurvey || status.localTest" @change="changeSurvey">旧模式：混合调查</label>
               <p>{{ status.hybrid?.configurationKnown ? (status.hybrid.surveyEnabled ? '仅把调查交给原生自动调查，其他操作由大肥鱼安排。' : '普通模式：操作由大肥鱼逐项安排。') : '控制模式配置尚未确认。' }}运行前可更改。</p>
