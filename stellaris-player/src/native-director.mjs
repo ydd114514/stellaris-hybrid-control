@@ -1,13 +1,28 @@
 // Presentation only. No work orders, game pauses, model calls or blocking holds.
 export class NativeDirector {
- constructor({now=Date.now}={}){this.now=now;this.counts={};this.next=0;this.lastTopic='';this.pending=new Map();this.shown=new Map();this.targets=new Map();this.cursor=0;}
+ constructor({now=Date.now}={}){this.now=now;this.counts={};this.next=0;this.lastTopic='';this.pending=new Map();this.shown=new Map();this.targets=new Map();this.cursor=0;this.lastGalaxyAt=null;this.galaxyRetryAt=0;}
  async tick({rpc,control,state,status,mode='auto',stopped=false,emit=async()=>{}}){
   const now=this.now();
-  if(stopped||mode!=='auto'||control.owner!=='native'||control.paused!==false||now<this.next)return;
+  const galaxyDue=this.lastGalaxyAt===null||now-this.lastGalaxyAt>=120000;
+  const attemptGalaxy=galaxyDue&&now>=this.galaxyRetryAt;
+  if(stopped||mode!=='auto'||control.owner!=='native'||control.paused!==false||now<this.next&&!attemptGalaxy)return;
   this.next=now+3000;
   // Never close a central choice or war-goal window to show routine work.
   const events=await rpc('get_active_events'),wars=await rpc('get_wars');
-  if(!Array.isArray(events)||events.length||wars.warGoalsWindow)return;
+  if(!Array.isArray(events)||events.length||wars.warGoalsWindow){this.galaxyRetryAt=now+3000;return;}
+  if(attemptGalaxy){
+   this.galaxyRetryAt=now+10000;
+   try{
+    const shown=await rpc('show_galaxy_map');
+    if(shown.success===true&&shown.full_galaxy===true){
+     const readback=await rpc('get_camera_state');
+     if(readback.success===true&&readback.full_galaxy===true){
+      this.lastGalaxyAt=this.now();this.next=this.lastGalaxyAt+15000;this.lastTopic='galaxy';
+      await emit({type:'director_scene',topic:'galaxy',text:'拉开完整银河星图，看看帝国在星海中的位置。',date:state.date,fullGalaxy:true,camera:readback});return;
+     }
+    }
+   }catch{} // A failed attempt does not reset the two-minute deadline.
+  }
   const counts=control.commandCounts??{},changed=[];
   for(const [name,row] of Object.entries(counts)){
    const n=Number(row.admitted)||0;if(n>(this.counts[name]??0))changed.push(name);this.counts[name]=n;

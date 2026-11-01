@@ -1,10 +1,15 @@
 #include "country_ai_routine_policy.hpp"
 #include "country_ai_queue_state.hpp"
+#include "galaxy_camera_layout.hpp"
 #include <cstdlib>
 #include <iostream>
 using namespace bridge::cyberfish;
 void Check(bool value){if(!value)std::abort();}
 int main(){
+ Check(GalaxyOverviewZoom(500,16.0/9.0)>=3000);
+ Check(GalaxyOverviewZoom(1000,16.0/9.0)>GalaxyOverviewZoom(500,16.0/9.0));
+ Check(GalaxyOverviewZoom(500,0.5)>GalaxyOverviewZoom(500,16.0/9.0));
+ Check(GalaxyOverviewZoom(0,1)==0);Check(GalaxyOverviewZoom(500,0)==0);
  NativeAIQueueState queue;queue.vtableRva=kCountryAIVtableRva;
  Check(NativeAIQueueEmpty(queue,0)); // Exact fresh-game dormant state.
  queue.initialized=1;Check(!NativeAIQueueEmpty(queue,0));queue.initialized=0;

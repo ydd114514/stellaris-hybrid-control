@@ -6,7 +6,7 @@ export function rpcEvidenceCategory(method,params={}) {
  if(method==='set_survey_automation'&&params.execute!==true)return 'validation';
  if(method==='set_monthly_trade'&&params.cancel===true)return 'cleanup';
  if(method==='set_paused'&&params.paused===true||method==='set_survey_automation'&&params.enabled===false)return 'cleanup';
- if(['focus_fleet','focus_planet','show_panel'].includes(method))return 'presentation';
+ if(['focus_fleet','focus_planet','show_panel','show_galaxy_map'].includes(method))return 'presentation';
  if(method==='set_paused'||method==='set_speed')return 'control';
  return 'work';
 }

@@ -8,6 +8,7 @@
 #include "game_state.hpp"
 #include "command_builder.hpp"
 #include <algorithm>
+#include "galaxy_camera_layout.hpp"
 
 namespace bridge::cyberfish {
 using Microsoft::WRL::ComPtr;
@@ -73,6 +74,51 @@ nlohmann::json CaptureFrame() {
     if (!file) return {{"success",false},{"error","Cannot save game frame"}};
     const auto utf8=path.u8string();
     return {{"success",true},{"path",std::string(utf8.begin(),utf8.end())},{"picture",picture}};
+}
+namespace {
+template<class T> bool CameraRead(uintptr_t at,T& value){SIZE_T n=0;return at>=0x10000&&ReadProcessMemory(GetCurrentProcess(),(void*)at,&value,sizeof value,&n)&&n==sizeof value;}
+bool GalaxyRadius(double& radius){
+ const auto base=CommandBuilder::Get().Base();uintptr_t db=0,slots=0;uint32_t capacity=0;float scale=0;unsigned count=0;radius=0;
+ if(!CameraRead(base+sdk::db::CGalacticObject,db)||!CameraRead(db+0x18,slots)||!CameraRead(db+0x20,capacity)||capacity>65536||!CameraRead(base+0x3114f00,scale)||!std::isfinite(scale)||scale<=0||scale>100)return false;
+ for(uint32_t i=0;i<capacity;++i){uintptr_t object=0;uint32_t id=0xffffffffu;int64_t x=0,y=0;
+  if(!CameraRead(slots+i*16+8,object))return false;if(!object)continue;
+  if(!CameraRead(object+sdk::rt::CGalacticObject_id,id)||id==0xffffffffu||(id&0xffffffu)!=i)continue;
+  const auto coord=object+sdk::ent::CGalacticObject::coordinate;
+  if(!CameraRead(coord+sdk::ent::CCelestialCoordinate::x,x)||!CameraRead(coord+sdk::ent::CCelestialCoordinate::y,y))return false;
+  const double r=std::hypot(double(x)/100000.0,double(y)/100000.0)*scale;if(!std::isfinite(r))return false;
+  radius=std::max(radius,r);++count;
+ }
+ return count>0&&radius>0;
+}
+}
+nlohmann::json CameraState(){
+ const auto base=CommandBuilder::Get().Base();auto idler=(uintptr_t)GameState::Get().GetInGameIdler();
+ uint32_t system=0,focus=0;float pose[6]{};double radius=0;const auto picture=PictureState();
+ if(!idler||!CommandBuilder::Get().SdkMatchesExe()||!CameraRead(idler+0x218+0x274,system)||!CameraRead(idler+0x218+0x288,focus)||!CameraRead(idler+0x218+0x230,pose)||!GalaxyRadius(radius))return {{"success",false},{"error","Galaxy camera state unavailable"}};
+ const auto required=GalaxyOverviewZoom(radius,double(picture.value("width",0))/std::max(1,picture.value("height",0)));
+ const bool finite=std::all_of(std::begin(pose),std::end(pose),[](float x){return std::isfinite(x);});
+ const bool full=finite&&system==0xffffffffu&&focus==10&&required>0&&std::abs(pose[0])<1&&std::abs(pose[1])<1&&std::abs(pose[2])<1&&pose[3]>=required*0.995f&&pose[4]>=1.47f;
+ return {{"success",true},{"galaxy_view",system==0xffffffffu},{"full_galaxy",full},{"follow_target_cleared",focus==10},{"center",{pose[0],pose[1],pose[2]}},{"zoom",pose[3]},{"pitch",pose[4]},{"required_zoom",required},{"galaxy_radius",radius}};
+}
+nlohmann::json ShowGalaxyMap(){
+ auto& builder=CommandBuilder::Get();const auto base=builder.Base();auto idler=(uint8_t*)GameState::Get().GetInGameIdler();double radius=0;const auto picture=PictureState();
+ const uint8_t clearPrefix[]{0x48,0x83,0xec,0x08,0x83,0xb9,0x88,0x02,0,0,0x0a};
+ const uint8_t galaxyPrefix[]{0x48,0x89,0x5c,0x24,0x08,0x57,0x48,0x83,0xec,0x30};
+ if(!idler||!builder.SdkMatchesExe()||!picture.value("visible",false)||!GalaxyRadius(radius)||memcmp((void*)(base+0xf30ee0),clearPrefix,sizeof clearPrefix)||memcmp((void*)(base+0xf323f0),galaxyPrefix,sizeof galaxyPrefix))return {{"success",false},{"error","Galaxy camera interface unavailable"}};
+ const float zoom=GalaxyOverviewZoom(radius,double(picture.value("width",0))/std::max(1,picture.value("height",0)));if(!zoom)return {{"success",false},{"error","Galaxy extent cannot be fitted safely"}};
+ if(ShowPanel("game").value("success",false)!=true)return {{"success",false},{"error","Managed panel could not close"}};
+ struct Context{uintptr_t base;uint8_t* camera;float zoom;};Context ctx{base,idler+0x218,zoom};
+ auto run=[](void* p,void*){auto& x=*(Context*)p;
+  ((void(*)(void*))(x.base+0xf30ee0))(x.camera);
+  if(*(uint32_t*)(x.camera+0x274)!=0xffffffffu)((void(*)(void*))(x.base+0xf323f0))(x.camera);
+  // The two native camera-position records are desired/current, each six floats.
+  // Set only presentation state; no world, fleet, player or pause state changes.
+  const float pose[]{0,0,0,x.zoom,1.48352986f,0};
+  memcpy(x.camera+0x218,pose,sizeof pose);memcpy(x.camera+0x230,pose,sizeof pose);
+  *(uint32_t*)(x.camera+0x24c)=6;
+ };
+ if(!builder.CallGuarded(run,&ctx))return {{"success",false},{"error","Galaxy camera call failed"}};
+ auto state=CameraState();state["success"]=state.value("full_galaxy",false);return state;
 }
 nlohmann::json FocusFleet(uint32_t fleet_id) {
     auto& builder=CommandBuilder::Get();

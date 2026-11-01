@@ -6,7 +6,7 @@ test('director follows real categories, paces scenes, and never pauses or places
  await d.tick(ctx);assert.equal(scenes.length,1);
  now=20000;await d.tick({...ctx,mode:'fixed'});assert.equal(scenes.length,1);
  await d.tick({...ctx,control:{...ctx.control,owner:'unconfirmed'}});assert.equal(scenes.length,1);
- assert.ok(calls.every(c=>['get_active_events','get_wars','show_panel'].includes(c.m)));
+ assert.ok(calls.every(c=>['get_active_events','get_wars','show_panel','show_galaxy_map'].includes(c.m)));
 });
 test('central events block presentation and failed UI never propagates into AI control',async()=>{
  const d=new NativeDirector({now:()=>1000});let writes=0;
@@ -36,4 +36,20 @@ test('simultaneous market and research changes are both retained for presentatio
  let now=0;const scenes=[],d=new NativeDirector({now:()=>now});
  const ctx={control:{owner:'native',paused:false,commandCounts:{research_technology_command:{admitted:1},market_buy_resource_command:{admitted:1}}},state:{},status:{},emit:async e=>scenes.push(e),rpc:async m=>m==='get_active_events'?[]:m==='get_wars'?{wars:[]}:{success:true}};
  await d.tick(ctx);now=18000;await d.tick(ctx);assert.deepEqual(scenes.map(x=>x.topic),['research','market']);
+});
+test('full galaxy is mandatory initially and at 120 seconds, overriding an ordinary hold',async()=>{
+ let now=0;const scenes=[],d=new NativeDirector({now:()=>now});
+ const ctx={control:{owner:'native',paused:false,commandCounts:{}},state:{},status:{},emit:async e=>scenes.push({...e,at:now}),rpc:async m=>m==='get_active_events'?[]:m==='get_wars'?{wars:[]}:{success:true,full_galaxy:true}};
+ await d.tick(ctx);assert.equal(scenes[0].topic,'galaxy');assert.equal(d.next,15000);
+ now=119000;await d.tick(ctx);assert.notEqual(scenes.at(-1).topic,'galaxy');
+ now=120000;await d.tick(ctx);assert.equal(scenes.at(-1).topic,'galaxy');assert.equal(d.lastGalaxyAt,120000);
+ now=240000;await d.tick({...ctx,mode:'fixed'});assert.equal(d.lastGalaxyAt,120000);
+ await d.tick(ctx);assert.equal(d.lastGalaxyAt,240000);
+});
+test('failed full-map readback never clears the deadline; event windows defer it',async()=>{
+ let now=0,blocked=true,valid=false;const d=new NativeDirector({now:()=>now});
+ const ctx={control:{owner:'native',paused:false},state:{},status:{},rpc:async m=>m==='get_active_events'?(blocked?[{}]:[]):m==='get_wars'?{wars:[]}:m==='get_camera_state'?{success:true,full_galaxy:valid}:{success:true,full_galaxy:true}};
+ await d.tick(ctx);assert.equal(d.lastGalaxyAt,null);
+ now=3000;blocked=false;await d.tick(ctx);assert.equal(d.lastGalaxyAt,null);
+ now=13000;valid=true;await d.tick(ctx);assert.equal(d.lastGalaxyAt,13000);
 });
