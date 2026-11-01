@@ -20,3 +20,20 @@ test('planet caption describes a real queue without claiming completion',async()
   emit:async e=>{scene=e;},rpc:async m=>m==='get_active_events'?[]:m==='get_wars'?{wars:[]}:m==='get_planet_details'?{construction_queue:[{item_name:'研究区'}]}:{success:true}});
  assert.equal(scene.text,'地球当前建设队列：研究区。');assert.equal(scene.topic,'planet');
 });
+test('continuous survey noise cannot monopolize the screen or repeat the same ship',async()=>{
+ let now=0;const scenes=[],d=new NativeDirector({now:()=>now});
+ const ctx={control:{owner:'native',paused:false,commandCounts:{}},state:{},status:{outliner:{sectors_summary:{sectors:[{colonies_summary:[{planet_id:3,name:'地球'}]}]}}},
+  emit:async e=>scenes.push({...e,at:now}),rpc:async m=>m==='get_active_events'?[]:m==='get_wars'?{wars:[]}:m==='get_civilian_fleets'?{science_ships:[{fleet_id:1},{fleet_id:2}],construction_ships:[{fleet_id:4}]}:m==='get_planet_details'?{construction_queue:[]}:{success:true}};
+ for(now=0;now<=300000;now+=3000){ctx.control.commandCounts={survey_planet_order:{admitted:now+1},build_orbital_station_order:{admitted:now+1}};await d.tick(ctx);}
+ assert.ok(new Set(scenes.map(x=>x.topic)).size>=5);
+ assert.ok(scenes.every((x,i)=>!i||x.topic!==scenes[i-1].topic));
+ const ships=new Map();for(const s of scenes)if(s.fleetId!==undefined){assert.ok(s.at-(ships.get(s.fleetId)??-Infinity)>=180000);ships.set(s.fleetId,s.at);}
+ assert.ok(scenes.some(s=>s.topic==='stations'&&s.fleetId===4));
+ assert.ok(scenes.some(s=>s.topic==='exploration'&&[1,2].includes(s.fleetId)));
+ assert.ok(scenes.every((x,i)=>!i||x.at-scenes[i-1].at<=21000));
+});
+test('simultaneous market and research changes are both retained for presentation',async()=>{
+ let now=0;const scenes=[],d=new NativeDirector({now:()=>now});
+ const ctx={control:{owner:'native',paused:false,commandCounts:{research_technology_command:{admitted:1},market_buy_resource_command:{admitted:1}}},state:{},status:{},emit:async e=>scenes.push(e),rpc:async m=>m==='get_active_events'?[]:m==='get_wars'?{wars:[]}:{success:true}};
+ await d.tick(ctx);now=18000;await d.tick(ctx);assert.deepEqual(scenes.map(x=>x.topic),['research','market']);
+});
