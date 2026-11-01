@@ -18,6 +18,7 @@ test('full native default keeps routine dispatch fenced, admits reserved player 
  assert.equal(f.c.view().commandCounts.queue_fleet_order_command.admitted,2);
  const host={nativeCountryAIFence:true,countryAI:f.c};
  for(const m of ['declare_war','offer_peace','diplomacy_action','respond_diplomacy'])assert.doesNotThrow(()=>NativeGame.prototype.assertRpcAllowed.call(host,m,{}));
+ for(const m of ['show_panel','focus_fleet','focus_planet','show_galaxy_map','capture_game_frame'])assert.doesNotThrow(()=>NativeGame.prototype.assertRpcAllowed.call(host,m,{}));
  assert.doesNotThrow(()=>NativeGame.prototype.assertRpcAllowed.call(host,'toggle_edict',{edict_key:'cfsteer_economy_research',enabled:true}));
  for(const m of ['build_ship','select_research','move_fleet','set_job_workforce_limit'])assert.throws(()=>NativeGame.prototype.assertRpcAllowed.call(host,m,{}),/封口/);
  assert.throws(()=>NativeGame.prototype.assertRpcAllowed.call(host,'toggle_edict',{edict_key:'unknown',enabled:true}));

@@ -53,3 +53,32 @@ test('failed full-map readback never clears the deadline; event windows defer it
  now=3000;blocked=false;await d.tick(ctx);assert.equal(d.lastGalaxyAt,null);
  now=13000;valid=true;await d.tick(ctx);assert.equal(d.lastGalaxyAt,13000);
 });
+test('cancelling after a read prevents all later presentation writes',async()=>{
+ let allowed=true;const writes=[],d=new NativeDirector();
+ await d.tick({control:{owner:'native',paused:false},state:{},status:{},shouldContinue:async()=>allowed,rpc:async m=>{
+  if(m==='get_active_events'){allowed=false;return [];}writes.push(m);return {wars:[],success:true};
+ }});
+ assert.deepEqual(writes,[]);assert.equal(d.lastGalaxyAt,null);
+});
+test('overlapping ticks cannot issue duplicate map scenes and read failures stay local',async()=>{
+ let release;const barrier=new Promise(r=>{release=r;}),scenes=[];let reads=0;
+ const d=new NativeDirector(),ctx={control:{owner:'native',paused:false},state:{},status:{},emit:async e=>scenes.push(e),rpc:async m=>{
+  if(m==='get_active_events'){reads++;await barrier;return [];}if(m==='get_wars')return {wars:[]};return {success:true,full_galaxy:true};
+ }};
+ const first=d.tick(ctx);await d.tick(ctx);release();await first;assert.equal(reads,1);assert.equal(scenes.length,1);
+ await assert.doesNotReject(()=>new NativeDirector().tick({...ctx,rpc:async()=>{throw Error('pipe unavailable')}}));
+});
+test('failed map calls back off without recording success, ordinary scenes continue',async()=>{
+ let now=0,mapCalls=0;const scenes=[],d=new NativeDirector({now:()=>now});
+ const ctx={control:{owner:'native',paused:false},state:{},status:{},emit:async e=>scenes.push(e),rpc:async m=>{
+  if(m==='get_active_events')return [];if(m==='get_wars')return {wars:[]};if(m==='show_galaxy_map'){mapCalls++;return {success:false};}return {success:true};
+ }};
+ for(now=0;now<=90000;now+=1000)await d.tick(ctx);
+ assert.ok(mapCalls<=4);assert.equal(d.lastGalaxyAt,null);assert.ok(scenes.length>=3);assert.ok(scenes.every(s=>s.topic!=='galaxy'));
+});
+test('a new lease resets command counters without restarting the full-map clock',async()=>{
+ let now=0;const scenes=[],d=new NativeDirector({now:()=>now});d.lastGalaxyAt=0;
+ const ctx={control:{owner:'native',paused:false,generation:1,commandCounts:{research_technology_command:{admitted:100}}},state:{},status:{},emit:async e=>scenes.push(e),rpc:async m=>m==='get_active_events'?[]:m==='get_wars'?{wars:[]}:{success:true}};
+ await d.tick(ctx);now=50000;ctx.control={...ctx.control,generation:2,commandCounts:{market_buy_resource_command:{admitted:1}}};await d.tick(ctx);
+ assert.equal(scenes.at(-1).topic,'market');assert.equal(d.counts.research_technology_command,undefined);assert.equal(d.lastGalaxyAt,0);
+});

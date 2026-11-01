@@ -27,6 +27,14 @@ async function fixture(now?:()=>number,onStopSleep?:(root:string)=>Promise<void>
   return { root, data, manager, living, preflight, launch, children, enginePackagePath }
 }
 describe('manual desktop DSH lifecycle, entirely offline', () => {
+  it('publishes director countdown and fixed mode from the current checkpoint without starting anything',async()=>{
+    const f=await fixture(()=>61000);f.living.add(1234);
+    await writeFile(join(f.root,'.local/native-bridge/controller.lock'),JSON.stringify({pid:1234}));
+    await writeFile(join(f.root,'.local/native-bridge/latest-session.json'),JSON.stringify({started:1,stopped:false,state:{date:'2200.01.01',director:{mode:'fixed',topic:'planet',lastGalaxyAt:1000,blocked:'event_window'}}}));
+    const status=await f.manager.getStatus();expect(status.director).toMatchObject({mode:'fixed',active:true,topic:'殖民地',galaxyRemainingSeconds:60,blocked:'event_window'});
+    expect(f.launch).not.toHaveBeenCalled();expect(f.preflight).not.toHaveBeenCalled();
+    f.living.clear();expect((await f.manager.getStatus()).director?.active).toBe(false);
+  });
   it('shows a current startup schema failure without exposing raw model errors or stale failures',async()=>{
     const f=await fixture();
     await writeFile(join(f.root,'.local/desktop-controller.json'),JSON.stringify({pid:1234,started:1000,source:'cyberfish-desktop',stoppedAt:1100}));

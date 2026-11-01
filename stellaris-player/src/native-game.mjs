@@ -19,6 +19,7 @@ import {surveyWatchWindow} from './survey-watch-window.mjs';
 import {surveyGameDay} from './survey-idle-policy.mjs';
 import {open, readFile, appendFile, mkdir, stat, unlink, writeFile} from 'node:fs/promises';
 import {NativeDirector} from './native-director.mjs';
+import {loadDirectorSettings} from './director-settings.mjs';
 import {randomUUID} from 'node:crypto';
 import {resolve} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
@@ -1609,12 +1610,19 @@ export class NativeGame {
           }
           const due=this.strategyReview.due(this.lastState);
           if(control.reviewDue||due.length){this.nativeStrategicReviewDue=true;this.lastState.strategyWakeReasons=due;}
-          await this.publishRuntimeHeartbeat();
           try{
-            let mode='auto';
-            try{mode=JSON.parse(await readFile(resolve(this.directory,'director-settings.json'),'utf8')).mode;}catch(error){if(error.code!=='ENOENT')mode='fixed';}
-            await this.nativeDirector.tick({rpc:(m,p)=>this.rpc(m,p),control,state:this.lastState,status,mode,stopped:this.stoppingRequested||this.stopped,emit:e=>this.log(e)});
+            const path=resolve(this.directory,'director-settings.json'),settings=await loadDirectorSettings(path);
+            await this.nativeDirector.tick({rpc:async(m,p)=>{
+              await this.countryAI.heartbeat();
+              const actual=this.countryAI.view();
+              if(this.stoppingRequested||this.stopped||actual.owner!=='native'||actual.paused!==false||(await loadDirectorSettings(path)).mode!=='auto')throw Error('导播控制权或展示模式已改变');
+              return this.rpc(m,p);
+            },control,state:this.lastState,status,mode:settings.mode,stopped:this.stoppingRequested||this.stopped,
+             shouldContinue:async()=>!this.stoppingRequested&&!this.stopped&&(await loadDirectorSettings(path)).mode==='auto',emit:e=>this.log(e)});
+            if(!settings.configurationKnown)this.nativeDirector.blocked='configuration_invalid';
+            this.lastState.director=this.nativeDirector.view();
           }catch{} // Presentation cannot fail the native control loop.
+          await this.publishRuntimeHeartbeat();
           return;
         }
         this.needsDecisionRefresh=true;this.decisionPause={at:this.now(),reasons:['native_country_ai_review'],control};

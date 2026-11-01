@@ -103,6 +103,10 @@ onUnmounted(() => { mounted = false; clearInterval(timer) })
             <label><input type="checkbox" :checked="status.hybrid?.nativeCountryAIEnabled === true" :disabled="busy || active || !api?.setNativeCountryAI || status.localTest" @change="changeCountryAI">原生国家 AI 托管：全面日常运营</label>
             <p v-if="status.hybrid?.nativeCountryAIEnabled">原生AI自己经营、扩张和调兵；大肥鱼用方针引导，仅决定宣战、议和和外交。停止会关闭原生AI。</p>
             <button v-if="status.hybrid?.nativeCountryAIEnabled" class="secondary" :disabled="!api?.presentationMode" @click="changeDirector">{{directorMode==='auto'?'自动导播中 · 点击固定当前画面':'画面已固定 · 点击恢复自动导播'}}</button>
+            <p v-if="status.director">{{!status.director.active?'导播已停止':directorMode==='fixed'?'画面已固定':`当前展示：${status.director.topic}`}} · {{!status.director.active?'星图自动展示未运行':directorMode==='fixed'?'恢复自动后优先补逾期星图':status.director.galaxyOverdue?'银河全图待展示':`距下次银河全图最多 ${status.director.galaxyRemainingSeconds} 秒`}}</p>
+            <p v-if="status.director?.blocked==='event_window'">事件窗口优先，处理后补展示。</p>
+            <p v-if="status.director?.blocked==='presentation_failed'">展示暂不可用，原生经营继续；稍后重试。</p>
+            <p v-if="status.director?.blocked==='configuration_invalid'">导播配置异常，画面保持固定；可点击恢复自动重新保存。</p>
             <template v-else>
               <label><input type="checkbox" :checked="status.hybrid?.surveyEnabled === true" :disabled="busy || active || !api?.setHybridSurvey || status.localTest" @change="changeSurvey">旧模式：混合调查</label>
               <p>{{ status.hybrid?.configurationKnown ? (status.hybrid.surveyEnabled ? '仅把调查交给原生自动调查，其他操作由大肥鱼安排。' : '普通模式：操作由大肥鱼逐项安排。') : '控制模式配置尚未确认。' }}运行前可更改。</p>

@@ -12,6 +12,7 @@ import { createQQVault } from './qq-vault'
 import { createBilibiliRoom } from './bilibili-room'
 import { createStellarisAi } from './stellaris-ai'
 import {createStellarisSpeech} from './stellaris-speech'
+import {loadDirectorSettings,saveDirectorSettings} from '../../../../stellaris-player/src/director-settings.mjs'
 import { prepareStellarisBundle } from './stellaris-bundle'
 import { resolveStellarisProfile } from './stellaris-profile'
 
@@ -100,8 +101,8 @@ else {
       assertSender(event);const status=await controller!.getStatus();
       if(!status.projectDirectory)throw Error('控制器目录尚未就绪');
       const path=join(status.projectDirectory,'.local/native-bridge/director-settings.json');
-      if(mode!==undefined){if(mode!=='auto'&&mode!=='fixed')throw Error('展示模式无效');mkdirSync(dirname(path),{recursive:true});await writeFile(path,JSON.stringify({mode}));}
-      try{return JSON.parse(await readFile(path,'utf8')).mode==='fixed'?'fixed':'auto';}catch{return 'auto';}
+      if(mode!==undefined)await saveDirectorSettings(path,mode);
+      return (await loadDirectorSettings(path)).mode
     })
     ipcMain.handle('dsh:start', event => { assertSender(event); return controller!.start() })
     ipcMain.handle('dsh:stop', event => { assertSender(event); return controller!.stop() })

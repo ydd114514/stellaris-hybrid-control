@@ -1,4 +1,5 @@
 import {nativeCountryAISummary} from '../../../../stellaris-player/src/native-country-ai-summary.mjs'
+import {directorSummary} from '../../../../stellaris-player/src/director-settings.mjs'
 import {confirmedCountryAIHandoff} from '../../../../stellaris-player/src/country-ai-handoff.mjs'
 import {loadHybridSettings,saveHybridSettings,saveNativeCountryAISettings} from '../../../../stellaris-player/src/hybrid-settings-store.mjs'
 import { spawn, execFile, type ChildProcess } from 'node:child_process'
@@ -152,7 +153,7 @@ export function createStellarisController(options: Options) {
     if (!nodeAvailable && !current.active) { phase = 'unavailable'; message = '未找到 Node.js，请先安装到正常全局位置。' }
     if (!engine && !current.active) { phase = 'unavailable'; message = '未找到官方 DeepSeek Harness，请先安装本机 DSH。' }
     if(!hybrid.configurationKnown&&!current.active){phase='unavailable';message=hybrid.message!}
-    return { phase, message, hybrid, projectDirectory: root, canStart: hybrid.configurationKnown && nodeAvailable && !!engine && !busy && !current.active, canStop: current.active && !stopping, ...(engine ? { engine } : {}),
+    return { phase, message, hybrid, director:directorSummary(checkpoint?.state?.director,{now:now(),active:current.active&&checkpoint?.stopped!==true}),projectDirectory: root, canStart: hybrid.configurationKnown && nodeAvailable && !!engine && !busy && !current.active, canStop: current.active && !stopping, ...(engine ? { engine } : {}),
       ...(current.pids[0] ? { pid: current.pids[0] } : {}), ...(snapshot ? { snapshot } : {}) }
   }
   async function start(): Promise<StellarisResult> {
