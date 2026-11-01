@@ -38,6 +38,14 @@ test('explicit pre-lease refusal restores human state only after fresh idle, off
   assert.equal(f.calls.some(x=>x.p.action==='enable'||x.p.action==='stop'),false);
  }
 });
+test('watch renews native supervision even when a strategy review is already pending',async()=>{
+ let heartbeats=0;
+ const host={nativeCountryAIEnabled:true,countryAI:{active:true,view:()=>({owner:'native'})},nativeStrategicReviewDue:true,
+  monitorDecision:async()=>{heartbeats++;},observe:async()=>({date:'2200.02.01'})};
+ const result=await NativeGame.prototype.watch.call(host,5);
+ assert.equal(heartbeats,1);assert.equal(result.waitPolicy.modelRoutineOrders,0);
+ assert.deepEqual(result.wakeReasons,['native_country_ai_review_due']);
+});
 test('StrategyContract changes direction and issues a reserved action while native AI stays on; request IDs do not replay',async()=>{
  const f=make();await f.c.delegate();const active=new Set(),orders=[];
  const host={countryAI:f.c,nativeCountryAIEnabled:true,strategyReceipts:new Map(),now:()=>1,

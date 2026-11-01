@@ -1770,6 +1770,9 @@ export class NativeGame {
   async watch(seconds = 15) {
     if(this.nativeCountryAIEnabled&&this.countryAI.active){
       if(!Number.isFinite(seconds)||seconds<0||seconds>900)throw Error('国家 AI 监督等待需要 0..900 秒');
+      // A pending strategy review returns promptly, but a live caller must still
+      // renew supervision before returning instead of starving the native lease.
+      await this.monitorDecision(0);
       const until=Date.now()+seconds*1000;
       while(Date.now()<until&&this.countryAI.active&&!this.decisionPause&&!this.nativeStrategicReviewDue){
         if(this.now()>=this.ends){await this.stop();break;}
