@@ -76,6 +76,8 @@ class Module(C.Structure):
 REVIEWED_DLL_HASHES.add("29005423ccc42cc7c55990b214f258dfba51c6c135d3ae70daf67d6eca59d2c1")
 # v1.5 T6 reserved senate fix; takes effect after manual restart only.
 REVIEWED_DLL_HASHES.add("4271ce99b3048e54beb1e002f6e055523d60117ac7f77209f697e72d31778261")
+# Full r3: exact reserved senate decisions; no live replacement of older bridges.
+REVIEWED_DLL_HASHES.add("902d0d1f1cc823bab15c2189e079ecbb4c4769afe2773e71fee06583ad68ecc4")
 
 def find_module(kernel, pid, name):
     kernel.Module32FirstW.argtypes = [C.c_void_p, C.POINTER(Module)]

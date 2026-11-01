@@ -1,5 +1,5 @@
 import {COUNTRY_AI_POLICIES,normalizeCountryAIProtection} from './native-country-ai-economic-policy.mjs';
-export const COUNTRY_AI_P1_BRIDGE_VERSION='cyberfish-0.6.19-country-ai-full-r2';
+export const COUNTRY_AI_P1_BRIDGE_VERSION='cyberfish-0.6.20-country-ai-full-r3';
 export const COUNTRY_AI_FULL_FEATURE='country_ai_full_with_reserved';
 export const COUNTRY_AI_P1_FEATURES=['country_ai_own_session_post_gate','country_ai_command_clone_lifetime','country_ai_native_queue_gate','country_ai_game_update_lease','country_ai_world_generation','country_ai_serialized_execution_receipts'];
 const off=s=>s?.global_flags?.human_ai===false&&s?.global_flags?.force_human_ai===false;
