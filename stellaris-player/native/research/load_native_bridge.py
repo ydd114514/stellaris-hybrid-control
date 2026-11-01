@@ -84,6 +84,8 @@ REVIEWED_DLL_HASHES.add("6734150b3248ca069028ef4369db7969305391cb072211ab51eba18
 REVIEWED_DLL_HASHES.add("76e031c8b9b69f342c0a0d96432357e04d23e09a435cdc864c6255ca11a72da4")
 # Correct world-distance/zoom conversion; original galaxy zoom steps only.
 REVIEWED_DLL_HASHES.add("e0b850c0747ab19b66fe553fcfc8f71d37e0b4c79a2de8248514ca8929c2b5fe")
+# Full overview at the farthest native galaxy step, with bounded zoom adjustment.
+REVIEWED_DLL_HASHES.add("7c4fdde71611edf922c4a9ae4bf7e6185c82475bc844a859e18add78324d1ddc")
 
 def find_module(kernel, pid, name):
     kernel.Module32FirstW.argtypes = [C.c_void_p, C.POINTER(Module)]

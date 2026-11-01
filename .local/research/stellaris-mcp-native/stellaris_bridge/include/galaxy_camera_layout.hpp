@@ -8,7 +8,8 @@ inline float GalaxyOverviewZoom(double radius,double aspect){
  // is 10: the camera's zoom field is not a world-space distance. Stay within
  // the native galaxy zoom steps, otherwise galaxy icons are culled entirely.
  const double required=radius/(10.0*std::tan(35.0*3.141592653589793/360.0)*0.65*std::min(1.0,aspect));
- for(const float step:{100.f,200.f,400.f,600.f,900.f,1500.f,3000.f})if(step>=required)return step;
- return 0;
+ // Full-map presentation uses the farthest native step. The fitted minimum
+ // alone can still crop borders/labels at the edges of the rendered viewport.
+ return required<=3000?3000.f:0;
 }
 }

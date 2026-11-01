@@ -100,12 +100,14 @@ nlohmann::json CameraState(){
  const bool full=finite&&system==0xffffffffu&&focus==10&&required>0&&std::abs(pose[0])<1&&std::abs(pose[1])<1&&std::abs(pose[2])<1&&pose[3]>=required*0.995f&&pose[4]>=1.47f;
  return {{"success",true},{"galaxy_view",system==0xffffffffu},{"full_galaxy",full},{"follow_target_cleared",focus==10},{"center",{pose[0],pose[1],pose[2]}},{"zoom",pose[3]},{"pitch",pose[4]},{"required_zoom",required},{"galaxy_radius",radius}};
 }
-nlohmann::json ShowGalaxyMap(){
+nlohmann::json ShowGalaxyMap(float zoom_override){
  auto& builder=CommandBuilder::Get();const auto base=builder.Base();auto idler=(uint8_t*)GameState::Get().GetInGameIdler();double radius=0;const auto picture=PictureState();
  const uint8_t clearPrefix[]{0x48,0x83,0xec,0x08,0x83,0xb9,0x88,0x02,0,0,0x0a};
  const uint8_t galaxyPrefix[]{0x48,0x89,0x5c,0x24,0x08,0x57,0x48,0x83,0xec,0x30};
  if(!idler||!builder.SdkMatchesExe()||!picture.value("visible",false)||!GalaxyRadius(radius)||memcmp((void*)(base+0xf30ee0),clearPrefix,sizeof clearPrefix)||memcmp((void*)(base+0xf323f0),galaxyPrefix,sizeof galaxyPrefix))return {{"success",false},{"error","Galaxy camera interface unavailable"}};
- const float zoom=GalaxyOverviewZoom(radius,double(picture.value("width",0))/std::max(1,picture.value("height",0)));if(!zoom)return {{"success",false},{"error","Galaxy extent cannot be fitted safely"}};
+ const float fitted=GalaxyOverviewZoom(radius,double(picture.value("width",0))/std::max(1,picture.value("height",0)));if(!fitted)return {{"success",false},{"error","Galaxy extent cannot be fitted safely"}};
+ if(!std::isfinite(zoom_override)||zoom_override<0||zoom_override>3000||(zoom_override>0&&zoom_override<100))return {{"success",false},{"error","Zoom must be zero (full map) or a native range 100..3000"}};
+ const float zoom=zoom_override>0?zoom_override:fitted;
  if(ShowPanel("game").value("success",false)!=true)return {{"success",false},{"error","Managed panel could not close"}};
  struct Context{uintptr_t base;uint8_t* camera;float zoom;};Context ctx{base,idler+0x218,zoom};
  auto run=[](void* p,void*){auto& x=*(Context*)p;
@@ -118,7 +120,7 @@ nlohmann::json ShowGalaxyMap(){
   *(uint32_t*)(x.camera+0x24c)=6;
  };
  if(!builder.CallGuarded(run,&ctx))return {{"success",false},{"error","Galaxy camera call failed"}};
- auto state=CameraState();state["success"]=state.value("full_galaxy",false);return state;
+ auto state=CameraState();state["success"]=state.value("galaxy_view",false)&&std::abs(state.value("zoom",0.f)-zoom)<1.f;return state;
 }
 nlohmann::json FocusFleet(uint32_t fleet_id) {
     auto& builder=CommandBuilder::Get();

@@ -8,5 +8,5 @@ nlohmann::json FocusFleet(uint32_t fleet_id);
 nlohmann::json FocusPlanet(uint32_t planet_id);
 nlohmann::json ShowPanel(const std::string& panel);
 nlohmann::json CameraState();
-nlohmann::json ShowGalaxyMap();
+nlohmann::json ShowGalaxyMap(float zoom_override=0);
 }
