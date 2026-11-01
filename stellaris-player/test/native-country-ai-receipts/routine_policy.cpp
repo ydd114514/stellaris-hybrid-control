@@ -1,9 +1,20 @@
 #include "country_ai_routine_policy.hpp"
+#include "country_ai_queue_state.hpp"
 #include <cstdlib>
 #include <iostream>
 using namespace bridge::cyberfish;
 void Check(bool value){if(!value)std::abort();}
 int main(){
+ NativeAIQueueState queue;queue.vtableRva=kCountryAIVtableRva;
+ Check(NativeAIQueueEmpty(queue,0)); // Exact fresh-game dormant state.
+ queue.initialized=1;Check(!NativeAIQueueEmpty(queue,0));queue.initialized=0;
+ queue.data=0x10000;Check(!NativeAIQueueEmpty(queue,0));queue.data=0;
+ queue.capacity=1;Check(!NativeAIQueueEmpty(queue,0));queue.capacity=0;
+ queue.size=1;Check(!NativeAIQueueEmpty(queue,0));queue.size=0;
+ queue.owner=1;Check(!NativeAIQueueEmpty(queue,0));queue.owner=0;
+ Check(NativeAIQueueEmpty(queue,0));queue.vtableRva=kCountryAIStrategyVtableRva;Check(NativeAIQueueEmpty(queue,0));
+ queue.owner=0xffffffffu;Check(!NativeAIQueueEmpty(queue,0));
+ queue.vtableRva=0;queue.owner=0;Check(!NativeAIQueueEmpty(queue,0));
  NativeRoutineRequest r;r.actor=0;
  for(auto name:{"research_technology_command","add_buildable_to_queue_command","prepare_war_command","update_strat_war_data_command","ai_add_strategy_command","ai_remove_diplo_action_command","queue_fleet_order_command","set_council_agenda_command","unlock_council_position_command","add_to_council_command","pass_resolution_command","fail_resolution_command","pass_resolution_type_command","unknown"}){
   r.name=name;Check(AllowNativeRoutine(r,0));

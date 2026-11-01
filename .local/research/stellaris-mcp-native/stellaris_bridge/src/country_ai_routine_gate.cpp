@@ -1,5 +1,6 @@
 #include "country_ai_routine_gate.hpp"
 #include "country_ai_routine_policy.hpp"
+#include "country_ai_queue_state.hpp"
 #include "country_ai_control.hpp"
 #include "command_builder.hpp"
 #include "country_ai_world.hpp"
@@ -56,9 +57,13 @@ bool OwnIdentity(uintptr_t base,uint32_t id) {
         country==gatedCountryObject.load()&&Read(country+0x20,actual)&&actual==id;
 }
 bool EmptyOwnQueue(uintptr_t country,uint32_t own) {
-    uintptr_t ai=0,vt=0;uint32_t owner=0xffffffffu,size=0;
-    return Read(country+0x1b28,ai)&&Read(ai,vt)&&vt==CommandBuilder::Get().Base()+0x23c9240&&
-        Read(ai+0x3a0,owner)&&owner==own&&Read(ai+0x53c,size)&&size==0;
+    uintptr_t ai=0,vt=0;NativeAIQueueState state;
+    if(!Read(country+0x1b28,ai)||!Read(ai,vt))return false;
+    state.vtableRva=vt-CommandBuilder::Get().Base();
+    if(state.vtableRva!=kCountryAIVtableRva&&state.vtableRva!=kCountryAIStrategyVtableRva)return false;
+    if(!Read(ai+0x3a0,state.owner)||!Read(ai+sdk::ent::CCountryAI::initialized,state.initialized)||
+       !Read(ai+0x530,state.data)||!Read(ai+0x538,state.capacity)||!Read(ai+0x53c,state.size))return false;
+    return NativeAIQueueEmpty(state,own);
 }
 uintptr_t FullRef(uintptr_t base,uintptr_t databaseRva,uint32_t id,uintptr_t identityOffset) {
     uintptr_t db=0,slots=0,object=0;uint32_t capacity=0,actual=0xffffffffu;
