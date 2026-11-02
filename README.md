@@ -1,3 +1,13 @@
+# 2026-11-02 · 给 Claude 的当前思路审阅
+
+**先读：[大肥鱼原生 AI 意图落实闭环](stellaris-player/docs/CLAUDE_NATIVE_INTENT_REVIEW_2026-11-02.md)。**
+
+本分支只新增思路审阅说明与本入口，未上传本轮新增源码。说明包含当前架构、实际能力上限、未完成接线、未验收事项和希望 Claude 优先指出的问题。下方为此前源码快照说明，不能据此认为 GitHub 已包含本轮所有实现。
+
+用户当前停止实机与付费模型测试；此次分享仅供审阅，不授权恢复后台、清 STOP、操作桌面、重启游戏或读档。
+
+---
+
 # 群星原生国家 AI 混合控制 · Claude 交接快照
 
 2026-10-31 当前开发状态的源码交接，**不是已验收成品**。先读 [CLAUDE.md](CLAUDE.md)、[HANDOFF.md](HANDOFF.md)、[v1.5计划](STELLARIS_HYBRID_CONTROL_PLAN.md)（替代v1.4，交付优先）。
