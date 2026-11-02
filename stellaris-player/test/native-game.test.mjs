@@ -300,12 +300,12 @@ async function fixture(t, override = {},timing={}) {
     if(method==='ping')return {bridge_version:timing.colonyUpgradePilot&&!timing.surveyPilot?'cyberfish-0.6.11-upgrade-paths-r1':timing.hybridSurvey?'cyberfish-0.6.7-survey-pilot-r1':'cyberfish-0.6.6-gestalt-war-r1',features:['building_upgrade_candidates','building_upgrade_queue_identity','ship_design_naval_size','zone_building_membership','owned_shipyard_queues','engine_market_transaction_quotes','normal_war_actions',...(timing.hybridSurvey?['native_survey_automation_candidate']:[]),...(timing.colonyUpgradePilot&&!timing.surveyPilot?['native_survey_automation_candidate','monthly_trade_read_coverage_candidate','engine_monthly_trade_quotes','building_upgrade_string_paths']:[])]};
     if (method === 'get_status') return {in_game: true, date: {formatted: '2200.01.01'}, outliner: {sectors_summary: {capital_system: '太阳'}}};
     if(method==='get_active_events'||method==='get_alerts')return [];
-    if(method==='get_wars')return {wars:[]};
+    if(method==='get_wars')return {wars:[],warGoalsWindow:false};
     if (method === 'get_galaxy_overview') return {player: {country_id: 0, capital_system_id: 0}};
     if (method === 'get_civilian_fleets') return {science_ships: [{fleet_id: 1}]};
     if (method === 'get_research_state') return {};
     if (method === 'get_buildable_ships') return {queue:[],buildable:[]};
-    if(method==='get_shipyards')return {success:true,coverage_complete:true,coverage_scope:'owned_system_starbase_shipyards',shipyards:[{system_id:0,queue_id:0,queue_complete:true,naval_costs_complete:true,...(override.get_buildable_ships?await override.get_buildable_ships({system_id:0}):{queue:[],buildable:[]})}]};
+    if(method==='get_shipyards')return {success:true,coverage_complete:true,coverage_scope:'owned_system_starbase_shipyards',shipyards:[{system_id:0,starbase_id:0,queue_id:0,owner_id:0,has_shipyard:true,queue_complete:true,naval_costs_complete:true,...(override.get_buildable_ships?await override.get_buildable_ships({system_id:0}):{queue:[],buildable:[]})}]};
     if (method === 'get_picture_state') return {rendering: true, visible: true, frames: 1};
     if (method === 'focus_fleet') return {success: true, camera_target_id: params.fleet_id};
     if(method==='focus_planet')return {success:true,camera_target_id:params.planet_id};
@@ -339,7 +339,7 @@ test('strategy advice reaches observations once per ID, without submitting a gam
   await writeFile(join(isolated,'strategy-directive.json'),JSON.stringify({version:1,source:'cyberfish-ai-hub',id:'d1',at:game.now(),gameSessionId:game.sessionId,text:'先补科研',orders:[{command:'build_ship'}]}));
   calls.length=0;const state=await game.observe();assert.equal(state.operationalGoal.text,'先补科研');assert.ok(!state.operationalGoal.orders);assert.ok(!state.operationalGoal.id);assert.ok(!state.strategistAdvice);
   await game.observe();const rows=(await readFile(game.journal,'utf8')).trim().split('\n').map(JSON.parse);assert.equal(rows.filter(x=>x.type==='strategy_advice_read').length,1);
-  assert.ok(calls.every(x=>x.method.startsWith('get_')));advance(300001);assert.ok(!(await game.observe()).operationalGoal);
+  assert.ok(calls.every(x=>x.method.startsWith('get_')));game.ends+=600001;advance(600001);assert.ok(!(await game.observe()).operationalGoal);
 });
 
 test('expired observations never submit commands', async t => {
@@ -1393,7 +1393,7 @@ test('construction bundle is available through NativeGame only for owned colonie
   get_buildable_districts:()=>({success:true,planet_id:0,colony_id:0,current:[],buildable:[]})
  });
  game.lastState.colonies=[{colonies_summary:[{planet_id:0}]}];const n=calls.length;
- const r=await game.inspect({topic:'construction',id:0});assert.equal(r.allRequestedKnown,true);assert.equal(r.planet.colony_id,0);assert.equal(game.colonyReviews.has(0),true);assert.ok(JSON.stringify(game.operationalContext.view()).includes('星球0'));
+ const r=await game.inspect({topic:'construction',id:0});assert.equal(r.allRequestedKnown,false);assert.equal(r.sections.buildings.known,false);assert.equal(r.planet.colony_id,0);assert.equal(game.colonyReviews.has(0),true);assert.ok(JSON.stringify(game.operationalContext.view()).includes('星球0'));
  assert.equal(calls.slice(n).some(c=>!c.method.startsWith('get_')&&c.method!=='ping'),false);
  await assert.rejects(game.inspect({topic:'construction',id:1}),/己方/);
  await assert.rejects(game.inspect({topic:'construction'}),/需要 id/);

@@ -18,6 +18,7 @@ import { AI_PROVIDER_PRESETS, aiFailure, chat, listModels, redact, validateBaseU
 import { createDirector, DEFAULT_DIRECTOR, normalizeDirector, type Directive, type Spoken } from '../../../packages/core/src/ai-director'
 import { audienceGuidance, clip, createBlackboard, restoreBlackboard } from '../../../packages/core/src/ai-blackboard'
 import {safePublicGameText} from '../../../packages/core/src/public-game-text'
+import {createOperatorStandingBridge} from './operator-standing'
 
 export interface SecretCodec { available(): boolean; encrypt(value: string): string; decrypt(value: string): string }
 interface Options {
@@ -97,7 +98,7 @@ export function createStellarisAi(options: Options) {
   const configPath = join(options.dataDirectory, 'ai-hub.json'), keyPath = join(options.dataDirectory, 'ai-keys.enc.json')
   const fetcher: Fetch = options.fetch || ((url, init) => fetch(url, { ...init, redirect: 'error' }) as any)
   let config = defaults(options.basic), keys: Record<string, string> = {}, saveTimer: ReturnType<typeof setTimeout> | undefined, ticker: ReturnType<typeof setInterval> | undefined
-  let server: Server | undefined, overlayUrl: string | undefined, spoken: Spoken[] = [], disposed = false, ticking = false, busy = false
+  let server: Server | undefined, overlayUrl: string | undefined, spoken: Spoken[] = [], disposed = false, busy = false
   let hostWake:ReturnType<typeof setTimeout>|undefined,hostWakeAt=0,hostWakeGeneration=0
   let saves = Promise.resolve(), keySaves = Promise.resolve(), audits = Promise.resolve(), directives = Promise.resolve()
   let querySaves=Promise.resolve(),deliverySaves=Promise.resolve(),querySignature=''
@@ -167,7 +168,7 @@ export function createStellarisAi(options: Options) {
     directives=directives.catch(()=>{}).then(async()=>{
       const root=await options.getProject();if(!root||options.disabled)return
       const path=join(root,'.local/commentary/strategy-directive.json')
-      if(!directive){
+      if(!directive||disposed||!director.status().running){
         try{if(JSON.parse(await readFile(path,'utf8')).source==='cyberfish-ai-hub')await unlink(path)}catch{/* Already absent. */}
         return
       }
@@ -176,6 +177,17 @@ export function createStellarisAi(options: Options) {
     })
     return directives
   }
+  async function readSnapshot(){
+    const root=await options.getProject();if(!root)return
+    const path=join(root,'.local/native-bridge/latest-session.json')
+    const info=await stat(path);if(info.size>4*1024*1024)return
+    return {...JSON.parse((await readFile(path,'utf8')).replace(/^\ufeff/,'')),observedAt:info.mtimeMs}
+  }
+  const operatorBridge=createOperatorStandingBridge({disabled:options.disabled,now,getProject:options.getProject,readSnapshot,
+    state:()=>({running:!disposed&&director.status().running,note:config.director.strategyNote}),
+    async onSessionWaiting(){director.rebindSession(true);hostWakeGeneration++;clearHostWake();await director.flushQueries();await publishDirective()},
+    async onSessionContinue(){director.rebindSession();hostWakeGeneration++;clearHostWake();await director.flushQueries();await publishDirective()},
+    onSessionChange(){director.stop();clearInterval(ticker);ticker=undefined;hostWakeGeneration++;clearHostWake();void director.flushQueries().then(()=>publishDirective()).catch(()=>{})}})
   function publishAudienceQueries(bus:AiAudienceQueryBus) {
     const signature=JSON.stringify({...bus,updatedAt:0})
     querySaves=querySaves.catch(()=>{}).then(async()=>{
@@ -224,30 +236,26 @@ export function createStellarisAi(options: Options) {
     async call(agent, messages, signal) {
       return requestAgent(agent,messages,signal)
     },
-    async readSnapshot() {
-      const root = await options.getProject(); if (!root) return
-      const path = join(root, '.local/native-bridge/latest-session.json')
-      if (!existsSync(path) || (await stat(path)).size > 4 * 1024 * 1024) return
-      return {...JSON.parse((await readFile(path, 'utf8')).replace(/^\ufeff/, '')),observedAt:(await stat(path)).mtimeMs}
-    },
+    readSnapshot,
     onSay(lines,canPublish){return deliver(lines,canPublish??(()=>director.status().running))},
     onQueries:publishAudienceQueries,
     async readQueryResults(){const root=await options.getProject();if(!root)return;const path=join(root,'.local/commentary/audience-query-results.json');try{if((await stat(path)).size>131072)return;return JSON.parse(await readFile(path,'utf8'))}catch{return}},
     onDirective(directive: Directive) {
-      void publishDirective(directive).catch(()=>{})
+      void publishDirective(directive).then(()=>operatorBridge.refresh()).catch(()=>{})
     },
+    onReview(review){void operatorBridge.refresh({review:{note:review.operatorNote,gameSessionId:review.snapshot.gameSessionId,operator:review.operator,snapshot:review.snapshot}})},
     onChange: scheduleSave,
   })
 
   function clearHostWake(){clearTimeout(hostWake);hostWake=undefined;hostWakeAt=0}
   function runDirectorTick(){
-    if(disposed||options.disabled||ticking||!director.status().running)return
-    ticking=true
-    void director.tick().catch(()=>{/* The next bounded tick may retry local observation. */}).finally(()=>{ticking=false;scheduleHostWake()})
+    if(disposed||options.disabled||!director.status().running)return
+    void operatorBridge.refresh().then(()=>{if(!disposed&&director.status().running)return director.tick()})
+      .catch(()=>{/* The next bounded tick may retry local observation. */}).finally(()=>{scheduleHostWake()})
   }
   function scheduleHostWake(){
     const state=director.status(),host=config.agents.find(a=>a.role==='host'&&a.enabled&&a.providerId&&a.model)
-    if(disposed||options.disabled||!state.running||!host||!state.pending||state.busy.includes('host')||state.health?.host?.circuitOpen||state.hourRequests>=config.director.maxRequestsPerHour){clearHostWake();return}
+    if(disposed||options.disabled||!state.running||director.waitingForSession()||!host||!state.pending||state.busy.includes('host')||state.health?.host?.circuitOpen||state.hourRequests>=config.director.maxRequestsPerHour){clearHostWake();return}
     // Briefly coalesce simultaneous events; thereafter retain the configured
     // request interval, provider backoff, and the director's shared hard budget.
     const due=Math.max(now()+25,state.lastHostAt===undefined?0:state.lastHostAt+config.director.replyIntervalSeconds*1000,state.health?.host?.nextRetryAt??0)
@@ -277,7 +285,7 @@ export function createStellarisAi(options: Options) {
   function view(): AiHubView {
     return { basic: !!options.basic, localTest: !!options.disabled, encrypted: options.secrets.available(), presets: options.basic ? AI_PROVIDER_PRESETS.filter(p => p.id === 'deepseek') : AI_PROVIDER_PRESETS,
       providers: config.providers.map(p => ({ ...p, hasKey: !!keys[p.id] })), agents: structuredClone(config.agents), director: { ...config.director },
-      status: director.status(), blackboard: structuredClone(director.board), feed: director.feedItems().slice(0, 80), ...(overlayUrl ? { overlayUrl } : {}) }
+      status: director.status(), operatorExecution:operatorBridge.view(),blackboard: structuredClone(director.board), feed: director.feedItems().slice(0, 80), ...(overlayUrl ? { overlayUrl } : {}) }
   }
   const result = (ok: boolean, message?: string): AiHubResult => ({ ok, ...(message ? { message } : {}), view: view() })
 
@@ -345,7 +353,7 @@ export function createStellarisAi(options: Options) {
           if (new Set(agents.map(a => a.id)).size !== agents.length) return result(false, '角色编号重复。')
           config.agents = ensureRoles(agents); await persist(); return result(true, '角色分工已保存，下一次调用起生效。')
         }
-        case 'save-director': config.director = normalizeDirector(input.director); await persist(); return result(true, '场控参数已保存。')
+        case 'save-director': config.director = normalizeDirector(input.director); await persist();await operatorBridge.refresh({rearm:true});return result(true, '场控参数已保存。')
         case 'start-chat':
         case 'start': {
           // A strategist-only room is valid for the AI hub, but cannot answer chat.
@@ -358,6 +366,7 @@ export function createStellarisAi(options: Options) {
             if(!keyOf(provider.id))return result(false,'场控服务商的密钥尚未保存或无法解密，请在AI中枢重新加密保存。')
           }
           const started = director.start(); if (!started.ok) return result(false, started.message)
+          await operatorBridge.refresh({rearm:true})
           await startOverlay().catch(() => { /* Port taken: the room still works, subtitles just need the file feed. */ })
           clearInterval(ticker)
           ticker = setInterval(runDirectorTick, options.tickMs ?? 1000); ticker.unref?.();scheduleHostWake()
@@ -365,7 +374,7 @@ export function createStellarisAi(options: Options) {
         }
         case 'stop': {
           clearInterval(ticker);ticker=undefined;hostWakeGeneration++;clearHostWake();const stopped=director.stop()
-          await director.flushQueries();await publishDirective();await persist();return result(true,stopped.message)
+          await operatorBridge.refresh();await director.flushQueries();await publishDirective();await persist();return result(true,stopped.message)
         }
         case 'clear-feed': director.clearFeed(); return result(true, '已清空实时记录。')
         case 'reset-blackboard': Object.assign(director.board, createBlackboard());await publishAudienceQueries({version:1,source:'cyberfish-ai-hub',runId:'reset',gameSessionId:'',updatedAt:now(),requests:[]}); await persist(); return result(true, '黑板已清空，参谋下一轮会重新判断局势。')
@@ -398,6 +407,7 @@ export function createStellarisAi(options: Options) {
     },
     async dispose() {
       disposed = true;hostWakeGeneration++;clearHostWake(); clearInterval(ticker); director.stop(); clearTimeout(saveTimer)
+      await operatorBridge.refresh()
       await director.flushQueries();await querySaves.catch(()=>{});await deliverySaves.catch(()=>{})
       await publishDirective().catch(()=>{})
       await persist().catch(() => {})

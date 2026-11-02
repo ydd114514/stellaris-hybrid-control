@@ -4,6 +4,16 @@ import {digestSnapshot,STRATEGIST_SYSTEM} from '../packages/core/src/ai-prompts'
 import {captainContext} from '../packages/core/src/stellaris-captain'
 
 describe('跨角色的已核实游戏事实',()=>{
+ it('v3实际凝聚力进展和科研增长优先保留，未知字段不进入摘要',()=>{
+  const unityProgress={known:true,focused:true,income:240,expense:210,net:30,traditionCost:9000,monthsToNextTradition:200,stagnating:true,scalingBehind:true,baseline:{observedYears:4,netGrowthPercent:1,traditionCostGrowthPercent:40,traditionsGained:0},reasons:['四年未推进传统'],private:'PRIVATE_SECRET'}
+  const state={strategy:{version:3,focus:'解除产能瓶颈',priorities:['核验科研岗位'],growth:{known:true,observedYears:15,scienceGrowthPercent:4},unityProgress},resources:{unity:{stockpile:3000,net:30},...Object.fromEntries(Array.from({length:20},(_,i)=>['资源'.repeat(100)+i,{stockpile:100,net:1}]))}}
+  const digest=digestSnapshot({state})
+  expect(digest.text).toContain('解除产能瓶颈');expect(digest.text).toContain('15年，科研月产变化4%')
+  expect(digest.text).toContain('凝聚力进展诊断');expect(digest.text).toContain('净产30/月');expect(digest.text).toContain('同局4年');expect(digest.text).toContain('传统增加0');expect(digest.text).toContain('实际进展停滞')
+  expect(digest.text).toContain('unity 3000（+30.0/月）');expect(digest.text.length).toBeLessThanOrEqual(3500)
+  expect(digest.unityProgress).toMatchObject({net:30,stagnating:true,baseline:{traditionsGained:0}})
+  expect(JSON.stringify(digest)).not.toContain('PRIVATE_SECRET')
+ })
  it('新版增长诊断及可执行优先项进入参谋摘要',()=>{
   const text=digestSnapshot({state:{strategy:{version:2,focus:'解除产能瓶颈',priorities:['核验科研岗位'],ordinaryExpansionAllowed:true,resumeWhen:'条件改善后重评',growth:{known:true,observedYears:15,scienceGrowthPercent:4}}}}).text
   expect(text).toContain('解除产能瓶颈');expect(text).toContain('核验科研岗位');expect(text).toContain('15年，科研月产变化4%')

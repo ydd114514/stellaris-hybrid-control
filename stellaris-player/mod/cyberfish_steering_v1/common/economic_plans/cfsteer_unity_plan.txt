@@ -1,0 +1,84 @@
+# Append to every vanilla economic tier: retain shortage goals and keep unity as a continuing priority.
+basic_economy_plan = {
+ subplan = {
+  set_name = "cfsteer_unity_focus_basic"
+  potential = { has_edict = cfsteer_economy_unity_traditions }
+  focus = { unity = 1000 }
+ }
+ subplan = {
+  set_name = "cfsteer_unity_scaling_basic"
+  scaling = yes
+  potential = { has_edict = cfsteer_economy_unity_traditions }
+  income = { unity = 100 }
+ }
+}
+
+intermediate_economy_plan = {
+ subplan = {
+  set_name = "cfsteer_unity_focus_intermediate"
+  potential = { has_edict = cfsteer_economy_unity_traditions }
+  focus = { unity = 1000 }
+ }
+ subplan = {
+  set_name = "cfsteer_unity_scaling_intermediate"
+  scaling = yes
+  potential = { has_edict = cfsteer_economy_unity_traditions }
+  income = { unity = 100 }
+ }
+}
+
+advanced_economy_plan = {
+ subplan = {
+  set_name = "cfsteer_unity_focus_advanced"
+  potential = { has_edict = cfsteer_economy_unity_traditions }
+  focus = { unity = 1000 }
+ }
+ subplan = {
+  set_name = "cfsteer_unity_scaling_advanced"
+  scaling = yes
+  potential = { has_edict = cfsteer_economy_unity_traditions }
+  income = { unity = 100 }
+ }
+}
+
+mature_economy_plan = {
+ subplan = {
+  set_name = "cfsteer_unity_focus_mature"
+  potential = { has_edict = cfsteer_economy_unity_traditions }
+  focus = { unity = 1000 }
+ }
+ subplan = {
+  set_name = "cfsteer_unity_scaling_mature"
+  scaling = yes
+  potential = { has_edict = cfsteer_economy_unity_traditions }
+  income = { unity = 100 }
+ }
+}
+
+endgame_economy_plan = {
+ subplan = {
+  set_name = "cfsteer_unity_focus_endgame"
+  potential = { has_edict = cfsteer_economy_unity_traditions }
+  focus = { unity = 1000 }
+ }
+ subplan = {
+  set_name = "cfsteer_unity_scaling_endgame"
+  scaling = yes
+  potential = { has_edict = cfsteer_economy_unity_traditions }
+  income = { unity = 100 }
+ }
+}
+
+beyond_endgame_economy_plan = {
+ subplan = {
+  set_name = "cfsteer_unity_focus_beyond_endgame"
+  potential = { has_edict = cfsteer_economy_unity_traditions }
+  focus = { unity = 1000 }
+ }
+ subplan = {
+  set_name = "cfsteer_unity_scaling_beyond_endgame"
+  scaling = yes
+  potential = { has_edict = cfsteer_economy_unity_traditions }
+  income = { unity = 100 }
+ }
+}

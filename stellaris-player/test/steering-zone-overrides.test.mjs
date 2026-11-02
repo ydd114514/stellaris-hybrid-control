@@ -1,7 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {researchZoneOverrides} from '../src/steering-zone-overrides.mjs';
+import {researchZoneOverrides,unityZoneOverrides,unityTechnologyOverrides,unityZoneTrigger,traditionPriorityOverrides} from '../src/steering-zone-overrides.mjs';
 const names=['zone_research','zone_research_physics','zone_research_society','zone_research_engineering'];
+test('tradition steering prefers prosperity then statecraft then domination, preserving vanilla eligibility and weights',()=>{
+ const sources=Object.fromEntries(['prosperity','statecraft','domination','discovery'].map(key=>[key,`tradition_${key} = { adoption_bonus = tr_${key}_adopt finish_bonus = tr_${key}_finish potential = { has_paragon_dlc = yes } ai_weight = { factor = 20 } }`]));
+ const result=traditionPriorityOverrides(sources);
+ assert.equal((result.match(/factor = 1000000/g)??[]).length,3);assert.equal((result.match(/factor = 20/g)??[]).length,4);
+ assert.ok((result.match(/factor = 0 /g)??[]).length>4);assert.match(result,/has_tradition = tr_prosperity_finish OR = \{ has_tradition = tr_statecraft_finish has_paragon_dlc = no \}/);
+ assert.match(result,/has_tradition = tr_discovery_adopt NOT = \{ has_tradition = tr_discovery_finish/);
+ assert.equal((result.match(/potential = \{ has_paragon_dlc = yes \}/g)??[]).length,4);
+});
 test('local generation adds conditional science weights while retaining balance, potential and non-player defaults',()=>{
  const source=names.map((name,i)=>name+' = {\n potential = { always = yes }\n cost = { minerals = 123 }\n description = "brace } # inside string"\n # brace } in comment\n'+(i===1?' additional_ai_weight = 20\n':'')+'}\n').join('\n')+'zone_trade = { cost = 99 }';
  const mod=researchZoneOverrides(source);
@@ -14,4 +22,20 @@ test('local generation adds conditional science weights while retaining balance,
  assert.doesNotMatch(mod,/^zone_research =/m);assert.doesNotMatch(mod,/zone_trade/);
  assert.throws(()=>researchZoneOverrides('zone_research = {'),/不完整/);
  assert.throws(()=>researchZoneOverrides(''),/定义缺失/);
+});
+test('unity candidates retain inline jobs and eligibility, tech weights retain all other fields and trigger keeps base variants',()=>{
+ const names=['zone_unity','zone_unity_spiritualist','zone_unity_bio_trophy','zone_research_unity'];
+ const input=names.map(name=>`${name} = { inline_script = { script = jobs/${name} AMOUNT = 100 } convert_to = { zone_unity zone_unity_spiritualist } resources = { minerals = 120 } }`).join('\n');
+ const result=unityZoneOverrides(input);
+ assert.equal((result.match(/has_edict = cfsteer_economy_unity_traditions/g)??[]).length,4);
+ assert.equal((result.match(/additional_ai_weight = 250/g)??[]).length,4);
+ assert.equal((result.match(/minerals = 120/g)??[]).length,4);
+ assert.match(result,/convert_to = \{ cfsteer_zone_unity cfsteer_zone_unity_spiritualist/);
+ assert.match(result,/script = jobs\/zone_unity/);
+ const techNames=['tech_cultural_heritage','tech_heritage_site','tech_hypercomms_forum','tech_autocurating_vault','tech_holographic_rituals','tech_consecration_fields'];
+ const tech=unityTechnologyOverrides(techNames.map(key=>`${key} = { cost = 100 potential = { is_gestalt = no } ai_weight = { modifier = { factor = 2 always = yes } } }`).join('\n'));
+ assert.equal((tech.match(/factor = 3 has_edict/g)??[]).length,6);assert.equal((tech.match(/cost = 100/g)??[]).length,6);
+ assert.equal((tech.match(/factor = 2/g)??[]).length,6);assert.doesNotMatch(tech,/tech_unity_of_purpose/);
+ const trigger=unityZoneTrigger('has_any_unity_zone = { OR = { has_zone = { zone = zone_unity_hive } } }');
+ assert.match(trigger,/zone_unity_hive/);for(const key of names)assert.ok(trigger.includes('zone = cfsteer_'+key));
 });

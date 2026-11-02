@@ -15,6 +15,7 @@ import {createStellarisSpeech} from './stellaris-speech'
 import {loadDirectorSettings,saveDirectorSettings} from '../../../../stellaris-player/src/director-settings.mjs'
 import { prepareStellarisBundle } from './stellaris-bundle'
 import { resolveStellarisProfile } from './stellaris-profile'
+import { createStellarisWindowPresentation } from './stellaris-window'
 
 app.setName('群星控制器大肥鱼')
 protocol.registerSchemesAsPrivileged([{scheme:'shop-qqmusic',privileges:{standard:true,secure:true,supportFetchAPI:true,stream:true,corsEnabled:true}}])
@@ -36,14 +37,16 @@ let room:ReturnType<typeof createBilibiliRoom>|undefined,biliLogin:BrowserWindow
 let ai:ReturnType<typeof createStellarisAi>|undefined
 let speech:ReturnType<typeof createStellarisSpeech>|undefined,speechOwnsChat=false,speechPlayer:BrowserWindow|undefined
 let speechControlGeneration=0,chatControlGeneration=0,playerControlGeneration=0
+let musicControlGeneration=0
 let quitting = false, readyToQuit = false
+const windowPresentation=createStellarisWindowPresentation({hidden:headlessSmoke,getWindow:()=>quitting?undefined:window})
 const validUrl = (url: string) => { try { return new URL(url).protocol === 'file:' && fileURLToPath(url) === renderer } catch { return false } }
 function assertSender(event: Electron.IpcMainInvokeEvent) {
   if (!window || window.isDestroyed() || event.sender.id !== window.webContents.id || !event.senderFrame || !validUrl(event.senderFrame.url)) throw new Error('请从群星控制器大肥鱼 桌面控制台操作。')
 }
 if (!app.requestSingleInstanceLock()) app.quit()
 else {
-  app.on('second-instance', () => { window?.restore(); window?.show(); window?.focus() })
+  app.on('second-instance', () => windowPresentation.requestOpen())
   app.whenReady().then(async () => {
     const bundledRoot = !offline && !localSource ? await prepareStellarisBundle(process.resourcesPath, dataRoot) : undefined
     controller = createStellarisController({ dataDirectory: dataRoot, disabled: offline,
@@ -59,11 +62,15 @@ else {
     }})
     protocol.handle('shop-qqmusic',request=>music!.stream(request).catch(()=>new Response('音乐读取未完成',{status:502})))
     speech=createStellarisSpeech({directory:dataRoot,disabled:offline,getProject:async()=>(await controller!.getStatus()).projectDirectory,samplesDirectory:join(dataRoot,'captain-auditions'),tunedSamplesDirectory:join(__dirname,'../captain-tuned'),
+      diagnostics:()=>{const state=ai?.view().status;return {music:{...music?.diagnostics(),playerAttached:!!musicPlayer&&!musicPlayer.isDestroyed()},chat:state?{running:state.running,busy:state.busy,pending:state.pending,message:state.message,health:state.health}:null}},
       onStop:()=>{speechControlGeneration++;if(speechOwnsChat){speechOwnsChat=false;void ai?.action({type:'stop'})}},
       secrets:{available:()=>safeStorage.isEncryptionAvailable(),encrypt:value=>safeStorage.encryptString(value).toString('base64'),decrypt:value=>safeStorage.decryptString(Buffer.from(value,'base64'))}})
-    ai = createStellarisAi({ dataDirectory: dataRoot, disabled: offline, basic, getProject: async () => (await controller!.getStatus()).projectDirectory, copy: text => clipboard.writeText(text),onSpoken:lines=>{for(const line of lines)speech?.say({id:line.id,text:line.to?`${line.to}，${line.text}`:line.text,kind:'host',at:line.at})},
+    ai = createStellarisAi({ dataDirectory: dataRoot, disabled: offline, basic, getProject: async () => (await controller!.getStatus()).projectDirectory, copy: text => clipboard.writeText(text),onSpoken:lines=>{for(const line of lines)speech?.say({id:line.id,text:line.text,kind:'host',at:line.at})},
       secrets: { available: () => safeStorage.isEncryptionAvailable(), encrypt: value => safeStorage.encryptString(value).toString('base64'), decrypt: value => safeStorage.decryptString(Buffer.from(value, 'base64')) } })
     broadcast = createStellarisBroadcast({ disabled: offline, getProject: async () => (await controller!.getStatus()).projectDirectory,onAudienceEvent:event=>{music!.event(event);ai!.feed(event)} })
+    // The live frame must be available when the user opens the controller,
+    // independently of starting a game, a model, or connecting the room.
+    if(!offline)void broadcast.operation('prepare')
     const biliSession=session.fromPartition('persist:cyberfish-bilibili')
     biliSession.setPermissionRequestHandler((_,__,done)=>done(false))
     room=createBilibiliRoom({disabled:offline,onEvent:event=>broadcast!.receivePlatform(event),cookies:async()=>{
@@ -72,7 +79,7 @@ else {
     }})
     if(!offline)try{const prefs=JSON.parse(await readFile(join(dataRoot,'bilibili-room.json'),'utf8'));if(Number.isSafeInteger(prefs.roomId)&&prefs.roomId>0)savedRoom=prefs.roomId}catch{}
     const liveInfo=async()=>({...await broadcast!.info(),bilibili:{...room!.view(),roomId:room!.view().roomId||savedRoom}})
-    async function showMusicPlayer(){
+    async function showMusicPlayer(ticket:number=musicControlGeneration){
       if(!musicPlayer||musicPlayer.isDestroyed()){
         musicPlayer=new BrowserWindow({width:540,height:170,title:'群星控制器大肥鱼 · QQ音乐',autoHideMenuBar:true,webPreferences:{preload:join(__dirname,'preload.cjs'),contextIsolation:true,sandbox:true,nodeIntegration:false,webSecurity:true,autoplayPolicy:'no-user-gesture-required'}})
         musicPlayer.webContents.setWindowOpenHandler(()=>({action:'deny'}))
@@ -80,17 +87,19 @@ else {
         musicPlayer.on('closed',()=>{musicPlayer=undefined;void music?.action('stop')})
         await musicPlayer.loadFile(musicRenderer)
       }
-      musicPlayer.webContents.setAudioMuted(false)
+      if(ticket===musicControlGeneration&&music?.diagnostics().enabled)musicPlayer?.webContents.setAudioMuted(false)
     }
     const playerSender=(event:Electron.IpcMainInvokeEvent)=>musicPlayer&&!musicPlayer.isDestroyed()&&event.sender.id===musicPlayer.webContents.id&&event.senderFrame&&event.senderFrame.url.startsWith('file:')&&fileURLToPath(event.senderFrame.url)===musicRenderer
     ipcMain.handle('dsh:music-view',event=>{if(!playerSender(event))assertSender(event);return music!.view()})
     ipcMain.handle('dsh:music-feedback',(event,generation:unknown,kind:unknown)=>{if(!playerSender(event))throw new Error('仅音乐播放器可确认播放');music!.feedback(generation,kind)})
     ipcMain.handle('dsh:music-action',async(event,action:unknown,value:unknown)=>{
       assertSender(event)
-      if(!['connect','login','poll','start','stop','add','remove','volume','next','blacklist','queueLimit'].includes(String(action)))throw new Error('不支持的音乐操作')
-      if(action==='stop'||action==='blacklist')musicPlayer?.webContents.setAudioMuted(true)
+      if(!['connect','login','poll','start','stop','add','search','searchPage','add-result','import-liked','remove','volume','next','blacklist','queueLimit'].includes(String(action)))throw new Error('不支持的音乐操作')
+      if(action==='stop'||action==='blacklist'){musicControlGeneration++;musicPlayer?.webContents.setAudioMuted(true)}
+      const ticket=action==='start'?++musicControlGeneration:musicControlGeneration
       const result=await music!.action(String(action),value)
-      if(action==='start'&&result.ok)await showMusicPlayer()
+      // Media/network loading must not hold the control-panel IPC lock or block login/stop.
+      if(action==='start'&&result.ok)void showMusicPlayer(ticket).catch(()=>music?.playerUnavailable())
       return result
     })
     ipcMain.handle('dsh:status', event => { assertSender(event); return controller!.getStatus() })
@@ -108,7 +117,7 @@ else {
     ipcMain.handle('dsh:stop', event => { assertSender(event); return controller!.stop() })
     ipcMain.handle('dsh:live-info', event => { assertSender(event); return liveInfo() })
     ipcMain.handle('dsh:ai-view', event => { assertSender(event); return ai!.view() })
-    ipcMain.handle('dsh:ai-action', (event, action: unknown) => { assertSender(event);if(['start','start-chat','stop'].includes((action as any)?.type)){chatControlGeneration++;speechOwnsChat=false}return ai!.action(action as any) })
+    ipcMain.handle('dsh:ai-action', (event, action: unknown) => { assertSender(event);if((action as any)?.type==='stop')speech?.cancel('host');if(['start','start-chat','stop'].includes((action as any)?.type)){chatControlGeneration++;speechOwnsChat=false}return ai!.action(action as any) })
     ipcMain.handle('dsh:speech-view',event=>{assertSender(event);return speech!.view()})
     ipcMain.handle('dsh:speech-action',async(event,action:unknown)=>{
       assertSender(event)
@@ -122,7 +131,7 @@ else {
       if(result.ok&&(action as any)?.type==='auditions'&&result.view.auditionsUrl)await shell.openExternal(result.view.auditionsUrl)
       if(result.ok&&(action as any)?.type==='open-player'&&result.view.playerUrl){
         if(playerTicket!==playerControlGeneration)return {...result,ok:false,message:'本机播放器打开已取消。'}
-        const url=result.view.playerUrl
+        const url=result.view.playerUrl+'?monitor=1'
         if(!speechPlayer||speechPlayer.isDestroyed()){
           const player=new BrowserWindow({width:620,height:220,title:'大肥鱼 · 本机语音播放器',autoHideMenuBar:true,webPreferences:{contextIsolation:true,sandbox:true,nodeIntegration:false,webSecurity:true,backgroundThrottling:false,autoplayPolicy:'no-user-gesture-required'}})
           speechPlayer=player
@@ -157,7 +166,7 @@ else {
         if(!project)return {ok:false,message:'请先选择群星控制器目录。',info:await liveInfo()}
         const result=await room!.start(value)
         if(result.ok){savedRoom=room!.view().roomId;await writeFile(join(dataRoot,'bilibili-room.json'),JSON.stringify({roomId:savedRoom}));await broadcast!.operation('prepare')
-          const playing=await music!.action('start');if(playing.ok)await showMusicPlayer()
+          const playing=await music!.action('start');if(playing.ok)void showMusicPlayer(++musicControlGeneration).catch(()=>music?.playerUnavailable())
           return {...result,message:result.message+(playing.ok?' 背景音乐已开启。':' QQ音乐尚未开启，请先在上方扫码连接。'),info:await liveInfo()}
         }return {...result,info:await liveInfo()}
       }
@@ -213,8 +222,9 @@ else {
     window.on('closed',()=>app.quit())
     window.webContents.on('will-navigate', (event, url) => { if (!validUrl(url)) event.preventDefault() })
     window.on('page-title-updated', event => event.preventDefault())
-    window.once('ready-to-show', () => {if(!headlessSmoke)window!.show()})
+    window.once('ready-to-show', windowPresentation.readyToShow)
     await window.loadFile(renderer,{query:process.argv.includes('--ai-hub')?{panel:'ai'}:process.argv.includes('--music')?{panel:'music'}:process.argv.includes('--speech')?{panel:'speech'}:{}})
+    windowPresentation.didLoad()
   }).catch(() => { dialog.showErrorBox('群星控制器大肥鱼 暂时无法打开', '请检查程序目录是否完整，或重新解压安装包。游戏没有自动启动。'); app.quit() })
   app.on('before-quit', event => {
     if (readyToQuit) return
@@ -222,6 +232,7 @@ else {
     if (quitting) return
     quitting = true
     playerControlGeneration++
+    speech?.cancel('host')
     musicPlayer?.webContents.setAudioMuted(true)
     speechPlayer?.webContents.setAudioMuted(true)
     void Promise.allSettled([Promise.resolve(controller?.dispose()), Promise.resolve(room?.dispose()),Promise.resolve(broadcast?.dispose()),Promise.resolve(music?.dispose()),Promise.resolve(ai?.dispose()),Promise.resolve(speech?.dispose())]).finally(() => { readyToQuit = true; app.quit() })

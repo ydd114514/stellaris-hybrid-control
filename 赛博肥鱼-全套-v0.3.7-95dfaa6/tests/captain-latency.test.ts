@@ -1,3 +1,4 @@
+const settle=()=>new Promise<void>(resolve=>setImmediate(resolve))
 import {afterEach,describe,expect,it} from 'vitest'
 import {mkdtemp,rm} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
@@ -30,9 +31,9 @@ describe('bounded low-latency audience scheduling',()=>{
  it('the first turn is immediate even at clock zero, while following turns retain the configured gap',async()=>{
   let now=0,calls=0
   const d=createDirector({now:()=>now,agents:()=>[host],config:()=>({...DEFAULT_DIRECTOR,idleCommentSeconds:0}),readSnapshot:async()=>undefined,call:async()=>{calls++;return reply}})
-  d.start();d.feed(event('first'));await d.tick();expect(calls).toBe(1);expect(d.status().lastHostAt).toBe(0)
-  d.feed(event('first'));d.feed(event('second'));now=7999;await d.tick();expect(calls).toBe(1)
-  now=8000;await d.tick();expect(calls).toBe(2);expect(d.status().pending).toBe(0)
+  d.start();d.feed(event('first'));await d.tick();await settle();expect(calls).toBe(1);expect(d.status().lastHostAt).toBe(0)
+  d.feed(event('first'));d.feed(event('second'));now=7999;await d.tick();await settle();expect(calls).toBe(1)
+  now=8000;await d.tick();await settle();expect(calls).toBe(2);expect(d.status().pending).toBe(0)
  })
  it('an event burst wakes the service without its minute-long fallback tick and remains one batch',async()=>{
   let calls=0,prompt=''
@@ -61,7 +62,7 @@ describe('bounded low-latency audience scheduling',()=>{
   let now=100000,calls=0,release!:()=>void
   const d=createDirector({now:()=>now,agents:()=>[host],config:()=>({...DEFAULT_DIRECTOR,maxRequestsPerHour:1,batchSize:1,idleCommentSeconds:0}),readSnapshot:async()=>undefined,call:async()=>{calls++;return new Promise(done=>{release=()=>done(reply)})}})
   d.start();d.feed(event('first'));const pending=d.tick();await Promise.resolve();await Promise.resolve()
-  d.feed(event('second'));expect(d.tick()).toBe(pending);expect(calls).toBe(1)
-  release();await pending;now+=8000;await d.tick();expect(calls).toBe(1);expect(d.status()).toMatchObject({pending:1,hourRequests:1})
+  d.feed(event('second'));await d.tick();await settle();expect(calls).toBe(1)
+  release();await pending;await settle();now+=8000;await d.tick();await settle();expect(calls).toBe(1);expect(d.status()).toMatchObject({pending:1,hourRequests:1})
  })
 })

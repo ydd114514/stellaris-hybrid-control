@@ -1,5 +1,6 @@
 import type { MusicTrack, QQMusicLogin, QQMusicSearch, QQMusicStatus } from '../../../packages/shared/src/index'
 import { musicMatchScore as matchScore, musicSearchQueries } from '../../../packages/core/src/music-match'
+import { MUSIC_LIBRARY_LIMIT } from '../../../packages/shared/src/music-limits'
 
 export interface QQMusicVault {
   get(): string | undefined | Promise<string | undefined>
@@ -25,6 +26,7 @@ const UNAVAILABLE = '这首歌暂时无法取得完整播放地址，请在QQ音
 const NO_MATCH = '没有找到可确认的歌名和歌手，请发「点歌 歌名 歌手」。'
 const BUSY = '正在核对前一首QQ歌曲，请稍后再点。'
 const UNTRUSTED = 'QQ音乐返回的播放地址不可信，已停止。'
+const LIKED_UNAVAILABLE = 'QQ音乐“我喜欢”歌单读取未完成，请稍后重试。'
 const object = (value: unknown): Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
 const text = (value: unknown, max: number) => typeof value === 'string' ? value.replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, max) : ''
 const abortError = () => new Error(STOPPED)
@@ -222,6 +224,49 @@ export function createQQMusic(options: QQMusicOptions) {
     cancelRemote(oldKey); cancelRemote(undefined, oldToken)
     return status()
   }
+  /** Convert only public catalog fields; credentials and upstream URLs never leave this module. */
+  function catalogTrack(raw:unknown):MusicTrack|undefined {
+    const outer=object(raw),nested=object(outer.songInfo??outer.musicData),item=Object.keys(nested).length?nested:outer
+    const mid=text(item.mid||item.songmid,65),title=text(item.title||item.name||item.songname,200)
+    if(!MID.test(mid)||!title)return
+    const singers=Array.isArray(item.singer)?item.singer:Array.isArray(item.singers)?item.singers:[]
+    const artist=singers.slice(0,8).map(value=>text(object(value).name,60)).filter(Boolean).join(' / ').slice(0,240)||'未知歌手'
+    const duration=typeof item.interval==='number'&&Number.isFinite(item.interval)&&item.interval>0&&item.interval<=86400?item.interval:undefined
+    const mediaId=text(object(item.file).media_mid,65)
+    if(MID.test(mediaId)){if(mediaIds.size>=500)mediaIds.delete(mediaIds.keys().next().value!);mediaIds.set(mid,mediaId)}
+    return {id:`qq:${mid}`,title,artist,source:`shop-qqmusic://track/${mid}`,...(duration?{duration}:{})}
+  }
+  /** Read the authenticated account's built-in favorites, without starting playback or editing QQ. */
+  async function likedSongs(signal?:AbortSignal):Promise<{tracks:MusicTrack[];total:number;skipped:number;truncated:boolean}>{
+    const at=generation,controller=new AbortController(),stop=()=>controller.abort()
+    signal?.addEventListener('abort',stop,{once:true});if(signal?.aborted)controller.abort()
+    const timer=setTimeout(()=>controller.abort(),120000);controllers.add(controller)
+    try{
+      await cancellable(ready,controller.signal);ensure(at);aborted(controller.signal)
+      if(!token)throw new Error(LOGIN_REQUIRED)
+      const tracks:MusicTrack[]=[],seen=new Set<string>()
+      let offset=0,total=0,skipped=0,more=true
+      while(more&&offset<MUSIC_LIBRARY_LIMIT){
+        const limit=Math.min(100,MUSIC_LIBRARY_LIMIT-offset)
+        const data=await api(`/user/liked-songs?offset=${offset}&limit=${limit}`,token,'GET',25000,controller.signal)
+        ensure(at);aborted(controller.signal)
+        if(data.code!==200||!Array.isArray(data.songs)||!Number.isSafeInteger(data.total)||(data.total as number)<0||data.songs.length>limit)throw new Error(LIKED_UNAVAILABLE)
+        total=Math.max(total,data.total as number,offset+data.songs.length)
+        for(const raw of data.songs){
+          const track=catalogTrack(raw)
+          if(!track){skipped++;continue}
+          if(seen.has(track.id))continue
+          seen.add(track.id);tracks.push(track)
+        }
+        offset+=data.songs.length
+        more=data.more===true||offset<total
+        // An empty page claiming more is a broken read, not an empty playlist.
+        if(more&&!data.songs.length)throw new Error(LIKED_UNAVAILABLE)
+      }
+      return {tracks,total,skipped,truncated:more}
+    }catch(error){throw safeError(error)}
+    finally{clearTimeout(timer);controllers.delete(controller);signal?.removeEventListener('abort',stop)}
+  }
   async function search(query: string, signal?: AbortSignal, page = 1): Promise<QQMusicSearch & { more: boolean }> {
     await ready; ensure()
     if (signal) aborted(signal)
@@ -255,15 +300,9 @@ export function createQQMusic(options: QQMusicOptions) {
       if (result.code !== 200 || !Array.isArray(data.items)) throw new Error('QQ音乐搜索暂时不可用，请稍后重试。')
       const tracks: MusicTrack[] = [], seen = new Set<string>()
       for (const raw of data.items.slice(0, 60)) {
-        const item = object(raw), mid = text(item.mid, 65), title = text(item.title || item.name, 200)
-        if (!MID.test(mid) || !title || seen.has(mid)) continue
-        const singers = Array.isArray(item.singer) ? item.singer : []
-        const artist = singers.slice(0, 8).map(value => text(object(value).name, 60)).filter(Boolean).join(' / ').slice(0, 240) || '未知歌手'
-        const duration = typeof item.interval === 'number' && Number.isFinite(item.interval) && item.interval > 0 && item.interval <= 86400 ? item.interval : undefined
-        const mediaId = text(object(item.file).media_mid, 65)
-        if (MID.test(mediaId)) { if (mediaIds.size >= 500) mediaIds.delete(mediaIds.keys().next().value!); mediaIds.set(mid, mediaId) }
-        tracks.push({ id: `qq:${mid}`, title, artist, source: `shop-qqmusic://track/${mid}`, ...(duration ? { duration } : {}) })
-        seen.add(mid)
+        const track=catalogTrack(raw)
+        if(!track||seen.has(track.id))continue
+        tracks.push(track);seen.add(track.id)
         if (tracks.length === 30) break
       }
       return { tracks, more: data.more === true, ...(!tracks.length ? { message: '没有找到歌曲，请尝试完整歌名和歌手。' } : {}) }
@@ -427,11 +466,13 @@ export function createQQMusic(options: QQMusicOptions) {
     } catch (error) { const cancelled = expectedStop(); cleanup(); return mediaError(cancelled ? STOPPED : safeError(error).message, cancelled ? 499 : 502) }
   }
   function dispose() { if (disposed) return; const old = pending?.key; invalidate(); pending = undefined; token = ''; mediaIds.clear(); cancelRemote(old); disposed = true }
-  return { status, loginStart, loginPoll, logout, search, resolve, lyrics, stream, dispose }
+  return { status, loginStart, loginPoll, logout, search, likedSongs, resolve, lyrics, stream, dispose }
 }
 
 /** Never return upstream exception messages, which may contain cookies or signed URLs. */
 export function safeError(error: unknown): Error {
+  if(error instanceof Error&&error.message===LIKED_UNAVAILABLE)return new Error(LIKED_UNAVAILABLE)
+  if(error instanceof Error&&['暂时无法读取歌词，请稍后重试。','请输入1至60个字的歌名或歌手。'].includes(error.message))return new Error(error.message)
   const allowed = [STOPPED, LOGIN_REQUIRED, UNAVAILABLE, NO_MATCH, BUSY, UNTRUSTED, 'QQ音乐连接失败，请稍后重试。', 'QQ音乐服务暂时不可用，请稍后重试。', 'QQ音乐操作过于频繁，请稍后重试。', 'QQ音乐返回内容过大，请稍后重试。', 'QQ音乐返回内容异常，请稍后重试。', 'QQ音乐二维码创建失败，请稍后重试。', 'QQ音乐二维码格式不支持，请重新扫码。', 'QQ音乐登录凭证无效，请重新扫码。', 'QQ音乐登录状态异常，请重新扫码。', 'QQ音乐登录信息保存失败，请重新扫码。', 'QQ音乐搜索暂时不可用，请稍后重试。', 'QQ音乐音频文件过大，请换一首。']
   return new Error(error instanceof Error && allowed.includes(error.message) ? error.message : 'QQ音乐操作失败，请稍后重试。')
 }

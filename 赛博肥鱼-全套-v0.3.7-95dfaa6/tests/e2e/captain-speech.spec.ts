@@ -38,3 +38,17 @@ test('a verified tuned sample can be adopted and previewed without starting live
  expect(await page.evaluate(()=>(window as any).__captainCalls)).toEqual(['use-tuned-voice'])
  await page.screenshot({path:'.local/captain-reference-20261029/voice-chat-tuned-offline.png',fullPage:true})
 })
+
+test('语音表单有焦点时仍刷新播放状态，同时保留本地配置草稿',async({page})=>{
+ await page.addInitScript(defaults=>{
+  const speech:any={localTest:false,enabled:true,hasKey:true,encrypted:true,message:'等待语音',config:{...defaults,presetId:'20'},queued:0,usage:{requests:0,completed:0,failed:0,cancelled:0,inputTokens:0,outputTokens:0,missing:0},playback:{playerConnected:false,status:'idle'}}
+  ;(window as any).__speechFixture=speech
+  ;(window as any).stellaris={getStatus:async()=>({phase:'stopped',message:'隔离测试',canStart:false,canStop:false}),speech:{view:async()=>structuredClone(speech),action:async()=>({ok:false,message:'测试不启动语音',view:structuredClone(speech)})}}
+ },{...CAPTAIN_DEFAULTS})
+ await page.goto('/stellaris.html?panel=speech')
+ await expect(page.getByTestId('speech-player-status')).toContainText('播放器尚未接入')
+ await page.locator('.voice-form').dispatchEvent('focusin')
+ await page.evaluate(()=>{const s=(window as any).__speechFixture;s.playback={playerConnected:true,status:'playing'};s.current={id:'offline',text:'测试发言',kind:'host',phase:'playing'};s.config.workspaceId='新的后台值'})
+ await expect(page.getByTestId('speech-player-status')).toContainText('播放器已确认正在播放')
+ await expect(page.getByLabel('业务空间ID')).toHaveValue('')
+})

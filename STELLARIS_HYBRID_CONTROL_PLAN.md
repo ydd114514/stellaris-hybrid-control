@@ -106,7 +106,7 @@ v1.4 的干预方式是：暂停 → 关 AI → 模型亲自下命令 → 回读
 
 | 维度 | 取值 |
 | --- | --- |
-| 经济重点 | 均衡 / 消费品与稳定 / 合金与军工 / 科研 |
+| 经济重点 | 均衡 / 凝聚力与传统 / 消费品与稳定 / 合金与军工 / 科研 |
 | 扩张姿态 | 积极扩张 / 巩固消化 |
 | 军备姿态 | 和平建设 / 备战 |
 
@@ -123,7 +123,7 @@ v1.4 的干预方式是：暂停 → 关 AI → 模型亲自下命令 → 回读
 
 ```json
 {
-  "economyFocus": "balanced | consumer_stability | alloys_military | research",
+  "economyFocus": "balanced | unity_traditions | consumer_stability | alloys_military | research",
   "expansionStance": "aggressive | consolidate",
   "militaryStance": "peaceful | prepare_war",
   "oneOffActions": [{ "type": "declare_war | offer_peace | diplo_propose | diplo_respond", "...": "现有命令参数" }],
@@ -187,21 +187,25 @@ v1.4 的干预方式是：暂停 → 关 AI → 模型亲自下命令 → 回读
 - `nativeCountryAIEconomyCandidate` 和 `CYBERFISH_COUNTRY_AI_ECONOMY_CANDIDATE` 不再需要，移除或固定为不使用。
 - 原生 AI 持权时，**关闭会重复派单的本地调度**：`colony-routine`、`colony-upgrade-routine`、本地建筑派单，以及模型逐条经营的提示路径。
 - 删除“模型没有新指令就暂停游戏”这类会让原生运营停住的等待规则；保留用户暂停、心跳失联、停止收权。
+- 并入控制器 issue #1：读取 `../commentary/operator-standing.json`，字段严格沿用 `cyber-fish-shop#3`；32KB上限、同局、来源/版本/kind校验和3分钟心跳，原话进入operatorMessages，文件删除或超时撤销。参谋目标改为10分钟未刷新才失效。
 
 **T3 读 4.5.2 游戏文件，定引导 mod 方案**（只读）
 - 看 `common/policies`、`common/edicts`、`common/ai_budget`、`common/economic_plans`，以及建筑和科技里 `ai_weight` 的写法。
 - 决定方针用政策还是法令，列出每个方针要改哪些权重。写进 HANDOFF.md，**不超过一屏**。
+- 同时确定凝聚力与传统的行政/凝聚力建设、岗位、相关科技、经济计划和传统预算权重，结论仍在同一屏内。
 
 **T4 写引导 mod `cyberfish_steering_v1`**
 - 3 个维度的方针 + 对应权重修改，按 T3 的方案。
 - 复用 `mod-install.mjs`，安装逻辑支持多个 mod。
 - 门控保留清单加上方针相关命令。
+- 经济维度加入unity_traditions，仍复用相同法令开关和cfsteer_门控保护，不增加维度。
 
 **T5 大肥鱼主循环改造**（`strategic-review.mjs`、`strategy-planner.mjs`、`strategy-advice.mjs`、DSH 提示词）
 - 模型输出改为第 3.4 节的 `StrategyContract`。
 - 新增翻译层：contract → 方针切换 + 保留决定命令。
 - 去掉托管范围内的日常微操提示。模型调用改为定期加事件驱动。
 - DSH 状态面板显示：“原生 AI 运营中”、当前方针、最近一次战略决定及原因、门控拦截计数。
+- 主播常驻档位优先于参谋targetResource映射，后者优先于模型判断；只在战争或核心资源半年内耗尽时临时覆盖，脱险恢复，在controller-receipt.json写读取/切换结果和原因。退出条件达到后待本人确认，不自动切走；传统与飞升合法候选保留凝聚力收益优先的过渡提示。确认planStrategy调用路径，清除默认征服与主播要求冲突的提示。
 
 **T6 一次合并实机验收**（全部写完之后，向用户申请一次）
 - 申请时一次说清：目的、需要用户做什么（启用 mod、重启游戏、读档一次）、预计时长（目标 30 分钟以内）、停止条件。
@@ -210,6 +214,7 @@ v1.4 的干预方式是：暂停 → 关 AI → 模型亲自下命令 → 回读
   2. 切换一次经济重点方针，之后 AI 的建设选择明显往该方向偏。只要求方向对，不做精确对照实验。
   3. 大肥鱼下一个保留决定（比如一次外交提议或宣战），原生 AI 继续运营不受影响。
   4. 停止后 AI 被关闭。
+  5. DSH设置“前期主拉凝聚力”后，几个游戏月内凝聚力月产明显上升，原生建设偏向行政/凝聚力，回执steeringApplied=true；只看方向，不做精确对照。
 - 实测发现的问题直接修。修完只复测出问题的那一项，不重跑整轮。
 
 ---

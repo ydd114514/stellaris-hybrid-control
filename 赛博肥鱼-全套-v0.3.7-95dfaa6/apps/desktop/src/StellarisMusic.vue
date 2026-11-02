@@ -13,15 +13,15 @@ const pageCount=computed(()=>Math.max(1,Math.ceil(library.value.length/50)))
 const visibleTracks=computed(()=>library.value.slice((page.value-1)*50,page.value*50))
 watch(libraryQuery,()=>{page.value=1});watch(pageCount,n=>{page.value=Math.min(page.value,n)})
 watch(()=>view.value?.maxQueue,n=>{queueLimit.value=n??MUSIC_QUEUE_DEFAULT})
-let timer:ReturnType<typeof setInterval>|undefined,alive=true,polling=false
+let timer:ReturnType<typeof setInterval>|undefined,alive=true,polling=false,operation=0
 async function refresh(){if(!props.api||busy.value||polling)return;polling=true;try{const v=await props.api.view();if(alive){view.value=v;if(!initialized){blacklist.value=v.blacklist.join('\n');initialized=true}}}catch{}finally{polling=false}}
 async function run(action:Parameters<NonNullable<StellarisBridge['music']>['action']>[0],value?:string|number){
- if(!props.api||busy.value||view.value?.localTest)return;busy.value=true
- try{const r=await props.api.action(action,value);if(!alive)return;view.value=r.view;notice.value=r.message
+ if(!props.api||busy.value&&action!=='stop'||view.value?.localTest)return;const ticket=++operation;busy.value=true
+ notice.value=action==='login'?'正在获取登录二维码，请稍候…':action==='import-liked'?'正在读取 QQ“我喜欢”并合并轮播，可以停止音乐取消。':action==='search'||action==='searchPage'?'正在搜索 QQ 曲库，可以停止音乐取消。':action==='add'||action==='add-result'?'正在加入所选歌曲，可以停止音乐取消。':action==='start'?'正在开启音乐…':'正在处理音乐操作…'
+ try{const r=await props.api.action(action,value);if(!alive||ticket!==operation)return;view.value=r.view;notice.value=r.message
  if(r.login){qr.value=r.login.qrDataUrl;expires.value=r.login.expiresAt}
- if(view.value.account.loggedIn){qr.value='';expires.value=0}
- if(action==='add'&&r.ok)query.value=''
- }catch{if(alive)notice.value='音乐操作未完成，请稍后重试。'}finally{busy.value=false}
+ if(view.value.account.loggedIn&&!view.value.account.loginPending&&!r.login){qr.value='';expires.value=0}
+ }catch{if(alive&&ticket===operation)notice.value='音乐操作未完成，请稍后重试。'}finally{if(ticket===operation)busy.value=false}
 }
 onMounted(async()=>{alive=true;await refresh();if(alive)timer=setInterval(()=>{if(qr.value&&Date.now()<expires.value&&!busy.value)void run('poll');else{if(Date.now()>=expires.value)qr.value='';void refresh()}},2500)})
 onUnmounted(()=>{alive=false;clearInterval(timer)})
@@ -29,13 +29,17 @@ onUnmounted(()=>{alive=false;clearInterval(timer)})
 <template>
  <article class="music" v-if="api" data-testid="stellaris-music"><h3>QQ 音乐 <span>{{view?.account.loggedIn?'已连接':'等待连接'}} · {{view?.enabled?'音乐已开启':'静音待命'}}</span></h3>
  <p>无人点歌时轮播背景曲。弹幕发送「点歌 歌名 歌手」；每人一首、个人冷却 120 秒、队列最多 {{view?.maxQueue??MUSIC_QUEUE_DEFAULT}} 首。自选曲库可收藏 {{MUSIC_LIBRARY_LIMIT}} 首，另保留默认背景曲。</p>
- <p>陌生歌曲自动搜索 QQ 音乐；入队和播放前检查歌名、歌手与歌词，拦截国歌、政治相关和脏话过多的曲目。歌词暂时取不到会先跳过，可稍后重试。</p>
- <div class="buttons"><button :disabled="busy||view?.localTest" @click="run('connect')">读取本机登录</button><button :disabled="busy||view?.localTest" @click="run('login','qq')">手机 QQ 扫码</button><button :disabled="busy||view?.localTest" @click="run('login','wechat')">微信扫码</button><button :disabled="busy||view?.localTest||!view?.account.loggedIn" @click="run('start')">开启背景音乐与点歌</button><button :disabled="!view?.enabled||view?.localTest" @click="run('stop')">停止音乐</button><button :disabled="busy||!view?.enabled||view?.localTest" @click="run('next')">下一首</button></div>
+ <p>搜索后选择歌手和版本加入轮播，不要求搜索文字完全一致。收藏与播放权限分开：先保存曲目，播放时按当前 QQ 账号取得完整音源。国歌、明确政治相关和高密度脏话仍会拦截；歌词暂时取不到可先收藏，播放前再检查。</p>
+ <div class="buttons"><button :disabled="busy||view?.localTest" @click="run('connect')">读取本机登录</button><button :disabled="busy||view?.localTest" @click="run('login','qq')">手机 QQ 扫码</button><button :disabled="busy||view?.localTest" @click="run('login','wechat')">微信扫码</button><button :disabled="busy||view?.localTest||!view?.account.loggedIn" @click="run('start')">开启背景音乐与点歌</button><button :disabled="(!view?.enabled&&!busy)||view?.localTest" @click="run('stop')">停止音乐</button><button :disabled="busy||!view?.enabled||view?.localTest" @click="run('next')">下一首</button></div>
  <div v-if="qr" class="qr"><img :src="qr" alt="QQ 音乐登录二维码"><p>请用所选的手机 QQ / 微信扫码，在手机上确认。登录仅保存在本机安全存储中。</p></div>
  <p role="status">{{notice||view?.account.message}}<br>{{view?.state.lastMessage}}</p>
  <div class="now"><strong>{{current?`当前：${current.title} · ${current.artist}`:'当前没有播放歌曲'}}</strong><span>{{view?.state.current?.startedAt?'正在播放':view?.state.current?'准备音频':'已停止'}}</span></div>
  <label>音乐音量 <input type="range" min="0" max="1" step="0.01" :value="view?.volume??.22" :disabled="busy||view?.localTest" @change="run('volume',Number(($event.target as HTMLInputElement).value))"> {{Math.round((view?.volume??.22)*100)}}%</label>
- <form @submit.prevent="run('add',query)"><input v-model="query" maxlength="60" placeholder="歌名 歌手，加入 QQ 背景曲库" :disabled="busy||view?.localTest"><button :disabled="busy||view?.localTest||!query.trim()">搜索并加入</button></form>
+ <form @submit.prevent="run('search',query)"><input v-model="query" maxlength="60" placeholder="搜索 QQ 歌名或歌手，例如 One Last Kiss" :disabled="busy||view?.localTest"><button :disabled="busy||view?.localTest||!query.trim()">搜索 QQ 音乐</button></form>
+ <div class="buttons"><button :disabled="busy||view?.localTest" @click="run('import-liked')">导入 QQ「我喜欢」到轮播</button><span>合并现有歌单并去重，QQ原歌单保持不变。</span></div>
+ <section v-if="view?.catalog" class="catalog" data-testid="music-search-results"><p>“{{view.catalog.query}}” · 第 {{view.catalog.page}} 页 · {{view.catalog.tracks.length}} 个结果</p>
+ <ul><li v-for="t in view.catalog.tracks" :key="t.id"><span>{{t.title}} · {{t.artist}}<small v-if="t.duration"> · {{Math.floor(t.duration/60)}}:{{String(Math.round(t.duration%60)).padStart(2,'0')}}</small></span><button :disabled="busy||view.localTest||view.bgmTrackIds.includes(t.id)" @click="run('add-result',t.id)">{{view.bgmTrackIds.includes(t.id)?'已在轮播':'加入轮播'}}</button></li></ul>
+ <div class="buttons"><button :disabled="busy||view.localTest||view.catalog.page<=1" @click="run('searchPage',view.catalog.page-1)">搜索上一页</button><button :disabled="busy||view.localTest||!view.catalog.more||view.catalog.page>=50" @click="run('searchPage',view.catalog.page+1)">搜索下一页</button></div></section>
  <form @submit.prevent="run('queueLimit',queueLimit)"><label>点歌队列上限 <input v-model.number="queueLimit" type="number" min="1" :max="MUSIC_QUEUE_LIMIT" :disabled="busy||view?.localTest"></label><button :disabled="busy||view?.localTest">保存上限</button></form>
  <label>筛选背景歌单 <input v-model="libraryQuery" placeholder="歌名或歌手"></label>
  <p>背景歌单 {{view?.bgmTrackIds.length||0}} 首 · 筛选后 {{library.length}} 首</p>

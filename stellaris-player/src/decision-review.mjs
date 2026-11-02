@@ -18,7 +18,7 @@ export function decisionReview(state,{sessionId,observedAt,now=Date.now()}={}){
  const monthly=rows(state.monthlyControl?.records).filter(current).filter(r=>!r.released);
  const uncertainMonthly=monthly.filter(r=>['prepared','issued','unknown','old_order_removed_new_unconfirmed','cancellation_unconfirmed','cancellation_not_submitted','ownership_unconfirmed'].includes(r.status));
  const count=n=>Number.isInteger(n)&&n>=0?n:0;
- const monthlyUncertain=Math.max(count(state.monthlyControl?.sessionId===sessionId?state.monthlyControl.counts?.uncertain:0),uncertainMonthly.length);
+ const monthlyUncertain=Math.max(count(typeof sessionId==='string'&&state.monthlyControl?.sessionId===sessionId?state.monthlyControl?.counts?.uncertain:0),uncertainMonthly.length);
  const oldMonthlyRecovery=count(state.monthlyControl?.recovery?.count);
  const colonies=[...rows(state.colonyControl?.records),...rows(state.colonyUpgradeControl?.records)].filter(current).filter(r=>['active','waiting','blocked','paused'].includes(r.status));
  const blockedColonies=colonies.filter(r=>r.status==='blocked'||r.reviewRequired===true);

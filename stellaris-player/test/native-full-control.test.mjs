@@ -49,10 +49,10 @@ test('watch renews native supervision even when a strategy review is already pen
 });
 test('StrategyContract changes direction and issues a reserved action while native AI stays on; request IDs do not replay',async()=>{
  const f=make();await f.c.delegate();const active=new Set(),orders=[];
- const host={countryAI:f.c,nativeCountryAIEnabled:true,strategyReceipts:new Map(),now:()=>1,
+ const host=Object.assign(Object.create(NativeGame.prototype),{countryAI:f.c,nativeCountryAIEnabled:true,strategyReceipts:new Map(),now:()=>1,refreshOperatorStanding:async()=>{},
   lastState:{date:'2200.01.01'},commandScope:async()=>{},checkpoint:async()=>{},strategyReview:{acknowledge(){}},
   rpc:async(m,p)=>{assert.equal(f.state().global_flags.human_ai,true);if(m==='get_edicts')return {active_edicts:[...active].map(key=>({key}))};assert.equal(m,'toggle_edict');p.enabled?active.add(p.edict_key):active.delete(p.edict_key);return {success:true};},
-  observe:async()=>({snapshotId:'current'}),apply:async input=>{assert.equal(f.c.view().owner,'native');orders.push(input);return {orders:[{status:'posted'}]};}};
+  observe:async()=>({snapshotId:'current'}),apply:async input=>{assert.equal(f.c.view().owner,'native');orders.push(input);return {orders:[{status:'posted'}]};}});
  const input={requestId:'strategy-1',contract:{economyFocus:'research',expansionStance:'consolidate',militaryStance:'peaceful',reason:'以科研为主并改善关系',oneOffActions:[{type:'diplo_propose',arguments:{country_id:0,action:'improve_relations'}}]}};
  assert.equal((await NativeGame.prototype.strategyControl.call(host,input)).status,'applied');
  await NativeGame.prototype.strategyControl.call(host,input);assert.equal(orders.length,1);

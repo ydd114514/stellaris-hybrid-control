@@ -20,6 +20,16 @@ test('steering updates preserve launcher-formatted descriptors but refuse redire
  await writeFile(descriptor,text.replace('path="','path="redirected/'));
  await assert.rejects(installSteeringMod({documentsPath:folder}),/未覆盖/);
 });
+test('steering upgrades its known old personality to include unity without overwriting custom changes',async t=>{
+ const folder=await fixture(t);await installSteeringMod({documentsPath:folder});
+ const path=join(folder,'mod','cyberfish_steering_v1/common/personalities/cfsteer_personality.txt');
+ const current=await readFile(path,'utf8');
+ await writeFile(path,current.replace('has_edict = cfsteer_economy_unity_traditions ',''));
+ assert.deepEqual((await installSteeringMod({documentsPath:folder})).created,[path]);
+ assert.equal(await readFile(path,'utf8'),current);
+ await writeFile(path,current+'\n# custom personality\n');
+ await assert.rejects(installSteeringMod({documentsPath:folder}),/未覆盖/);
+});
 test('installation adds only its own four files and never changes enabled mods', async t => {
   const folder = await fixture(t), settings = '{"enabled_mods":["mod/existing.mod"]}'
   await writeFile(join(folder, 'dlc_load.json'), settings)

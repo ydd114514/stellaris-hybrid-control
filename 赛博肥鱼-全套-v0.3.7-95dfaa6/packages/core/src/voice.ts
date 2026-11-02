@@ -85,8 +85,11 @@ function endpoint(config: AppConfig['voice'], customization = false): string {
 
 function providerError(body: SseObject, status?: number): Error {
   const code = String(body.code || body.error?.code || '')
+  const providerCode = /^[a-zA-Z][a-zA-Z0-9_.]{0,79}$/.test(code) ? code : undefined
+  const requestId = typeof body.request_id === 'string' && /^[a-f0-9-]{32,40}$/i.test(body.request_id) ? body.request_id : undefined
   const serverCode = !code || /^(?:5\d\d|InternalError|InternalServerError|ServiceUnavailable|ServiceError|SystemError|ServerError|GatewayTimeout|BadGateway)(?:[._-]|$)/i.test(code)
-  const tagged = (message: string) => Object.assign(new Error(message), { providerFailure: true, retryableVoice: !!status && status >= 500 && status <= 599 && serverCode, ...(status ? { httpStatus: status } : {}) })
+  const tagged = (message: string) => Object.assign(new Error(message), { providerFailure: true, retryableVoice: !!status && status >= 500 && status <= 599 && serverCode, ...(status ? { httpStatus: status } : {}), ...(providerCode ? { providerCode } : {}), ...(requestId ? { requestId } : {}) })
+  if (code === 'AllocationQuota.FreeTierOnly') return tagged('百炼将本次接口调用限制为仅使用免费额度，当前无法继续；请核对密钥所属账号、业务空间和计费策略。')
   if (status === 401 || status === 403 || /InvalidApiKey|Unauthorized|AccessDenied/i.test(code)) return tagged('百炼密钥无效、地域不匹配或尚未开通语音服务，请检查设置。')
   if (status === 429 || /Throttling|RateLimit|LimitExceeded/i.test(code)) return tagged('千问配音请求过于频繁或额度不足，请稍后重试。')
   // Do not echo upstream messages: proxies can include Authorization headers.
@@ -115,6 +118,7 @@ async function responseFailure(response: Response): Promise<Error> {
       if (size <= 65536) {
         const raw = JSON.parse(Buffer.concat(parts).toString('utf8')), code = raw?.code ?? raw?.error?.code
         if (typeof code === 'string' || typeof code === 'number') body = { code: String(code).slice(0, 160) }
+        if (typeof raw.request_id === 'string') body.request_id = raw.request_id
         const inputTokens = usageNumber(raw?.usage?.input_tokens), outputTokens = usageNumber(raw?.usage?.output_tokens), characters = usageNumber(raw?.usage?.characters)
         if (inputTokens !== undefined || outputTokens !== undefined) reported.usage = { inputTokens, outputTokens }
         if (characters !== undefined) reported.chargedCharacters = characters
@@ -242,7 +246,7 @@ export async function designQwenVoice(options: {
       body: JSON.stringify({ model: 'voice-enrollment', input: { action: 'create_voice', target_model: options.config.model, voice_prompt: description, preview_text: previewText, prefix: 'fatfish', language_hints: ['zh'] }, parameters: { sample_rate: 24000, response_format: 'wav' } }),
       signal: abort.signal,
     })
-    if (!response.ok) throw providerError({}, response.status)
+    if (!response.ok) throw await responseFailure(response)
     const body = await response.json() as SseObject
     if (body.code || body.error) throw providerError(body)
     const output = body.output || {}

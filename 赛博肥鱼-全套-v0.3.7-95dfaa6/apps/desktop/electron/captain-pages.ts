@@ -1,12 +1,14 @@
 export const captainPlayerPage=String.raw`<!doctype html><meta charset="utf-8"><title>大肥鱼舰长语音</title><body style="background:transparent;color:#8fb5d7;font:13px Microsoft YaHei"><span id="status">等待语音</span><script>
-const client=crypto.randomUUID();let audio=null,id='',pending=false,alive=true,revision=-1,mediaSequence=0,timer;
-const send=(path,data)=>fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...data,client})});
+const client=crypto.randomUUID(),role=new URLSearchParams(location.search).get('monitor')==='1'?'monitor':'broadcast';let audio=null,id='',pending=false,alive=true,revision=-1,mediaSequence=0,timer;
+const send=(path,data)=>fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...data,client,role})});
 let parentOrigin='http://127.0.0.1:17655';try{const u=new URL(document.referrer);if(u.protocol==='http:'&&u.hostname==='127.0.0.1')parentOrigin=u.origin}catch{}
 function notify(playback){if(playback?.version===1)parent.postMessage({source:'cyberfish-captain-speech',...playback},parentOrigin)}
+function sendHeartbeat(){if(alive)parent.postMessage({source:'cyberfish-captain-speech',version:1,heartbeat:true},parentOrigin)}
+const heartbeatTimer=setInterval(sendHeartbeat,1000);sendHeartbeat();
 function clear(current=id){if(current!==id)return;const old=audio;audio=null;id='';if(old){old.pause();old.removeAttribute('src');old.load()}}
 async function feedback(kind,current){if(current!==id)return;const request=send('/player/feedback',{id:current,kind,mediaSequence:++mediaSequence});if(kind==='ended'||kind==='error')clear(current);try{const r=await request;if(r.ok){const state=await r.json();notify(state.playback)}}catch{}}
 async function poll(){if(pending||!alive)return;pending=true;try{
- const r=await send('/player/poll',{afterRevision:revision});if(!r.ok){clear();await new Promise(r=>setTimeout(r,500));return}const s=await r.json();revision=s.revision;notify(s.playback);document.getElementById('status').textContent=s.message||'';
+ const r=await send('/player/poll',{afterRevision:revision});if(!r.ok){clear();document.getElementById('status').textContent=r.status===409?(role==='monitor'?'直播播放器已接管送音，本机试听暂停，避免重复播放。':'语音正在由另一个直播播放器输出，本窗口不重复播放。'):'语音服务暂不可用，正在重连。';await new Promise(r=>setTimeout(r,500));return}const s=await r.json();revision=s.revision;notify(s.playback);document.getElementById('status').textContent=(role==='monitor'?'本机试听 · 尚未接入直播播放器。 ':'直播播放器 · ')+(!s.enabled?'语音尚未开启。':!s.current?'等待新的游戏解说或弹幕回复。':!s.current.audio?'正在合成语音，请稍候。':s.message||'正在播放语音。');
  if(!s.enabled||!s.current||!s.current.audio){clear();return}
  if(s.current.id!==id){clear();id=s.current.id;mediaSequence=0;const current=id;audio=new Audio(s.current.audio);audio.volume=s.volume;
  audio.onplaying=()=>{if(id===current)void feedback('started',current)};
@@ -14,8 +16,8 @@ async function poll(){if(pending||!alive)return;pending=true;try{
  audio.onwaiting=()=>{if(id===current)void feedback('paused',current)};
  audio.onended=()=>void feedback('ended',current);audio.onerror=()=>void feedback('error',current);audio.play().catch(()=>void feedback('error',current));
  }else if(audio)audio.volume=s.volume;
-}catch{clear();await new Promise(r=>setTimeout(r,500))}finally{pending=false;if(alive)timer=setTimeout(()=>void poll(),0)}}
-window.addEventListener('beforeunload',()=>{alive=false;clearTimeout(timer);navigator.sendBeacon('/player/release',new Blob([JSON.stringify({client})],{type:'application/json'}));clear()});void poll();
+}catch{clear();document.getElementById('status').textContent='语音服务连接中断，正在重连。';await new Promise(r=>setTimeout(r,500))}finally{pending=false;if(alive)timer=setTimeout(()=>void poll(),0)}}
+window.addEventListener('beforeunload',()=>{alive=false;clearTimeout(timer);clearInterval(heartbeatTimer);navigator.sendBeacon('/player/release',new Blob([JSON.stringify({client})],{type:'application/json'}));clear()});void poll();
 </script>`
 
 export const captainAuditionsPage=String.raw`<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>大肥鱼舰长 · 20版音色试听</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>

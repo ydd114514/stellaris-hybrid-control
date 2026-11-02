@@ -1,7 +1,13 @@
 import {NativeStrategyReview} from './native-strategy-review.mjs';
-import {validateStrategyContract,applySteering,reservedOrder,reservedRPC,steeringRPC,RESERVED_ACTIONS} from './strategy-contract.mjs';
-import {COUNTRY_AI_POLICIES,normalizeCountryAIProtection} from './native-country-ai-economic-policy.mjs';
-import {constructionInspectionScope,inspectConstruction} from './construction-inspection.mjs';
+import {NativeColonyAudit} from './native-colony-audit.mjs';
+import {AdviceExecution} from './advice-execution.mjs';
+import {compileNativeIntent,NativeIntentExecution} from './native-intent.mjs';
+import {ownerEconomicPolicyReview} from './owner-economic-policy.mjs';
+import {validateStrategyContract,applySteering,applyDomesticAction,reservedOrder,reservedRPC,steeringRPC,RESERVED_ACTIONS} from './strategy-contract.mjs';
+import {COUNTRY_AI_POLICIES,normalizeCountryAIProtection,assertProtectedShipyardRefs,nativeOwnerPolicy} from './native-country-ai-economic-policy.mjs';
+import {constructionInspectionScope,buildingInspectionScope,inspectBuildingQuote,inspectConstruction} from './construction-inspection.mjs';
+import {withConstructionCoverage} from './construction-coverage.mjs';
+import {needsPlanetJobsSupplement,supplementPlanetJobs} from './planet-jobs-readback.mjs';
 import {NativeCountryAI,nativeCountryScope} from './native-country-ai.mjs';
 import {MonthlyTradeExecution,monthlyReservationRisks,monthlyQuoteCondition,MONTHLY_EXECUTION_BRIDGES} from './monthly-trade-execution.mjs';
 import {ColonyRoutine} from './colony-routine.mjs';
@@ -35,11 +41,15 @@ import {validateMarketInspectionScope,quoteMarketInspection} from './market-insp
 import {inspectNativeProcess} from './native-process.mjs';
 import {councilAgendaCandidates,councilAgendaProblem} from './council-agendas.mjs';
 import {readStrategyAdvice} from './strategy-advice.mjs';
+import {readOperatorStanding,writeControllerReceipt} from './operator-standing.mjs';
+import {readGameplayPreferences} from './gameplay-preferences.mjs';
+import {resolveStrategyDirection} from './strategy-direction.mjs';
 import {routineSalePlan} from './market-maintenance.mjs';
 import {empireRoute,strategicReview,colonyReview,expansionCandidates,createGrowthTracker} from './strategic-review.mjs';
 import {OperationalContext,executionCapabilities} from './operational-context.mjs';
 import {orderKey,stableJson,stationTarget,stationSignature,persistentStationRefusal,mergeProblem,queuedNavalBudget} from './operation-guards.mjs';
-import {buildingCandidateProblem} from './building-candidates.mjs';
+import {buildingCandidateProblem,readBuildingAdmission} from './building-candidates.mjs';
+import {USER_ECONOMIC_COMMANDS,assertNativeEconomicOrders,checkEconomicExploration} from './user-economic-intervention.mjs';
 import {hasProductionIdentity,publicGameExplanation} from './game-voice-boundary.mjs';
 import {AudienceQueryBridge} from './audience-query-bridge.mjs';
 import {OrderTracker,captureBaseline,TRACKED_ASYNC_COMMANDS} from './order-tracker.mjs';
@@ -65,6 +75,15 @@ const owns = (object, key) => Object.hasOwn(object, key);
 const COLONY_ROUTINE_AUTHORITY=Symbol('local colony routine');
 const CAMPAIGN_AUTHORITY=Symbol('campaign execution');
 const COUNTRY_AI_AUTHORITY=Symbol('native country AI ownership');
+// Only strategyControl can authorize one exact, validated ordinary setting RPC.
+// No public RPC flag or apply_orders command can open this dispatch fence.
+const strategyDomesticWrites=new WeakMap();
+const authorizedDomesticRPC=(game,method,params)=>strategyDomesticWrites.get(game)?.method===method&&strategyDomesticWrites.get(game)?.params===params;
+const strategyExecutionBinding=game=>game.nativeCountryAIEnabled&&game.boundNativeWorld&&Number.isSafeInteger(game.binding?.pid)&&typeof game.binding?.creationTime==='string'?stableJson([game.binding.pid,game.binding.creationTime,game.boundNativeWorld]):null;
+const strategyExecutionError=message=>!message?null:/世界|代次|玩家|首都|身份|绑定/.test(message)?'本国世界或进程绑定未确认，已停止执行':/timeout|超时|尚未确认|pipe/i.test(message)?'执行结果尚未确认，先核查当前状态，不重发命令':/不可停用|未确认.*可启用|清单不完整/.test(message)?'法令状态或当前合法性未确认，未完成调整':'战略执行未完成，请核查当前状态和执行回执';
+const publicStrategyExecution=(result,date)=>({requestId:result.requestId,status:result.status,date:typeof date==='string'?date:null,steeringConfirmed:result.steering?.confirmed===true,
+ domesticActions:(result.domesticActions??[]).slice(0,4).map(row=>({type:row.type??'toggle_edict',...(typeof row.targetName==='string'?{targetName:row.targetName.slice(0,100)}:{}),...(row.taskId?{taskId:row.taskId}:{}),edictKey:row.arguments?.edict_key??null,...(row.arguments?.agenda_key?{agendaKey:row.arguments.agenda_key}:{}),enabled:row.arguments?.enabled??null,status:row.status??'checking',confirmed:row.confirmed===true,...(typeof row.changed==='boolean'?{changed:row.changed}:{}),error:strategyExecutionError(row.error)})),error:strategyExecutionError(result.error)});
+const clearStrategyExecution=game=>{delete game.strategyExecutionRecord;if(game.lastState)game.lastState.strategyExecution=null;};
 const NO_IMMEDIATE_RESOURCE_SPEND=new Set(['select_research','move_fleet','survey','set_fleet_stance','follow_fleet','set_speed','assign_scientist','set_job_priority','assign_councilor','set_council_agenda','open_alert','open_notification',
   // These commands use already-owned forces or edit plans. Recruitment,
   // reinforcement, claims and event choices can spend resources and stay gated.
@@ -164,6 +183,7 @@ export class NativeGame {
     this.knownShipyards = new Set();
     this.operationalContext=new OperationalContext({now:this.now});
     this.growthTracker=createGrowthTracker();this.strategyReview=new NativeStrategyReview();
+    this.adviceTasks=new AdviceExecution({now:this.now});
     this.audienceQueries=new AudienceQueryBridge({directory:resolve(this.directory,'../commentary'),now:this.now});
     this.continuity=new ControllerContinuity({directory:this.directory,now:this.now});
     this.gestalt=new GestaltTasks({directory:this.directory,now:this.now});
@@ -256,7 +276,7 @@ export class NativeGame {
   }
   assertRpcAllowed(method,params={}) {
     const countryRead=['country_ai_lease','country_ai_observation','country_ai_routine_gate'].includes(method)&&params.action==='status';
-    if(this.nativeCountryAIFence&&!(this.countryAI?.view().owner==='native'&&(reservedRPC(method)||steeringRPC(method,params)||rpcEvidenceCategory(method,params)==='presentation'))&&rpcEvidenceCategory(method,params)!=='read'&&!(method==='set_paused'&&params.paused===true)&&method!=='country_ai_lease')throw Error('原生国家 AI 持权或交接待确认；本地派单已封口，先接管并回读后再干预');
+    if(this.nativeCountryAIFence&&!(this.countryAI?.view().owner==='native'&&(reservedRPC(method)||steeringRPC(method,params)||authorizedDomesticRPC(this,method,params)||rpcEvidenceCategory(method,params)==='presentation'))&&rpcEvidenceCategory(method,params)!=='read'&&!(method==='set_paused'&&params.paused===true)&&method!=='country_ai_lease')throw Error('原生国家 AI 持权或交接待确认；本地派单已封口，先接管并回读后再干预');
     if((this.stoppingRequested||this.stopped)&&!(/^(get_|find_)/.test(method)||method==='ping'||countryRead||method==='country_ai_lease'&&params.action==='stop'||method==='set_paused'&&params.paused===true||method==='set_survey_automation'&&params.enabled===false||method==='set_monthly_trade'&&params.cancel===true&&(this.monthlyExecution?.owns(params.order_id)||recoveryOwnsOrder(this.gestalt.data.monthlyTrades||[],this.sessionId,params.order_id))))
       throw Error('控制会话正在停止，只允许状态核对、暂停与收权');
   }
@@ -290,8 +310,16 @@ export class NativeGame {
   }
   async assertNativeWorld(){
     if(!this.nativeCountryAIEnabled||!this.boundNativeWorld)return;
-    const current=await this.rpc('get_country_ai_state');
-    if(current?.success!==true||current.world_loading===true||JSON.stringify(nativeCountryScope(current))!==JSON.stringify(this.boundNativeWorld))throw Error('国家 AI 世界代次或玩家身份改变，旧会话不能继续派单或恢复战略');
+    try{
+      const current=await this.rpc('get_country_ai_state');
+      if(current?.success!==true||current.world_loading===true||JSON.stringify(nativeCountryScope(current))!==JSON.stringify(this.boundNativeWorld))throw Error('国家 AI 世界代次或玩家身份改变，旧会话不能继续派单或恢复战略');
+    }catch(error){clearStrategyExecution(this);this.adviceTasks?.invalidate();if(this.lastState)this.lastState.adviceExecution=null;throw error;}
+  }
+  strategyExecutionView(){
+    const record=this.strategyExecutionRecord;
+    if(!record)return null;
+    if(!record.bindingKey||record.bindingKey!==strategyExecutionBinding(this)){clearStrategyExecution(this);this.strategyReceipts?.clear();return null;}
+    return publicStrategyExecution(record.result,record.date);
   }
   async countryAIControl({operation='status',policy='full_with_reserved',maxGameDays=180,maxWallSeconds=3600,stopAtReview=false,protectedTargets,reason}={}){
     if(!this.nativeCountryAIEnabled)return {enabled:false,coreGoalComplete:false,reason:'国家 AI 持续托管需要统一验收后的桥与显式启用；局部调查和本地派单不代表国家 AI'};
@@ -301,37 +329,138 @@ export class NativeGame {
     if(!['delegate','resume','takeover','reclaim','stop','continue','protect'].includes(operation))throw Error('国家 AI 操作无效');
     if(operation==='protect'){
       if(this.uncertain||this.applyBusy)throw Error('先核对未确认的关键干预，再更新保护');
+      if(!this.countryAI.active&&this.countryAI.saved&&this.countryAI.phase==='human'&&Number.isSafeInteger(this.countryAI.takeoverGeneration))await this.checkProtectedShipyards(protectedTargets);
       const control=await this.countryAI.protect({protectedTargets,reason});return {control:{enabled:true,...control},state:await this.observe()};
     }
-    if(operation==='continue'){this.strategyReview.acknowledge(this.lastState??{});await this.countryAI.acknowledgeReview();this.nativeStrategicReviewDue=false;this.needsDecisionRefresh=false;return {control:{enabled:true,...this.countryAI.view()},state:await this.observe()};}
+    if(operation==='continue'){
+      const intent=this.lastState?.nativeIntent;
+      if(intent&&['stalled','blocked'].includes(intent.status))return {status:'attention',needsAttention:'目标尚未落实，不能仅续期同一方针；先处理受阻或给出具体纠偏，原生日常经营继续',nativeIntent:intent,
+        control:{enabled:true,...this.countryAI.view()},state:this.lastState,nextCall:{name:'inspect',arguments:{topic:'strategy'}}};
+      this.strategyReview.acknowledge(this.lastState??{});await this.countryAI.acknowledgeReview();this.nativeStrategicReviewDue=false;this.needsDecisionRefresh=false;return {control:{enabled:true,...this.countryAI.view()},state:await this.observe()};
+    }
     if(['delegate','resume'].includes(operation)){
       if(this.countryAI.active)throw Error('当前已经委派或控制权未确认；先查询或接管后调整，不重复开启');
+      if(this.ownerEconomicReturnPending){
+        await this.observe();
+        const hold=this.ownerEconomicExecution();
+        if(hold.unfinished.length&&!hold.emergency){
+          const blocked=hold.unfinished.find(t=>['failed','expired_unknown'].includes(t.status));
+          const nextCall=blocked?{name:'inspect',arguments:blocked.command==='build_building'?{topic:'buildings',id:blocked.arguments.planet_id,building_key:blocked.arguments.building_key,zone_id:blocked.arguments.slot_index}:{topic:'military'}}:{name:'watch',arguments:{seconds:20}};
+          return {status:'attention',delegationDeferred:true,needsAttention:'本人具体任务尚未确认完成，暂不交给会覆盖施工/移动的原生AI；保持human推进，受阻项先读回再调整',
+            control:{enabled:true,...this.countryAI.view()},state:this.lastState,ownerEconomicExecution:hold,nextCall};
+        }
+      }
+      if(operation==='resume'&&(!this.countryAI.saved||this.countryAI.phase!=='human'||!Number.isSafeInteger(this.countryAI.takeoverGeneration)))
+        return {status:'attention',delegationDeferred:true,needsAttention:'本轮没有可恢复的已核验原生委派；先显式delegate建立本轮代次，不恢复或猜测旧AI记录',
+          control:{enabled:true,...this.countryAI.view()},state:this.lastState,nextCall:{name:'country_ai_control',arguments:{operation:'delegate',policy:'full_with_reserved',maxGameDays,maxWallSeconds}}};
       if(!Number.isFinite(maxWallSeconds)||maxWallSeconds<1||maxWallSeconds>3600||!Number.isInteger(maxGameDays)||maxGameDays<1||maxGameDays>720||(!Object.hasOwn(COUNTRY_AI_POLICIES,policy)))throw Error('国家 AI 范围与复查参数无效');
       if(this.uncertain||this.applyBusy||this.colonyBusy||this.monthlyBusy||this.monthlyLifecycleBusy)throw Error('先核对未确认写入或等待当前本地操作结束，再交给国家 AI');
       if(this.orderTracker?.view().some(row=>row.status==='expired_unknown'||row.status==='submitted'&&row.submissionConfirmed!==true))throw Error('存在未确认的旧订单，不能直接交给国家 AI');
+      await this.checkProtectedShipyards(operation==='resume'?this.countryAI.saved?.protectedTargets:protectedTargets);
       const pause=await this.rpc('set_paused',{paused:true});if(pause?.success!==true)throw Error('委派准备未能暂停');
+      const decisionAttention=async()=>{
+        const events=await this.rpc('get_active_events'),wars=await this.rpc('get_wars');
+        if(!Array.isArray(events)||typeof wars?.warGoalsWindow!=='boolean')throw Error('中央事件或战争目标状态未知，暂不委派国家 AI');
+        if(!events.length&&!wars.warGoalsWindow)return;
+        const state=await this.observe();
+        if(!state.pendingEvents?.length&&!state.warGoalsWindow)return;
+        return {status:'attention',delegationDeferred:true,needsAttention:'先处理当前中央事件或战争目标，再交给原生国家 AI；不要反复请求委派',
+          nextCall:{name:'inspect',arguments:{topic:state.warGoalsWindow?'wars':'events'}},control:{enabled:true,...this.countryAI.view()},state};
+      };
+      const blocked=await decisionAttention();if(blocked)return blocked;
       const maxWallMs=Math.min(Math.floor((this.ends-this.now())),Math.floor(maxWallSeconds*1000));
       if(maxWallMs<1000)throw Error('本轮剩余授权不足，不开始新的国家 AI 委派');
-      if(operation==='resume')await this.countryAI.resume({maxWallMs});
-      else await this.countryAI.delegate({policy,maxGameDays,maxWallMs,stopAtReview,protectedTargets});
+      try{
+        const ownerPolicy=nativeOwnerPolicy(this.lastState,this.modelStrategyContract);
+        if(operation==='resume')await this.countryAI.resume({maxWallMs,ownerPolicy});
+        else await this.countryAI.delegate({policy,maxGameDays,maxWallMs,stopAtReview,protectedTargets,ownerPolicy});
+      }catch(error){
+        // A choice can appear between the preflight and native run. Only turn
+        // this into attention after native cleanup has confirmed human control.
+        const control=this.countryAI.view();
+        if(error.message==='country_ai_run_scope_or_key_event_blocked'&&!this.countryAI.active&&control.owner==='human'&&control.paused===true&&control.actualFlags?.human_ai===false&&control.actualFlags?.force_human_ai===false){
+          await this.assertNativeWorld();
+          const attention=await decisionAttention();if(attention)return attention;
+        }
+        throw error;
+      }
+    }else if(operation==='takeover'&&!this.countryAI.active){
+      // watch may have advanced accepted commands while the owner stayed human.
+      // Pausing that same bound world is still required; never enable/replay AI.
+      await this.commandScope();await this.countryAI.state();
+      const before=this.countryAI.view();
+      if(before.owner!=='human'||before.ordinaryOrdersBlocked!==false||!['idle','stopped'].includes(before.nativePhase)||before.actualFlags?.human_ai!==false||before.actualFlags?.force_human_ai!==false)
+        throw Error('当前人类持权或AI关闭状态未确认，不能将未知交接当作已接管');
+      const pause=await this.rpc('set_paused',{paused:true});if(pause?.success!==true)throw Error('人类持权接管的暂停请求未确认');
+      const status=await this.guard();await this.countryAI.state();const control=this.countryAI.view();
+      if(status.is_paused!==true||control.owner!=='human'||control.paused!==true||control.ordinaryOrdersBlocked!==false||control.actualFlags?.human_ai!==false||control.actualFlags?.force_human_ai!==false)
+        throw Error('人类持权接管未完成暂停/AI关闭回读，保持未确认');
     }else await this.countryAI.takeover();
     this.nativeCountryAIUnknownSealed=false;this.nativeStrategicReviewDue=false;this.needsDecisionRefresh=false;this.decisionPause=undefined;
     return {control:{enabled:true,...this.countryAI.view()},state:await this.observe()};
+  }
+  ownerEconomicExecution(){
+    const tasks=(this.orderTracker?.view()??[]).filter(t=>t.ownerEconomicTask),state=this.lastState??{};
+    const emergency=Array.isArray(state.wars)&&state.wars.length>0||['energy','minerals','alloys','food','consumer_goods'].some(key=>{
+      const r=state.resources?.[key];return r?.net_known!==false&&r?.stockpile_known!==false&&Number.isFinite(r?.stockpile)&&Number.isFinite(r.net)&&r.net<0&&Math.max(0,r.stockpile)/-r.net<=6;
+    });
+    const summary=tasks.map(t=>({id:t.id,command:t.command,status:t.status,reason:t.reason,arguments:t.arguments}));
+    return {holding:!!this.ownerEconomicReturnPending&&!this.countryAI.active,tasks:summary,unfinished:summary.filter(t=>t.status!=='completed'),emergency};
+  }
+  async settleOwnerEconomicExecution(){
+    if(!this.nativeCountryAIEnabled||this.countryAI.active||!this.ownerEconomicReturnPending)return;
+    const hold=this.ownerEconomicExecution();this.lastState.ownerEconomicExecution=hold;
+    if(hold.emergency||hold.tasks.length&&!hold.unfinished.length){
+      if(!this.countryAI.saved)return {...this.lastState,needsAttention:'本人任务已结束或出现紧急情况；没有本轮原生委派记录，需显式delegate，不能猜测恢复旧AI',ownerEconomicExecution:hold};
+      this.ownerEconomicReturnPending=false;
+      const result=await this.countryAIControl({operation:'resume',maxWallSeconds:Math.max(1,Math.min(3600,Math.floor((this.ends-this.now())/1000)))});
+      return {...result.state,...(result.needsAttention?{needsAttention:result.needsAttention,nextCall:result.nextCall}:{}),ownerEconomicExecution:{...hold,holding:false,returnedToNative:result.control?.owner==='native'}};
+    }
+    if(hold.unfinished.some(t=>['failed','expired_unknown'].includes(t.status))){
+      await this.rpc('set_paused',{paused:true});await this.guard();
+      return {...await this.observe(),needsAttention:'本人任务未完成：已失败项重新核对合法条件；未知项只读对账，禁止盲重放。保持human并暂停以便调整',ownerEconomicExecution:hold};
+    }
+    return {...this.lastState,needsAttention:'本人明确任务执行期：保持human正常推进，真实建筑完工或舰队抵达后再交还原生AI',ownerEconomicExecution:hold};
+  }
+  async checkProtectedShipyards(protectedTargets={}){
+    const protection=normalizeCountryAIProtection(protectedTargets);
+    if(!protection.shipyards.length)return;
+    const yards=await this.rpc('get_shipyards');
+    assertProtectedShipyardRefs(protection,yards,this.lastState?.player?.country_id);
   }
   async strategyControl({requestId,contract}={}) {
     if(!this.nativeCountryAIEnabled||this.countryAI.view().owner!=='native'||this.stoppingRequested||this.stopped)throw Error('战略合同需要本国原生AI正在运营');
     if(this.strategyBusy)throw Error('战略合同正在执行');
     if(typeof requestId!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(requestId))throw Error('战略requestId无效');
-    const checked=validateStrategyContract(contract,validateOrder),fingerprint=stableJson(checked);
-    this.strategyReceipts??=new Map();const old=this.strategyReceipts.get(requestId);
+    const requested=validateStrategyContract(contract,validateOrder),fingerprint=stableJson(requested);
+    await this.assertNativeWorld();this.strategyExecutionView();
+    this.strategyReceipts??=new Map();const receiptBinding=strategyExecutionBinding(this);
+    let old=this.strategyReceipts.get(requestId);
+    if(old&&old.bindingKey!==receiptBinding){this.strategyReceipts.delete(requestId);old=undefined;}
     if(old){if(old.fingerprint!==fingerprint)throw Error('同一战略请求内容不能改变');return old.result;}
-    const result={requestId,status:'applying',contract:checked,actions:[]};
-    this.strategyReceipts.set(requestId,{fingerprint,result});this.strategyBusy=true;
+    const result={requestId,status:'applying',contract:requested,actions:[]};
+    this.strategyReceipts.set(requestId,{fingerprint,result,bindingKey:receiptBinding});this.strategyBusy=true;
     try{
       await this.commandScope();await this.countryAI.heartbeat();
-      result.steering=await applySteering({contract:checked,rpc:(m,p)=>this.rpc(m,p),heartbeat:()=>this.countryAI.heartbeat()});
-      this.strategyContract={...checked,at:this.now(),date:this.lastState?.date,steeringConfirmed:true};
+      const bindingKey=strategyExecutionBinding(this);
+      if(bindingKey)this.strategyExecutionRecord={bindingKey,result,date:this.lastGameDate??this.lastState?.date??null};
+      await this.refreshOperatorStanding(this.lastState);
+      const taskIds=[...new Set([...(requested.taskIds??[]),...(requested.domesticActions??[]).map(a=>a.taskId).filter(Boolean)])];
+      this.adviceTasks?.require([...taskIds,...(requested.taskUpdates??[]).map(x=>x.taskId)]);
+      this.adviceTasks?.start(taskIds,this.lastState);
+      this.adviceTasks?.update(requested.taskUpdates??[],this.lastState);
+      result.taskIds=taskIds;
+      this.modelStrategyContract=requested;
+      const checked=resolveStrategyDirection({state:this.lastState,contract:requested}).contract;
+      result.contract=checked;
+      result.steering=await this.syncStrategyDirection(this.lastState,{force:true});
+      if(!result.steering?.confirmed)throw Error('方针未确认，未执行保留决定');
       await this.checkpoint();
+      for(const action of checked.domesticActions??[]){
+        const receipt={};(result.domesticActions??=[]).push(receipt);
+        await this.applyStrategyDomestic(action,receipt,this.lastState);
+        await this.checkpoint();
+      }
       for(const [index,action] of checked.oneOffActions.entries()){
         await this.countryAI.heartbeat();const state=await this.observe();
         result.actions.push(await this.apply({requestId:requestId.slice(0,70)+'-s'+index,snapshotId:state.snapshotId,explanation:checked.reason,
@@ -339,8 +468,13 @@ export class NativeGame {
       }
       result.status='applied';await this.countryAI.acknowledgeReview();this.strategyReview.acknowledge(this.lastState);this.nativeStrategicReviewDue=false;
     }catch(error){result.status='attention';result.error=error.message;}
-    finally{this.strategyBusy=false;await this.checkpoint();}
-    return {...result,control:this.countryAI.view()};
+    finally{
+      if(this.strategyExecutionRecord?.result===result)this.strategyExecutionRecord.date=this.lastGameDate??this.lastState?.date??null;
+      const explicitStopped=new Set((requested.taskUpdates??[]).filter(x=>['blocked','superseded'].includes(x.status)).map(x=>x.taskId));
+      this.adviceTasks?.finish((result.taskIds??[]).filter(id=>!explicitStopped.has(id)),result,this.lastState??{});
+      this.strategyBusy=false;await this.checkpoint();
+    }
+    return {...result,control:this.countryAI.view(),adviceExecution:this.adviceTasks?.view()};
   }
   queueEvidence(event) {
     if(!this.journal)return;
@@ -445,6 +579,7 @@ export class NativeGame {
   async observe() {
     await this.assertNativeWorld();
     const status = await this.guard();
+    const economyObservedAt=this.now();
     // Initial observation can open a pending choice or pause before lastState
     // exists. Bind its read-only world identity before those command writes.
     const world = await this.rpc('get_galaxy_overview');
@@ -461,6 +596,7 @@ export class NativeGame {
     const alerts = await this.rpc('get_alerts');
     let events = await this.rpc('get_active_events');
     const warState = await this.rpc('get_wars');
+    const ascensionPerks=this.nativeCountryAIEnabled?(await this.rpc('get_traditions')).ascension_perks:undefined;
     // First-contact stage decisions live behind a HUD alert, not the ordinary
     // central event queue. Surface the actual pending choice before planning.
     const contactAlert=Array.isArray(alerts)&&alerts.find(row=>row.type==='alert_first_contact_stage_done');
@@ -492,14 +628,19 @@ export class NativeGame {
     const state = {
       snapshotId: this.snapshotId, remainingSeconds: Math.max(0, Math.round((this.ends - this.now()) / 1000)),
       date: status.date.formatted, paused: status.is_paused, speed: status.speed,
+      ...(status.resources&&typeof status.resources==='object'&&!Array.isArray(status.resources)&&Object.keys(status.resources).length?{economyObservedAt}:{}),
       controlCapabilities:{surveyDelegationAvailable:this.hybridSurvey,colonyHousingAvailable:!this.nativeRoutineSuppressed&&!this.surveyPilot,colonyUpgradeAvailable:this.colonyUpgradePilot,monthlyConditionsAvailable:this.monthlyLifecyclePilot,trustedWaitMaximumSeconds:this.nativeCountryAIEnabled?900:this.hybridSurvey?this.surveyWatchSeconds:this.localWaitPilot?60:20,note:'可用能力不是已启用的对象控制权；委派须显式申请并核对实际条件。'},
-      player: world.player, resources: Object.fromEntries(Object.entries(status.resources || {}).filter(([key]) => ['energy', 'minerals', 'alloys', 'consumer_goods', 'food', 'influence', 'unity', 'trade', 'physics_research', 'society_research', 'engineering_research', 'volatile_motes', 'exotic_gases', 'rare_crystals', 'living_metal', 'zro', 'dark_matter', 'nanites', 'astral_threads'].includes(key)).map(([key, value]) => [key, fields(value, ['stockpile', 'net', 'capped','max'])])),
+      player: world.player, resources: Object.fromEntries(Object.entries(status.resources || {}).filter(([key]) => ['energy', 'minerals', 'alloys', 'consumer_goods', 'food', 'influence', 'unity', 'trade', 'physics_research', 'society_research', 'engineering_research', 'volatile_motes', 'exotic_gases', 'rare_crystals', 'living_metal', 'zro', 'dark_matter', 'nanites', 'astral_threads'].includes(key)).map(([key, value]) => [key, fields(value, ['stockpile', 'net', 'capped','max','income','expense','net_known','income_known','expense_known'])])),
       civilian, military, research, colonies: status.outliner?.sectors_summary?.sectors,
       capacities: status.stats, picture: this.picture,
       pendingDiplomacy: diplomacy.pending,
       wars: warState.wars, warGoalsWindow: warState.warGoalsWindow,
       alerts: Array.isArray(alerts) ? alerts.map(row=>fields(row,['alert_id','type','title','description'])) : [],
-      council: status.council, traditions: status.society,
+      council: status.council, traditions: status.society?{...status.society,
+        next_tradition_cost_known:status.society.next_tradition_cost_known===true,
+        edict_fund:status.society.edict_fund_known===true?status.society.edict_fund:null,
+        edict_fund_known:status.society.edict_fund_known===true}:status.society,
+      ...(this.nativeCountryAIEnabled?{ascensionPerks:ascensionPerks??null}:{}),
       leaders: {...status.leaders, leader_capacity: Number.isInteger(status.leaders?.leader_capacity) && status.leaders.leader_capacity >= 0 && status.leaders.leader_capacity < 1000 ? status.leaders.leader_capacity : null},
       pendingEvents: Array.isArray(events) ? events.map(row => fields(row, ['window_id', 'title', 'event_key','kind','first_contact_id'])) : [],
       note: '来自当前游戏原生接口。指令返回 posted 仅表示提交；后续状态、订单或队列才是效果证据。'
@@ -510,25 +651,17 @@ export class NativeGame {
       state.terminal={kind:'no_playable_empire',message:'玩家已失去全部星系和殖民地，已停止操作以检查战败状态'};
       await this.rpc('set_paused',{paused:true});state.paused=true;
     }
-    try {
-      const guidance=JSON.parse(await readFile(this.guidanceFile,'utf8'));
-      if(guidance.pid===this.binding.pid && Number.isFinite(guidance.expiresAt) && guidance.expiresAt>this.now())
-        state.operatorMessages=Array.isArray(guidance.messages)?guidance.messages.filter(x=>typeof x==='string'&&!hasProductionIdentity(x)).slice(0,4).map(x=>x.slice(0,300)):[];
-    } catch(error) {if(error.code!=='ENOENT') await this.log({type:'guidance_read_error',error:'本地操作提示无效，未应用'});}
-    const advice=await readStrategyAdvice(resolve(this.directory,'../commentary/strategy-directive.json'),this.sessionId,this.now());
-    if(advice){
-      state.operationalGoal=advice.goal;
-      if(this.lastAdviceId!==advice.id){this.lastAdviceId=advice.id;await this.log({type:'strategy_advice_read',adviceId:advice.id,sessionId:this.sessionId,snapshotId:state.snapshotId,executed:false});}
-    }
+    await this.refreshOperatorStanding(state);
     state.operationalFacts=this.operationalContext.view({ownedPlanetIds:(state.colonies||[]).flatMap(s=>(s.colonies_summary||[]).map(p=>p.planet_id))});
     state.capabilities=executionCapabilities(Object.keys(ORDER_FIELDS));
-    if(this.nativeCountryAIEnabled){state.strategyContract=this.strategyContract??null;state.nativeWorldGeneration=this.boundNativeWorld?.world_generation;state.countryAIControl={enabled:true,...this.countryAI.view()};}
+    if(this.nativeCountryAIEnabled){state.strategyContract=this.strategyContract??null;state.strategyExecution=this.strategyExecutionView();state.nativeWorldGeneration=this.boundNativeWorld?.world_generation;state.countryAIControl={enabled:true,...this.countryAI.view()};}
     if(!this.continuityLoaded){
       this.continuityLoaded=true;
       const saved=await this.continuity.load(this.binding,state);
-      if(saved){this.growthTracker.restore(saved.growth,state);this.stationFailures=new Map(saved.stationFailures||[]);this.orderTracker?.restore(saved.orderTracking,{state});}
+      if(saved){this.growthTracker.restore(saved.growth,state);this.stationFailures=new Map(saved.stationFailures||[]);this.orderTracker?.restore(saved.orderTracking,{state});this.adviceTasks?.restore(saved.adviceExecution,state);this.nativeIntentExecution??=new NativeIntentExecution();this.nativeIntentExecution.restore(saved.nativeIntent,strategyExecutionBinding(this));this.unknownDomesticCommands=new Set((saved.domesticUnknown??[]).filter(x=>typeof x==='string'&&x.length<=2000).slice(-128));}
     }
     this.growthTracker.record(state);
+    if(this.nativeCountryAIEnabled)await this.refreshNativeColonyAudit(state);
     await this.refreshOrderTracking(state);
     await this.gestalt.bind(this.binding,state);
     await this.gestalt.update(state,this.orderTracker?.view()||[]);
@@ -541,6 +674,11 @@ export class NativeGame {
     state.gestalt=this.gestalt.view();
     if(this.hybridSurvey||Object.keys(this.surveyDelegation.view().records||{}).length)state.surveyControl=this.surveyDelegation.view();
     state.strategy=this.reviewStrategy(state);
+    // Direction must see this round's growth and colony audit, rather than the
+    // preceding observation. Only the existing verified steering path writes.
+    await this.syncStrategyDirection(state);
+    state.strategy=this.reviewStrategy(state);
+    if(this.nativeCountryAIEnabled){this.adviceTasks?.observe(state);state.adviceExecution=this.adviceTasks?.view();state.strategy.adviceExecution=state.adviceExecution;}
     if(this.decisionPause)state.decisionAttention={...this.decisionPause,requiresRefresh:false};
     this.needsDecisionRefresh=false;
     this.lastState = state; this.metrics.observations++;
@@ -548,22 +686,141 @@ export class NativeGame {
     await this.log({type: 'state', state}); await this.checkpoint();
     return state;
   }
+  async refreshNativeColonyAudit(state){
+    this.nativeColonyAudit??=new NativeColonyAudit();
+    state.colonyAudit=await this.nativeColonyAudit.review(state,{rpc:(m,p)=>this.rpc(m,p),onPlanet:raw=>{
+      this.colonyReviews.delete(raw.planet_id);this.colonyReviews.set(raw.planet_id,{...colonyReview(raw),at:this.now()});
+      if(this.colonyReviews.size>32)this.colonyReviews.delete(this.colonyReviews.keys().next().value);
+      this.operationalContext.record('planet',fields(raw,['planet_id','name','designation','designation_key','kpi','workforce_summary','construction_queue','monthly_production']),{gameDate:state.date});
+    }});
+    state.operationalFacts=this.operationalContext.view({ownedPlanetIds:(state.colonies||[]).flatMap(s=>(s.colonies_summary||[]).map(p=>p.planet_id))});
+  }
+  async applyStrategyDomestic(action,receipt={},policyState=this.lastState){
+    const unknownKey=stableJson([strategyExecutionBinding(this),action.type,action.arguments]);
+    this.unknownDomesticCommands??=new Set();
+    try{
+      await applyDomesticAction({action,receipt,policyState,rpc:(m,p)=>this.rpc(m,p),
+        checkScope:async()=>{
+          if(this.countryAI.view().owner!=='native'||this.stoppingRequested||this.stopped)throw Error('原生经营控制权已改变，停止国内战略设置');
+          await this.commandScope();
+        },heartbeat:()=>this.countryAI.heartbeat(),write:async(method,params)=>{
+          if(this.unknownDomesticCommands.has(unknownKey))throw Object.assign(Error('相同国内设置仍有未确认命令，不能更换请求编号重发'),{nativeWriteAttempted:false});
+          strategyDomesticWrites.set(this,{method,params});
+          try{return await this.rpc(method,params);}finally{strategyDomesticWrites.delete(this);}
+        }});
+      if(receipt.confirmed===true)this.unknownDomesticCommands.delete(unknownKey);
+      return receipt;
+    }catch(error){if(receipt.status==='unknown')this.unknownDomesticCommands.add(unknownKey);throw error;}
+  }
+  async correctNativeIntent(state){
+    if(state.userEconomicPolicy?.edictPolicy!=='unity_net_gain'||this.countryAI.view().owner!=='native'||this.stoppingRequested||this.stopped)return this.nativeIntentCorrection??null;
+    const currentDay=day(state.date),key=stableJson([state.userEconomicPolicy.updatedAt,this.countryAI.view().generation]);
+    if(currentDay===null||this.nativeIntentCorrectionKey===key&&Number.isFinite(this.nativeIntentCorrectionDay)&&currentDay>=this.nativeIntentCorrectionDay&&currentDay-this.nativeIntentCorrectionDay<180)return this.nativeIntentCorrection??null;
+    this.nativeIntentCorrectionDay=currentDay;this.nativeIntentCorrectionKey=key;
+    const correction=this.nativeIntentCorrection={date:state.date,actions:[],deferred:[]};
+    try{
+      await this.commandScope();await this.countryAI.heartbeat();
+      const edicts=await this.rpc('get_edicts'),status=await this.rpc('get_status'),wars=await this.rpc('get_wars');
+      const fresh={...state,resources:status.resources,wars:wars.wars,warGoalsWindow:wars.warGoalsWindow};
+      const review=ownerEconomicPolicyReview(fresh,{edicts});
+      correction.deferred=review.deferred;
+      for(const action of review.domesticActions){
+        const receipt={};correction.actions.push(receipt);
+        await this.applyStrategyDomestic(action,receipt,fresh);
+      }
+    }catch(error){correction.error=error.message;}
+    return correction;
+  }
+  async refreshOperatorStanding(state){
+    state.operatorMessages=[];
+    try{
+      const guidance=JSON.parse(await readFile(this.guidanceFile,'utf8'));
+      if(guidance.pid===this.binding.pid&&Number.isFinite(guidance.expiresAt)&&guidance.expiresAt>this.now())
+        state.operatorMessages=Array.isArray(guidance.messages)?guidance.messages.filter(x=>typeof x==='string'&&!hasProductionIdentity(x)).slice(0,4).map(x=>x.slice(0,300)):[];
+    }catch{}
+    const advice=await readStrategyAdvice(resolve(this.directory,'../commentary/strategy-directive.json'),this.sessionId,this.now());
+    if(this.nativeCountryAIEnabled){
+      this.adviceTasks??=new AdviceExecution({now:this.now});
+      this.adviceTasks.bind(this.sessionId,strategyExecutionBinding(this),state);
+      if(advice)this.adviceTasks.ingest(advice.executionTasks,state);
+      state.adviceExecution=this.adviceTasks.view();
+    }
+    if(advice)state.operationalGoal=advice.goal;else delete state.operationalGoal;
+    if(advice&&this.lastAdviceId!==advice.id){this.lastAdviceId=advice.id;await this.log({type:'strategy_advice_read',adviceId:advice.id,sessionId:this.sessionId,snapshotId:state.snapshotId,executed:false});}
+    const standing=await readOperatorStanding(resolve(this.directory,'../commentary/operator-standing.json'),this.sessionId,this.now());
+    this.operatorStanding=standing;
+    if(standing){state.operatorMessages.push(standing.text);state.operatorStanding=standing;}else delete state.operatorStanding;
+    const preferences=await readGameplayPreferences(resolve(this.directory,'../gameplay-preferences.json'),{standing,now:this.now()});
+    if(preferences){state.userEconomicPolicy=preferences;state.operatorMessages.unshift(preferences.note);}else delete state.userEconomicPolicy;
+  }
+  async syncStrategyDirection(state,{force=false}={}){
+    const standing=state.operatorStanding,active=this.nativeCountryAIEnabled&&this.countryAI.view().owner==='native'&&!this.stoppingRequested&&!this.stopped;
+    if(!standing&&!state.userEconomicPolicy&&!this.directionManaged&&!force&&!state.operationalGoal?.targetResource)return;
+    const intent=compileNativeIntent(state,this.modelStrategyContract),direction={contract:intent.contract,reason:intent.contract.reason},effective={...direction.contract,oneOffActions:[]};
+    const previousIntent=state.nativeIntent??this.lastState?.nativeIntent;
+    if(previousIntent?.status==='stalled'&&previousIntent.targetResource===intent.targetResource&&this.nativeIntentExecution?.record?.key===intent.key&&!intent.emergency){effective.expansionStance='consolidate';effective.reason=(effective.reason+'；实际目标停滞，先消化现有负担并纠偏').slice(0,300);}
+    const ownerPolicy=intent.ownerPolicy;
+    const key=stableJson([effective.economyFocus,effective.expansionStance,effective.militaryStance,ownerPolicy,this.countryAI.view().generation]);
+    let confirmed=false,reason=direction.reason;
+    const hasDirection=!!standing?.economyFocus||!!state.userEconomicPolicy||!!state.operationalGoal?.targetResource||!!this.modelStrategyContract||this.directionManaged||force;
+    if(active&&hasDirection&&!this.directionApplying){
+      this.directionManaged=true;
+      if(this.directionAttempt?.key!==key||force&&this.directionAttempt?.confirmed===true){
+        this.directionApplying=true;this.directionAttempt={key,confirmed:false};
+        try{
+          await this.commandScope();await this.countryAI.heartbeat();
+          await applySteering({contract:effective,rpc:(m,p)=>this.rpc(m,p),heartbeat:async()=>{
+            if(this.stoppingRequested||this.stopped)throw Error('会话已停止');
+            await this.countryAI.heartbeat();if(this.countryAI.view().owner!=='native')throw Error('原生持权已结束');
+          }});
+          if(typeof this.countryAI.setOwnerPolicy==='function')await this.countryAI.setOwnerPolicy(ownerPolicy);
+          else if(Object.values(ownerPolicy).some(Boolean))throw Error('当前桥未提供本人经营约束，不能把引导开关当作已落实');
+          this.directionAttempt.confirmed=true;
+          this.strategyContract={...effective,at:this.now(),date:state.date,steeringConfirmed:true};
+        }catch(error){this.directionAttempt.confirmed=false;this.directionAttempt.error=error.message;}
+        finally{this.directionApplying=false;}
+      }
+      confirmed=this.directionAttempt?.key===key&&this.directionAttempt.confirmed===true;
+      if(confirmed&&this.strategyContract?.reason!==direction.reason)this.strategyContract={...this.strategyContract,reason:direction.reason,at:this.now(),date:state.date};
+      if(!confirmed)reason=this.directionAttempt?.error??'引导方针未确认；未重放未确认命令';
+    }else reason=!active?'原生AI未持权，常驻要求已读取，尚未切换方针':!hasDirection?'尚未解析出经济档位，要求原文已转交战略决策':'方针切换正在进行';
+    if(standing||this.lastStandingId){
+      const receipt={operatorStandingId:standing?.id??this.lastStandingId,readAt:this.now(),appliedFocus:this.strategyContract?.economyFocus??null,
+        steeringApplied:!!standing?.economyFocus&&confirmed,reason:standing?reason:confirmed?'常驻要求已撤销或心跳失联，已恢复参谋目标或模型方针':'常驻要求已撤销；恢复方针尚未确认'};
+      try{await writeControllerReceipt(resolve(this.directory,'../commentary/controller-receipt.json'),receipt);this.controllerReceipt=receipt;}catch{this.receiptWriteFailed=true;}
+    }
+    this.lastStandingId=standing?.id??null;
+    state.strategyContract=this.strategyContract??null;state.controllerReceipt=this.controllerReceipt??null;
+    this.nativeIntentExecution??=new NativeIntentExecution();
+    const actualPolicy=this.countryAI.view().ownerPolicy??{};
+    const ownerPolicyConfirmed=Object.entries(ownerPolicy).every(([key,value])=>actualPolicy[key]===value||value===false&&actualPolicy[key]===undefined);
+    const correction=active&&confirmed?await this.correctNativeIntent(state):this.nativeIntentCorrection;
+    state.nativeIntent=this.nativeIntentExecution.observe(intent,state,{binding:strategyExecutionBinding(this),steeringConfirmed:active&&confirmed,ownerPolicyConfirmed,correction,controlError:this.directionAttempt?.key===key?this.directionAttempt.error:null,now:this.now()});
+    return {confirmed};
+  }
   reviewStrategy(state=this.lastState) {
-    if(this.nativeCountryAIEnabled)return {mode:'native_strategy',focus:'原生AI持续运营；仅通过StrategyContract调方针和保留决定',currentContract:this.strategyContract??null,reviewEveryGameDays:180};
     const owned=(state.colonies||[]).flatMap(x=>x.colonies_summary||[]),own=new Set(owned.map(x=>x.planet_id));
     const colonies=[...this.colonyReviews.values()].filter(x=>this.now()-x.at<180000&&own.has(x.planetId));
     const review=strategicReview(state,{government:this.government,colonies,growth:this.growthTracker.review(state)});
     const recent=new Set(colonies.map(x=>x.planetId));
     review.reviewTargets=owned.filter(x=>!x.is_colonizing&&!recent.has(x.planet_id)).sort((a,b)=>(b.status_alerts_count||0)-(a.status_alerts_count||0)).slice(0,3).map(x=>({planetId:x.planet_id,name:x.name,alerts:x.status_alerts_count}));
+    if(this.nativeCountryAIEnabled)return {...review,nativeIntent:state.nativeIntent??null,adviceExecution:this.adviceTasks?.view()??state.adviceExecution??null,mode:'native_strategy',diagnosisMode:review.mode,currentContract:this.strategyContract??null,reviewEveryGameDays:180,
+      note:review.note+' 原生AI继续承担日常运营；这些诊断用于调整StrategyContract、保留决定和必要的只读检查，不开放普通经营派单。'};
     return review;
   }
-  async inspect({topic, id: entityId, fleet_id, purpose, system_id,district_type,jumps=4,resource,action,units,sections,goal_key} = {}) {
+  async inspect({topic, id: entityId, fleet_id, purpose, system_id,district_type,jumps=4,resource,action,units,sections,goal_key,building_key,zone_id} = {}) {
     if(goal_key!==undefined&&(topic!=='attack_options'||typeof goal_key!=='string'||!/^wg_[a-zA-Z0-9_]{1,100}$/.test(goal_key)))throw Error('goal_key仅用于attack_options的当前战争目标');
-    const constructionScope=constructionInspectionScope({topic,sections,district_type});
+    const constructionScope=constructionInspectionScope({topic,sections,district_type,building_key,zone_id});
+    const buildingTarget=buildingInspectionScope({topic,sections,building_key,zone_id});
     const marketScope=validateMarketInspectionScope({topic,resource,action,units});
     const status=await this.guard();
     if (entityId !== undefined && !id(entityId) || fleet_id !== undefined && !id(fleet_id) || system_id !== undefined && !id(system_id)) throw new Error('无效实体 ID');
     if (['system', 'planet', 'districts', 'buildings','zones','jobs','upgrades','construction'].includes(topic) && entityId === undefined) throw new Error(`${topic} 需要 id`);
+    if(buildingTarget){
+      const fresh=status.outliner?.sectors_summary?.sectors;
+      const owned=Array.isArray(fresh)?fresh:this.lastState?.date===status.date?.formatted?this.lastState.colonies:[];
+      if(!owned?.some(s=>s.colonies_summary?.some(p=>p.planet_id===entityId)))throw Error('定向建筑核验只支持已确认的当前己方殖民地');
+    }
     let result;
     if(topic==='war_fleets')return this.rpc('get_war_fleets');
     if(topic==='armies')return entityId===undefined?this.rpc('get_armies'):this.rpc('get_planet_armies',{planet_id:entityId});
@@ -587,7 +844,7 @@ export class NativeGame {
       if(this.colonyReviews.size>32)this.colonyReviews.delete(this.colonyReviews.keys().next().value);
       result.strategicDiagnosis=this.reviewStrategy();
       this.operationalContext.record('planet',result.planet,{gameDate:this.lastState?.date});
-      for(const [section,row]of Object.entries(result.sections))if(row.known)this.operationalContext.record(section,row.data,{gameDate:this.lastState?.date});
+      for(const [section,row]of Object.entries(result.sections))this.operationalContext.record(section,row.known?row.data:{planet_id:entityId,coverageKnown:false,coverageReason:row.reason},{gameDate:this.lastState?.date});
     }
     else if(topic==='zones') {
       if(district_type!==undefined&&(typeof district_type!=='string'||!/^district_[a-z_]{1,60}$/.test(district_type)))throw new Error('district_type 需要当前真实区划key');
@@ -595,7 +852,19 @@ export class NativeGame {
       for(const district of result.districts||[])for(const slot of district.slots||[])if(slot.zone!==null)delete slot.buildable_zones;
       result.note='只为当前空特区槽创建合法特区，不能替换或拆除已有特区。zone_slot是槽位序号，后续建建筑使用新zone_id。';
     }
-    else if(topic==='jobs')result=await this.rpc('get_planet_jobs',{planet_id:entityId});
+    else if(topic==='jobs'){
+      const audit=this.lastState?.colonyAudit?.colonies?.find(p=>p.planetId===entityId&&p.ageDays<=180);
+      const planet=audit?{workforce_summary:{active_jobs_count:audit.activeJobsCount,total_employed_workforce:audit.employedWorkforce}}:{};
+      const raw=await this.rpc('get_planet_jobs',{planet_id:entityId});
+      result=withConstructionCoverage('jobs',raw,planet);
+      if(this.nativeCountryAIEnabled&&needsPlanetJobsSupplement(raw,planet))result=await supplementPlanetJobs({data:result,planetId:entityId,binding:this.binding,worldScope:this.boundNativeWorld,
+        ownedColonies:(this.lastState.colonies??[]).flatMap(sector=>sector.colonies_summary??[]),processReader:this.processReader,now:this.now,
+        assertScope:async()=>{
+          if(this.stoppingRequested||this.stopped)throw Error('会话已停止');
+          await this.assertNativeWorld();
+          return {binding:{pid:this.binding?.pid,creationTime:this.binding?.creationTime},worldScope:structuredClone(this.boundNativeWorld)};
+        }});
+    }
     else if (topic === 'planet') {
       if (entityId === undefined) throw new Error('planet 需要 id');
       const raw = await this.rpc('get_planet_details', {planet_id: entityId});
@@ -605,7 +874,7 @@ export class NativeGame {
       if(this.colonyReviews.size>32)this.colonyReviews.delete(this.colonyReviews.keys().next().value);
       result.strategicDiagnosis=this.reviewStrategy();
     } else if (topic === 'districts') result = await this.rpc('get_buildable_districts', {planet_id: entityId});
-    else if (topic === 'buildings') result = await this.rpc('get_buildable_buildings', {planet_id: entityId});
+    else if (topic === 'buildings') result = buildingTarget?await inspectBuildingQuote({planetId:entityId,buildingTarget,rpc:(m,p)=>this.rpc(m,p)}):withConstructionCoverage('buildings',await this.rpc('get_buildable_buildings', {planet_id: entityId}));
     else if(topic==='upgrades') {
       if(!this.lastState.colonies?.some(s=>s.colonies_summary?.some(p=>p.planet_id===entityId)))throw new Error('只能查询当前己方殖民地的建筑升级候选');
       result=await this.rpc('get_building_upgrade_candidates',{planet_id:entityId});
@@ -663,6 +932,16 @@ export class NativeGame {
     }
     else if (topic === 'alerts') result = await this.rpc('get_alerts');
     else if (topic === 'notifications') result = await this.rpc('get_notifications');
+    else if (topic === 'edicts') {
+      const raw=await this.rpc('get_edicts');
+      if(!Array.isArray(raw?.active_edicts))throw Error('当前法令清单不可读，不能当作没有开启法令');
+      const summary=raw.summary??{},fundKnown=summary.edict_fund_known===true&&Number.isFinite(summary.edict_fund)&&summary.edict_fund>=0,listComplete=Number.isSafeInteger(summary.active_edicts_count)&&summary.active_edicts_count===raw.active_edicts.length;
+      result={summary:{active_edicts_count:Number.isSafeInteger(summary.active_edicts_count)&&summary.active_edicts_count>=0?summary.active_edicts_count:raw.active_edicts.length,
+        edict_fund:fundKnown?summary.edict_fund:null,edict_fund_known:fundKnown},
+        active_edicts:raw.active_edicts.map(row=>{const upkeepKnown=row.upkeep_known===true&&row.upkeep!==undefined&&row.upkeep!==null;return {...fields(row,['key','name']),upkeep:upkeepKnown?row.upkeep:null,upkeep_known:upkeepKnown};}),
+        active_edicts_complete:listComplete,maintenance_details_known:listComplete&&raw.active_edicts.every(row=>row.upkeep_known===true&&row.upkeep!==undefined&&row.upkeep!==null),
+        note:'这是当前启用法令的只读清单。未由原生接口确认的法令经费和逐项维护均标未知，不能把旧桥默认0当实际免费；凝聚力总支出仍看资源结算。普通法令经strategy_contract.domesticActions的受限入口调整；只有实际回读确认才能称已关闭，系统和角色维护法令不可修改。'};
+    }
     else if (topic === 'government') {
       const government=await this.rpc('get_government'),council=(await this.rpc('get_status')).council;
       this.government=government;this.governmentAt=this.now();
@@ -1009,6 +1288,16 @@ export class NativeGame {
     }
     await this.gestalt.save();
   }
+  async confirmManualBuildingControl(){
+    const status=await this.guard();
+    if(status.is_paused!==true)throw Object.assign(Error('本人经营干预须先确认暂停，不能与原生经营并行'),{rejected:true});
+    if(this.nativeCountryAIEnabled){
+      await this.countryAI.state();const control=this.countryAI.view();
+      if(control.owner!=='human'||!['idle','stopped'].includes(control.nativePhase)||control.ordinaryOrdersBlocked!==false||control.paused!==true||control.actualFlags?.human_ai!==false||control.actualFlags?.force_human_ai!==false)
+        throw Object.assign(Error('建筑干预前须实际收回本国AI、确认人类持权且全局AI已关闭'),{rejected:true});
+    }
+    return status;
+  }
   async apply(input={},authority) {
     if(this.nativeCountryAIFence&&!(this.countryAI.view().owner==='native'&&Array.isArray(input.orders)&&input.orders.length&&input.orders.every(o=>reservedOrder(o.command))))throw Error('原生国家 AI 负责日常操作；仅允许战略合同和保留决定，异常时紧急收权');
     if(this.applyBusy)throw Error('普通命令正在执行，不接受并行提交');
@@ -1019,6 +1308,10 @@ export class NativeGame {
     if (typeof requestId !== 'string' || !/^[a-zA-Z0-9_-]{1,80}$/.test(requestId)) throw new Error('requestId 无效');
     if (!Array.isArray(orders) || !orders.length || orders.length > 6) throw new Error('每批需要 1..6 条命令');
     const checked = orders.map(validateOrder),manualReason=validateManualSurveyReason(manualSurveyReason);
+    if(this.nativeCountryAIEnabled){
+      assertNativeEconomicOrders(checked,this.lastState);
+      if(checked.some(o=>USER_ECONOMIC_COMMANDS.includes(o.command)))await this.confirmManualBuildingControl();
+    }
     if(manualReason!==undefined&&!checked.some(o=>o.command==='survey'))throw Error('manualSurveyReason仅用于包含survey的动作');
     if(typeof strategicResearchOverride!=='boolean')throw Error('strategicResearchOverride 必须为布尔值');
     if(strategicResearchOverride&&(!this.nativeCountryAIEnabled||taskId!==undefined||checked.length!==1||checked[0].command!=='select_research'||typeof explanation!=='string'||explanation.trim().length<5||explanation.length>300))
@@ -1065,7 +1358,7 @@ export class NativeGame {
       if (this.now() - (this.cooldowns.get(key) ?? 0) < 30000) {result.orders.push({command: order.command, status: 'duplicate_skipped'}); continue;}
       const failure = this.failures.get(key);
       if (failure && this.now() - failure.at < 60000) {result.orders.push({command: order.command, status: 'rejected_cached', error: failure.error, note: '同样参数刚被引擎拒绝；查当前状态或换合法候选，不盲重试。'}); continue;}
-      let method = order.command, params = order.arguments,stationState,baseline,marketContext,surveyRoute,writeAttempted=false,durableAction;
+      let method = order.command, params = order.arguments,stationState,baseline,marketContext,surveyRoute,writeAttempted=false,durableAction,buildingQuoteRequired=false;
       if (method === 'assign_scientist') {
         const ship = this.lastState.civilian.science_ships.find(row => row.fleet_id === params.fleet_id);
         if (!id(ship?.ship_id)) throw new Error('无法确认该己方科研船的实体 ID，请重新 observe');
@@ -1133,7 +1426,11 @@ export class NativeGame {
         if(method==='build_building'){
           const choices=await this.rpc('get_buildable_buildings',{planet_id:params.planet_id});
           const problem=buildingCandidateProblem(choices,params);
-          if(problem){const error=new Error(problem);error.rejected=true;throw error;}
+          if(problem||this.nativeCountryAIEnabled){
+            await this.confirmManualBuildingControl();
+            if(!this.lastState.colonies?.some(s=>s.colonies_summary?.some(p=>p.planet_id===params.planet_id)))throw Object.assign(Error('目标不是已确认的当前己方殖民地'),{rejected:true});
+            if(problem||this.nativeCountryAIEnabled)buildingQuoteRequired=(await readBuildingAdmission(params,(m,p)=>this.rpc(m,p),{choices,forceTarget:this.nativeCountryAIEnabled})).basis==='targeted_engine_quote';
+          }
         }
         if(method==='upgrade_building') {
           if(!this.lastState.colonies?.some(s=>s.colonies_summary?.some(p=>p.planet_id===params.planet_id))){const error=new Error('只能升级当前己方殖民地中的建筑');error.rejected=true;throw error;}
@@ -1360,7 +1657,7 @@ export class NativeGame {
           const {commitments,floors}=this.delegationBudgetOptions();
           for(const k of Object.keys(candidate.cost)){const row=current.status.resources?.[k];if(!Number.isFinite(row?.stockpile)||!Number.isFinite(row.net)||row.stockpile+Math.min(0,row.net)*3-(commitments[k]??0)-(floors[k]??0)<0)throw Error('托管建设的当前库存不足以兑现共享预留与维护底线');}
         }
-        if(method==='claim_system'||method==='market_trade'||method==='build_ship'||!NO_IMMEDIATE_RESOURCE_SPEND.has(order.command)&&(spendingTask||hasSpendingReservations(this.delegationBudgetOptions()))){
+        if(method==='claim_system'||method==='market_trade'||method==='build_ship'||method==='build_building'&&(buildingQuoteRequired||this.nativeCountryAIEnabled)||!NO_IMMEDIATE_RESOURCE_SPEND.has(order.command)&&(spendingTask||hasSpendingReservations(this.delegationBudgetOptions()))){
           let cost,evidence;
           if(method==='market_trade'){
             if(this.now()<marketContext.quotedAt||this.now()-marketContext.quotedAt>=5000){
@@ -1370,12 +1667,17 @@ export class NativeGame {
             evidence=checkQuotedTrade({params,...marketContext,status,...this.delegationBudgetOptions(),task:spendingTask});cost=evidence.cost;
             this.marketBefore={resource:status.resources[params.resource].stockpile,currency:status.resources[marketContext.market.settlement_currency].stockpile,settlement:marketContext.market.settlement_currency,quote:marketContext.quote};
           }else{
-            cost=await readActualSpendingCost(order,(m,p)=>this.rpc(m,p));
-            const status=await this.guard();evidence=checkActualSpending({cost,status,...this.delegationBudgetOptions(),task:spendingTask,expenseCycle:method==='build_ship'});
+            cost=await readActualSpendingCost(order,(m,p)=>this.rpc(m,p),{forceTargetBuilding:this.nativeCountryAIEnabled&&method==='build_building'});
+            const status=method==='build_building'&&(buildingQuoteRequired||this.nativeCountryAIEnabled)?await this.confirmManualBuildingControl():await this.guard();
+            evidence=checkActualSpending({cost,status,...this.delegationBudgetOptions(),task:spendingTask,expenseCycle:method==='build_ship'});
           }
           if(method==='claim_system'&&!params.remove)params={...params,max_influence_cost_fixed:Math.round(cost.influence*100000)};
           durableAction.spendingAdmission={...evidence,...(method==='claim_system'&&!params.remove?{hardNativeBudget:true,nativeCostCap:{resource:'influence',maximumFixed:params.max_influence_cost_fixed}}:{}),gameDate:this.lastGameDate,cost};await this.gestalt.save();
           await this.guard();
+        }
+        if(this.nativeCountryAIEnabled&&USER_ECONOMIC_COMMANDS.includes(order.command)){
+          await this.confirmManualBuildingControl();assertNativeEconomicOrders([order],this.lastState);
+          if(order.command!=='build_building')await checkEconomicExploration(order,this.lastState,(m,p)=>this.rpc(m,p));
         }
         writeAttempted=true;
         const response = await this.rpc(method, params);
@@ -1388,6 +1690,7 @@ export class NativeGame {
           try {receipt.verification = await this.verifyOrder(order, params, response,baseline);} catch (error) {receipt.verification = {verified: false, error: error.message};}
           if (receipt.verification.verified) this.metrics.verified++;
           receipt.tracking=this.orderTracker?.register({requestId,order,response,verification:receipt.verification,beforeState:this.lastState,baseline});
+          if(this.nativeCountryAIEnabled&&receipt.tracking?.ownerEconomicTask)this.ownerEconomicReturnPending=true;
           if(receipt.tracking)this.trackedIntentKeys.set(receipt.tracking.id,key);
         } else {
           this.failures.set(key, {at: this.now(), error: response?.error || '引擎拒绝'});
@@ -1596,18 +1899,38 @@ export class NativeGame {
     if(this.stopped)return;
     if(this.now()>=this.ends)return this.stop();
     const status=await this.guard();
+    const economyObservedAt=this.now();
     if(this.nativeCountryAIEnabled&&this.countryAI.active){
       try{
         const control=await this.countryAI.heartbeat();
-        this.lastState={...this.lastState,paused:control.paused,date:status.date?.formatted,resources:status.resources,countryAIControl:{enabled:true,...control}};
+        const economyKnown=status.resources&&typeof status.resources==='object'&&!Array.isArray(status.resources)&&Object.keys(status.resources).length>0;
+        const colonies=status.outliner?.sectors_summary?.sectors;
+        this.lastState={...this.lastState,paused:control.paused,date:status.date?.formatted,
+          ...(economyKnown?{resources:status.resources,economyObservedAt}:{}),
+          ...(status.stats?{capacities:status.stats}:{}),...(Array.isArray(colonies)?{colonies}:{}),
+          ...(status.council?{council:status.council}:{}),
+          ...(status.society?{traditions:{...status.society,next_tradition_cost_known:status.society.next_tradition_cost_known===true,
+            edict_fund:status.society.edict_fund_known===true?status.society.edict_fund:null,edict_fund_known:status.society.edict_fund_known===true}}:{}),
+          countryAIControl:{enabled:true,...control}};
         if(control.owner==='native'){
           if(!this.lastStrategyEventPoll||this.now()-this.lastStrategyEventPoll>=10000){
             this.lastStrategyEventPoll=this.now();
-            const wars=await this.rpc('get_wars'),events=await this.rpc('get_active_events'),diplomacy=await this.rpc('get_pending_diplomacy');
-            this.lastState={...this.lastState,wars:wars.wars??[],pendingEvents:Array.isArray(events)?events:[],pendingDiplomacy:diplomacy.pending??[]};
-            const advice=await readStrategyAdvice(resolve(this.directory,'../commentary/strategy-directive.json'),this.sessionId,this.now());
-            if(advice)this.lastState.operationalGoal=advice.goal;
+            const wars=await this.rpc('get_wars'),events=await this.rpc('get_active_events'),diplomacy=await this.rpc('get_pending_diplomacy'),society=await this.rpc('get_traditions');
+            this.lastState={...this.lastState,wars:wars.wars??[],warGoalsWindow:wars.warGoalsWindow,pendingEvents:Array.isArray(events)?events:[],pendingDiplomacy:diplomacy.pending??[],ascensionPerks:society.ascension_perks??null};
+            // Native ownership must not freeze the read-only lifecycle ledger
+            // for the owner's earlier accepted movement/construction commands.
+            const orderChanges=await this.refreshOrderTracking(this.lastState);
+            if(orderChanges){await this.gestalt.update(this.lastState,this.orderTracker?.view()??[]);await this.gestalt.save();}
           }
+          await this.refreshOperatorStanding(this.lastState);
+          this.lastState.strategyContract=this.strategyContract??null;
+          if(economyKnown)this.growthTracker.record(this.lastState);
+          await this.refreshNativeColonyAudit(this.lastState);
+          this.lastState.strategy=this.reviewStrategy(this.lastState);
+          await this.syncStrategyDirection(this.lastState);
+          this.lastState.strategy=this.reviewStrategy(this.lastState);
+          this.adviceTasks?.observe(this.lastState);this.lastState.adviceExecution=this.adviceTasks?.view();
+          this.lastState.strategy.adviceExecution=this.lastState.adviceExecution;
           const due=this.strategyReview.due(this.lastState);
           if(control.reviewDue||due.length){this.nativeStrategicReviewDue=true;this.lastState.strategyWakeReasons=due;}
           try{
@@ -1768,7 +2091,8 @@ export class NativeGame {
     if(!this.orderTracker||!state)return;
     if(!this.stopped){
       await this.gestalt.reconcileMoves((method,params)=>this.rpc(method,params));
-      await this.orderTracker.poll({state,rpc:(method,params)=>this.rpc(method,params),maxQueries:2});
+      const ownerBuilding=this.orderTracker.view().some(r=>r.ownerEconomicTask&&r.command==='build_building'&&r.buildingQueueSeen&&!['completed','failed','expired_unknown'].includes(r.status));
+      await this.orderTracker.poll({state,rpc:(method,params)=>this.rpc(method,params),maxQueries:ownerBuilding?3:2,assertScope:this.nativeCountryAIEnabled?()=>this.assertNativeWorld():undefined});
     }
     const events=this.orderTracker.drainEvents();
     for(const event of events){
@@ -1901,6 +2225,7 @@ export class NativeGame {
     }
     if(this.now()>=this.ends)return this.finishRuntimeWatch({requestedSeconds,effectiveSeconds:seconds,nativeWorkConfirmed,localWorkConfirmed,localWork});
     const state=await this.observe();
+    const ownerExecution=await this.settleOwnerEconomicExecution();if(ownerExecution)return ownerExecution;
     if(this.gestalt.data.campaign?.enabled&&!state.paused&&!this.presentationStopRequested)await this.campaign({operation:'advance'});
     return {...this.lastState,waitPolicy:{requestedSeconds,effectiveSeconds:seconds,nativeWorkConfirmed,localWorkConfirmed,localWork},wakeReasons:wakeReasons.length?wakeReasons:['scheduled_review']};
   }
@@ -1932,12 +2257,16 @@ export class NativeGame {
   }
   async checkpoint() {
     const checkpoint=resolve(this.directory,'latest-session.json');
+    const strategyExecution=this.nativeCountryAIEnabled?this.strategyExecutionView():null;
+    if(this.nativeCountryAIEnabled&&this.lastState)this.lastState.strategyExecution=strategyExecution;
+    if(this.nativeCountryAIEnabled&&this.lastState)this.lastState.adviceExecution=this.adviceTasks?.view();
+    if(this.lastState&&this.ownerEconomicReturnPending)this.lastState.ownerEconomicExecution=this.ownerEconomicExecution();
     await writeFile(checkpoint+'.tmp', JSON.stringify({sessionId: this.sessionId,controllerRunId:this.controllerRunId,binding:this.binding,
-      ...(this.nativeCountryAIEnabled?{strategyContract:this.strategyContract??null,countryAIControl:{enabled:true,...this.countryAI.view(),worldScope:this.countryAI.saved?.scope??this.boundNativeWorld}}:{}),
+      ...(this.nativeCountryAIEnabled?{strategyContract:this.strategyContract??null,strategyExecution,countryAIControl:{enabled:true,...this.countryAI.view(),worldScope:this.countryAI.saved?.scope??this.boundNativeWorld}}:{}),
       taskStateFile:this.gestalt.file,started: this.started, ends: this.ends, observedAt:this.snapshotAt, runtimeStatus:this.runtimeStatus, stopped: !!this.stopped, stopReason:this.stopReason, uncertain: this.uncertain, cleanup: this.cleanup, metrics: this.metrics, state: this.lastState}, null, 2) + '\n');
     await replaceCheckpoint(checkpoint+'.tmp',checkpoint);
     if(this.orderTracker)await writeFile(resolve(this.directory,`orders-${this.sessionId}.json`),JSON.stringify(this.orderTracker.serialize()));
-    await this.continuity.save(this.binding,this.lastState,{growth:this.growthTracker.serialize(),stationFailures:[...this.stationFailures],orderTracking:this.orderTracker?.serialize()});
+    await this.continuity.save(this.binding,this.lastState,{growth:this.growthTracker.serialize(),stationFailures:[...this.stationFailures],orderTracking:this.orderTracker?.serialize(),adviceExecution:this.adviceTasks?.serialize(),nativeIntent:this.nativeIntentExecution?.serialize(),domesticUnknown:[...(this.unknownDomesticCommands??[])]});
   }
   async stop() {
     if(this.stopPromise)return this.stopPromise;
@@ -1982,6 +2311,7 @@ export class NativeGame {
     try{const {status:actual}=await this.cleanupScope();this.cleanup.pauseConfirmed=actual.is_paused===true;this.cleanup.paused=this.cleanup.pauseConfirmed;this.cleanup.pauseStateUnknown=typeof actual.is_paused!=='boolean';this.cleanup.bindingConfirmed=true;}catch(error){this.cleanup.pauseConfirmed=false;this.cleanup.paused=false;this.cleanup.bindingConfirmed=false;this.cleanup.pauseStateUnknown=true;this.cleanup.bindingError=error.message;}
     if(this.lastState&&(this.hybridSurvey||this.lastState.surveyControl))this.lastState.surveyControl=this.surveyDelegation.view();
     if(this.lastState){this.lastState.colonyControl=this.colonyRoutine.view();this.lastState.colonyUpgradeControl={...this.colonyUpgradeRoutine.view(),enabled:this.colonyUpgradePilot};this.lastState.monthlyControl=this.monthlyControlView();if(this.nativeCountryAIEnabled)this.lastState.countryAIControl={enabled:true,...this.countryAI.view()};}
+    if(this.lastState)await this.syncStrategyDirection(this.lastState);
     try{this.pipe.close();}catch{this.cleanup={...this.cleanup,pipeError:'原生管道清理失败'};}
     if (this.lockPath) {
       try {const lock = JSON.parse(await readFile(this.lockPath, 'utf8')); if (lock.sessionId === this.sessionId) await unlink(this.lockPath);} catch {}

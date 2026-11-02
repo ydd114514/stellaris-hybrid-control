@@ -1,6 +1,7 @@
 // Read-back ledger only. This module never submits or replays a game command.
 import {createHash} from 'node:crypto';
 import {captureUpgradeBaseline,captureUpgradeQueueWitness,verifyBuildingUpgrade} from './building-upgrades.mjs';
+import {userEconomicOrderAllowed} from './user-economic-intervention.mjs';
 
 export const TRACKED_ASYNC_COMMANDS=Object.freeze(['recruit_planet_army','embark_all_armies','declare_war','land_armies','offer_peace','colonize','build_district','build_building','upgrade_building','clear_blocker','set_district_zone','build_ship','reinforce_fleet','move_fleet','survey','build_outpost','build_stations','upgrade_fleet','follow_fleet','diplomacy','respond_diplomacy','select_research']);
 const tracked=new Set(TRACKED_ASYNC_COMMANDS),terminal=new Set(['completed','failed','expired_unknown']);
@@ -34,6 +35,7 @@ const cleanBaseline=b=>({
   warIds:(b?.warIds||[]).filter(id).slice(0,128),warPresent:b?.warPresent===true,
   countryId:id(b?.countryId)?b.countryId:undefined,districtCount:finite(b?.districtCount)?b.districtCount:undefined,
   buildingCount:finite(b?.buildingCount)?b.buildingCount:undefined,buildingKnown:b?.buildingKnown===true,
+  buildingInstancesKnown:b?.buildingInstancesKnown===true,buildingInstanceIds:(b?.buildingInstanceIds||[]).filter(id).slice(0,256),
   oldBuildingKey:text(b?.oldBuildingKey,100)||undefined,blockerPresent:typeof b?.blockerPresent==='boolean'?b.blockerPresent:undefined,
   stationIds:(b?.stationIds||[]).filter(id).slice(0,128),stationIdsKnown:b?.stationIdsKnown===true,
   designCount:finite(b?.designCount)?b.designCount:undefined,civilianClass:text(b?.civilianClass,30)||undefined,
@@ -54,6 +56,7 @@ export function makeOrderBaseline(order,{state,planet,nativeColony,buildingCandi
     return finite(z.buildings)&&Array.isArray(detail?.buildings)&&detail.buildings.length===z.buildings;
   });
   const ship=shipyard?.buildable?.find(x=>x.design_id===a.design_id),ck=civilKey(ship?.ship_size);
+  const instanceZones=buildingCandidates?.zones,instancesKnown=Array.isArray(instanceZones)&&instanceZones.length>0&&instanceZones.every(z=>z.buildings_known===true&&Array.isArray(z.building_instances)&&z.building_instances.length===z.buildings&&z.building_instances.every(b=>id(b.id)&&typeof b.key==='string'&&b.status==='built'));
   return cleanBaseline({countryId:state?.player?.country_id,
     upgradeBaseline:c==='upgrade_building'?captureUpgradeBaseline(planet,a,nativeColony):undefined,
     armyIds:[...(armies?.garrison_armies||[]),...(armies?.transport_armies||[])].map(a=>a.army_id),
@@ -61,6 +64,7 @@ export function makeOrderBaseline(order,{state,planet,nativeColony,buildingCandi
     warIds:(state?.wars||[]).map(w=>w.war_id),warPresent:Array.isArray(state?.wars)&&state.wars.some(w=>w.war_id===a.war_id),
     districtCount:planet?.districts?.find(x=>x.type===a.district_key)?.built,
     buildingKnown:buildingsComplete,buildingCount:buildingsComplete?allBuildings(planet).filter(x=>keyOf(x)===a.building_key).length:undefined,
+    buildingInstancesKnown:instancesKnown,buildingInstanceIds:instancesKnown?instanceZones.flatMap(z=>z.building_instances.map(b=>b.id)):[],
     oldBuildingKey:keyOf(building),blockerPresent:Array.isArray(planet?.blockers)?planet.blockers.some(x=>(x.id??x.deposit_id)===a.deposit_id):undefined,
     stationIdsKnown:Array.isArray(system?.fleets),stationIds:(system?.fleets||[]).filter(f=>f.own===true&&String(f.ship_class).includes(type)).map(f=>f.id),
     designCount:Array.isArray(fleets?.fleets)?countDesign(fleets,a.design_id):undefined,
@@ -136,13 +140,20 @@ export class OrderTracker {
     const reserve=(base,field,match,amount)=>finite(base)?Math.max(base,...[...this.records.values()].filter(x=>!terminal.has(x.status)&&match(x)&&finite(x[field])).map(x=>x[field]))+amount:undefined;
     const countMatch=x=>x.command===order.command&&(order.command==='build_ship'?x.arguments.design_id===args.design_id:x.arguments.planet_id===args.planet_id&&(order.command==='build_district'?x.arguments.district_key===args.district_key:x.arguments.building_key===args.building_key));
     const countBaseline=order.command==='build_district'?b.districtCount:order.command==='build_building'&&b.buildingKnown?b.buildingCount:order.command==='build_ship'?b.designCount:undefined;
-    const row={id:idValue,sessionId:this.sessionId,requestId:text(requestId,80),command:order.command,arguments:args,baseline:b,status:'submitted',submissionConfirmed:response.success===true,submittedAt:now,updatedAt:now,expiresAt:now+this.ttlMs,nextPollAt:now+this.pollIntervalMs,polls:0,readIndex:0,gameDate:beforeState?.date,
+    const row={id:idValue,sessionId:this.sessionId,requestId:text(requestId,80),command:order.command,arguments:args,baseline:b,status:'submitted',submissionConfirmed:response.success===true,ownerEconomicTask:userEconomicOrderAllowed(order,beforeState),submittedAt:now,updatedAt:now,expiresAt:now+this.ttlMs,nextPollAt:now+this.pollIntervalMs,polls:0,readIndex:0,gameDate:beforeState?.date,
       upgradeWitness:verification.upgradeQueueWitness?.exclusive===true?clone(verification.upgradeQueueWitness):undefined,
       queueItemId:id(response.queue_item_id)?response.queue_item_id:id(verification.entry?.item_id)?verification.entry.item_id:undefined,
+      originalQueueId:id(response.queue_id)?response.queue_id:undefined,originalColonyId:id(response.colony_id)?response.colony_id:undefined,
+      buildingQueueSeen:order.command==='build_building'&&verification.verified===true&&verification.phase==='construction_queue'&&id(verification.entry?.item_id),
       expectedCount:reserve(countBaseline,'expectedCount',countMatch,order.command==='build_ship'?(args.count||1):1),
       expectedCivilianCount:order.command==='build_ship'?reserve(b.civilianCount,'expectedCivilianCount',x=>x.command==='build_ship'&&x.baseline.civilianClass===b.civilianClass,args.count||1):undefined,
       reason:response.success===true?'已收到接受回执；等待真实状态确认':'未获得明确接受回执，是否提交未知；仅回读、不重放'};
     this.records.set(row.id,row);
+    if(row.ownerEconomicTask&&response.success===true)for(const old of this.records.values())if(old.id!==row.id&&old.ownerEconomicTask){
+      const retried=old.status==='failed'&&old.command===row.command&&stable(old.arguments)===stable(row.arguments);
+      const retargeted=row.command==='move_fleet'&&old.command==='move_fleet'&&old.arguments.fleet_id===args.fleet_id&&!args.queue&&verification.verified&&verification.phase==='fleet_order';
+      if(retried||retargeted){old.ownerEconomicTask=false;if(retargeted&&!terminal.has(old.status))this.transition(old,'failed','本人已确认的新移动订单替代旧目标；旧移动不重放',{kind:'superseded_by_owner_order',fleetId:args.fleet_id});}
+    }
     if(response.success===false)this.transition(row,'failed','引擎明确拒绝本次操作',{kind:'engine_rejected'});
     else if(verification.verified&&['construction_queue','shipyard_queue','zone_pending'].includes(verification.phase))this.transition(row,'queued','已看到施工或造船队列，不等于完工',{kind:'queue_observed',itemId:row.queueItemId});
     else if(verification.verified&&verification.phase==='fleet_order')this.transition(row,'executing','已看到目标舰队任务，不等于任务完成',{kind:'fleet_order_observed'});
@@ -216,6 +227,7 @@ export class OrderTracker {
     const entry=Array.isArray(queue)?queue.find(x=>queueMatch(row,x)):undefined;
     if(entry) {
       if(id(entry.item_id))row.queueItemId=entry.item_id;
+      if(row.ownerEconomicTask&&row.command==='build_building'&&id(row.queueItemId))row.buildingQueueSeen=true;
       if(entry.status==='failed'||entry.status==='cancelled'||entry.cancelled===true)this.transition(row,'failed','匹配的队列项明确失败或取消',{kind:'queue_failed',itemId:entry.item_id});
       else this.transition(row,Number(entry.progress_percent??entry.progress)>0?'executing':'queued','匹配的队列项仍存在，不等于竣工',{kind:'queue_observed',itemId:entry.item_id});
       return;
@@ -271,12 +283,37 @@ export class OrderTracker {
     this.pollInFlight=this.pollRead(options).finally(()=>{this.pollInFlight=null;});
     return this.pollInFlight;
   }
-  async pollRead({state,rpc,maxQueries=2}={}) {
+  applyBuildingPair(row,native,buildings,planet){
+    const a=row.arguments;
+    const complete=native?.known===true&&native.planet_id===a.planet_id&&native.colony_id===row.originalColonyId&&native.owner_id===row.baseline.countryId&&native.queue?.known===true&&native.queue.queue_id===row.originalQueueId&&Array.isArray(native.queue.items)&&
+      planet?.planet_id===a.planet_id&&planet.colony_id===row.originalColonyId&&Array.isArray(planet.construction_queue)&&planet.construction_queue.length===native.queue.items.length&&planet.construction_queue.every(q=>id(q.item_id)&&native.queue.items.some(n=>n.item_id===q.item_id))&&
+      buildings?.success===true&&buildings.planet_id===a.planet_id&&buildings.colony_id===row.originalColonyId&&Array.isArray(buildings.zones)&&buildings.zones.length>0&&buildings.zones.every(z=>z.buildings_known===true&&Array.isArray(z.building_instances)&&z.building_instances.length===z.buildings&&z.building_instances.every(b=>id(b.id)&&typeof b.key==='string'&&b.status==='built'));
+    if(!complete){row.missingBuildingProofs=0;return;}
+    const target=buildings.zones.find(z=>z.zone_id===a.slot_index&&z.district===a.district_type);
+    if(!target){row.missingBuildingProofs=0;return;}
+    if(row.baseline.buildingInstancesKnown&&target.building_instances.some(b=>b.key===a.building_key&&!row.baseline.buildingInstanceIds.includes(b.id))){
+      this.transition(row,'completed','已在原特区实际建成新的目标建筑实例，不是仅入队',{kind:'building_instance_created',zoneId:a.slot_index});return;
+    }
+    if(native.queue.items.some(q=>q.item_id===row.queueItemId)||planet.construction_queue.some(q=>q.key===a.building_key)){row.missingBuildingProofs=0;return;}
+    if(!planet.construction_queue.every(q=>typeof q.key==='string')){row.missingBuildingProofs=0;return;}
+    if(!row.buildingQueueSeen||!id(row.queueItemId)||!row.baseline.buildingInstancesKnown){row.missingBuildingProofs=0;return;}
+    if(this.now()<=row.lastMissingBuildingAt)return;
+    row.lastMissingBuildingAt=this.now();row.missingBuildingProofs=(row.missingBuildingProofs||0)+1;
+    if(row.missingBuildingProofs>=2)this.transition(row,'failed','原已确认入队项消失；连续两次同身份完整队列与建筑实例均无新增目标，确认本次未建成，可重新评估合法新尝试',{kind:'building_queue_cancelled_no_instance',itemId:row.queueItemId,zoneId:a.slot_index});
+  }
+  async pollRead({state,rpc,maxQueries=2,assertScope}={}) {
     this.updateState(state);this.expire();
     if(typeof rpc!=='function'||this.now()<this.nextReadAt)return {queries:0,pending:this.pending().length};
     const budget=Math.max(0,Math.min(4,Math.floor(maxQueries))),cache=new Map();let queries=0;
     for(const row of [...this.records.values()].filter(x=>!terminal.has(x.status)&&x.nextPollAt<=this.now()).sort((a,b)=>a.nextPollAt-b.nextPollAt)) {
       if(this.closed)break;
+      if(row.ownerEconomicTask&&row.command==='build_building'&&row.buildingQueueSeen&&id(row.originalQueueId)&&id(row.originalColonyId)){
+        if(queries+3>budget)continue;
+        row.polls++;row.nextPollAt=this.now()+Math.min(this.maxPollIntervalMs,this.pollIntervalMs*2**Math.min(row.polls,8));queries+=3;
+        try{await assertScope?.();const native=await read(rpc,'get_colony_automation',{planet_id:row.arguments.planet_id}),planet=await read(rpc,'get_planet_details',{planet_id:row.arguments.planet_id}),buildings=await read(rpc,'get_buildable_buildings',{planet_id:row.arguments.planet_id});await assertScope?.();this.applyBuildingPair(row,native,buildings,planet);}
+        catch{row.missingBuildingProofs=0;row.lastReadError='完整队列或建筑实例回读失败，保持未知，不重放';}
+        continue;
+      }
       const plans=queryPlans(row),plan=plans.length?plans[row.readIndex%plans.length]:null;
       const key=plan&&stable(plan);
       if(plan&&!cache.has(key)&&queries>=budget)continue;
@@ -305,10 +342,11 @@ export class OrderTracker {
     this.records.clear();
     for(const raw of snapshot.records.slice(-this.maxEntries)) {
       if(!raw||!tracked.has(raw.command)||!statuses.has(raw.status)||raw.sessionId!==this.sessionId||typeof raw.id!=='string'||!finite(raw.submittedAt)||!finite(raw.expiresAt))continue;
-      const row={id:text(raw.id,40),sessionId:this.sessionId,requestId:text(raw.requestId,80),command:raw.command,arguments:cleanArgs(raw.arguments),baseline:cleanBaseline(raw.baseline),status:raw.status,submissionConfirmed:raw.submissionConfirmed===true,
+      const row={id:text(raw.id,40),sessionId:this.sessionId,requestId:text(raw.requestId,80),command:raw.command,arguments:cleanArgs(raw.arguments),baseline:cleanBaseline(raw.baseline),status:raw.status,submissionConfirmed:raw.submissionConfirmed===true,ownerEconomicTask:raw.ownerEconomicTask===true,
         submittedAt:raw.submittedAt,updatedAt:finite(raw.updatedAt)?raw.updatedAt:raw.submittedAt,expiresAt:Math.min(raw.expiresAt,raw.submittedAt+this.ttlMs),reason:text(raw.reason,180),
         polls:finite(raw.polls)?Math.max(0,raw.polls):0,readIndex:finite(raw.readIndex)?Math.max(0,raw.readIndex):0,nextPollAt:this.now()+this.pollIntervalMs,
         queueItemId:id(raw.queueItemId)?raw.queueItemId:undefined,expectedCount:finite(raw.expectedCount)?raw.expectedCount:undefined,
+        originalQueueId:id(raw.originalQueueId)?raw.originalQueueId:undefined,originalColonyId:id(raw.originalColonyId)?raw.originalColonyId:undefined,buildingQueueSeen:raw.buildingQueueSeen===true,
         upgradeWitness:raw.upgradeWitness?.exclusive===true&&id(raw.upgradeWitness.queueItemId)?clone(raw.upgradeWitness):undefined,
         expectedCivilianCount:finite(raw.expectedCivilianCount)?raw.expectedCivilianCount:undefined,gameDate:text(raw.gameDate,20)||undefined};
       this.records.set(row.id,row);

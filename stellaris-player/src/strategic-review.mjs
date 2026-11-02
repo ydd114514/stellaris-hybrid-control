@@ -1,5 +1,7 @@
 import {conquestReview} from './gestalt-campaign.mjs';
 import {MARKET_MAINTENANCE} from './market-maintenance.mjs';
+import {unityProgress,unitySample} from './unity-progress.mjs';
+import {confirmedStrategy,expansionHealth,ownerConsolidation} from './expansion-health.mjs';
 const numeric=Number.isFinite;
 const core=['energy','food','consumer_goods','minerals','alloys'];
 const names={energy:'能量币',food:'食物',consumer_goods:'消费品',minerals:'矿物',alloys:'合金',unity:'凝聚力'};
@@ -26,18 +28,24 @@ export function createGrowthTracker() {
       if(lastDay!==null&&(day<lastDay||identity!==currentIdentity))samples=[];
       lastDay=day;identity=currentIdentity;
       if(science===null)return;
-      const sample={day,year:Math.floor(day/360),science};
+      const sample={day,year:Math.floor(day/360),science,...(numeric(state.capacities?.colonies)?{colonies:state.capacities.colonies}:{}),...(numeric(state.player?.owned_systems)?{ownedSystems:state.player.owned_systems}:{}),...(unitySample(state)?{unity:unitySample(state)}:{})};
       if(samples.at(-1)?.year===sample.year)samples[samples.length-1]=sample;
       else samples.push(sample);
       if(samples.length>24)samples.splice(0,samples.length-24);
     },
     review(state) {
       const day=gameDay(state.date),science=scienceOutput(state);
-      if(day===null||science===null)return {known:false,reason:'科研月产或游戏日期不完整'};
+      const unity=unityProgress(state,samples);
+      const recent=day===null?null:[...samples].reverse().find(x=>day-x.day>=1080&&day-x.day<=1800);
+      const colonies=state.capacities?.colonies,systems=state.player?.owned_systems;
+      const coloniesAdded=recent&&numeric(colonies)&&numeric(recent.colonies??recent.unity?.colonies)?colonies-(recent.colonies??recent.unity.colonies):null;
+      const systemsAdded=recent&&numeric(systems)&&numeric(recent.ownedSystems)?systems-recent.ownedSystems:null;
+      const expansion={known:!!recent&&(coloniesAdded!==null||systemsAdded!==null),observedYears:recent?Math.round((day-recent.day)/36)/10:null,coloniesAdded,systemsAdded};
+      if(day===null||science===null)return {known:false,reason:'科研月产或游戏日期不完整',unity,expansion};
       const previous=samples.find(x=>day-x.day>=3600&&day-x.day<=7200&&x.science>0);
-      if(!previous)return {known:false,reason:'尚无同局10至20年的可比科研样本'};
+      if(!previous)return {known:false,reason:'尚无同局10至20年的可比科研样本',unity,expansion};
       const years=(day-previous.day)/360,percent=(science/previous.science-1)*100;
-      return {known:true,observedYears:Math.round(years*10)/10,scienceGrowthPercent:Math.round(percent*10)/10,
+      return {known:true,observedYears:Math.round(years*10)/10,scienceGrowthPercent:Math.round(percent*10)/10,unity,expansion,
         stagnating:percent<=10,note:'本机增长诊断启发式：同局10至20年科研月产增长不超过10%，不是年份达标要求'};
     }
   };
@@ -53,14 +61,21 @@ export function empireRoute(government={}) {
 // Operational heuristics, not Stellaris rules: inspect the bottleneck before
 // acquiring more obligations. No fixed empire-size cap or year-based build list.
 export function strategicReview(state,{government={},colonies=[],growth={known:false}}={}) {
-  const route=empireRoute(government),r=state.resources||{};
+  const route=empireRoute(government),r=state.resources||{},unity=growth.unity??unityProgress(state);
+  const unityFirst=state.userEconomicPolicy?.priority==='unity_first';
+  const contract=confirmedStrategy(state),ownerConsolidating=ownerConsolidation(state);
+  const health=expansionHealth(state,{colonies,growth:{...growth,unity}});
+  const consolidating=contract?.expansionStance==='consolidate'||ownerConsolidating||health.consolidate;
   const deficits=core.filter(k=>!(k==='consumer_goods'&&['hive','machine'].includes(route))).flatMap(key=>{
     const x=r[key];return numeric(x?.net)&&x.net<0&&numeric(x.stockpile)?[{resource:key,net:Math.round(x.net*10)/10,months:Math.round(Math.max(0,x.stockpile)/-x.net*10)/10}]:[];
   }).sort((a,b)=>a.months-b.months);
   const distressed=colonies.filter(x=>x.inhabited&&((numeric(x.stability)&&x.stability<50)||(numeric(x.amenities)&&x.amenities<0)||(numeric(x.housing)&&x.housing<0))).slice(0,3);
   const offensive=state.wars?.some(w=>w.player_side==='attacker')===true;
-  const conquest=conquestReview(state,{route});
+  let conquest=conquestReview(state,{route});
   const emergency=!!state.wars?.length||!!state.warGoalsWindow||!!state.pendingEvents?.length;
+  const deferConquest=Array.isArray(state.wars)&&state.wars.length===0&&(unityFirst||ownerConsolidating||health.consolidate||contract?.expansionStance==='consolidate'&&contract.militaryStance==='peaceful');
+  if(deferConquest)conquest={...conquest,objective:'先巩固现有疆域与内政',stage:'deferred_by_strategy',decisionRequired:false,nextCall:null,
+    next:'按当前方针消化殖民地和维护负担；原生AI继续建设、科研与防守，方针改变后再评估新征服目标'};
   const critical=deficits.some(x=>x.months<=12);
   // Multiple very long-reserve deficits alone are not an immediate crisis.
   const needsRepair=deficits.some(x=>x.months<=36)||distressed.length>0;
@@ -69,9 +84,12 @@ export function strategicReview(state,{government={},colonies=[],growth={known:f
     const x=r[k];return numeric(x?.net)&&x.net>0&&numeric(x.stockpile)&&(x.capped===true||numeric(x.max)&&x.max>0&&x.stockpile>=x.max*.95);
   });
   const growthBottleneck=known&&!emergency&&!critical&&!needsRepair&&(cappedSurpluses.length>=2||growth.known&&growth.stagnating);
-  const mode=emergency?(offensive?'campaign':'defense'):critical?'stabilize':needsRepair?'consolidate':!known?'reconnaissance':growthBottleneck?'develop_capacity':'selective_growth';
+  const mode=emergency?(offensive?'campaign':'defense'):critical?'stabilize':needsRepair||consolidating?'consolidate':!known?'reconnaissance':growthBottleneck?'develop_capacity':'selective_growth';
   const priority=[];
-  if(!emergency&&!critical&&known)priority.push(conquest.campaignPhase?'优先推进已保存的进攻战役；完成具体缺口后继续，不长期转回内政':'主动评估一个征服目标：inspect targets→核对收益/战力/合法战争条件→campaign select保存目标和备战；内政小赤字或普通扩张暂缓不取消本项');
+  if(unityFirst&&!emergency&&!critical)priority.push('本人最高优先：持续提高凝聚力净产'+(route==='hive'?'，优先核对突触节点的当前真实候选、岗位与实际施工':'')+'；其他资源仅补实际赤字或即将断供的缺口，净产健康时不新增合金/科研盈余目标。');
+  if(unity.focused&&!unity.targetMet&&(unity.reasons.length||unity.stagnating)&&!emergency&&!critical)priority.push('凝聚力落实：'+unity.reasons.slice(0,3).join('；')+'；核查岗位是否填满、各殖民地净贡献及在建队列，再决定人口/建设瓶颈。方针生效不等于净产达标。');
+  if(!emergency&&!critical&&known&&!deferConquest)priority.push(conquest.campaignPhase?'优先推进已保存的进攻战役；完成具体缺口后继续，不长期转回内政':'主动评估一个征服目标：inspect targets→核对收益/战力/合法战争条件→campaign select保存目标和备战；内政小赤字或普通扩张暂缓不取消本项');
+  if(!emergency&&!critical&&consolidating)priority.push(health.consolidate?'先消化殖民地：'+health.reasons.slice(0,2).join('；'):'按已确认方针或本人要求先巩固现有疆域，原生AI继续内政和防守；扩张意图重新评估后再开新殖民地与前哨');
   if(emergency)priority.push(offensive?'持续推进当前进攻战役：核对敌我战力、轨道控制、运输军、占领与议和；不因已宣战就回到长期内政':'处理当前事件与防务，核对敌我战力和撤退路线');
   const repairDeficits=deficits.filter(x=>x.months<=36);
   if(repairDeficits.length)priority.push(`先查${repairDeficits.slice(0,2).map(x=>`${names[x.resource]}约${x.months}月余量`).join('、')}：岗位填充→专精/特区→队列→新增产能`);
@@ -87,9 +105,9 @@ export function strategicReview(state,{government={},colonies=[],growth={known:f
   if(upgradeColonies.length)priority.push(`${upgradeColonies.map(x=>x.name).join('、')}有首府升级提示；${upgradeSupported?'inspect upgrades核验当前建筑、唯一升级路径、费用和合法性，预算允许再升级，回读队列及最终建筑确认':'当前未提供首府/建筑升级动作，标记能力受限'}，不反复加城市区划声称解锁`);
   if(!repairDeficits.length&&deficits.length)priority.push(`监测${deficits.slice(0,2).map(x=>`${names[x.resource]}约${x.months}月余量`).join('、')}，保留预算并规划修复；长期小赤字不自动压过产能增长`);
   if(!priority.length)priority.push(known?'保护三线科研与工业储备，比较边境收益后选择少量高价值目标':'先读取完整资源与政府路线，不能把未知当成经济健康');
-  const ordinaryExpansionAllowed=mode==='selective_growth'||mode==='develop_capacity';
+  const ordinaryExpansionAllowed=!consolidating&&(mode==='selective_growth'||mode==='develop_capacity');
   const focus={campaign:'持续推进进攻、占领与战争结果',defense:'防务与事件优先',stabilize:'保住经济，暂停普通扩张',consolidate:'消化疆域，修复内政',develop_capacity:'解除产能瓶颈，把储备转成有效增长',selective_growth:'有预算地选择扩张',reconnaissance:'补齐关键情报'}[mode];
-  return {version:3,route,mode,focus,conquest,ordinaryExpansionAllowed,deficits: deficits.slice(0,5),priorities:priority.slice(0,3),
+  return {version:3,route,mode,focus,conquest,unityProgress:unity,expansionHealth:health,ordinaryExpansionAllowed,deficits: deficits.slice(0,5),priorities:priority.slice(0,3),
     growth:{...growth,bottleneck:growthBottleneck,cappedSurpluses},
     marketPolicy:{mode:emergency?(offensive?'support_campaign':'support_defense'):critical?'rescue_shortage':known?'bounded_maintenance':'verify_first',sizing:MARKET_MAINTENANCE,
       note:'非紧急市场维护不能连续占用经营回合。完成一笔后轮巡一个实际可推进的非市场目标；库存余量超过36个月的赤字不反复补货。无合法动作则watch，不为凑轮巡强行下单。',
@@ -110,6 +128,7 @@ export function colonyReview(planet) {
   const k=planet?.kpi||{};
   return {planetId:planet.planet_id,name:typeof planet.name==='string'?planet.name.slice(0,40):String(planet.planet_id),inhabited:k.pop_groups>0,
     stability:numeric(k.stability_percent)?k.stability_percent:undefined,amenities:numeric(k.amenities)?k.amenities:undefined,housing:numeric(k.housing)?k.housing:undefined,
+    unemployed:numeric(k.unemployed)?k.unemployed:undefined,
     capitalUpgradeAvailable:Array.isArray(planet.status_alerts)&&planet.status_alerts.some(x=>x.id==='upgrade_available'&&/首府/.test(x.desc||x.name||''))};
 }
 

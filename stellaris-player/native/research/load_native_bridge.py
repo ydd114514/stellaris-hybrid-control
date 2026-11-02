@@ -87,6 +87,10 @@ REVIEWED_DLL_HASHES.add("e0b850c0747ab19b66fe553fcfc8f71d37e0b4c79a2de8248514ca8
 # Full overview at the farthest native galaxy step, with bounded zoom adjustment.
 REVIEWED_DLL_HASHES.add("7c4fdde71611edf922c4a9ae4bf7e6185c82475bc844a859e18add78324d1ddc")
 
+# Owner-intent constraints and full-ref fleet protection; source reviewed and
+# compiled locally, no live acceptance or hot replacement is implied.
+REVIEWED_DLL_HASHES.add("d7dd17dc91f5d3c190e325333c2befb05044f653fc82139157cc5b941a150287")
+
 def find_module(kernel, pid, name):
     kernel.Module32FirstW.argtypes = [C.c_void_p, C.POINTER(Module)]
     kernel.Module32NextW.argtypes = [C.c_void_p, C.POINTER(Module)]

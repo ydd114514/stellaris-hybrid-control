@@ -10,8 +10,8 @@ test('check mode never spawns or prints inherited secrets and ambiguous flags fa
  await runLocalLauncher(['--check'],options);assert.equal(spawns,0);assert.equal(output.length,1);assert.equal(output.join('').includes('private-test-key'),false);assert.equal(JSON.parse(output[0]).launched,false);
  await assert.rejects(runLocalLauncher(['--check','--launch'],options));await assert.rejects(runLocalLauncher(['--arbitrary'],options));assert.equal(spawns,0);
 });
-test('explicit user launch uses argument arrays, removes electron node mode and retains test isolation',async()=>{
+test('first user launch allows the GUI to show, removes electron node mode and retains test isolation',async()=>{
  let called;const fake=Object.assign(new EventEmitter(),{unref(){}});
  await runLocalLauncher(['--launch','--speech'],{root:resolve(import.meta.dirname,'..'),env:{ELECTRON_RUN_AS_NODE:'1',VITE_DEV_SERVER_URL:'http://invalid',CYBER_FISH_TEST_DATA_DIR:'isolated'},spawnProcess:(exe,args,options)=>{called={exe,args,options};queueMicrotask(()=>fake.emit('spawn'));return fake;}});
- assert.equal(called.options.shell,undefined);assert.equal(called.options.windowsHide,true);assert.equal(called.options.env.ELECTRON_RUN_AS_NODE,undefined);assert.equal(called.options.env.VITE_DEV_SERVER_URL,undefined);assert.equal(called.options.env.CYBER_FISH_TEST_DATA_DIR,'isolated');assert.equal(called.options.env.CYBERFISH_LOCAL_SOURCE,'1');assert.equal(called.args.at(-1),'--speech');
+ assert.equal(called.options.shell,undefined);assert.equal(called.options.windowsHide,false);assert.equal(called.options.detached,true);assert.equal(called.options.stdio,'ignore');assert.equal(called.options.env.ELECTRON_RUN_AS_NODE,undefined);assert.equal(called.options.env.VITE_DEV_SERVER_URL,undefined);assert.equal(called.options.env.CYBER_FISH_TEST_DATA_DIR,'isolated');assert.equal(called.options.env.CYBERFISH_LOCAL_SOURCE,'1');assert.equal(called.args.at(-1),'--speech');
 });

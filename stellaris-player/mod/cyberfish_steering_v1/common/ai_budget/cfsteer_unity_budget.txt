@@ -1,0 +1,15 @@
+cfsteer_budget_unity_planets = {
+ resource = minerals
+ type = expenditure
+ category = planets
+ potential = { has_edict = cfsteer_economy_unity_traditions }
+ weight = { weight = 1.5 }
+}
+cfsteer_budget_unity_traditions = {
+ resource = unity
+ type = expenditure
+ category = traditions
+ potential = { has_edict = cfsteer_economy_unity_traditions has_unlocked_all_traditions = no }
+ weight = { weight = 2 }
+ desired_min = { base = 100000 }
+}

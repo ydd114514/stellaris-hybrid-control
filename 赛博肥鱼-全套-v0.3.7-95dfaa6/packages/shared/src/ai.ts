@@ -10,6 +10,27 @@
 
 export type AiProviderKind = 'openai' | 'gemini' | 'anthropic'
 export type AiAgentRole = 'host' | 'strategist' | 'player'
+export type AiEconomyFocus='balanced'|'unity_traditions'|'consumer_stability'|'alloys_military'|'research'
+export const OPERATOR_NOTE_LIMIT=600
+export interface AiUnityProgress {
+  targetNet:number|null;deadlineYear:number|null;targetMet:boolean;targetOverdue:boolean
+  known:boolean;focused:boolean;stagnating:boolean;maintenancePressure:boolean;scalingBehind:boolean
+  income:number|null;expense:number|null;net:number|null;maintenanceShare:number|null;monthsToNextTradition:number|null;traditionCost:number|null;unlockedTraditions:number|null;estimatedMonthsToFundNext:number|null
+  baseline?:{observedYears:number|null;netGrowthPercent:number|null;incomeGrowthPercent:number|null;empireSizeGrowthPercent:number|null;traditionCostGrowthPercent:number|null;traditionsGained:number|null}
+  reasons:string[]
+}
+export interface AiOperatorJudgment { economyFocus:AiEconomyFocus|null;until:{date:string;condition:string};status:'on_track'|'blocked'|'done';evidence:string }
+export interface AiOperatorStanding { version:1;source:'cyberfish-ai-hub';kind:'operator-standing';id:string;gameSessionId:string;text:string;economyFocus:AiEconomyFocus|null;until:{date:string;condition:string};setAt:number;refreshedAt:number }
+export interface AiControllerReceipt { operatorStandingId:string;readAt:number;appliedFocus:AiEconomyFocus|null;steeringApplied:boolean;reason:string }
+export type AiOperatorAssessment=AiOperatorJudgment
+export interface AiNativeIntent {
+ version:1;source:string;objective:string;targetResource:string;requestedFocus:string;effectiveFocus:string
+ controls:{steeringConfirmed:boolean;ownerPolicyConfirmed:boolean}
+ status:'pending'|'applied'|'progressing'|'stalled'|'blocked'|'suspended';reason:string
+ baseline:{date:string;net:number|null};current:{date:string;net:number|null}
+ progress:{netDelta:number|null;traditionsGained:number|null};correctiveAction:string;unsupported:string[]
+}
+export interface AiOperatorExecution extends AiOperatorJudgment { nativeIntent?:AiNativeIntent;unityProgress?:AiUnityProgress;standingRefreshedAt?:number;directiveRefreshedAt?:number;history:{at:number;date:string;resource:string;net:number|null}[]; text:string;standing?:AiOperatorStanding;judgment?:AiOperatorJudgment;receipt?:AiControllerReceipt;directiveAt?:number;standingDelivered:boolean;directiveDelivered:boolean;message:string;trend:{at:number;date:string;resource:string;net:number}[] }
 
 export interface AiModelInfo { id: string; name?: string; contextWindow?: number; ownedBy?: string }
 /** preset: which built-in template this came from; decides vendor-only request fields such as DeepSeek's thinking switch. */
@@ -43,7 +64,11 @@ export interface AiDirectorConfig {
   strategyNote: string
 }
 
-export interface AiAudienceSuggestion { id: string; name: string; text: string; at: number; status: 'new' | 'adopted' | 'declined' | 'answered'; reply?: string }
+export type AiAdviceExecutionStatus='pending'|'working'|'verifying'|'succeeded'|'blocked'|'superseded'
+export interface AiExecutionTask {id:string;source:'strategist'|'audience';suggestionId?:string;text:string;at:number}
+export interface AiAdviceExecutionResult {taskId:string;status:AiAdviceExecutionStatus;reason:string;updatedAt:number;date?:string;evidence?:string;attempts?:number}
+export interface AiExecutionTaskState extends AiExecutionTask {status:AiAdviceExecutionStatus;reason:string;updatedAt:number;date?:string;evidence?:string;attempts?:number;lastPublishedAt?:number}
+export interface AiAudienceSuggestion { id: string; name: string; text: string; at: number; status: 'new' | 'adopted' | 'declined' | 'answered'; reply?: string; attempts?:number;lastAskedAt?:number;announcedAt?:number;execution?:AiAdviceExecutionResult;executionGameSessionId?:string }
 export type AiAudienceQueryTopic='government'|'research'|'traditions'|'ascension'|'planet'|'buildings'|'jobs'|'zones'|'military'|'upgrades'
 export interface AiAudienceQuery { topic:AiAudienceQueryTopic;entityId?:number }
 export type AiAudienceTaskStatus='querying'|'ready'|'unavailable'|'timed_out'|'cancelled'|'answered'
@@ -62,6 +87,7 @@ export interface AiAudienceGuidance {
   items: { id: string; name: string; text: string; status: 'pending' | 'adopted' | 'dismissed' | 'answered'; reply?: string }[]
 }
 export interface AiBlackboard {
+  executionTasks?:{gameSessionId:string;tasks:AiExecutionTaskState[]}
   game: { summary: string; date?: string; threats: string[]; goals: string[]; updatedAt?: number; by?: string }
   plan: { focus: string; nextSteps: string[]; talkingPoint: string; updatedAt?: number; by?: string }
   audience: { mood: string; hotTopics: string[]; suggestions: AiAudienceSuggestion[]; tasks?:AiAudienceTask[]; updatedAt?: number; by?: string }
@@ -74,9 +100,10 @@ export interface AiFeedItem { id: string; at: number; kind: AiFeedKind; agentId?
 export interface AiUsageTotals { requests: number; failed: number; inputTokens: number; outputTokens: number; usageMissing: number; cachedTokens?:number;cacheWriteTokens?:number;cacheUsageMissing?:number }
 export interface AiRoleHealth { consecutiveFailures: number; lastSuccessAt?: number; lastFailureAt?: number; category?: string; httpStatus?: number; message?: string; nextRetryAt?: number; circuitOpen: boolean }
 export interface AiSnapshotStatus { state: 'live' | 'stopped' | 'stale' | 'missing' | 'unknown'; observedAt?: number; gameDate?: string }
-export interface AiDirectorStatus { running: boolean; message: string; busy: AiAgentRole[]; lastHostAt?: number; lastStrategyAt?: number; pending: number; hourRequests: number; usage: Record<string, AiUsageTotals>; health?: Partial<Record<AiAgentRole,AiRoleHealth>>; snapshot?: AiSnapshotStatus; pendingDropped?: number }
+export interface AiDirectorStatus { running: boolean; message: string; busy: AiAgentRole[]; lastHostAt?: number; lastStrategyAt?: number; pending: number; hourRequests: number;roleRequests?:Partial<Record<AiAgentRole,number>>;roleLimits?:Partial<Record<AiAgentRole,number>>; usage: Record<string, AiUsageTotals>; health?: Partial<Record<AiAgentRole,AiRoleHealth>>; snapshot?: AiSnapshotStatus; pendingDropped?: number }
 
 export interface AiHubView {
+  operatorExecution?:AiOperatorExecution
   basic?: boolean
   localTest: boolean; encrypted: boolean
   providers: (AiProvider & { hasKey: boolean })[]

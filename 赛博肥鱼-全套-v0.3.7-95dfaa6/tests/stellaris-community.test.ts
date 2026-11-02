@@ -1,3 +1,4 @@
+const settle=()=>new Promise<void>(resolve=>setImmediate(resolve))
 import {describe,it,expect} from 'vitest'
 import {createDirector,DEFAULT_DIRECTOR} from '../packages/core/src/ai-director'
 import {conversationContext,STELLARIS_COMMUNITY} from '../packages/core/src/stellaris-community'
@@ -10,12 +11,12 @@ describe('community conversation context',()=>{
     const director=createDirector({now:()=>clock,agents:()=>[{id:'host',role:'host',label:'鱼',enabled:true,providerId:'offline',model:'offline',temperature:1,maxTokens:600,thinking:false}],config:()=>({...DEFAULT_DIRECTOR,idleCommentSeconds:0}),readSnapshot:async()=>undefined,
       call:async(_agent,messages)=>{prompts.push(messages);return {text:JSON.stringify({replies:[{to:'甲',text:'外交菜单翻到食谱了。'}],toStrategist:[]}),usage:{}}},onSay:()=>true})
     const feed=(id:string,user:string,text:string)=>director.feed({id,kind:'chat',platform:'bilibili',user:{id:user,name:user},text,at:clock})
-    director.start();feed('a','甲','海星先别卖，我留着做饭');await director.tick()
-    clock+=9000;feed('b','乙','那给我留一份');await director.tick()
+    director.start();feed('a','甲','海星先别卖，我留着做饭');await director.tick();await settle()
+    clock+=9000;feed('b','乙','那给我留一份');await director.tick();await settle()
     const user=prompts[1].filter((m:any)=>m.role==='user').map((m:any)=>m.content).join('\n')
     expect(user).toContain('海星先别卖，我留着做饭');expect(user).toContain('外交菜单翻到食谱了。');expect(user).toContain('那给我留一份')
     expect(user.match(/那给我留一份/g)).toHaveLength(1)
-    director.stop();director.start();clock+=9000;feed('c','乙','你好');await director.tick()
+    director.stop();director.start();clock+=9000;feed('c','乙','你好');await director.tick();await settle()
     expect(prompts[2].map((m:any)=>m.content).join('\n')).not.toContain('海星先别卖，我留着做饭')
     director.stop()
   })

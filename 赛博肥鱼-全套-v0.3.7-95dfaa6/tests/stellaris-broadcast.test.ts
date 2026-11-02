@@ -67,12 +67,32 @@ describe('Stellaris local broadcast', () => {
     for(let n=0;n<2;n++)expect((await fetch(c.endpoint,{method:'POST',headers:c.headers,body:JSON.stringify(event)})).status).toBe(202)
     expect(events).toHaveLength(1);expect(events[0]).toMatchObject({text:'点歌 陌生歌曲'})
   })
-  it('only explicit actions prepare the service; isolated mode never reads or starts real services', async () => {
+  it('isolated mode never reads or starts real services', async () => {
     const { service, prepares } = await setup(true)
     expect(await service.info()).toMatchObject({ localTest: true, ready: false, input: { status: 'stopped' } })
     expect((await service.operation('prepare')).ok).toBe(false)
     expect((await service.operation('start')).ok).toBe(false)
     expect(service.connectionConfig()).toBeUndefined(); expect(prepares()).toBe(0)
+  })
+  it('startup, room and preview share pending frame preparation without blocking audience controls',async()=>{
+    const root=await mkdtemp(join(tmpdir(),'cyberfish-broadcast-'));roots.push(root)
+    let prepares=0,release!:()=>void
+    const service=createStellarisBroadcast({port:0,getProject:async()=>root,healthy:async()=>true,prepare:async()=>{prepares++;await new Promise<void>(done=>{release=done})}});services.push(service)
+    const startup=service.operation('prepare'),room=service.operation('prepare'),preview=service.operation('prepare')
+    await expect.poll(()=>prepares).toBe(1)
+    expect((await service.operation('start')).ok).toBe(true)
+    expect((await service.operation('stop')).ok).toBe(true)
+    release()
+    expect((await Promise.all([startup,room,preview])).every(result=>result.ok)).toBe(true)
+    expect(prepares).toBe(1)
+  })
+  it('a failed shared frame preparation can be retried',async()=>{
+    const root=await mkdtemp(join(tmpdir(),'cyberfish-broadcast-'));roots.push(root)
+    let prepares=0
+    const service=createStellarisBroadcast({getProject:async()=>root,healthy:async()=>false,prepare:async()=>{if(++prepares===1)throw Error('offline fixture')}});services.push(service)
+    const failed=await Promise.all([service.operation('prepare'),service.operation('prepare')])
+    expect(failed.every(result=>!result.ok)).toBe(true);expect(prepares).toBe(1)
+    expect((await service.operation('prepare')).ok).toBe(true);expect(prepares).toBe(2)
   })
   it('authenticates local HTTP, refuses other platforms, deduplicates and keeps test events out of the live feed', async () => {
     const { service, root, prepares } = await setup()

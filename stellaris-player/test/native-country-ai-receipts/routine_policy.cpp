@@ -1,4 +1,5 @@
 #include "country_ai_routine_policy.hpp"
+#include "country_ai_owner_policy.hpp"
 #include "country_ai_queue_state.hpp"
 #include "galaxy_camera_layout.hpp"
 #include <cstdlib>
@@ -6,6 +7,12 @@
 using namespace bridge::cyberfish;
 void Check(bool value){if(!value)std::abort();}
 int main(){
+ OwnerProductionPolicy owner{true,true};
+ Check(OwnerProductionBlocked(owner,0,true,true));Check(OwnerProductionBlocked(owner,11,true,false));
+ Check(!OwnerProductionBlocked(owner,0,false,true)); // war or peace unknown: native defence keeps running
+ Check(OwnerProductionBlocked(owner,3,true,true));Check(!OwnerProductionBlocked(owner,3,true,false)); // replacement possible
+ for(auto cls:{1,2,4,5,6,7,8,9,10,255})Check(!OwnerProductionBlocked(owner,static_cast<uint8_t>(cls),true,true));
+ Check(!OwnerProductionBlocked({},0,true,true));
  Check(GalaxyOverviewZoom(2861,16.0/9.0)==3000);
  Check(GalaxyOverviewZoom(5000,16.0/9.0)==3000);
  Check(GalaxyOverviewZoom(1000,16.0/9.0)==3000);

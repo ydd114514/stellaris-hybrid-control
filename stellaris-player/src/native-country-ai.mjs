@@ -1,7 +1,7 @@
-import {COUNTRY_AI_POLICIES,normalizeCountryAIProtection} from './native-country-ai-economic-policy.mjs';
-export const COUNTRY_AI_P1_BRIDGE_VERSION='cyberfish-0.6.24-country-ai-galaxy-r3';
+import {COUNTRY_AI_POLICIES,normalizeCountryAIProtection,normalizeNativeOwnerPolicy} from './native-country-ai-economic-policy.mjs';
+export const COUNTRY_AI_P1_BRIDGE_VERSION='cyberfish-0.6.25-owner-intent';
 export const COUNTRY_AI_FULL_FEATURE='country_ai_full_with_reserved';
-export const COUNTRY_AI_P1_FEATURES=['country_ai_own_session_post_gate','country_ai_command_clone_lifetime','country_ai_native_queue_gate','country_ai_game_update_lease','country_ai_world_generation','country_ai_serialized_execution_receipts'];
+export const COUNTRY_AI_P1_FEATURES=['country_ai_own_session_post_gate','country_ai_command_clone_lifetime','country_ai_native_queue_gate','country_ai_game_update_lease','country_ai_world_generation','country_ai_serialized_execution_receipts','country_ai_owner_intent'];
 const off=s=>s?.global_flags?.human_ai===false&&s?.global_flags?.force_human_ai===false;
 const stopped=s=>s?.phase==='stopped'&&s.last_native_state?.paused===true&&off(s.last_native_state)&&s.routine_gate?.armed===false&&s.observation?.armed===false;
 export const nativeCountryScope=s=>Object.fromEntries(Object.entries(s?.precondition||{}).filter(([k])=>!['date','sequence','global_flags'].includes(k)).sort(([a],[b])=>a.localeCompare(b)));
@@ -28,6 +28,7 @@ export class NativeCountryAI {
     if(!economy||COUNTRY_AI_P1_FEATURES.some(f=>!ping.features?.includes(f)))
       throw Error('当前桥不具备国家 AI 提交限制、失联收权和世界代次接口');
     this.fullGateVerified=economy;
+    this.ownerIntentSupported=ping.features.includes('country_ai_owner_intent');
     this.capabilityVerified=true;
   }
   async state() {
@@ -51,6 +52,7 @@ export class NativeCountryAI {
       ordinaryOrdersBlocked:this.active,generation:this.generation??null,
       domains:[...(COUNTRY_AI_POLICIES[this.saved?.policy]??[])],
       protectedTargets:structuredClone(this.saved?.protectedTargets??{}),
+      ownerPolicy:structuredClone(raw?.routine_gate?.owner_policy??{}),ownerIntentSupported:this.ownerIntentSupported===true,
       supportedPolicies:this.capabilityVerified?Object.keys(COUNTRY_AI_POLICIES):[],
       commandCounts:raw?.routine_gate?.command_counts??{},reservedPolicy:raw?.routine_gate?.reserved_policy??null,
       protectionStatus:this.saved?.protectionStatus==='pending_native_revalidation'?'pending_native_revalidation':
@@ -71,13 +73,13 @@ export class NativeCountryAI {
     }
     throw Error('国家 AI 结果未确认；不重放开启命令');
   }
-  async delegate({policy='full_with_reserved',maxGameDays=180,maxWallMs=120000,stopAtReview=false,protectedTargets={}}={}) {
+  async delegate({policy='full_with_reserved',maxGameDays=180,maxWallMs=120000,stopAtReview=false,protectedTargets={},ownerPolicy={}}={}) {
     if(this.operation||this.active)throw Error('先完成当前国家 AI 接管，不覆盖已有控制权');
     if(!Object.hasOwn(COUNTRY_AI_POLICIES,policy)||!Number.isInteger(maxGameDays)||maxGameDays<1||maxGameDays>720||!Number.isSafeInteger(maxWallMs)||maxWallMs<1000||maxWallMs>3600000)
       throw Error('国家 AI 试点范围或复查上限无效');
-    const protection=normalizeCountryAIProtection(protectedTargets);
+    const protection=normalizeCountryAIProtection(protectedTargets),owner=normalizeNativeOwnerPolicy(ownerPolicy);
     this.active=true;this.phase='preparing';this.cancelRequested=false;this.setDispatchFence(true);
-    const work=this.performDelegate({policy,maxGameDays,maxWallMs,stopAtReview,protectedTargets:protection});this.operation=work;
+    const work=this.performDelegate({policy,maxGameDays,maxWallMs,stopAtReview,protectedTargets:protection,ownerPolicy:owner});this.operation=work;
     try{return await work;}finally{this.operation=undefined;}
   }
   async performDelegate(options) {
@@ -91,7 +93,7 @@ export class NativeCountryAI {
       this.saved={...options,scope:scope(before)};
       await this.journal({type:'country_ai_delegate_intent',policy:options.policy,before},{required:true});
       const prepared=await this.call('country_ai_lease',{action:'prepare',expected:before.precondition,policy:options.policy,max_game_days:options.maxGameDays,max_wall_ms:options.maxWallMs,stop_at_review:options.stopAtReview,
-        ...(this.fullGateVerified?{protected_targets:options.protectedTargets}:{})});
+        ...(this.fullGateVerified?{protected_targets:options.protectedTargets}:{}),owner_policy:options.ownerPolicy});
       if(prepared?.success===false)prepareRejected=true;
       if(prepared?.success!==true||prepared.phase!=='prepared'||!Number.isSafeInteger(prepared.generation))throw Error(prepared?.error||'国家 AI 未准备好');
       this.generation=prepared.generation;this.last=prepared;
@@ -103,6 +105,7 @@ export class NativeCountryAI {
           throw Error('经济范围或关键目标保护未真实回读，不开启国家 AI');
         this.saved.protectionStatus='native_arm_confirmed';
       }
+      if(this.ownerIntentSupported&&!same(normalizeNativeOwnerPolicy(prepared.routine_gate?.owner_policy),options.ownerPolicy))throw Error('本人经营约束没有真实原生回读，不开启国家AI');
       if(this.cancelRequested)throw Error('国家 AI 委派已取消');
       const enabled=await this.call('country_ai_lease',{action:'enable',generation:this.generation});
       if(enabled?.success!==true)throw Error(enabled?.error||'国家 AI 开启结果未知');
@@ -183,6 +186,15 @@ export class NativeCountryAI {
     if(stopped(result))this.confirmStopped(result);
     else if(result.phase!=='running')this.phase='unconfirmed';
     return this.view();
+  }
+  async setOwnerPolicy(value){
+    const policy=normalizeNativeOwnerPolicy(value);
+    if(!this.active||this.generation===undefined||!this.ownerIntentSupported)throw Error('本人经营方针需要当前支持意图约束的原生委派');
+    await this.state();
+    if(same(normalizeNativeOwnerPolicy(this.last?.routine_gate?.owner_policy),policy))return this.view();
+    const result=await this.call('country_ai_lease',{action:'update_owner_policy',generation:this.generation,owner_policy:policy});
+    if(result?.success!==true||result.generation!==this.generation||!same(scope(result.last_native_state),this.saved?.scope)||!same(normalizeNativeOwnerPolicy(result.routine_gate?.owner_policy),policy))throw Error('原生经营约束更新未确认，不把目标记作已落实');
+    this.last=result;this.saved.ownerPolicy=policy;return this.view();
   }
   async acknowledgeReview(){
     if(!this.active||this.generation===undefined)throw Error('没有可继续的国家 AI 委派');

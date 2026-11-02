@@ -14,7 +14,7 @@ export async function planStrategy({apiKey,context,goal,model='deepseek-v4-pro',
     const payload={
       model,thinking:{type:'disabled'},max_tokens:1024,tool_choice:'required',stream:false,
       messages:[
-        {role:'system',content:'你是v1.5大肥鱼战略指挥。原生国家AI自己执行全部日常操作。只输出StrategyContract的三维方针、最多4个保留决定和一句公开理由；不要给建设、科研、造船、舰队移动等逐条任务。宣战议和外交用现有合法参数，原生AI保持开启。低频每6游戏月或战争/危机/资源告急/用户新方向时复查。未知信息不捏造，不调用桌面。'},
+        {role:'system',content:'你是v1.5大肥鱼战略指挥。原生国家AI自己执行全部日常操作。只输出StrategyContract的三维方针、最多4个保留决定和一句公开理由；不要给建设、科研、造船、舰队移动等逐条任务。服从operatorMessages与常驻主播方针，优先级为主播要求、operationalGoal、自己的判断；仅战争或核心资源六个月内耗尽可临时覆盖，说明原因并在脱险后恢复。unity_traditions代表凝聚力与传统；传统和飞升仅在已有合法候选中优先比较凝聚力及传统收益，不猜key、不覆盖原生日常经营。退出条件达到后请本人确认，不自动切走。宣战议和外交用现有合法参数，原生AI保持开启，没有默认征服目标。低频每6游戏月或战争/危机/资源告急/用户新方向时复查。未知信息不捏造，不调用桌面。'},
         {role:'user',content:JSON.stringify({goal,playerFacts:context,readingRule:'原生AI持续运营；无关键决定oneOffActions=[]，不要请求日常派单。'})},
       ],
       tools:[{type:'function',function:{name:'set_strategy',parameters}}],

@@ -32,6 +32,50 @@ function setup(extra: Partial<QQMusicOptions> = {}, initial?: string) {
 const authenticated = (extra: Partial<QQMusicOptions> = {}) => setup(extra, JSON.stringify({ token: TOKEN }))
 const audioRequest = (mid = MID, init?: RequestInit) => new Request(`shop-qqmusic://track/${mid}`, init)
 
+describe('QQ我喜欢歌单只读导入适配',()=>{
+  const song=(mid:string)=>({mid,title:'歌曲 '+mid,singer:[{name:'歌手'}],interval:180,file:{media_mid:'media'+mid},cookie:TOKEN,url:SIGNED})
+  it('带当前账号分页读取并按MID去重，仅返回公开曲目信息，不取音源或歌词',async()=>{
+    const request=vi.fn(async(req:Request)=>{
+      const u=new URL(req.url),offset=Number(u.searchParams.get('offset'))
+      expect(u.pathname).toBe('/user/liked-songs');expect(req.method).toBe('GET');expect(req.headers.get('X-QQ-Session')).toBe(TOKEN)
+      expect(u.searchParams.get('limit')).toBe('100')
+      return json({code:200,total:103,more:offset===0,songs:offset===0?Array.from({length:100},(_,i)=>song('s'+i)):[song('s99'),{songmid:'legacy',songname:'旧版曲目',singer:[{name:'旧歌手'}]}, {songInfo:song('wrapped')}]})
+    })
+    const {service,fetchAudio}=authenticated({request}),result=await service.likedSongs()
+    expect(request.mock.calls.map(([r])=>new URL(r.url).searchParams.get('offset'))).toEqual(['0','100'])
+    expect(result).toMatchObject({total:103,skipped:0,truncated:false});expect(result.tracks).toHaveLength(102)
+    expect(result.tracks.at(-2)).toMatchObject({id:'qq:legacy',title:'旧版曲目',artist:'旧歌手'})
+    expect(result.tracks.at(-1)?.id).toBe('qq:wrapped');expect(JSON.stringify(result)).not.toMatch(/SECRET|cookie|vkey|media_mid/)
+    expect(fetchAudio).not.toHaveBeenCalled()
+  })
+  it('合法空歌单与登录失效、协议缺失和分页中断明确区分',async()=>{
+    expect(await authenticated({request:async()=>json({code:200,songs:[],total:0,more:false})}).service.likedSongs()).toEqual({tracks:[],total:0,skipped:0,truncated:false})
+    for(const body of [{code:401,songs:[],total:0},{code:200,total:0},{code:200,songs:[],total:10,more:true}]){
+      await expect(authenticated({request:async()=>json(body)}).service.likedSongs()).rejects.toThrow(body.code===401?'重新扫码':'读取未完成')
+    }
+    await expect(setup().service.likedSongs()).rejects.toThrow('重新扫码')
+  })
+  it('无效歌曲计数且继续后续页，不把5000首读取上限误报为全部完成',async()=>{
+    let pages=0
+    const {service}=authenticated({request:async req=>{
+      pages++;const offset=Number(new URL(req.url).searchParams.get('offset'))
+      return json({code:200,total:5001,more:true,songs:Array.from({length:100},(_,i)=>offset===0?{mid:'invalid-url!',title:'不可识别'}:song('s'+(offset+i)))})
+    }})
+    const result=await service.likedSongs()
+    expect(pages).toBe(50);expect(result).toMatchObject({total:5001,skipped:100,truncated:true});expect(result.tracks).toHaveLength(4900)
+  })
+  it('读取中取消或登出后不返回迟到的账号歌单，也不请求下一页',async()=>{
+    const entered=deferred<void>(),late=deferred<Response>(),controller=new AbortController()
+    const request=vi.fn(async()=>{entered.resolve();return late.promise}),{service}=authenticated({request})
+    const pending=service.likedSongs(controller.signal),rejected=expect(pending).rejects.toThrow('取消')
+    await entered.promise;controller.abort();late.resolve(json({code:200,total:200,more:true,songs:Array.from({length:100},(_,i)=>song('s'+i))}))
+    await rejected;expect(request).toHaveBeenCalledTimes(1)
+    const started=deferred<void>(),response=deferred<Response>(),other=authenticated({request:async req=>{if(new URL(req.url).pathname==='/logout')return json({code:200});started.resolve();return response.promise}}).service
+    const reading=other.likedSongs(),stopped=expect(reading).rejects.toThrow('取消');await started.promise;await other.logout()
+    response.resolve(json({code:200,total:1,more:false,songs:[song('stale')]}));await stopped
+  })
+})
+
 describe('QQ音乐主进程账号与曲库', () => {
   it('只给界面二维码和安全状态，成功后仅保存sealed token', async () => {
     const { service, sets, saved } = setup()

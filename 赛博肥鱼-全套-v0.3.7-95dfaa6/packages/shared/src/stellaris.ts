@@ -33,7 +33,7 @@ export interface StellarisBridge {
   saveGameKey?(key: string): Promise<StellarisResult>
   music?: {
     view(): Promise<StellarisMusicView>
-    action(action: 'connect'|'login'|'poll'|'start'|'stop'|'add'|'remove'|'volume'|'next'|'blacklist'|'queueLimit', value?: string|number): Promise<{ok:boolean;message:string;view:StellarisMusicView;login?:import('./index').QQMusicLogin}>
+    action(action: 'connect'|'login'|'poll'|'start'|'stop'|'add'|'search'|'searchPage'|'add-result'|'import-liked'|'remove'|'volume'|'next'|'blacklist'|'queueLimit', value?: string|number): Promise<{ok:boolean;message:string;view:StellarisMusicView;login?:import('./index').QQMusicLogin}>
     feedback(generation: string, kind: 'started'|'ended'|'error'): Promise<void>
   }
   live?: {
@@ -44,6 +44,7 @@ export interface StellarisBridge {
   speech?: import('./stellaris-speech').CaptainSpeechBridge
 }
 export interface StellarisMusicView {
+  catalog?:{query:string;page:number;more:boolean;tracks:import('./index').MusicTrack[]}
   localTest:boolean; enabled:boolean; volume:number; maxQueue?:number; account:import('./index').QQMusicStatus;
   state:import('./index').MusicState; bgmTrackIds:string[];blacklist:string[];builtInBlacklist:string[];reviewedLibraryOnly:boolean
 }

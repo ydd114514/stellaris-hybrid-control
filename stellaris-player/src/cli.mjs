@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import { callWindowsBridge, createWindowsDriver } from './driver.mjs'
 import { createAgent } from './agent.mjs'
-import { installObserverMod,installSteeringMod, MOD_NAME } from './mod-install.mjs'
+import { installObserverMod,installSteeringMod,installStellarCompatibilityMod,installAutomationCompatibilityMod, MOD_NAME } from './mod-install.mjs'
 import { createModObserver } from './mod-observer.mjs'
 import { loadDeepSeekKey, credentialStatus } from './credentials.mjs'
 
@@ -22,7 +22,7 @@ const gameCandidates = [config.gamePath, 'D:/SteamLibrary/steamapps/common/Stell
 const gamePath = gameCandidates.find(path => existsSync(path)) || config.gamePath
 const pythonCandidates = [config.pythonPath, 'C:/Program Files/Python315/python.exe', 'C:/Program Files/Python314/python.exe', 'C:/Program Files/Python313/python.exe'].filter(Boolean)
 const pythonPath = pythonCandidates.find(path => existsSync(path)) || 'python'
-const documentsPath = config.documentsPath || join(homedir(), 'Documents', 'Paradox Interactive', 'Stellaris')
+const documentsPath = argument('--documents') || config.documentsPath || join(homedir(), 'Documents', 'Paradox Interactive', 'Stellaris')
 const local = join(root, '.local')
 let logWrites = Promise.resolve()
 const driverOptions = { pythonPath, gamePath, maxObservationAgeMs: config.maxObservationAgeMs }
@@ -54,8 +54,13 @@ try {
     await writeFile(join(local, 'deepseek-connection-check.json'), JSON.stringify(result, null, 2), { mode: 0o600 })
     console.log(JSON.stringify(result, null, 2))
     if (!result.ok) process.exitCode = 1
-  } else if (command === 'install-mod' || command === 'install-steering-mod') {
-    const installation = await (command==='install-steering-mod'?installSteeringMod:installObserverMod)({...(command==='install-steering-mod'?{gameDirectory:argument('--game-dir')||'D:/SteamLibrary/steamapps/common/Stellaris'}:{}), documentsPath, dryRun: flag('--dry-run') })
+  } else if (['install-mod','install-steering-mod','install-stellar-compat','install-automation-compat'].includes(command)) {
+    const gameDirectory=argument('--game-dir')||'D:/SteamLibrary/steamapps/common/Stellaris';
+    const stellarDirectory=argument('--stellar-ai-dir')||[resolve(gameDirectory,'../../workshop/content/281990/3686836322'),'C:/Tools/SteamCMD/steamapps/workshop/content/281990/3686836322'].find(path=>existsSync(join(path,'descriptor.mod')));
+    const findWorkshop=id=>[resolve(gameDirectory,'../../workshop/content/281990',id),'C:/Tools/SteamCMD/steamapps/workshop/content/281990/'+id].find(path=>existsSync(join(path,'descriptor.mod')));
+    const install=command==='install-automation-compat'?installAutomationCompatibilityMod:command==='install-stellar-compat'?installStellarCompatibilityMod:command==='install-steering-mod'?installSteeringMod:installObserverMod;
+    const installation = await install({gameDirectory,stellarDirectory,ultimateDirectory:argument('--ultimate-dir')||findWorkshop('2250100617'),performanceDirectory:argument('--performance-dir')||findWorkshop('2184737698'),
+      ...(argument('--energy-reserve')?{reserveEnergy:Number(argument('--energy-reserve'))}:{}),...(argument('--alloy-reserve')?{reserveAlloys:Number(argument('--alloy-reserve'))}:{}),documentsPath,dryRun:flag('--dry-run')})
     if (!installation.dryRun) { await mkdir(local, { recursive: true }); await writeFile(join(local, 'mod-installation.json'), JSON.stringify(installation, null, 2), { mode: 0o600 }) }
     console.log(JSON.stringify(installation, null, 2))
   } else if (command === 'observe') {

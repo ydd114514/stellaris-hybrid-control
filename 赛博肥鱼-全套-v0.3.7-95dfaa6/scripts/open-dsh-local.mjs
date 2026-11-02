@@ -13,7 +13,9 @@ export async function runLocalLauncher(args=process.argv.slice(2),{spawnProcess=
  if(!plan.ok)throw Error('启动文件缺失，请先构建本机DSH源码；可用 --rollback 回退0.3.16。缺失：'+plan.missing.join('、'));
  if(!args.includes('--launch')){output(JSON.stringify({...plan,launched:false,realModelCalls:0}));return plan;}
  const childEnv={...env,...plan.environment};delete childEnv.ELECTRON_RUN_AS_NODE;delete childEnv.VITE_DEV_SERVER_URL;
- const child=spawnProcess(plan.executable,plan.args,{cwd:plan.cwd,env:childEnv,detached:true,windowsHide:true,stdio:'ignore'});
+ // This child is the user's GUI, not a background command. On Windows,
+ // windowsHide passes SW_HIDE to it and can hide the first window show.
+ const child=spawnProcess(plan.executable,plan.args,{cwd:plan.cwd,env:childEnv,detached:true,windowsHide:false,stdio:'ignore'});
  await new Promise((done,fail)=>{child.once('spawn',done);child.once('error',fail);});child.unref();return plan;
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href)runLocalLauncher().catch(e=>{console.error(e.message);process.exitCode=1;});

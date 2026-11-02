@@ -1,4 +1,19 @@
 const keyPattern=/^[a-zA-Z0-9_]{1,100}$/;
+const fullId=value=>Number.isSafeInteger(value)&&value>=0&&value<0xffffffff;
+export function buildingZoneIdentityError(message,snapshot,planetId,reasonCode='zone_id_not_found'){
+ const error=Object.assign(Error(message),{rejected:true,nativeWriteAttempted:false});
+ if(snapshot?.success===true&&snapshot.planet_id===planetId&&Array.isArray(snapshot.zones)&&snapshot.zones.length<=256&&snapshot.zones.every(row=>fullId(row?.zone_id))){
+  const string=value=>typeof value==='string'?value.slice(0,120):null;
+  const number=value=>Number.isFinite(value)?value:null;
+  error.candidateFeedback={planet_id:planetId,reasonCode,actualZones:snapshot.zones.map(row=>({zone_id:row.zone_id,district:string(row.district),zone_name:string(row.zone_name),buildings:number(row.buildings),max_buildings:number(row.max_buildings)})),
+   source:'get_buildable_buildings',readOnly:true,note:'这是本次回读的真实特区身份，不是建筑可建候选或施工授权；使用完整zone_id重新决策，不按列表顺位改号。'};
+ }
+ return error;
+}
+export function nativeToolErrorText(error){
+ const message=typeof error?.message==='string'?error.message:String(error);
+ return error?.candidateFeedback?JSON.stringify({error:message,candidateFeedback:error.candidateFeedback,...(typeof error.nativeWriteAttempted==='boolean'?{nativeWriteAttempted:error.nativeWriteAttempted}:{})}):message;
+}
 // These are observations, not a reusable permission to write. Every later
 // submission still checks the engine's then-current candidate pool.
 export function candidateFeedback(command,available,{slot,observedAt}={}){

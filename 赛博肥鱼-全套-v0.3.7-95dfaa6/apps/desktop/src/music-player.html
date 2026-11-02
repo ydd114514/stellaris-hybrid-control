@@ -2,12 +2,13 @@
 <style>body{background:#edf7ff;color:#265c8a;font:14px system-ui;margin:20px}small{display:block;color:#7b9eb9;margin-top:9px}audio{width:100%;margin-top:15px}</style>
 <b id="title">QQ 音乐待命</b><small id="status">仅这个大肥鱼程序输出音乐。关闭窗口会停止音乐。</small><audio id="audio"></audio>
 <script>
-const api=window.stellaris.music,title=document.querySelector('#title');
+const api=window.stellaris?.music,title=document.querySelector('#title'),status=document.querySelector('#status');
 let audio=document.querySelector('audio'),generation='',polling=false,stopped=false,enabled=false,changedAt=0,lastProgress=0,lastPosition=0,finished=false;
 function clear(){generation='';audio.pause();audio.removeAttribute('src');audio.load()}
 function finish(id,media,kind){if(!finished&&id===generation&&media===audio&&enabled&&!stopped){finished=true;void api.feedback(id,kind)}}
-async function poll(){if(polling||stopped)return;polling=true;try{const v=await api.view();if(stopped)return;enabled=v.enabled;audio.volume=v.volume;
+async function poll(){if(polling||stopped)return;polling=true;try{if(!api)throw Error('播放器接口未加载');const v=await api.view();if(stopped)return;enabled=v.enabled;audio.volume=v.volume;
 const c=v.state.current,t=v.state.tracks.find(x=>x.id===c?.trackId);
+status.textContent=v.state.lastMessage||v.account?.message||(enabled?'音乐已开启，等待曲目进入播放队列。':'音乐已停止，请在主界面开启。');
 title.textContent=t?`${c.isBgm?'背景音乐':'观众点歌'} · ${t.title} · ${t.artist}`:'QQ 音乐待命';
 if(!enabled||!c||!t||v.state.status!=='playing'){clear();return}
 if(generation!==c.generationId){
@@ -21,6 +22,6 @@ if(generation!==c.generationId){
  const elapsed=Date.now()-lastProgress;
  if(elapsed>(c.startedAt?20000:30000))finish(generation,audio,'error');
 }
-}catch{clear()}finally{polling=false}}
+}catch{clear();status.textContent='无法读取音乐播放状态，请关闭这个播放器，再从主界面重新开启音乐。'}finally{polling=false}}
 window.addEventListener('beforeunload',()=>{stopped=true;clear()});setInterval(poll,500);void poll();
 </script></html>

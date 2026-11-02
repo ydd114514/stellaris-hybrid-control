@@ -1,3 +1,4 @@
+import {constructionCandidateCoverage} from './construction-coverage.mjs';
 // Allowlisted game facts only. A context instance belongs to one NativeGame session.
 const text=(x,n=70)=>typeof x==='string'?x.replace(/[\r\n]+/g,' ').slice(0,n):'';
 const number=x=>Number.isFinite(x)?Math.round(x*10)/10:undefined;
@@ -13,6 +14,14 @@ export function executionCapabilities(actions=[]) {
 
 export function summarizeOperationalFacts(topic,r) {
   if(!r||typeof r!=='object'||r.success===false)return '';
+  if(topic==='buildings'&&r.scope==='targeted_building_engine_quote'){
+    if(r.coverageKnown!==true||typeof r.can_build!=='boolean')return `星球${r.planet_id}定向建筑核验覆盖未知，不能推定合法性或费用`;
+    return `星球${r.planet_id}，特区${r.zone_id}，${text(r.building_key)}：${r.can_build?'当前引擎允许建造':'当前引擎拒绝：'+text(r.reason,300)}；${r.quote?.costKnown?'当前费用'+JSON.stringify(r.quote.cost)+'，工期'+r.quote.build_days+'天':'当前费用未知'}；仅此目标的只读报价，不是全候选或施工授权`;
+  }
+  if(['jobs','buildings'].includes(topic)){
+    const coverage=constructionCandidateCoverage(topic,r);
+    if(!coverage.known)return `星球${r.planet_id}的${topic==='jobs'?'岗位':'建筑候选'}覆盖未知：${text(coverage.reason,240)}；不能把空列表当零岗位或无合法建筑`;
+  }
   if(topic==='planet') {
     const net=r.monthly_production?.net||{}, k=r.kpi||{};
     return [`星球${title(r)||r.planet_id}；专精${text(r.designation)||'未知'}`,
@@ -22,7 +31,7 @@ export function summarizeOperationalFacts(topic,r) {
       `施工队列${Array.isArray(r.construction_queue)?r.construction_queue.length:'未知'}项；详情中的空建筑数组不证明空槽，须核对buildings候选`].join('；');
   }
   if(topic==='buildings')return `星球${r.planet_id}建筑候选：`+limited(r.zones,4).map(z=>`${text(z.zone_name||z.zone)}(zone_id=${z.zone_id}) ${number(z.buildings)??'未知'}/${number(z.max_buildings)??'未知'}；可建${limited(z.buildable,3).map(title).join('、')||'未列出（不猜空槽或解锁条件）'}`).join('；');
-  if(topic==='jobs')return `星球${r.planet_id}岗位：`+limited(r.strata,4).flatMap(s=>limited(s.jobs,6)).filter(j=>['artisan','physicist','biologist','engineer','foundry','bureaucrat'].includes(j.job_key)).slice(0,7).map(j=>`${text(j.job_key)} ${number(j.current_workforce)??'未知'}/${number(j.max_workforce)??'未知'}，${j.is_prioritized===true?'已优先':j.is_prioritized===false?'未优先':'优先状态未知'}`).join('；')+'；满员岗位再优先不会增加容量';
+  if(topic==='jobs')return `星球${r.planet_id}岗位：`+(Array.isArray(r.flat_jobs)?r.flat_jobs:limited(r.strata,4).flatMap(s=>limited(s.jobs,6))).filter(j=>['artisan','physicist','biologist','engineer','foundry','bureaucrat','coordinator'].includes(j.job_key)).slice(0,7).map(j=>`${text(j.job_key)} ${number(j.current_workforce)??'未知'}/${number(j.max_workforce)??'未知'}，${j.is_prioritized===true?'已优先':j.is_prioritized===false?'未优先':'优先状态未知'}${Object.hasOwn(j,'workforce_limit')?'，限额读数'+(number(j.workforce_limit)??'未知'):''}`).join('；')+'；满员岗位再优先不会增加容量';
   if(topic==='government')return `政体${text(r.authority_name||r.authority)||'未知'}；国民理念${limited(r.civics,4).map(title).join('、')||'未知'}；内阁议程${title(r.agenda)||'未列出'}；可用候选${limited(r.available_agendas,3).map(title).join('、')||'未列出（不等于已证明无议程）'}`;
   if(topic==='research')return ['physics','society','engineering'].map(key=>`${key}：${title(r[key]?.current)||'当前项目未提供'}；候选${limited(r[key]?.candidates,3).map(title).join('、')||'未列出'}`).join('；');
   if(topic==='zones')return `星球${r.planet_id}特区：`+limited(r.districts,4).map(d=>`${text(d.district_name)}；`+limited(d.slots,4).map(s=>`${s.slot}：${text(s.zone_name||s.zone)||'空槽'}，可建${limited(s.buildable_zones,3).map(title).join('、')||'未列出'}`).join('；')).join('；');
@@ -43,7 +52,13 @@ export class OperationalContext {
     const facts=summarizeOperationalFacts(topic,result);if(!facts)return;
     const entityId=id(result.planet_id)?result.planet_id:undefined,countryId=id(result.country_id)?result.country_id:undefined,key=`${topic}:${entityId??countryId??''}`;
     const basis=topic==='military'?{navalUsed:number(result.empire_naval_capacity?.used),navalCapacity:number(result.empire_naval_capacity?.capacity)}:undefined;
-    this.entries.delete(key);this.entries.set(key,{topic,...(entityId===undefined?{}:{entityId}),...(countryId===undefined?{}:{countryId}),observedAt:this.now(),...(text(gameDate,20)?{gameDate:text(gameDate,20)}:{}),...(basis?{basis}:{}),facts:facts.slice(0,600)});
+    let economy;
+    if(topic==='jobs'&&result.success===true&&(Array.isArray(result.strata)||Array.isArray(result.flat_jobs))&&constructionCandidateCoverage(topic,result).known){
+      const jobs=Array.isArray(result.flat_jobs)?result.flat_jobs:result.strata.flatMap(s=>Array.isArray(s?.jobs)?s.jobs:[]);
+      if(jobs.length>0&&jobs.length<=128&&jobs.every(j=>Number.isFinite(j?.current_workforce)&&j.current_workforce>=0&&Number.isFinite(j.max_workforce)&&j.max_workforce>=j.current_workforce))
+        economy={workforceKnown:true,employedWorkforce:number(jobs.reduce((n,j)=>n+j.current_workforce,0)),capacityWorkforce:number(jobs.reduce((n,j)=>n+j.max_workforce,0))};
+    }
+    this.entries.delete(key);this.entries.set(key,{topic,...(entityId===undefined?{}:{entityId}),...(countryId===undefined?{}:{countryId}),observedAt:this.now(),...(text(gameDate,20)?{gameDate:text(gameDate,20)}:{}),...(basis?{basis}:{}),...(economy?{economy}:{}),facts:facts.slice(0,600)});
     while(this.entries.size>this.maxEntries)this.entries.delete(this.entries.keys().next().value);
   }
   view({ownedPlanetIds}={}) {

@@ -1,3 +1,4 @@
+import {readBuildingAdmission} from './building-candidates.mjs';
 // Admission against actual engine costs, never an engine-enforced hard cap.
 const resources=x=>x&&typeof x==='object'&&!Array.isArray(x)&&Object.keys(x).length>0&&Object.entries(x).every(([k,n])=>/^[a-z_][a-z0-9_]{0,99}$/.test(k)&&Number.isFinite(n)&&n>=0&&n<=1e12);
 const fits=(available,required)=>available>=required||Math.abs(available-required)<=Number.EPSILON*Math.max(1,Math.abs(available),required)*8;
@@ -24,7 +25,7 @@ export function checkActualSpending({cost,status,commitments={},floors={},task,m
  return {basis:'fresh_engine_candidate_cost',maintenanceMonths,expenseCycle,rows,hardNativeBudget:false};
 }
 
-export async function readActualSpendingCost(order,rpc){
+export async function readActualSpendingCost(order,rpc,{forceTargetBuilding=false}={}){
  const p=order.arguments;
  if(order.command==='claim_system'){
   if(p.remove===true)return {influence:0};
@@ -43,8 +44,7 @@ export async function readActualSpendingCost(order,rpc){
   snapshot=await rpc('get_buildable_districts',{planet_id:p.planet_id});
   candidates=snapshot.buildable?.filter(c=>c.key===p.district_key&&c.can_build===true);
  }else if(order.command==='build_building'){
-  snapshot=await rpc('get_buildable_buildings',{planet_id:p.planet_id});
-  candidates=snapshot.zones?.filter(z=>z.zone_id===p.slot_index&&z.district===p.district_type).flatMap(z=>(z.buildable||[]).filter(c=>c.key===p.building_key));
+  return (await readBuildingAdmission(p,rpc,{forceTarget:forceTargetBuilding})).cost;
  }else if(order.command==='upgrade_building'){
   snapshot=await rpc('get_building_upgrade_candidates',{planet_id:p.planet_id});
   candidates=snapshot.candidates?.filter(c=>c.building_id===p.building_id&&c.upgrade_key===p.upgrade_key&&c.can_upgrade===true);

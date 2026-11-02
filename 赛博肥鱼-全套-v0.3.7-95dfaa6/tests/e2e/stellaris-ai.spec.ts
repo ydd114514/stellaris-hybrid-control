@@ -87,3 +87,39 @@ test('基础版也显示问题查询、待答和公开确认，不把查到事�
   await expect(page.getByTestId('question-q3')).toContainText('已保存公开答复')
   await expect(page.getByTestId('question-q4')).toContainText('查询超时')
 })
+test('主播要求执行面板显示原文、方针、退出条件、最近净产与过期送达状态',async({page})=>{
+
+  await page.addInitScript(()=>{
+    ;(window as any).__operatorTestNow=Date.now();Date.now=()=> (window as any).__operatorTestNow
+    const now=Date.now()
+    const view:any={localTest:false,encrypted:true,providers:[],presets:[],agents:[],feed:[],
+      director:{replyIntervalSeconds:8,batchSize:12,strategyIntervalSeconds:180,maxRequestsPerHour:240,idleCommentSeconds:0,hostNote:'',strategyNote:'前期主拉凝聚力'},
+      status:{running:true,message:'场控运行中。',busy:[],pending:0,hourRequests:0,usage:{}},
+      blackboard:{game:{summary:'',threats:[],goals:[]},plan:{focus:'',nextSteps:[],talkingPoint:''},audience:{mood:'',hotTopics:[],suggestions:[]},notes:[]},
+      operatorExecution:{text:'前期主拉凝聚力',economyFocus:'unity_traditions',until:{date:'2230.01.01',condition:'完成首个传统树'},status:'on_track',evidence:'凝聚力净产增加',standingRefreshedAt:now,directiveRefreshedAt:now,history:[{at:now,date:'2201.01.01',resource:'unity',net:30}],receipt:{operatorStandingId:'o-1',readAt:now,appliedFocus:'unity_traditions',steeringApplied:true,reason:'按当前要求执行'}}}
+    const status={phase:'stopped',message:'控制器已停止。',canStart:true,canStop:false}
+    ;(window as any).__operatorView=view
+    ;(window as any).stellaris={getStatus:async()=>status,ai:{view:async()=>structuredClone(view),action:async(a:any)=>{
+      if(a.type==='save-director'){view.director=a.director;view.operatorExecution.text=a.director.strategyNote}
+      return{ok:true,message:'已保存。',view:structuredClone(view)}
+    }}}
+  })
+  await page.goto('/stellaris.html')
+  await page.getByRole('button',{name:'AI 中枢',exact:true}).click()
+  const panel=page.getByTestId('operator-execution')
+  await expect(panel).toContainText('前期主拉凝聚力');await expect(panel).toContainText('凝聚力与传统')
+  await expect(panel).toContainText('2230.01.01；完成首个传统树');await expect(panel).toContainText('按计划推进：凝聚力净产增加')
+  await expect(page.getByTestId('operator-history')).toContainText('2201.01.01 · unity：+30.0/月')
+  await expect(page.getByTestId('standing-delivery')).toContainText('已送达 · 最后刷新')
+  await expect(page.getByTestId('directive-delivery')).toContainText('已送达 · 最后刷新')
+  await expect(page.getByTestId('controller-receipt')).toContainText('引导档位已切换 · 凝聚力与传统')
+  await page.evaluate(()=>{(window as any).__operatorView.operatorExecution.receipt.steeringApplied=false})
+  await expect(page.getByTestId('controller-receipt')).toContainText('控制器已读取，尚未确认切换')
+  await page.getByLabel('给游戏参谋的要求').fill('优先研究')
+  await page.getByRole('button',{name:'保存场控参数',exact:true}).click()
+  await expect(page.getByTestId('operator-text')).toHaveText('优先研究')
+  await page.evaluate(()=>{(window as any).__operatorTestNow+=121000;delete (window as any).__operatorView.operatorExecution.receipt})
+  await expect(page.getByTestId('controller-receipt')).toContainText('等待控制器回执')
+  await expect(page.getByTestId('standing-delivery')).toContainText('未送达 · 最后刷新')
+  await expect(page.getByTestId('directive-delivery')).toContainText('未送达 · 最后刷新')
+})

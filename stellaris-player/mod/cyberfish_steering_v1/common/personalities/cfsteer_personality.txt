@@ -8,7 +8,7 @@ cfsteer_reserved_diplomacy = {
  armor_ratio = 0.4
  shields_ratio = 0.4
  hull_ratio = 0.2
- allow = { OR = { has_edict = cfsteer_economy_balanced has_edict = cfsteer_economy_consumer_stability has_edict = cfsteer_economy_alloys_military has_edict = cfsteer_economy_research } }
+ allow = { OR = { has_edict = cfsteer_economy_balanced has_edict = cfsteer_economy_unity_traditions has_edict = cfsteer_economy_consumer_stability has_edict = cfsteer_economy_alloys_military has_edict = cfsteer_economy_research } }
  weight_modifier = { weight = 100000 }
  behaviour = { conqueror = yes opportunist = no crisis_fighter = yes }
 }

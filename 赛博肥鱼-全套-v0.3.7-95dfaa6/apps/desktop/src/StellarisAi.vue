@@ -3,6 +3,7 @@ import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { AI_ROLE_LABELS, type AiAgentConfig, type AiDirectorConfig, type AiHubAction, type AiHubBridge, type AiHubView, type AiProvider } from '../../../packages/shared/src/ai'
 import AiModelPicker from './AiModelPicker.vue'
 const props = defineProps<{ api?: AiHubBridge }>()
+const clock=ref(Date.now())
 const view = ref<AiHubView>(), busy = ref(false), notice = ref(''), failed = ref(false)
 // Drafts are edited locally; the 2-second poll only refreshes status, feed, blackboard and fetched models.
 const agents = ref<AiAgentConfig[]>([]), director = ref<AiDirectorConfig>()
@@ -24,6 +25,23 @@ const taskLabels={querying:'查询中',ready:'待答复',unavailable:'不可查�
 const taskReasons:Record<string,string>={unsupported:'当前能力无法查询',stopped:'游戏状态未更新',queue_full:'待查队列已满',expired:'查询超时',result_expired:'事实已过期',cross_session:'游戏局已切换',invalid_entity:'星球未确认属于当前帝国',error:'读取失败',transport_error:'查询入口不可用',answer_unavailable:'未能整理出可靠答复'}
 const taskReason=(reason?:string)=>taskReasons[reason||'']||''
 const tasks=computed(()=>view.value?.blackboard.audience.tasks??[])
+const execution=computed(()=>view.value?.operatorExecution)
+const nativeIntent=computed(()=>execution.value?.nativeIntent)
+const nativeIntentLabels={pending:'目标待生效',applied:'设置已确认，效果待观察',progressing:'实际效果在推进',stalled:'实际效果停滞',blocked:'执行受阻',suspended:'临时让路，目标保留'}
+const monthly=(n:number|null|undefined)=>typeof n==='number'?`${n>=0?'+':''}${n.toFixed(1)}/月`:'未知'
+const executionLabels={pending:'待执行核查',working:'执行中',verifying:'跟踪效果',succeeded:'结果已核实',blocked:'受阻，待调整',superseded:'已结束旧任务'}
+const executionTasks=computed(()=>[...(view.value?.blackboard.executionTasks?.tasks??[])].sort((a,b)=>Number(['succeeded','superseded'].includes(a.status))-Number(['succeeded','superseded'].includes(b.status))))
+const unityProgressLine=computed(()=>{
+ const p=execution.value?.unityProgress;if(!p)return '尚无真实凝聚力进展读数。'
+ const monthly=(n:number|null)=>n===null?'未知':`${n>=0?'+':''}${n.toFixed(1)}/月`
+ const share=p.maintenanceShare===null?'未知':`${(p.maintenanceShare*100).toFixed(1)}%`
+ const benchmark=p.targetNet===null?'':` · 参考净产 ${monthly(p.targetNet)}${p.deadlineYear===null?'':`（参考年份 ${p.deadlineYear}）`}`
+ const diagnosis=p.reasons.length?p.reasons.join('；'):p.stagnating?'实际进展停滞':p.scalingBehind?'增长落后于规模/成本':p.known?'暂未发现停滞':'趋势样本尚不足'
+ return `实际净产 ${monthly(p.net)}${benchmark} · 维护占收入 ${share} · ${diagnosis}`
+})
+const delivery=(at?:number)=>at&&clock.value-at<=120000?'已送达':'未送达'
+const focusNames:Record<string,string>={balanced:'均衡',unity_traditions:'凝聚力与传统',consumer_stability:'消费品与稳定',alloys_military:'合金与军工',research:'科研'}
+const operatorStatuses={on_track:'按要求推进',blocked:'暂时受阻',done:'退出条件已达到，等待本人确认'}
 const usageText = (id: string) => {
   const u = view.value?.status.usage[id]; if (!u) return '尚未调用'
   const missing = u.cacheUsageMissing ?? 0
@@ -35,7 +53,7 @@ function adopt(next: AiHubView, drafts = false) {
   view.value = next
   if (drafts || !director.value) { agents.value = structuredClone(next.agents); director.value = { ...next.director } }
 }
-async function refresh() { if (!props.api || busy.value) return; try { const next = await props.api.view(); if (mounted) adopt(next) } catch { if (mounted) { notice.value = '无法读取 AI 中枢，请刷新桌面端。'; failed.value = true } } }
+async function refresh() { clock.value=Date.now(); if (!props.api || busy.value) return; try { const next = await props.api.view(); if (mounted) adopt(next) } catch { if (mounted) { notice.value = '无法读取 AI 中枢，请刷新桌面端。'; failed.value = true } } }
 async function run(action: AiHubAction, drafts = false) {
   if (!props.api || busy.value) return
   busy.value = true; notice.value = ''
@@ -83,7 +101,7 @@ onUnmounted(() => { mounted = false; clearInterval(timer) })
         <button :disabled="busy || disabled" @click="run({ type: 'copy-overlay' })">复制字幕地址</button>
         <span class="status">{{ view?.status.message }}</span>
       </div>
-      <div class="counters"><span>排队弹幕 {{ view?.status.pending ?? 0 }}</span><span>本小时请求 {{ view?.status.hourRequests ?? 0 }} / {{ view?.director.maxRequestsPerHour ?? '—' }}</span><span>{{ view?.basic ? '大肥鱼上次' : '场控上次' }} {{ time(view?.status.lastHostAt) }}</span><span v-if="!view?.basic">参谋上次 {{ time(view?.status.lastStrategyAt) }}</span><span v-if="view?.overlayUrl">字幕 {{ view.overlayUrl }}</span></div>
+      <div class="counters"><span>排队弹幕 {{ view?.status.pending ?? 0 }}</span><span>本小时请求 {{ view?.status.hourRequests ?? 0 }} / {{ view?.director.maxRequestsPerHour ?? '—' }}</span><span>场控本小时 {{ view?.status.roleRequests?.host ?? 0 }} / {{ view?.status.roleLimits?.host ?? 0 }}</span><span v-if="!view?.basic">参谋本小时 {{ view?.status.roleRequests?.strategist ?? 0 }} / {{ view?.status.roleLimits?.strategist ?? 0 }}</span><span>{{ view?.basic ? '大肥鱼上次' : '场控上次' }} {{ time(view?.status.lastHostAt) }}</span><span v-if="!view?.basic">参谋上次 {{ time(view?.status.lastStrategyAt) }}</span><span v-if="view?.overlayUrl">字幕 {{ view.overlayUrl }}</span></div>
       <p class="hint" data-testid="game-snapshot-status">{{ snapshotLabel }} · 最近观察 {{ time(view?.status.snapshot?.observedAt) }}<span v-if="view?.status.pendingDropped"> · 超出队列上限省略 {{ view.status.pendingDropped }} 条</span></p>
       <div v-for="row in healthRows" :key="row.id" :class="['hub-notice', {failed: !!row.health?.consecutiveFailures}]" :data-testid="`health-${row.id}`" role="status">
         {{ row.label }} · 最后成功 {{ time(row.health?.lastSuccessAt) }}<span v-if="row.health?.consecutiveFailures"> · 连续失败 {{ row.health.consecutiveFailures }} 次 · {{ row.health.message }}<span v-if="row.health.httpStatus">（HTTP {{ row.health.httpStatus }}）</span> · {{ row.health.circuitOpen ? '已暂停该角色请求，检查后停止并重新启动场控' : `下次重试 ${time(row.health.nextRetryAt)}` }}</span>
@@ -161,6 +179,50 @@ onUnmounted(() => { mounted = false; clearInterval(timer) })
       <div class="row-end"><button class="primary" :disabled="busy || disabled" @click="run({ type: 'save-director', director }, true)">保存场控参数</button></div>
     </article>
 
+    <article v-if="!view?.basic" data-testid="operator-execution">
+      <h3>主播要求执行</h3>
+      <dl>
+        <dt>原文</dt><dd data-testid="operator-text">{{ view?.operatorExecution?.text || '尚未设置主播要求。' }}</dd>
+        <dt>解析方针</dt><dd>{{ view?.operatorExecution?.economyFocus ? focusNames[view.operatorExecution.economyFocus] : '待解析' }}</dd>
+        <dt>退出条件</dt><dd>{{ [view?.operatorExecution?.until.date,view?.operatorExecution?.until.condition].filter(Boolean).join('；') || '待解析' }}</dd>
+        <dt>常驻要求</dt><dd data-testid="standing-delivery">{{ delivery(view?.operatorExecution?.standingRefreshedAt) }} · 最后刷新 {{ time(view?.operatorExecution?.standingRefreshedAt) }}</dd>
+        <dt>参谋目标</dt><dd data-testid="directive-delivery">{{ delivery(view?.operatorExecution?.directiveRefreshedAt) }} · 最后刷新 {{ time(view?.operatorExecution?.directiveRefreshedAt) }}</dd>
+        <dt>执行判断</dt><dd>{{ nativeIntent ? nativeIntentLabels[nativeIntent.status] : {on_track:'按计划推进',blocked:'受阻',done:'已达到退出条件，请主播确认'}[view?.operatorExecution?.status || 'blocked'] }}：{{ view?.operatorExecution?.evidence || '等待参谋解释主播要求。' }}</dd>
+      </dl>
+      <p data-testid="controller-receipt">{{ execution?.receipt ? execution.receipt.steeringApplied ? '引导档位已切换' : '控制器已读取，尚未确认切换' : '等待控制器回执' }}<span v-if="execution?.receipt"> · {{ focusNames[execution.receipt.appliedFocus || ''] || '尚无档位' }} · {{ time(execution.receipt.readAt) }} · {{ execution.receipt.reason }}</span></p>
+      <p v-if="execution?.receipt?.steeringApplied" class="hint">档位回执只确认设置；经营效果以下方实际读数为准。</p>
+      <p data-testid="operator-unity-progress">{{ unityProgressLine }}</p>
+
+      <p class="hint">目标资源月净产 · 最近十次复盘快照（缺失读数显示未知；送达表示文件已写出）</p>
+      <ol data-testid="operator-history" class="operator-history"><li v-for="(point,index) in view?.operatorExecution?.history || []" :key="index">{{ point.date || time(point.at) }} · {{ point.resource }}：{{ point.net === null ? '未知' : `${point.net >= 0 ? '+' : ''}${point.net.toFixed(1)}/月` }}</li></ol>
+    </article>
+
+    <article v-if="nativeIntent" data-testid="native-intent-execution">
+      <h3>原生 AI 目标落实</h3>
+      <p><b>{{ nativeIntentLabels[nativeIntent.status] }}</b> · {{ nativeIntent.objective }}</p>
+      <p>{{ nativeIntent.reason }}</p>
+      <dl>
+        <dt>引导设置</dt><dd>{{ nativeIntent.controls.steeringConfirmed ? '已确认' : '待确认' }} · 目标执行合同 {{ nativeIntent.controls.ownerPolicyConfirmed ? '已确认' : '待确认' }}</dd>
+        <dt>月净产</dt><dd>{{ nativeIntent.baseline.date || '基线日期未知' }}：{{ monthly(nativeIntent.baseline.net) }} → {{ nativeIntent.current.date || '当前日期未知' }}：{{ monthly(nativeIntent.current.net) }}</dd>
+        <dt>实际变化</dt><dd>月净产变化 {{ monthly(nativeIntent.progress.netDelta) }} · 新增传统 {{ nativeIntent.progress.traditionsGained ?? '未知' }}</dd>
+        <dt v-if="nativeIntent.correctiveAction">后续调整</dt><dd v-if="nativeIntent.correctiveAction">{{ nativeIntent.correctiveAction }}</dd>
+        <dt v-if="nativeIntent.unsupported.length">能力受限</dt><dd v-if="nativeIntent.unsupported.length">{{ nativeIntent.unsupported.join('；') }}</dd>
+      </dl>
+    </article>
+
+    <article v-if="!view?.basic" data-testid="advice-execution">
+      <h3>意见执行 <small>{{ executionTasks.length }} 项</small></h3>
+      <p class="hint">参谋行动与采纳的弹幕建议分别跟踪。采取措施后继续核对效果，有结果依据才显示已核实。</p>
+      <ul v-if="executionTasks.length" class="execution-list">
+        <li v-for="task in executionTasks" :key="task.id">
+          <div><span :class="['execution-status',task.status]">{{ executionLabels[task.status] }}</span><b>{{ task.source === 'audience' ? '弹幕建议' : '参谋行动' }}</b> · {{ task.text }}</div>
+          <p>{{ task.reason || '等待执行层核查当前条件。' }}<span v-if="task.date"> · 星历 {{ task.date }}</span></p>
+          <p v-if="task.evidence" class="execution-evidence">结果依据：{{ task.evidence }}</p>
+        </li>
+      </ul>
+      <p v-else class="hint">尚无本局执行任务。采纳建议或生成具体行动后会在这里持续显示。</p>
+    </article>
+
     <div class="split">
       <article v-if="!view?.basic" class="board" data-testid="blackboard">
         <h3>共享黑板 <small>两位同事都读这里</small><span class="spacer"></span><button class="small" :disabled="busy || disabled" @click="run({ type: 'reset-blackboard' })">清空</button></h3>
@@ -171,7 +233,7 @@ onUnmounted(() => { mounted = false; clearInterval(timer) })
           <dt>下一步</dt><dd><ol v-if="view?.blackboard.plan.nextSteps.length"><li v-for="s in view.blackboard.plan.nextSteps" :key="s">{{ s }}</li></ol><template v-else>—</template></dd>
           <dt>话题</dt><dd>{{ view?.blackboard.plan.talkingPoint || '—' }}</dd>
           <dt>直播间</dt><dd>{{ view?.blackboard.audience.mood || '未知' }}{{ view?.blackboard.audience.hotTopics.length ? ' · ' + view.blackboard.audience.hotTopics.join('、') : '' }}</dd>
-          <dt>观众建议</dt><dd><ul v-if="view?.blackboard.audience.suggestions.length"><li v-for="s in view.blackboard.audience.suggestions" :key="s.id"><b>{{ s.name }}</b>：{{ s.text }} <i :class="s.status">{{ { new: '待判断', adopted: '已采纳', declined: '未采纳', answered: '已回答' }[s.status] }}</i><span v-if="s.reply"> — {{ s.reply }}</span></li></ul><template v-else>—</template></dd>
+          <dt>观众建议</dt><dd><ul v-if="view?.blackboard.audience.suggestions.length"><li v-for="s in view.blackboard.audience.suggestions" :key="s.id"><b>{{ s.name }}</b>：{{ s.text }} <i :class="s.status">{{ { new: '待判断', adopted: '纳入计划，效果待确认', declined: '未采纳', answered: '已回答' }[s.status] }}</i><span v-if="s.execution"> · {{ executionLabels[s.execution.status] }}：{{ s.execution.reason }}</span><span v-if="s.reply"> — {{ s.reply }}</span></li></ul><template v-else>—</template></dd>
         </dl>
       </article>
       <article class="feed">
@@ -216,5 +278,6 @@ label{display:flex;flex-direction:column;gap:5px;font-size:11px;color:#7f9bb3}la
 .feed ul{list-style:none;margin:0;padding:0;max-height:430px;overflow:auto;font-size:12px}.feed li{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #edf3f9;line-height:1.6}.feed .when{color:#a3b6c7;font:10px Consolas,monospace;padding-top:3px;flex:none}.feed .kind{flex:none;font-size:10px;padding:1px 6px;border-radius:3px;background:#eef3f8;color:#8aa3b9;height:fit-content;margin-top:2px}
 .feed li.host .kind{background:#fff0e0;color:#c27a3a}.feed li.strategist .kind,.feed li.directive .kind{background:#e3f0fc;color:#3f7fbf}.feed li.error .kind{background:#fff0ed;color:#c06e5d}.feed li.error .text{color:#b77750}.feed .text{min-width:0;overflow-wrap:anywhere;color:#46698a}.feed .text b{color:#5d86ab;font-weight:600;margin-right:4px}.feed li.empty{color:#a3b6c7;justify-content:center;padding:20px 0}
 .footer-hint{margin-top:12px}
+.execution-list{list-style:none;margin:0;padding:0;max-height:420px;overflow:auto;font-size:12px;color:#46698a}.execution-list li{padding:10px 0;border-bottom:1px solid #edf3f9;line-height:1.7}.execution-list p{margin:4px 0 0;color:#7391ac}.execution-status{display:inline-block;margin-right:8px;padding:1px 7px;border-radius:4px;background:#e8f1ff;color:#3f7fbf}.execution-status.blocked{background:#fff0e0;color:#a4662f}.execution-status.succeeded{background:#e7f5f2;color:#298f88}.execution-status.superseded{background:#eef3f8;color:#8aa3b9}.execution-list .execution-evidence{color:#298478}
 @media(max-width:960px){.split{grid-template-columns:1fr}.agent-grid{grid-template-columns:1fr}}
 </style>

@@ -153,7 +153,7 @@ Json CountryAILease(const Json& params) {
         const auto wall=params.value("max_wall_ms",uint64_t(120000));
         if(wall<1000||wall>3600000)return {{"success",false},{"error","country_ai_wall_limit_out_of_range"}};
         if(!InstallCountryAIWorldHooks())return {{"success",false},{"error","country_ai_world_start_hooks_unverified"}};
-        lastGate=CountryAIRoutineGate({{"action","arm"},{"policy",params.value("policy",std::string("full_with_reserved"))},{"expected",state["precondition"]},{"protected_targets",params.value("protected_targets",Json::object())}});
+        lastGate=CountryAIRoutineGate({{"action","arm"},{"policy",params.value("policy",std::string("full_with_reserved"))},{"expected",state["precondition"]},{"protected_targets",params.value("protected_targets",Json::object())},{"owner_policy",params.value("owner_policy",Json::object())}});
         if(!lastGate.value("success",false))return lastGate;
         lastObservation=CountryAIObservation({{"action","start"},{"expected",state["precondition"]}});
         if(!lastObservation.value("success",false)) {
@@ -178,6 +178,12 @@ Json CountryAILease(const Json& params) {
             if(!lastPost.contains("pending")&&lastPost.value("phase",std::string())!="already_observed")
                 return {{"success",false},{"error","changed_world_reclaim_unconfirmed"},{"native_result",lastPost}};
             stopStarted=GetTickCount64();deadline=stopStarted+15000;phase="world_reclaim_off";
+        } else if(action=="update_owner_policy") {
+            const auto current=CountryAIState();
+            if(phase!="running"||!SameWorld(current)||!On(current))return {{"success",false},{"error","owner_policy_requires_running_owned_world"}};
+            const auto gate=CountryAIRoutineGate({{"action","update_owner_policy"},{"expected",current["precondition"]},{"owner_policy",params.value("owner_policy",Json::object())}});
+            if(!gate.value("success",false))return gate;
+            lastGate=gate;
         } else if(action=="acknowledge_review") {
             if(phase!="running"||!SameWorld(lastState)||!On(lastState))return {{"success",false},{"error","country_ai_review_requires_running_owned_world"}};
             reviewDue=false;nextReviewDay=Day()+maxDays;

@@ -40,6 +40,7 @@ async function prepareCommentary(root: string) {
 
 export function createStellarisBroadcast(options: { disabled?: boolean; getProject(): Promise<string | undefined>; prepare?: (root: string) => Promise<void>; healthy?: () => Promise<boolean>; port?: number; onAudienceEvent?: (event:LiveEvent)=>unknown }) {
   let inputRoot: string | undefined, disposed = false, busy = false, inputGeneration = 0
+  let preparation:Promise<StellarisLiveResult>|undefined
   let delivery = Promise.resolve()
   const seen = new Set<string>()
   // Both room sockets and the authenticated local bridge share this serial delivery
@@ -81,8 +82,24 @@ export function createStellarisBroadcast(options: { disabled?: boolean; getProje
       input: { status: local.status, received: local.received, rejected: local.rejected, lastEventAt: local.lastEventAt, endpoint: local.endpoint,
         message: local.status === 'listening' ? '本机接收器已就绪，等候 B 站弹幕工具转发；尚未连接真实直播间。' : local.status === 'stopped' ? '尚未开启本地弹幕接入。' : local.message } }
   }
+  async function prepareOverlay():Promise<StellarisLiveResult>{
+    try{
+      const root=await options.getProject()
+      if(disposed)return {ok:false,message:'桌面端已退出，本次设置已取消。',info:await info()}
+      if(!root)return {ok:false,message:'请先在群星控制台选择有效的 stellaris-player 目录。',info:await info()}
+      await (options.prepare||prepareCommentary)(root)
+      if(disposed)return {ok:false,message:'桌面端已退出，本次设置已取消。',info:await info()}
+      return {ok:true,message:'直播画面已准备；可以预览或导入 OBS 场景。',info:await info()}
+    }catch{return {ok:false,message:'本地直播服务未准备好，请检查端口和控制器目录后重试。',info:await info()}}
+  }
   async function operation(action: 'prepare' | 'start' | 'stop' | 'test'): Promise<StellarisLiveResult> {
     if (options.disabled || disposed) return { ok: false, message: '独立测试不启动真实服务或读取直播接入信息。', info: await info() }
+    // Startup, room connection and preview share one preparation. Preparing the
+    // frame does not reserve the separate audience-input controls.
+    if(action==='prepare'){
+      preparation??=prepareOverlay().finally(()=>{preparation=undefined})
+      return preparation
+    }
     if (busy) return { ok: false, message: '正在处理上一次直播设置操作。', info: await info() }
     busy = true
     try {
@@ -91,7 +108,6 @@ export function createStellarisBroadcast(options: { disabled?: boolean; getProje
       const root = await options.getProject()
       if (disposed) return { ok: false, message: '桌面端已退出，本次设置已取消。', info: await info() }
       if (!root) return { ok: false, message: '请先在群星控制台选择有效的 stellaris-player 目录。', info: await info() }
-      if (action === 'prepare') { await (options.prepare || prepareCommentary)(root); return { ok: true, message: '直播画面已准备；可以预览或导入 OBS 场景。', info: await info() } }
       if (input.info().status === 'stopped') { inputRoot = root;inputGeneration++;await input.start({ port: options.port ?? 17658 }) }
       return { ok: true, message: '本地弹幕接入已开启。复制接入配置给你使用的弹幕转发工具。', info: await info() }
     } catch { return { ok: false, message: '本地直播服务未准备好，请检查端口和控制器目录后重试。', info: await info() } }

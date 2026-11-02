@@ -14,9 +14,12 @@ export class ControllerContinuity {
    return {...data,stationFailures};
   }catch{return null;}finally{await handle?.close();}
  }
- async save(binding,state,{growth,stationFailures,orderTracking}={}){
+ async save(binding,state,{growth,stationFailures,orderTracking,adviceExecution,nativeIntent,domesticUnknown}={}){
   if(!binding?.creationTime||!validDate(state?.date))return;
   const data={version:1,savedAt:this.now(),gameDate:state.date,binding:fingerprint(binding,state),growth,stationFailures:(stationFailures||[]).slice(-256).filter(([key,row])=>/^\d+:(mining|research)$/.test(key)&&typeof row?.signature==='string'&&row.signature.length<12000).map(([key,row])=>[key,{signature:row.signature,error:'当前目标曾被引擎明确判定不可建站；条件变化后重评'}]),orderTracking};
+  if(adviceExecution)data.adviceExecution=adviceExecution;
+  if(nativeIntent)data.nativeIntent=nativeIntent;
+  if(Array.isArray(domesticUnknown))data.domesticUnknown=domesticUnknown.slice(-128).filter(x=>typeof x==='string'&&x.length<=2000);
   const body=JSON.stringify(data);if(Buffer.byteLength(body)>262144)return;
   const file=join(this.directory,'continuity.json');await writeFile(file+'.tmp',body);await rename(file+'.tmp',file);
  }

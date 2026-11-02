@@ -6,16 +6,17 @@ import { createStellarisAi } from '../apps/desktop/electron/stellaris-ai'
 import { audienceGuidance, createBlackboard } from '../packages/core/src/ai-blackboard'
 import type { Fetch } from '../packages/core/src/ai-providers'
 
+const testData=resolve('.local/test-data')
 const KEY = 'sk-offline-secret-abcdef'
 const roots: string[] = [], services: ReturnType<typeof createStellarisAi>[] = []
 afterEach(async () => {
   await Promise.all(services.splice(0).map(s => s.dispose()))
-  for (const root of roots.splice(0)) { if (dirname(root) !== resolve(tmpdir()) || !basename(root).startsWith('cyberfish-ai-')) throw new Error('Unexpected temporary directory'); await rm(root, { recursive: true, force: true }) }
+  for (const root of roots.splice(0)) { if (dirname(root) !== testData || !basename(root).startsWith('cyberfish-ai-')) throw new Error('Unexpected temporary directory'); await rm(root, { recursive: true, force: true }) }
 })
 // Reversible stand-in for safeStorage; the test checks the saved file never holds the plain key.
 const secrets = { available: () => true, encrypt: (v: string) => Buffer.from([...v].reverse().join('')).toString('base64'), decrypt: (v: string) => [...Buffer.from(v, 'base64').toString()].reverse().join('') }
 async function setup(fetcher?: Fetch, disabled = false, now?:()=>number) {
-  const root = await mkdtemp(join(tmpdir(), 'cyberfish-ai-')); roots.push(root)
+  await mkdir(testData,{recursive:true});const root = await mkdtemp(join(testData, 'cyberfish-ai-')); roots.push(root)
   const data = join(root, 'data'), project = join(root, 'stellaris-player')
   await mkdir(join(project, '.local/native-bridge'), { recursive: true })
   await writeFile(join(project, '.local/native-bridge/latest-session.json'), JSON.stringify({ sessionId:'game-1', stopped: false, state: { date: '2201.01.01', capacities: { colonies: 1 } } }))
@@ -83,6 +84,50 @@ describe('Stellaris AI hub service', () => {
     expect(feed.lines).toEqual([{ to: '阿黎', text: '阿黎晚上好，我们刚出港！' }])
     expect((await service.action({ type: 'stop' })).view.status.running).toBe(false)
     await expect(readFile(join(project,'.local/commentary/strategy-directive.json'),'utf8')).rejects.toMatchObject({code:'ENOENT'})
+  })
+  it('主播常驻要求直接写入、心跳续期，清空/停止/换局撤销且不泄漏旧要求',async()=>{
+    let t=1000000
+    const {service,project}=await setup(async()=>{throw new Error('离线不调用模型')},false,()=>t)
+    const path=join(project,'.local/commentary/operator-standing.json')
+    const read=async()=>{try{return JSON.parse(await readFile(path,'utf8'))}catch{return null}}
+    await service.action({type:'save-director',director:{...service.view().director,strategyNote:'前期主拉凝聚力'}})
+    await service.action({type:'start'})
+    expect(await read()).toMatchObject({version:1,source:'cyberfish-ai-hub',kind:'operator-standing',gameSessionId:'game-1',text:'前期主拉凝聚力',economyFocus:null,until:{date:'',condition:''},setAt:t,refreshedAt:t})
+    const id=(await read()).id;t+=60001;await expect.poll(async()=>(await read())?.refreshedAt).toBe(t);expect((await read()).id).toBe(id)
+    await service.action({type:'save-director',director:{...service.view().director,strategyNote:''}});expect(await read()).toBeNull()
+    await service.action({type:'save-director',director:{...service.view().director,strategyNote:'优先研究'}});expect((await read()).text).toBe('优先研究')
+    await service.action({type:'stop'});expect(await read()).toBeNull()
+    await service.action({type:'start'});expect(await read()).not.toBeNull()
+    await writeFile(join(project,'.local/native-bridge/latest-session.json'),JSON.stringify({sessionId:'game-2',state:{date:'2200.01.01'}}))
+    await expect.poll(async()=>service.view().status.running).toBe(false);await expect.poll(read).toBeNull()
+    t+=120000;await new Promise(r=>setTimeout(r,50));expect(await read()).toBeNull()
+    await writeFile(path,JSON.stringify({source:'another-controller',text:'其他来源'}));await service.action({type:'stop'});expect(await read()).toMatchObject({source:'another-controller'})
+  })
+  it('参谋解释写回约定常驻格式，目标续期和最近十点净产在执行面板视图可见',async()=>{
+    let t=1000000,calls=0
+    const {service,project}=await setup(async()=>({ok:true,status:200,json:async()=>({choices:[{message:{content:JSON.stringify({operator:{economyFocus:'unity_traditions',until:{date:'2230.01.01',condition:'完成首个传统树'},status:'on_track',evidence:'凝聚力月净产增长'},directive:++calls===1?{text:'优先凝聚力',targetResource:'unity'}:null})}}]})}),false,()=>t)
+    await service.action({type:'save-key',id:'deepseek',key:KEY})
+    await service.action({type:'save-director',director:{...service.view().director,strategyNote:'开局主拉凝聚力',strategyIntervalSeconds:30}})
+    const snapshot=join(project,'.local/native-bridge/latest-session.json'),path=join(project,'.local/commentary/operator-standing.json'),goal=join(project,'.local/commentary/strategy-directive.json')
+    await writeFile(snapshot,JSON.stringify({sessionId:'game-1',state:{date:'2201.01.01',resources:{unity:{net:10}}}}))
+    await service.action({type:'start'})
+    await expect.poll(()=>service.view().operatorExecution?.history.length).toBe(1)
+    const original=JSON.parse(await readFile(goal,'utf8'))
+    await writeFile(snapshot,'{');await new Promise(r=>setTimeout(r,60))
+    expect(service.view().operatorExecution?.history).toHaveLength(1)
+    expect(JSON.parse(await readFile(path,'utf8')).economyFocus).toBe('unity_traditions')
+    for(let n=1;n<12;n++){
+      await writeFile(snapshot,JSON.stringify({sessionId:'game-1',state:{date:`2201.01.${String(n+1).padStart(2,'0')}`,resources:{unity:{net:10+n}}}}));t+=31000
+      await expect.poll(()=>service.view().status.usage.strategist?.requests).toBe(n+1)
+      await expect.poll(()=>service.view().operatorExecution?.standingRefreshedAt,{timeout:5000}).toBe(t)
+      await expect.poll(()=>service.view().operatorExecution?.directiveRefreshedAt,{timeout:5000}).toBe(t)
+      await expect.poll(()=>service.view().operatorExecution?.history.at(-1)?.net,{timeout:5000}).toBe(10+n)
+    }
+    const standing=JSON.parse(await readFile(path,'utf8')),directive=JSON.parse(await readFile(goal,'utf8'))
+    expect(Object.keys(standing).sort()).toEqual(['version','source','kind','id','gameSessionId','text','economyFocus','until','setAt','refreshedAt'].sort())
+    expect(standing).toMatchObject({economyFocus:'unity_traditions',until:{date:'2230.01.01',condition:'完成首个传统树'},text:'开局主拉凝聚力'})
+    expect(directive).toMatchObject({id:original.id,text:original.text,at:t})
+    expect(service.view().operatorExecution).toMatchObject({status:'on_track',evidence:'凝聚力月净产增长',history:Array.from({length:10},(_,i)=>({resource:'unity',net:12+i}))})
   })
   it('模型用量日志记录缓存和请求散列，不记录密钥、完整提示词或回复',async()=>{
     const {service,project}=await setup(async()=>({ok:true,status:200,json:async()=>({choices:[{message:{content:'private-response'}}],usage:{prompt_tokens:1000,completion_tokens:20,prompt_cache_hit_tokens:768}})}))

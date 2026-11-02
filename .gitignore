@@ -33,3 +33,16 @@
 **/assets/figure/whale/outfits/
 **/assets/figure/whale/schemes/
 **/assets/figure/whale/thumbs/
+
+# Review snapshots contain source only.
+**/build/
+**/dist-electron/
+**/CMakeFiles/
+**/_deps/
+**/artifacts/
+**/coverage/
+**/test-results/
+**/playwright-report/
+**/sessions/
+**/*.sav
+**/*.enc.json

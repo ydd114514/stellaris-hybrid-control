@@ -5,6 +5,7 @@ import {mkdtemp,rm} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {basename,dirname,join,resolve} from 'node:path'
 import {createStellarisSpeech} from '../apps/desktop/electron/stellaris-speech'
+import {CAPTAIN_TUNED_VOICE} from '../packages/core/src/captain-tuned'
 
 const roots:string[]=[],services:ReturnType<typeof createStellarisSpeech>[]=[]
 const streams:AbortController[]=[]
@@ -43,6 +44,48 @@ async function openStream(origin:string){
 }
 
 describe('captain playback-only subtitle protocol',()=>{
+ it('解说密度可即时修改并保存，不中断现有声音或发起新配音',async()=>{
+  const x=await setup();await x.post('/player/poll')
+  const sample=await x.service.action({type:'play-sample'});expect(sample.ok).toBe(true)
+  const id=sample.view.current!.id;await x.post('/player/feedback',{id,kind:'started',mediaSequence:1})
+  const changed=await x.service.action({type:'set-commentary-interval',seconds:15})
+  expect(changed.ok).toBe(true);expect(changed.view.config.gameCommentSeconds).toBe(15)
+  expect(changed.view.current?.id).toBe(id);expect(x.service.readPlayback().status).toBe('playing')
+  for(const seconds of [0,14,181,NaN])expect((await x.service.action({type:'set-commentary-interval',seconds})).ok).toBe(false)
+  expect((await x.service.view()).config.gameCommentSeconds).toBe(15)
+  expect(x.service.readPlayback().status).toBe('playing');expect(x.calls()).toBe(0)
+ })
+ it('本机小样走真实播放与字幕链路，不调用配音、不打断当前语音、停止即清空',async()=>{
+  const x=await setup()
+  expect((await x.service.action({type:'play-sample'})).ok).toBe(false)
+  await x.post('/player/poll')
+  const result=await x.service.action({type:'play-sample'})
+  expect(result.ok).toBe(true);expect(result.view.current?.phase).toBe('ready');expect(x.calls()).toBe(0)
+  const id=result.view.current!.id
+  expect(x.service.readPlayback().text).toBeUndefined()
+  const response=await fetch(x.origin+'/audio/'+id)
+  expect(response.status).toBe(200);expect((await response.arrayBuffer()).byteLength).toBeGreaterThan(48000)
+  expect((await x.service.action({type:'play-sample'})).ok).toBe(false)
+  expect((await x.service.view()).current?.id).toBe(id)
+  await x.post('/player/feedback',{id,kind:'started',mediaSequence:1})
+  expect(x.service.readPlayback()).toMatchObject({status:'playing',text:CAPTAIN_TUNED_VOICE.sampleText})
+  await x.service.action({type:'stop'})
+  expect((await x.service.action({type:'play-sample'})).ok).toBe(false)
+  expect(x.service.readPlayback()).toMatchObject({enabled:false,status:'idle'});expect(x.calls()).toBe(0)
+ })
+ it('只读诊断不取得播放租约、不产生配音请求，并反映真实连接状态',async()=>{
+  const x=await setup()
+  const diagnostic=()=>fetch(x.origin+'/diagnostics').then(r=>r.json())
+  expect((await diagnostic()).speech).toMatchObject({enabled:true,playerConnected:false,playerLeaseAgeMs:null,narrateGame:true,replyAudience:true,volume:.8,queued:0,phase:'idle'})
+  expect(x.calls()).toBe(0)
+  await x.post('/player/poll')
+  expect((await diagnostic()).speech.playerConnected).toBe(true)
+  expect((await diagnostic()).speech.playerLeaseAgeMs).toBeGreaterThanOrEqual(0)
+  await x.post('/player/release')
+  expect((await diagnostic()).speech).toMatchObject({playerConnected:false,playerLeaseAgeMs:null,message:'播放器已断开，等待直播画面重新接入。'})
+  expect(x.calls()).toBe(0)
+  expect((await fetch(x.origin+'/diagnostics',{headers:{Origin:'https://outside.invalid'}})).status).toBe(403)
+ })
  it('keeps generating and ready text off captions, then clears text on pause, end, and stop',async()=>{
   let release!:(value:ReturnType<typeof fixture>)=>void
   const x=await setup(async()=>new Promise(done=>release=done))

@@ -8,6 +8,7 @@ from pathlib import Path
 from stellaris_memory_probe import ReadOnlyProcess, ProbeError, BUILD_SHA256, ANCHORS, fleet_ship_ids
 from war_state import read_wars,read_war_goal_window
 from load_native_bridge import find_module
+from planet_jobs_probe import read_planet_jobs, validate_planet_jobs_request
 
 GAME_PATH = "D:/SteamLibrary/steamapps/common/Stellaris/stellaris.exe"
 
@@ -39,6 +40,8 @@ def pipe_server_pid():
 
 
 def inspect(request):
+    if request.get("op") == "planet_jobs":
+        validate_planet_jobs_request(request)
     pid = pipe_server_pid() if request.get("op") == "identity" else request.get("pid")
     if type(pid) is not int or pid <= 0:
         raise ProbeError("invalid_game_pid")
@@ -59,6 +62,8 @@ def inspect(request):
         if request.get("creationTime", creation) != creation:
             raise ProbeError("game_process_identity_changed")
         result = {"ok": True, "pid": pid, "creationTime": creation}
+        if request.get("op") == "planet_jobs":
+            result["planetJobs"] = read_planet_jobs(memory, memory.base, request["planetId"], request["countryId"], request["colonyId"])
         if request.get("op") == "bridge_module":
             found=find_module(memory.kernel,pid,"stellaris_bridge.dll")
             result["bridgeModule"]={"known":True,"loaded":found is not None,"path":found[1] if found else None}

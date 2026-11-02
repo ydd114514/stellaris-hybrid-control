@@ -85,6 +85,15 @@ describe('千问流式配音适配器', () => {
     await expect(designQwenVoice({ description: '温暖的声音', previewText: '太短了', config, apiKey: 'test', fetch: mockFetch })).rejects.toThrow('15–200')
     expect(mockFetch).not.toHaveBeenCalled()
   })
+  it('声音设计保留创建接口本身的额度错误码和请求编号，不泄漏上游信息或自动重试', async () => {
+    const requestId='12345678-1234-1234-1234-123456789abc'
+    const mockFetch=vi.fn(async()=>Response.json({code:'AllocationQuota.FreeTierOnly',request_id:requestId,message:'Authorization: Bearer secret-upstream-key'},{status:403})) as typeof fetch
+    const error=await designQwenVoice({description:'原创成年女性，松弛日常说话。',previewText:'这个办法可以试试，先把眼前这点资源缺口补上。',config,apiKey:'secret-upstream-key',fetch:mockFetch}).catch(error=>error)
+    expect(error).toMatchObject({httpStatus:403,providerCode:'AllocationQuota.FreeTierOnly',requestId,retryableVoice:false})
+    expect(error.message).toContain('本次接口调用限制为仅使用免费额度')
+    expect(error.message).not.toContain('secret-upstream-key');expect(JSON.stringify(error)).not.toContain('secret-upstream-key')
+    expect(mockFetch).toHaveBeenCalledOnce()
+  })
   it('onRequest只在校验和取消检查通过后、真正fetch前触发', async () => {
     const order: string[] = [], onRequest = vi.fn(() => { order.push('request') })
     const mockFetch = vi.fn(async () => { order.push('fetch'); return Response.json({ output: { audio: { data: 'AAAA' } } }) }) as typeof fetch

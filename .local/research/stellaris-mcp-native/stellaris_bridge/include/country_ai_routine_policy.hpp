@@ -16,6 +16,7 @@ struct NativeRoutineRequest {
     bool targetProtected=false;
     std::string_view name="unknown";
     bool steeringSetting=false;
+    bool ownerPolicyBlocked=false;
 };
 enum class ReservedPolicy { FullWithReserved, Suspended };
 // Exact decision names: do not match "resolution"/"council" broadly. Engine
@@ -38,7 +39,7 @@ inline bool IsReservedNativeDecision(std::string_view name) {
 inline bool AllowNativeRoutine(const NativeRoutineRequest& request,uint32_t own,
     ReservedPolicy policy=ReservedPolicy::FullWithReserved) {
     if(request.actor!=own)return true;
-    if(policy==ReservedPolicy::Suspended||request.targetProtected)return false;
+    if(policy==ReservedPolicy::Suspended||request.targetProtected||request.ownerPolicyBlocked)return false;
     const auto name=request.name;
     if(IsReservedNativeDecision(name))return false;
     if(request.steeringSetting&&(name=="add_policy_command"||name=="add_edict_command"||name=="remove_edict_command"))return false;
