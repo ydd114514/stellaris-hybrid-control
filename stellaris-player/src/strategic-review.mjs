@@ -86,7 +86,9 @@ export function strategicReview(state,{government={},colonies=[],growth={known:f
   const growthBottleneck=known&&!emergency&&!critical&&!needsRepair&&(cappedSurpluses.length>=2||growth.known&&growth.stagnating);
   const mode=emergency?(offensive?'campaign':'defense'):critical?'stabilize':needsRepair||consolidating?'consolidate':!known?'reconnaissance':growthBottleneck?'develop_capacity':'selective_growth';
   const priority=[];
-  if(unityFirst&&!emergency&&!critical)priority.push('本人最高优先：持续提高凝聚力净产'+(route==='hive'?'，优先核对突触节点的当前真实候选、岗位与实际施工':'')+'；其他资源仅补实际赤字或即将断供的缺口，净产健康时不新增合金/科研盈余目标。');
+  const ownerNodeAuthorized=route==='hive'&&state.userEconomicPolicy?.worldTaskAuthorized===true&&
+    state.userEconomicPolicy.preferredUnityBuildings?.includes('building_hive_node');
+  if(unityFirst&&!emergency&&!critical)priority.push('本人最高优先：持续提高凝聚力净产'+(ownerNodeAuthorized?'，优先核对突触节点的当前真实候选、岗位与实际施工':'')+'；其他资源仅补实际赤字或即将断供的缺口，净产健康时不新增合金/科研盈余目标。');
   if(unity.focused&&!unity.targetMet&&(unity.reasons.length||unity.stagnating)&&!emergency&&!critical)priority.push('凝聚力落实：'+unity.reasons.slice(0,3).join('；')+'；核查岗位是否填满、各殖民地净贡献及在建队列，再决定人口/建设瓶颈。方针生效不等于净产达标。');
   if(!emergency&&!critical&&known&&!deferConquest)priority.push(conquest.campaignPhase?'优先推进已保存的进攻战役；完成具体缺口后继续，不长期转回内政':'主动评估一个征服目标：inspect targets→核对收益/战力/合法战争条件→campaign select保存目标和备战；内政小赤字或普通扩张暂缓不取消本项');
   if(!emergency&&!critical&&consolidating)priority.push(health.consolidate?'先消化殖民地：'+health.reasons.slice(0,2).join('；'):'按已确认方针或本人要求先巩固现有疆域，原生AI继续内政和防守；扩张意图重新评估后再开新殖民地与前哨');

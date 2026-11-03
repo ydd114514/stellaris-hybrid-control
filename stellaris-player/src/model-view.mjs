@@ -25,8 +25,16 @@ export class ModelView {
     const complete=full || !this.previous || ++this.count>=this.fullEvery;
     if(complete)this.count=0;
     let result;
-    if(complete)result={view:'full',...clone(state)};
-    else {
+    if(complete){
+      const completeState=clone(state);
+      result={view:'full'};
+      // Put the small strategic summary before fleet, planet and resource
+      // detail so the client can still read it when clipping a full result.
+      if(completeState.decisionReview?.mode==='native_strategy'){
+        for(const key of currentFields)if(Object.hasOwn(completeState,key))result[key]=completeState[key];
+      }
+      Object.assign(result,completeState);
+    }else {
       const removed=[],changes=difference(this.previous,state,[],removed);
       result={view:'delta',protocol:'merge-v2'};
       for(const key of currentFields)if(Object.hasOwn(state,key)){result[key]=clone(state[key]);delete changes[key];}

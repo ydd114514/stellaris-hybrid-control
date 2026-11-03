@@ -5,6 +5,7 @@ import {fileURLToPath} from 'node:url';
 
 export const FAST_STRATEGY_MODEL_NOTICE='使用快速模型';
 const FAST_STRATEGY_MODEL='deepseek-flash';
+const NATIVE_STRATEGY_MAX_TOKENS=32768;
 const DEEPSEEK_ORIGIN='https://api.deepseek.com';
 const modelId=value=>typeof value==='string'&&/^[a-z0-9][a-z0-9._-]{0,127}$/i.test(value);
 
@@ -23,7 +24,7 @@ export async function discoverNativeStrategyModel({apiKey,baseURL=DEEPSEEK_ORIGI
    const id=entry?.id;
    if(!modelId(id)||id===FAST_STRATEGY_MODEL||entry.supports_reasoning===false||
       (entry.api_capabilities&&!entry.api_capabilities.anthropic_messages)||
-      (Number.isFinite(entry.max_output_tokens)&&entry.max_output_tokens<8192))return [];
+      (Number.isFinite(entry.max_output_tokens)&&entry.max_output_tokens<NATIVE_STRATEGY_MAX_TOKENS))return [];
    const rank=/(?:^|[-_.])pro(?:$|[-_.])/i.test(id)?3:
     /(?:^|[-_.])reason(?:er|ing)(?:$|[-_.])/i.test(id)?2:entry.supports_reasoning===true?1:0;
    return rank?[{id,rank}]:[];
@@ -53,7 +54,7 @@ export function nativeMcpEnvironmentPatch({directory,runId,minutes,hybridSurvey,
   const modelNotice=model===FAST_STRATEGY_MODEL?FAST_STRATEGY_MODEL_NOTICE+'。':'';
   patch.push(
    {id:'agent-default-model',config:{provider:'deepseek-official',model,reasoningEffort:'high'}},
-   {id:'llm-deepseek',config:{thinking:'enabled',maxTokens:8192,...(modelRelayBaseURL?{baseURL:modelRelayBaseURL}:{})}},
+   {id:'llm-deepseek',config:{thinking:'enabled',maxTokens:NATIVE_STRATEGY_MAX_TOKENS,...(modelRelayBaseURL?{baseURL:modelRelayBaseURL}:{})}},
    {id:'system-prompt',config:{personaPrefix:'你是正在玩《群星》的大肥鱼。'+modelNotice+'只使用群星 MCP 工具，不使用文件、终端、网页、子代理、控制台或桌面输入。'+nativeCountryAIBrief(minutes)}});
  }
  return patch;

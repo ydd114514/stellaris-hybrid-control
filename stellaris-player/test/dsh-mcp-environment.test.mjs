@@ -66,7 +66,7 @@ test('native strategy uses the strongest compatible model in the account listing
   assert.ok(options.signal instanceof AbortSignal);
   return {ok:true,json:async()=>({data:[
    {id:'deepseek-flash'},{id:'deepseek-reasoner'},{id:'deepseek-v4-pro'},{id:'deepseek-v5-pro'},
-   {id:'deepseek-v6-pro',max_output_tokens:2048},
+   {id:'deepseek-v6-pro',max_output_tokens:8192},
    {id:'deepseek-v7-pro',api_capabilities:{chat_completions:{}}},
   ]})};
  }});
@@ -74,7 +74,7 @@ test('native strategy uses the strongest compatible model in the account listing
  const options={directory:'fixture',runId:'r',minutes:5,hybridSurvey:false,strategyModel:model};
  const patch=nativeMcpEnvironmentPatch({...options,nativeCountryAI:true});
  assert.deepEqual(patch.find(x=>x.id==='agent-default-model').config,{provider:'deepseek-official',model,reasoningEffort:'high'});
- assert.deepEqual(patch.find(x=>x.id==='llm-deepseek').config,{thinking:'enabled',maxTokens:8192});
+ assert.deepEqual(patch.find(x=>x.id==='llm-deepseek').config,{thinking:'enabled',maxTokens:32768});
  assert.deepEqual(nativeMcpEnvironmentPatch(options).map(x=>x.id),['cyberfish-stellaris-mcp']);
 });
 
@@ -119,7 +119,7 @@ test('normal native DSH patches the configured model provider to the budget rela
  const options={directory:'fixture',runId:'budget-patch',minutes:5,hybridSurvey:false,modelRelayBaseURL:'http://127.0.0.1:1234/fixture'};
  const patch=nativeMcpEnvironmentPatch({...options,nativeCountryAI:true});
  assert.deepEqual(patch.find(x=>x.id==='llm-deepseek').config,{
-  thinking:'enabled',maxTokens:8192,baseURL:options.modelRelayBaseURL
+  thinking:'enabled',maxTokens:32768,baseURL:options.modelRelayBaseURL
  });
  assert.ok(!nativeMcpEnvironmentPatch(options).some(x=>x.id==='llm-deepseek'));
 });

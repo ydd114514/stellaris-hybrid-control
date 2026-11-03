@@ -8,7 +8,7 @@ test('native control memory retains the fence and strategic override without wor
  const record=JSON.parse(text.slice(text.indexOf('{')));
  assert.equal(record.countryAIControl.generation,0);assert.equal(record.countryAIControl.ordinaryOrdersBlocked,true);
  assert.equal(record.countryAIControl.automaticResume,false);assert.equal(record.recentIntent[0].strategicResearchOverride,true);
- assert.equal(text.includes('country_address'),false);assert.equal(text.includes('idler_address'),false);assert.match(text,/v1.4/);
+ assert.equal(text.includes('country_address'),false);assert.equal(text.includes('idler_address'),false);assert.match(text,/v1.5/);
 });
 test('local memory retains authoritative state, failed commands and pending intent without a model call',()=>{
   const state={snapshotId:'session:6',player:{country_id:0},pendingEvents:[{window_id:0}],wars:[{war_id:16777219}]};
@@ -38,4 +38,44 @@ test('large delegation memory cannot turn compaction into another unbounded copy
  const monthly=Array.from({length:256},(_,i)=>({sessionId:'s',requestId:('r'+i).padEnd(100,'x'),status:'unknown',reservation:Object.fromEntries(Array.from({length:200},(_,j)=>['resource_'+j,100]))}));
  const colonies=Array.from({length:128},(_,i)=>({sessionId:'s',planetId:i,status:'paused',goal:'批准建设'.repeat(1000),remainingBudget:{minerals:1000},actions:Array.from({length:128},(_,j)=>({requestId:'a'+j,status:'queued',queueItemId:j}))}));
  const text=makeCompactGameCheckpoint({sessionId:'s',state:{snapshotId:'s:1',monthlyControl:{records:monthly},colonyControl:{records:colonies}}});assert.ok(text.length<=6000);const r=JSON.parse(text.slice(text.indexOf('{')));assert.ok(r.delegationMemory.monthly.length<=4);assert.ok(r.delegationMemory.colonies.length<=2);assert.equal(r.delegationMemory.automaticResume,false);
+});
+
+test('an active native review survives compaction with its decision context and checked topics',()=>{
+  const strategyBrief={metrics:{unity_monthly:{current:19.58,change:-2.01}},
+    previousGoals:[{metric:'pops',target:6000,status:'achieved'}],
+    lockedDimensions:{economyFocus:{value:'unity_traditions',by:'本人要求'}},
+    decisionOptions:{allowed:['修改目标','维持理由'],edicts:{status:'能力缺口',activatable:[]}},
+    neighbors:Array.from({length:100},()=>['不需保留的邻国明细'.repeat(100)])};
+  const checkpoint={sessionId:'s',countryAIControl:{enabled:true,owner:'native'},
+    strategyReview:{id:'s:review:1',startedAt:1000,inspectedTopics:['edicts','jobs','jobs','construction']},
+    strategyContract:{economyFocus:'unity_traditions',expansionStance:'consolidate',militaryStance:'prepare_war',
+      expansionDirection:{towardCountryId:0},warTarget:{countryId:5},goals:[{metric:'pops',target:6500,byDate:'2205.01.01'}],oneOffActions:[{type:'declare_war'}]},
+    state:{snapshotId:'s:9',date:'2204.12.29',strategyWakeReasons:['six_month_review','stagnation'],strategyBrief}};
+  const text=makeCompactGameCheckpoint(checkpoint);
+  const record=JSON.parse(text.slice(text.indexOf('{')));
+  assert.equal(record.refreshRequired,false);
+  assert.deepEqual(record.strategyReview.strategyWakeReasons,['six_month_review','stagnation']);
+  assert.deepEqual(record.strategyReview.inspectedTopics,['edicts','jobs','construction']);
+  assert.equal(record.strategyReview.id,'s:review:1');
+  for(const key of ['metrics','previousGoals','lockedDimensions','decisionOptions']){
+    assert.deepEqual(record.strategyReview.strategyBrief[key],strategyBrief[key]);
+  }
+  assert.equal(record.strategyReview.currentContract.economyFocus,'unity_traditions');
+  assert.deepEqual(record.strategyReview.currentContract.goals,checkpoint.strategyContract.goals);
+  assert.deepEqual(record.strategyReview.currentContract.expansionDirection,checkpoint.strategyContract.expansionDirection);
+  assert.deepEqual(record.strategyReview.currentContract.warTarget,checkpoint.strategyContract.warTarget);
+  assert.equal(record.strategyReview.currentContract.oneOffActions,undefined);
+  assert.doesNotMatch(text,/先\s*observe|核对当前持权|邻国明细/u);
+  assert.match(text,/直接决定.*维持理由/u);
+  assert.ok(text.length<=6000);
+});
+
+test('native summary outside a review preserves the existing refresh reminder',()=>{
+  const text=makeCompactGameCheckpoint({sessionId:'s',countryAIControl:{enabled:true,owner:'native'},
+    state:{snapshotId:'s:10',strategyWakeReasons:[]}});
+  const record=JSON.parse(text.slice(text.indexOf('{')));
+  assert.equal(record.refreshRequired,true);
+  assert.equal(record.strategyReview,undefined);
+  assert.match(text,/先核对当前持权/u);
+  assert.match(text,/先 observe/u);
 });

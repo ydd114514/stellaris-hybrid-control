@@ -1,7 +1,7 @@
 import {open} from 'node:fs/promises';
 
 /** Explicit owner preference; a later AI-hub owner edit can supersede it. */
-export async function readGameplayPreferences(path,{standing,now=Date.now()}={}){
+export async function readGameplayPreferences(path,{standing,worldBinding,now=Date.now()}={}){
  let file;
  try{
   file=await open(path,'r');if((await file.stat()).size>8192)return;
@@ -14,12 +14,20 @@ export async function readGameplayPreferences(path,{standing,now=Date.now()}={})
   // not a newer owner edit and must not erase later instructions from this chat.
   const baseline=typeof x.replacesStandingText==='string'?x.replacesStandingText.trim().slice(0,600):null;
   const standingText=typeof standing?.text==='string'?standing.text.trim().slice(0,600):null;
-  if(Number.isFinite(standing?.setAt)&&standing.setAt>=x.updatedAt&&!(standingText&&(standingText===baseline||standingText===x.note.trim().slice(0,600))))return;
+  const savedNote=x.note.replace(/[\u0000-\u001f\u007f]/g,' ').trim().slice(0,600);
+  const repeatedStanding=!!standingText&&(standingText===baseline||standingText===savedNote);
+  if(Number.isFinite(standing?.setAt)&&standing.setAt>=x.updatedAt&&!repeatedStanding)return;
+  // A matching process alone does not identify a save. A new or loaded game
+  // may reuse player, planet and fleet IDs. Missing scope never authorizes tasks.
+  const worldTaskAuthorized=typeof worldBinding==='string'&&worldBinding.length>0&&x.worldBinding===worldBinding;
+  const edictPolicy=x.edictPolicy==='unity_net_gain';
   return {version:1,source:x.source,updatedAt:x.updatedAt,priority:'unity_first',economyFocus:'unity_traditions',resourcePolicy:'deficit_only',
-   ...(x.militaryPolicy==='exploration_until_threat'?{militaryPolicy:x.militaryPolicy}:{}),
-   ...(x.civilianFleetPolicy==='use_existing_explorers'?{civilianFleetPolicy:x.civilianFleetPolicy}:{}),
-   ...(x.edictPolicy==='unity_net_gain'?{edictPolicy:x.edictPolicy}:{}),
-   preferredUnityBuildings:Array.isArray(x.preferredUnityBuildings)?x.preferredUnityBuildings.filter(k=>k==='building_hive_node').slice(0,1):[],
-   note:x.note.replace(/[\u0000-\u001f\u007f]/g,' ').trim().slice(0,600)};
+   worldTaskAuthorized,discardStandingText:!worldTaskAuthorized&&repeatedStanding,
+   ...(worldTaskAuthorized&&x.militaryPolicy==='exploration_until_threat'?{militaryPolicy:x.militaryPolicy}:{}),
+   ...(worldTaskAuthorized&&x.civilianFleetPolicy==='use_existing_explorers'?{civilianFleetPolicy:x.civilianFleetPolicy}:{}),
+   ...(edictPolicy?{edictPolicy:x.edictPolicy}:{}),
+   preferredUnityBuildings:worldTaskAuthorized&&Array.isArray(x.preferredUnityBuildings)?x.preferredUnityBuildings.filter(k=>k==='building_hive_node').slice(0,1):[],
+   note:worldTaskAuthorized?savedNote:
+    '长期方针：优先提高凝聚力净产，其他资源只补实际缺口。'+(edictPolicy?'法令以实际净收益为准。':'')};
  }catch{return;}finally{await file?.close();}
 }

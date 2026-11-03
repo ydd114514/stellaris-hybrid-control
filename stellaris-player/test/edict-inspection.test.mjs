@@ -29,3 +29,16 @@ test('a partial returned list cannot claim complete maintenance detail',async()=
  const {result}=await inspect({summary:{active_edicts_count:9},active_edicts:[]});
  assert.equal(result.active_edicts_complete,false);assert.equal(result.maintenance_details_known,false);
 });
+
+test('edict inspection returns only native-confirmed ordinary activation candidates',async()=>{
+ const {result}=await inspect({summary:{active_edicts_count:1},active_edicts:[{key:'fortify_the_border'}],available_edicts:[
+  {key:'research_subsidies',name:'科研补贴',can_activate:true},{key:'capacity_subsidies',can_activate:false},
+  {key:'mining_subsidies',is_active:false},{key:'cfsteer_economy_research',can_activate:true},
+  {key:'fortify_the_border',can_activate:true},
+ ]});
+ assert.deepEqual(result.available_edicts,[{key:'research_subsidies',name:'科研补贴',can_activate:true}]);
+ assert.equal(result.edict_activation_status,'ok');
+ const legacy=await inspect({summary:{active_edicts_count:0},active_edicts:[],available_edicts:[{key:'research_subsidies',is_active:false}]});
+ assert.deepEqual(legacy.result.available_edicts,[]);
+ assert.equal(legacy.result.edict_activation_status,'能力缺口');
+});

@@ -47,5 +47,5 @@ export function nativeCountryAISummary(checkpoint,{actorActive=false}={}){
  }));
  const counts=raw.commandCounts??{};
  const blocked=Object.values(counts).reduce((n,x)=>n+(Number(x?.blocked)||0),0);
- return {owner,historical,domains,message,steering:contract?{economyFocus:contract.economyFocus,expansionStance:contract.expansionStance,militaryStance:contract.militaryStance}:null,lastStrategyReason:typeof contract?.reason==='string'?contract.reason.slice(0,300):'',blockedCommands:blocked,reviewDue:!historical&&(checkpoint.state?.strategyWakeReasons?.length??Number(control?.reviewDue===true))>0,goals:goalProgress};
+ return {owner,historical,domains,message,steering:contract?{economyFocus:contract.economyFocus,expansionStance:contract.expansionStance,militaryStance:contract.militaryStance}:null,lastStrategyReason:typeof contract?.reason==='string'?contract.reason.slice(0,300):'',blockedCommands:blocked,reviewDue:!historical&&(checkpoint.state?.strategyWakeReasons?.length??Number(control?.reviewDue===true))>0,reviewNoDecision:!historical&&owner==='native'&&typeof checkpoint.state?.strategyReviewNoDecision?.reviewId==='string',goals:goalProgress};
 }

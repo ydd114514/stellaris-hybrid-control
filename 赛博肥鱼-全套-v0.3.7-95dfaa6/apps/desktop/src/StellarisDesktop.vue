@@ -146,6 +146,7 @@ onUnmounted(() => { mounted = false; clearInterval(timer) })
           </li>
         </ul>
         <p>保留命令拦截：{{ status.snapshot.countryAI.blockedCommands ?? 0 }}</p>
+        <p v-if="status.snapshot.countryAI.reviewNoDecision">本次战略复查模型未给出决定，原生 AI 继续运营，下次复查再试。</p>
         <p v-if="status.snapshot.countryAI.reviewDue">已到战略复查点；大肥鱼可调整方针或做保留决定，原生AI继续运营。</p>
       </section>
       <section v-if="status.snapshot?.survey" class="snapshot-panel" aria-label="调查分工" data-testid="survey-control">

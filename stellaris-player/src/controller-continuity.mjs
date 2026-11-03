@@ -10,6 +10,13 @@ export class ControllerContinuity {
   if(!binding?.creationTime||!Number.isSafeInteger(binding.pid)||!validDate(state?.date))return null;
   let handle;try{handle=await open(join(this.directory,'continuity.json'),'r');const b=Buffer.alloc(262145);const {bytesRead}=await handle.read(b,0,b.length,0);if(bytesRead>262144)return null;const data=JSON.parse(b.subarray(0,bytesRead).toString('utf8'));
    if(data.version!==1||data.binding!==fingerprint(binding,state)||!Number.isFinite(data.savedAt)||data.savedAt>this.now()+5000||this.now()-data.savedAt>86400000||!validDate(data.gameDate)||data.gameDate>state.date)return null;
+   const worldGeneration=state.nativeWorldGeneration;
+   if(data.worldGeneration!==undefined&&data.worldGeneration!==worldGeneration)return null;
+   if(worldGeneration!==undefined&&data.worldGeneration===undefined&&Array.isArray(data.orderTracking?.records)){
+    // Legacy order receipts still guard against uncertain replays. An
+    // unscoped receipt cannot reintroduce a concrete owner task.
+    data.orderTracking.records=data.orderTracking.records.map(row=>row?.ownerEconomicTask===true?{...row,ownerEconomicTask:false}:row);
+   }
    const stationFailures=Array.isArray(data.stationFailures)?data.stationFailures.slice(-256).filter(row=>Array.isArray(row)&&/^\d+:(mining|research)$/.test(row[0])&&typeof row[1]?.signature==='string'&&row[1].signature.length<12000).map(([key,row])=>[key,{signature:row.signature,error:'当前目标曾被引擎明确判定不可建站；条件变化后重评'}]):[];
    return {...data,stationFailures};
   }catch{return null;}finally{await handle?.close();}
@@ -17,6 +24,7 @@ export class ControllerContinuity {
  async save(binding,state,{growth,stationFailures,orderTracking,adviceExecution,nativeIntent,domesticUnknown}={}){
   if(!binding?.creationTime||!validDate(state?.date))return;
   const data={version:1,savedAt:this.now(),gameDate:state.date,binding:fingerprint(binding,state),growth,stationFailures:(stationFailures||[]).slice(-256).filter(([key,row])=>/^\d+:(mining|research)$/.test(key)&&typeof row?.signature==='string'&&row.signature.length<12000).map(([key,row])=>[key,{signature:row.signature,error:'当前目标曾被引擎明确判定不可建站；条件变化后重评'}]),orderTracking};
+  if(state.nativeWorldGeneration!==undefined)data.worldGeneration=state.nativeWorldGeneration;
   if(adviceExecution)data.adviceExecution=adviceExecution;
   if(nativeIntent)data.nativeIntent=nativeIntent;
   if(Array.isArray(domesticUnknown))data.domesticUnknown=domesticUnknown.slice(-128).filter(x=>typeof x==='string'&&x.length<=2000);

@@ -16,3 +16,13 @@ test('stopped reports stay historical and need full handoff evidence',()=>{
  cp.cleanup.countryAI.confirmed=false;assert.equal(nativeCountryAISummary(cp).owner,'unconfirmed');
  assert.equal(nativeCountryAISummary({state:{}}),undefined);
 });
+
+test('a deferred review is visible only while the native AI still holds control',()=>{
+ const checkpoint={state:{strategyReviewNoDecision:{reviewId:'review-1'},strategyWakeReasons:[]},countryAIControl:native()};
+ const current=nativeCountryAISummary(checkpoint,{actorActive:true});
+ assert.equal(current.reviewNoDecision,true);
+ assert.equal(current.reviewDue,false);
+ assert.equal(nativeCountryAISummary(checkpoint,{actorActive:false}).reviewNoDecision,false);
+ checkpoint.countryAIControl.actualFlags.human_ai=false;
+ assert.equal(nativeCountryAISummary(checkpoint,{actorActive:true}).reviewNoDecision,false);
+});

@@ -1,13 +1,16 @@
 import {randomUUID} from 'node:crypto';
-import {open,readFile,unlink,writeFile} from 'node:fs/promises';
+import {appendFile,open,readFile,unlink,writeFile} from 'node:fs/promises';
 import {createServer} from 'node:http';
 import {once} from 'node:events';
+import {dirname,join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 import {replaceCheckpoint} from './checkpoint-replace.mjs';
 import {nativeModelRequestLimit} from './hybrid-settings-store.mjs';
 
 const HOUR_MS=60*60*1000;
 const MAX_BODY_BYTES=4*1024*1024;
+const MAX_SSE_FRAME_CHARS=1024*1024;
+const STOP_REASONS=new Set(['end_turn','stop_sequence','tool_use','max_tokens','pause_turn','refusal','model_context_window_exceeded']);
 const REPLY_HEADERS={'content-type':'text/event-stream','cache-control':'no-store'};
 const FORWARD_HEADERS=['content-type','accept','user-agent','authorization','x-api-key','anthropic-version','anthropic-beta',
  'x-deepseek-harness-user-id','x-deepseek-harness-session-id','x-deepseek-harness-compact'];
@@ -100,6 +103,81 @@ async function streamUpstreamError(res,upstream){
  });
 }
 
+// Observe a bounded copy of the SSE framing while forwarding the original bytes.
+function observeMessagesSse(){
+ const decoder=new TextDecoder();
+ let line='',lineLength=0,data='',overflow=false,skipLF=false,finished=false;
+ let stopReason=null,outputTokens=null,toolUse=false,textChars=0,thinking=false;
+
+ function endFrame(){
+  if(overflow||!data)return;
+  let event;
+  try{event=JSON.parse(data);}catch{return;}
+  switch(event?.type){
+   case 'content_block_start': {
+    const block=event.content_block;
+    if(block?.type==='tool_use'||block?.type==='server_tool_use')toolUse=true;
+    if(block?.type==='thinking'||block?.type==='redacted_thinking')thinking=true;
+    if(block?.type==='text'&&typeof block.text==='string')textChars+=block.text.length;
+    break;
+   }
+   case 'content_block_delta': {
+    const delta=event.delta;
+    if(delta?.type==='text_delta'&&typeof delta.text==='string')textChars+=delta.text.length;
+    if(delta?.type==='thinking_delta')thinking=true;
+    if(delta?.type==='input_json_delta')toolUse=true;
+    break;
+   }
+   case 'message_delta': {
+    const reason=event.delta?.stop_reason,tokens=event.usage?.output_tokens;
+    if(STOP_REASONS.has(reason))stopReason=reason;
+    if(Number.isSafeInteger(tokens)&&tokens>=0)outputTokens=tokens;
+    break;
+   }
+   case 'message_stop': finished=true;break;
+  }
+ }
+
+ function consume(part,endOfLine){
+  lineLength+=part.length;
+  if(!overflow){
+   if(lineLength>MAX_SSE_FRAME_CHARS){overflow=true;line='';data='';}
+   else line+=part;
+  }
+  if(!endOfLine)return;
+  if(lineLength===0){
+   endFrame();
+   overflow=false;
+   data='';
+  }else if(!overflow&&line.startsWith('data:')){
+   const part=line.slice(5).replace(/^ /u,'');
+   if(data.length+part.length+1>MAX_SSE_FRAME_CHARS){overflow=true;data='';}
+   else data+=(data?'\n':'')+part;
+  }
+  line='';
+  lineLength=0;
+ }
+
+ return {
+  push(chunk){
+   if(finished)return true;
+   let text=decoder.decode(chunk,{stream:true});
+   if(!text)return false;
+   if(skipLF&&text[0]==='\n')text=text.slice(1);
+   skipLF=text.endsWith('\r');
+   let start=0;
+   for(const delimiter of text.matchAll(/\r\n|\r|\n/gu)){
+    consume(text.slice(start,delimiter.index),true);
+    if(finished)return true;
+    start=delimiter.index+delimiter[0].length;
+   }
+   consume(text.slice(start),false);
+   return false;
+  },
+  metadata(){return {stopReason,outputTokens,toolUse,textChars,thinkingOnly:thinking&&!toolUse&&textChars===0};}
+ };
+}
+
 // The relay counts admission before sending to the configured provider, and
 // saves only a rolling timestamp window across normal controller rounds.
 // SSE comments keep the DSH Messages watchdog alive while quota is exhausted,
@@ -107,11 +185,12 @@ async function streamUpstreamError(res,upstream){
 export async function createNativeModelBudget({path,maxRequests,baseURL,now=Date.now,fetcher=fetch,
  onWaiting=()=>{},windowMs=HOUR_MS,keepAliveMs=15000}={}){
  const limit=nativeModelRequestLimit(maxRequests),endpoint=messagesEndpoint(baseURL);
+ const metadataPath=join(dirname(path),'model-requests.jsonl');
  const release=await claimWindow(path);
  let timestamps;
  try{timestamps=await loadWindow(path);}catch(error){await release();throw error;}
- const route='/'+randomUUID(),active=new Set();
- let serialized=Promise.resolve(),waiting=0,sealed=false,closing;
+ const route='/'+randomUUID(),active=new Map();
+ let serialized=Promise.resolve(),metadataWrites=Promise.resolve(),waiting=0,sealed=false,closing;
  const reserve=signal=>{
   const decision=serialized.then(async()=>{
    signal.throwIfAborted();
@@ -131,9 +210,18 @@ export async function createNativeModelBudget({path,maxRequests,baseURL,now=Date
  const server=createServer(async(req,res)=>{
   if(req.method!=='POST'||req.url!==route+'/v1/messages'){res.writeHead(404).end();return;}
   const abort=new AbortController();
-  active.add(abort);
   res.once('close',()=>abort.abort());
-  let paused=false,waitingForSlot=false;
+  let paused=false,waitingForSlot=false,attempted=false,recorded=false,status=null,observer;
+  const recordResponse=()=>{
+   if(!attempted||recorded)return;
+   recorded=true;
+   const fields=observer?.metadata()??{stopReason:null,outputTokens:null,toolUse:false,textChars:0,thinkingOnly:false};
+   const row=JSON.stringify({at:now(),status,...fields})+'\n';
+   // Diagnostic write failure must not break or change the client's stream.
+   metadataWrites=metadataWrites.then(()=>appendFile(metadataPath,row,{mode:0o600})).catch(()=>{});
+   return metadataWrites;
+  };
+  active.set(abort,recordResponse);
   const clearWait=()=>{
    if(waitingForSlot&&--waiting===0&&!sealed)onWaiting(false,limit);
    waitingForSlot=false;
@@ -156,7 +244,11 @@ export async function createNativeModelBudget({path,maxRequests,baseURL,now=Date
    abort.signal.throwIfAborted();
    const headers={};
    for(const name of FORWARD_HEADERS)if(typeof req.headers[name]==='string')headers[name]=req.headers[name];
+   attempted=true;
    const upstream=await fetcher(endpoint,{method:'POST',body,headers,signal:abort.signal,redirect:'error'});
+   status=Number.isInteger(upstream.status)&&upstream.status>=100&&upstream.status<=599?upstream.status:null;
+   if(!upstream.ok)await recordResponse();
+   else if(/^text\/event-stream(?:\s*;|$)/iu.test(upstream.headers.get('content-type')??''))observer=observeMessagesSse();
    if(paused&&!upstream.ok){await streamUpstreamError(res,upstream);return;}
    if(!paused){
     const responseHeaders={'content-type':'application/json','cache-control':'no-store'};
@@ -164,10 +256,16 @@ export async function createNativeModelBudget({path,maxRequests,baseURL,now=Date
     res.writeHead(upstream.status,responseHeaders);
    }
    if(upstream.body)for await(const chunk of upstream.body){
+    // DSH can run its turn-stopping hook as soon as it reads message_stop.
+    if(observer?.push(chunk))await recordResponse();
     if(!res.write(chunk))await once(res,'drain',{signal:abort.signal});
    }
+   await recordResponse();
    res.end();
-  }catch{if(!abort.signal.aborted)apiError(res,res.headersSent);}
+  }catch{
+   await recordResponse();
+   if(!abort.signal.aborted)apiError(res,res.headersSent);
+  }
   finally{
    clearWait();
    active.delete(abort);
@@ -180,10 +278,14 @@ export async function createNativeModelBudget({path,maxRequests,baseURL,now=Date
   seal(){sealed=true;},
   close(){return closing??=(async()=>{
    sealed=true;
-   for(const abort of active)abort.abort();
+   for(const [abort,record] of active){
+    abort.abort();
+    record();
+   }
    server.closeAllConnections();
    await new Promise(done=>server.close(done));
    await serialized;
+   await metadataWrites;
    await release();
   })();}
  };

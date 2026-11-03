@@ -34,3 +34,25 @@ test('quiet resource accumulation waits locally while urgent changes wake the mo
   const changed=structuredClone(quiet);changed.pendingEvents=[{window_id:0}];changed.military.fleets[0].status='无指令';changed.research.physics.current.is_researching=false;
   const reasons=attentionReasons(base,changed);assert.ok(reasons.includes('central_event'));assert.ok(reasons.includes('fleet_changed'));assert.ok(reasons.includes('research_changed'));
 });
+
+test('native full snapshots keep the strategy brief ahead of details when the client clips the payload',()=>{
+  const view=new ModelView({fullEvery:2});
+  const state={resources:{largeDetail:'x'.repeat(20000)},snapshotId:'s0',date:'2200.01.01',
+    decisionReview:{mode:'native_strategy',wakeReasons:['initial_strategy']},
+    strategyBrief:{lockedDimensions:{economyFocus:{value:'research',by:'本人要求'}}}};
+  const first=view.project(state,{full:true});
+  const clipped=JSON.stringify(first).slice(0,2000);
+  assert.match(clipped,/"decisionReview":/);
+  assert.match(clipped,/"strategyBrief":\{"lockedDimensions":/);
+  assert.deepEqual(restoreModelView({},first),state);
+
+  const next={...state,snapshotId:'s1'};
+  const delta=view.project(next);
+  assert.equal(delta.view,'delta');
+  assert.deepEqual(delta.strategyBrief,next.strategyBrief);
+  assert.deepEqual(restoreModelView(state,delta),next);
+  assert.match(JSON.stringify(view.project(next)).slice(0,2000),/"strategyBrief":/);
+
+  const ordinary={...state,decisionReview:{mode:'ordinary'}};
+  assert.equal(JSON.stringify(new ModelView().project(ordinary)),JSON.stringify({view:'full',...ordinary}));
+});

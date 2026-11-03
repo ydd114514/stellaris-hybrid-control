@@ -155,7 +155,7 @@ export async function readStrategyNeighbors(state,read){
 const showNumber=value=>Number.isFinite(value)?Number(value.toPrecision(6)):UNKNOWN;
 const governmentNames=rows=>Array.isArray(rows)?rows.slice(0,4).map(row=>cleanText(row?.name||row?.key)):UNKNOWN;
 
-export function strategyBrief(state,{government,previousMetrics,neighbors,phase,lockedDimensions=state.lockedDimensions}={}){
+export function strategyBrief(state,{government,previousMetrics,neighbors,phase,decisionOptions,lockedDimensions=state.lockedDimensions}={}){
   const locks={};
   for(const dimension of ['economyFocus','expansionStance','militaryStance']){
     const lock=lockedDimensions?.[dimension];
@@ -188,12 +188,17 @@ export function strategyBrief(state,{government,previousMetrics,neighbors,phase,
     omittedNeighbors:neighbors?.omitted??UNKNOWN,
     steeringEffects:STEERING_EFFECTS[type],
     lockedDimensions:locks,
+    ...(decisionOptions?{decisionOptions}:{}),
   };
   if(Array.isArray(brief.neighbors)){
     while(brief.neighbors.length&&Buffer.byteLength(JSON.stringify(brief))>STRATEGY_BRIEF_MAX_BYTES){
       brief.neighbors.pop();
       brief.omittedNeighbors++;
     }
+  }
+  if(decisionOptions&&Buffer.byteLength(JSON.stringify(brief))>STRATEGY_BRIEF_MAX_BYTES){
+    // Keep the current options, lock sources and goal evidence ahead of static descriptions.
+    delete brief.steeringEffects;
   }
   return brief;
 }

@@ -1,3 +1,5 @@
+import {pendingNativeStrategyReview,strategyDecisionReminder} from './runtime-continuation.mjs';
+
 // The game is an external authoritative state machine. Its current state and
 // execution ledger are a stronger memory source than an LLM retelling old turns.
 export function makeGameCheckpoint(checkpoint,rows=[]) {
@@ -11,8 +13,8 @@ export function makeGameCheckpoint(checkpoint,rows=[]) {
     JSON.stringify({sessionId:checkpoint.sessionId,uncertain:checkpoint.uncertain,state:checkpoint.state,recentIntent:decisions,recentFailures:failures});
 }
 
-// Keep durable intent and mistakes, not a second full copy of a state that the
-// next observe will refresh. The complete state and execution ledger stay local.
+// Keep bounded intent, mistakes and the pending strategic decision. The
+// complete state and execution ledger stay local.
 export function makeCompactGameCheckpoint(checkpoint,rows=[],maxChars=6000) {
   if(!checkpoint?.state?.snapshotId)throw new Error('Missing current authoritative game checkpoint');
   const clip=(x,n)=>typeof x==='string'?x.slice(0,n):'',s=checkpoint.state;
@@ -32,10 +34,23 @@ export function makeCompactGameCheckpoint(checkpoint,rows=[],maxChars=6000) {
     nativePhase:clip(country.nativePhase,40),generation:Number.isSafeInteger(country.generation)?country.generation:null,
     ordinaryOrdersBlocked:country.ordinaryOrdersBlocked===true,paused:typeof country.paused==='boolean'?country.paused:null,
     domains:list(country.domains).filter(x=>['research','planet_construction'].includes(x)),reviewDue:country.reviewDue===true}}:{};
-  const record={...nativeMemory,version:2,sessionId:clip(checkpoint.sessionId,100),uncertain:!!checkpoint.uncertain,refreshRequired:true,
+  const review=pendingNativeStrategyReview(checkpoint);
+  const record={...nativeMemory,version:2,sessionId:clip(checkpoint.sessionId,100),uncertain:!!checkpoint.uncertain,refreshRequired:!review?.brief,
     lastObserved:{date:clip(s.date,20),player:clip(s.player?.name,90),colonies:s.capacities?.colonies,warCount:s.wars?.length||0,pendingEvents:(s.pendingEvents||[]).slice(0,3).map(x=>clip(x.title,60))},
     recentIntent:intentRows.slice(-2).map(x=>({requestId:clip(x.requestId,100),purpose:clip(x.explanation,100),...(x.strategicResearchOverride===true?{strategicResearchOverride:true}:{}),orders:x.orders?.slice(0,3).map(order)})),recentFailures:failures,delegationMemory};
-  const prefix=(country?.enabled===true?'v1.5：日常操作全部交原生国家 AI。先核对当前持权，不把旧记录当新授权；战略输出StrategyContract，宣战议和外交不关AI，takeover仅紧急收权，托管时不逐条经营或恢复旧战役。':'' )+'继续当前同一局；这是本机持久记忆，不是新开局。压缩后必须先 observe 读取完整最新状态，再按当前真实候选操作；下面是旧意图、错误和委派请求索引，不包含可下单的 snapshotId。执行结果以本机账本和实时回读为准，未知结果不盲重发；原去重与失败保护不变。持久请求先按原requestId核对，不把旧委派当成新授权。所有任务已排好时按watch工具公布上限等待，控制器核对实际工作后决定窗口，不重复inspect或取消队列。\n';
+  if(review){
+    const {brief,contract}=review;
+    record.strategyReview={id:review.id,date:review.date,strategyWakeReasons:review.wakeReasons,inspectedTopics:review.inspectedTopics,
+      strategyBrief:brief?{metrics:brief.metrics,previousGoals:brief.previousGoals,lockedDimensions:brief.lockedDimensions,
+        decisionOptions:brief.decisionOptions}:null,
+      currentContract:contract?{economyFocus:contract.economyFocus,expansionStance:contract.expansionStance,
+        militaryStance:contract.militaryStance,goals:list(contract.goals).slice(0,3),reason:clip(contract.reason,150),
+        expansionDirection:contract.expansionDirection,warTarget:contract.warTarget}:null};
+  }
+  const prefix=review
+    ?'本次战略复查进度如下。'+(review.brief?strategyDecisionReminder(review):'本次简报尚未生成，用 watch 读取后作出决定。')+
+      '只有某项操作确实需要新的 snapshotId 时才读取全量状态。旧意图与失败记录仅供核对，未知结果不盲重发。\n'
+    :(country?.enabled===true?'v1.5：日常操作全部交原生国家 AI。先核对当前持权，不把旧记录当新授权；战略输出StrategyContract，宣战议和外交不关AI，takeover仅紧急收权，托管时不逐条经营或恢复旧战役。':'' )+'继续当前同一局；这是本机持久记忆，不是新开局。压缩后必须先 observe 读取完整最新状态，再按当前真实候选操作；下面是旧意图、错误和委派请求索引，不包含可下单的 snapshotId。执行结果以本机账本和实时回读为准，未知结果不盲重发；原去重与失败保护不变。持久请求先按原requestId核对，不把旧委派当成新授权。所有任务已排好时按watch工具公布上限等待，控制器核对实际工作后决定窗口，不重复inspect或取消队列。\n';
   while(prefix.length+JSON.stringify(record).length>maxChars){if(record.recentIntent.length)record.recentIntent.shift();else if(record.recentFailures.length)record.recentFailures.pop();else if(delegationMemory.oldMonthly.length)delegationMemory.oldMonthly.pop();else if(delegationMemory.colonies.length)delegationMemory.colonies.pop();else if(delegationMemory.monthly.length)delegationMemory.monthly.pop();else break;}
   return prefix+JSON.stringify(record);
 }

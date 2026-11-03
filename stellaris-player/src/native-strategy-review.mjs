@@ -24,7 +24,7 @@ export class NativeStrategyReview {
   this.now=now;this.minIntervalMs=minIntervalMs;
   this.lastDay=null;this.lastPeriodicAt=null;this.lastPeriodicSample=null;
   this.lastSignals=null;this.lastAdverse=[];this.lastMaintenanceBand=null;
-  this.lastMetrics=null;this.stalledReviews=0;
+  this.lastMetrics=null;this.stalledReviews=0;this.deferred=null;
  }
  signals(state){
   const critical=Object.entries(state.resources??{}).filter(([key,r])=>['energy','minerals','food','consumer_goods','alloys'].includes(key)&&Number.isFinite(r?.stockpile)&&r?.net<0&&r.stockpile/-r.net<=6).map(([key])=>key).sort();
@@ -48,7 +48,26 @@ export class NativeStrategyReview {
   if(this.lastDay===null)return 'initial_strategy';
   if(current!==null&&current-this.lastDay>=PERIODIC_REVIEW_DAYS&&this.now()-this.lastPeriodicAt>=this.minIntervalMs)return 'six_month_review';
  }
+ defer(state){
+  const day=gameDay(state.date);
+  if(day===null)return false;
+  this.deferred={day,at:this.now(),signals:this.signals(state),adverse:this.adverseSignals(state),
+   band:maintenanceBand(state.strategy?.unityProgress?.maintenanceShare,this.lastMaintenanceBand)};
+  return true;
+ }
  due(state,{fresh=true}={}){
+  if(this.deferred){
+   const deferred=this.deferred,day=gameDay(state.date);
+   const expired=day!==null&&day-deferred.day>=PERIODIC_REVIEW_DAYS&&this.now()-deferred.at>=this.minIntervalMs;
+   if(expired)this.deferred=null;
+   else{
+    const adverse=this.adverseSignals(state);
+    deferred.adverse=deferred.adverse.filter(signal=>adverse.includes(signal));
+    const band=maintenanceBand(state.strategy?.unityProgress?.maintenanceShare,deferred.band);
+    const event=this.signals(state)!==deferred.signals||adverse.some(signal=>!deferred.adverse.includes(signal))||band!==deferred.band;
+    return event?(this.lastDay===null?['initial_strategy','strategic_event']:['strategic_event']):[];
+   }
+  }
   const periodic=this.periodicReason(state),reasons=periodic?[periodic]:[];
   const adverse=this.adverseSignals(state);
   // Recovery is quiet. Forget recovered conditions so re-entry can wake again.
@@ -70,6 +89,7 @@ export class NativeStrategyReview {
   return noGrowth&&goals.length&&goals.every(goal=>Number.isFinite(goal.progress)&&goal.progress<0.8)?this.stalledReviews+1:0;
  }
  acknowledge(observed,{current=observed,changed=false}={}){
+  this.deferred=null;
   const reasons=observed.strategyWakeReasons??[this.periodicReason(observed)];
   const periodic=reasons.includes('initial_strategy')||reasons.includes('six_month_review');
   if(periodic){

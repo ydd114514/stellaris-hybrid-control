@@ -168,3 +168,76 @@ for(const appliedBeforeTimeout of [true,false]){
   assert.deepEqual(rows.find(row=>row.type==='strategy_steering_retry'),{type:'strategy_steering_retry',attempt:2,requestId:'attempt-2'});
  });
 }
+
+test('all effective owner locks yield an actual steering template and accept a specific maintain reason under stagnation',async()=>{
+ const {game,active,writes,rows}=gameFixture(sample('2201.01.01',{
+  operatorMessages:['巩固现有疆域'],
+  userEconomicPolicy:{priority:'unity_first',militaryPolicy:'exploration_until_threat'},
+  council:{active_agenda:'agenda_infinite_opportunities_gestalt'},
+  strategy:{focus:'经济'},
+ }));
+ active.delete('cfsteer_economy_research');
+ active.add('cfsteer_economy_unity_traditions');
+ game.strategyContract={...contract,economyFocus:'unity_traditions',steeringConfirmed:true};
+ game.modelStrategyContract=game.strategyContract;
+ game.lastState.strategyContract=game.strategyContract;
+ const rpc=game.rpc;
+ game.rpc=async (method,params)=>{
+  if(method==='get_edicts')return {summary:{active_edicts_count:active.size},active_edicts:[...active].map(key=>({key})),
+   available_edicts:[{key:'research_subsidies',is_active:false}]};
+  if(method==='get_contacts')return {empires:[]};
+  if(method==='get_government')return {authority:'auth_hive_mind',available_agendas:[{key:'agenda_infinite_opportunities_gestalt'}]};
+  return rpc(method,params);
+ };
+ const brief=await game.readStrategyBrief(game.lastState);
+ const {decisionOptions:options}=brief;
+ assert.deepEqual(options.steering,{
+  economyFocus:{locked:'本人要求'},expansionStance:{locked:'本人要求'},militaryStance:{locked:'本人要求'},
+ });
+ assert.deepEqual(options.edicts,{activatable:[],status:'能力缺口'});
+ assert.deepEqual(options.agendas,{available:[],status:'无合法候选'});
+ assert.deepEqual(options.allowed,['修改目标','维持理由']);
+ assert.deepEqual(options.contractTemplate,{
+  economyFocus:'unity_traditions',expansionStance:'consolidate',militaryStance:'peaceful',
+  goals:[],reason:'',domesticActions:[],oneOffActions:[],
+ });
+ assert.ok(Buffer.byteLength(JSON.stringify(brief))<=3500);
+ game.pendingStrategyReview={...game.lastState,strategyBrief:brief,strategyWakeReasons:['six_month_review','stagnation']};
+ const reason='维持理由：现有岗位未填满，先观察人口增长能否释放已建产能';
+ const result=await game.strategyControl({requestId:'maintain',contract:{...options.contractTemplate,goals:contract.goals,reason}});
+ assert.equal(result.status,'applied',result.error);
+ assert.equal(writes.length,0);
+ assert.equal(rows.find(row=>row.type==='strategy_review')?.reason,reason);
+});
+
+test('a pending review keeps its identity and inspections across snapshots, and scoped deferral records one no-decision',async()=>{
+ const {game,review,rows,setNow}=gameFixture(sample('2201.01.01',{strategyWakeReasons:['six_month_review','stagnation'],strategyBrief:{}}));
+ game.controllerRunId='run';
+ setNow(10000);
+ game.beginStrategyReview(game.lastState);
+ const firstId=game.activeStrategyReview.id;
+ await game.recordStrategyInspection('strategy');
+ await game.recordStrategyInspection('strategy');
+ const secondSnapshot={...game.lastState};
+ game.beginStrategyReview(secondSnapshot);
+ assert.deepEqual(secondSnapshot.strategyReview,{id:firstId,startedAt:10000,inspectedTopics:['strategy']});
+ game.lastState=secondSnapshot;
+ const signal={sessionId:'session',runId:'run',reviewId:firstId};
+ assert.equal(await game.applyStrategyReviewDeferral({...signal,runId:'older-run'}),false);
+ assert.equal(await game.applyStrategyReviewDeferral(signal),true);
+ assert.equal(await game.applyStrategyReviewDeferral(signal),false);
+ assert.deepEqual(rows,[{type:'strategy_review_no_decision',date:'2201.01.01',wakeReasons:['six_month_review','stagnation']}]);
+ assert.equal(review.lastDay,null);
+ assert.deepEqual(review.due(game.lastState),[]);
+ assert.equal(game.nativeStrategicReviewDue,false);
+ assert.equal(game.lastState.strategyBrief,undefined);
+ assert.equal(game.lastState.strategyReview,undefined);
+ assert.equal(game.lastState.strategyReviewNoDecision.reviewId,firstId);
+ game.lastState.wars=[{war_id:1}];
+ assert.ok(review.due(game.lastState).includes('strategic_event'));
+ game.beginStrategyReview(game.lastState);
+ assert.notEqual(game.lastState.strategyReview.id,firstId);
+ assert.deepEqual(game.lastState.strategyReview.inspectedTopics,[]);
+ await game.completeStrategyReview(game.lastState,contract);
+ assert.equal(game.lastState.strategyReviewNoDecision,undefined);
+});

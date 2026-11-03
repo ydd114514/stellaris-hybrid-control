@@ -5,7 +5,7 @@ import {userEconomicOrderAllowed,assertNativeEconomicOrders,checkEconomicExplora
 import {readActualSpendingCost,checkActualSpending} from '../src/shared-spending-guard.mjs';
 
 test('本人窄干预实际通过空bulk建造，仍受定向费用/人类暂停/白名单与逐路点安全门控',async()=>{
- const policy={version:1,source:'user-current-chat',priority:'unity_first',preferredUnityBuildings:['building_hive_node'],militaryPolicy:'exploration_until_threat'};
+ const policy={version:1,source:'user-current-chat',worldTaskAuthorized:true,priority:'unity_first',preferredUnityBuildings:['building_hive_node'],militaryPolicy:'exploration_until_threat'};
  const state={userEconomicPolicy:policy,player:{country_id:0}},order={command:'build_building',arguments:{planet_id:0,building_key:'building_hive_node',district_type:'district_hive',slot_index:0}};
  assert.equal(userEconomicOrderAllowed(order,state),true);assert.throws(()=>assertNativeEconomicOrders([{command:'build_ship',arguments:{}}],state),/封口/);
  assert.throws(()=>assertNativeEconomicOrders([{...order,arguments:{...order.arguments,building_key:'building_lab'}}],state),/封口/);

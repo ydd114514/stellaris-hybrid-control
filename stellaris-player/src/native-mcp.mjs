@@ -18,6 +18,7 @@ import {BroadcastQualityMonitor} from './broadcast-quality.mjs';
 import {loadHybridSettings} from './hybrid-settings.mjs';
 import {executionStatus} from './execution-status.mjs';
 import {readStopRequest,writeStopCompletion} from './cooperative-stop.mjs';
+import {readStrategyReviewDeferral} from './strategy-turn-recovery.mjs';
 
 const hybridSettings=await loadHybridSettings();
 const nativeCountryAI=hybridSettings.nativeCountryAI===true;
@@ -26,7 +27,7 @@ const quality=new BroadcastQualityMonitor({directory:game.directory,sessionId:ga
 const modelView=new ModelView();
 const projectState=(state,options)=>modelView.project({...state,decisionReview:game.nativeCountryAIEnabled
   ?{mode:'native_strategy',reviewEveryGameDays:180,wakeReasons:state.strategyWakeReasons??[],
-    instruction:'复查先读strategyBrief。本人明确的未完成节点或探索任务保持human watch到真实完工或抵达，之后交回原生；日常经营交原生AI，方针与保留决定用strategy_contract。'}
+    instruction:'复查先读strategyBrief与decisionOptions，日常经营交原生AI，方针与保留决定用strategy_contract。'+(state.userEconomicPolicy?.worldTaskAuthorized===true?'当前世界获授权的本人任务可按ownerEconomicExecution推进。':'具体建造与探索无本世界授权，保持原生运营。')}
   :decisionReview(state,{sessionId:game.sessionId,observedAt:game.snapshotAt})},options);
 let ready = false, stopping = false,startAttempted=false;
 const tools = [
@@ -47,7 +48,7 @@ if(game.nativeCountryAIEnabled){
   const allowed=['declare_war','offer_peace','diplomacy','respond_diplomacy','resolve_event','open_war_goals','set_defender_war_goal','close_war_goals','build_building','move_fleet','set_fleet_stance'];
   apply.inputSchema.properties.orders.items=orderInputSchema(Object.fromEntries(allowed.map(name=>[name,ORDER_FIELDS[name]])));
   delete apply.inputSchema.properties.strategicResearchOverride;
-  apply.description='本人明确经营任务的窄例外：先country_ai_control takeover并确认human持权、暂停与AI关闭，才允许preferredUnityBuildings白名单节点的build_building（真实zone、当前定向CanBuild及完整费用/储备核验），或militaryPolicy=exploration_until_threat时的己方空闲现有军舰set_fleet_stance(evasive)与move_fleet安全探索；逐路点核验当前可达与已知军事风险，不派往已知外国领土。已充分核验的无敌安全航路不要求改姿态；未知邻居实际读回passive/evasive非主动追敌姿态即可；passive不保证自动避敌，不能凭Post成功冒称evasive生效或换requestId重设。本人已授权回避姿态探未探索邻居：intel低本身不拒绝，但只进入当前明确直接相邻航道，不跨多段未知路线；未知不等于证明绝对安全，不授权作战/扩军。先inspect military/route/map选实际目标，不得只写guidance。入队或移动订单不等于完成，本人执行期暂不resume，保持human用watch(20)推进至真实建筑完工/舰队抵达，再自动恢复已保存的原生委派。执行受阻先核对，不盲重放。AI开启时这些普通单仍拒绝，其他日常命令不开放。其余仅保留决定：宣战、议和、外交提议/回应，原生国家AI继续运行。中央事件和战争目标须先实际接管并确认暂停，再inspect events或wars/war_goals，只选择当前合法选项；完成后delegate/resume交还。优先使用strategy_contract统一提交战略；日常经营不由模型派单。';
+  apply.description='本人具体经营任务仅在当前世界授权成立（userEconomicPolicy.worldTaskAuthorized=true）时开放。先country_ai_control takeover并确认human持权、暂停与AI关闭，才允许preferredUnityBuildings白名单节点的build_building（真实zone、当前定向CanBuild及完整费用/储备核验），或militaryPolicy=exploration_until_threat时的己方空闲现有军舰set_fleet_stance(evasive)与move_fleet安全探索；逐路点核验当前可达与已知军事风险，不派往已知外国领土。已充分核验的无敌安全航路不要求改姿态；未知邻居实际读回passive/evasive非主动追敌姿态即可；passive不保证自动避敌，不能凭Post成功冒称evasive生效或换requestId重设。当前世界确有相应探索授权时，intel低本身不拒绝，但只进入当前明确直接相邻航道，不跨多段未知路线；未知不等于证明绝对安全，不授权作战/扩军。先inspect military/route/map选实际目标，不得只写guidance。入队或移动订单不等于完成，本人执行期暂不resume，保持human用watch(20)推进至真实建筑完工/舰队抵达，再自动恢复已保存的原生委派。执行受阻先核对，不盲重放。AI开启时这些普通单仍拒绝，其他日常命令不开放。其余仅保留决定：宣战、议和、外交提议/回应，原生国家AI继续运行。中央事件和战争目标须先实际接管并确认暂停，再inspect events或wars/war_goals，只选择当前合法选项；完成后delegate/resume交还。优先使用strategy_contract统一提交战略；日常经营不由模型派单。';
  }
 }
 const emit = value => process.stdout.write(JSON.stringify(value) + '\n');
@@ -57,7 +58,7 @@ async function handle(request) {
   if (request.id === undefined) return;
   let result;
   try {
-    if (request.method === 'initialize') result = {protocolVersion: request.params?.protocolVersion || '2024-11-05', capabilities: {tools: {}}, serverInfo: {name: 'cyberfish-stellaris-native', version: '0.1.0'}, instructions: game.nativeCountryAIEnabled ? '你是大肥鱼。v1.5 日常运营优先交本国原生国家AI，低频用strategy_contract引导；本人明确要求的白名单凝聚力建设、现有舰队探索可以先takeover核实人类持权和暂停再受控执行。已接受的本人任务用human watch持续推进，真实完工或抵达后再resume，不能刚入队就交回让原生重排。战争和实际保供危机优先，未知结果不重放。没有本人任务时用原生委派和watch持续经营，宣战议和外交仍走保留决定。范围和未知如实说，开关/派发不代表经营效果。ID 0 有效，不作弊。' : '你是大肥鱼。只用原生工具正常经营群星。状态 ID 0 有效；不得作弊。先查候选再操作，每批简短解释目的。'};
+    if (request.method === 'initialize') result = {protocolVersion: request.params?.protocolVersion || '2024-11-05', capabilities: {tools: {}}, serverInfo: {name: 'cyberfish-stellaris-native', version: '0.1.0'}, instructions: game.nativeCountryAIEnabled ? '你是大肥鱼。v1.5 日常运营优先交本国原生国家AI，低频用strategy_contract引导；当前世界有明确授权（userEconomicPolicy.worldTaskAuthorized=true）的白名单建设和现有舰队探索才可以先takeover核实人类持权和暂停再受控执行。已接受的本人任务用human watch持续推进，真实完工或抵达后再resume，不能刚入队就交回让原生重排。战争和实际保供危机优先，未知结果不重放。没有本人任务时用原生委派和watch持续经营，宣战议和外交仍走保留决定。范围和未知如实说，开关/派发不代表经营效果。ID 0 有效，不作弊。' : '你是大肥鱼。只用原生工具正常经营群星。状态 ID 0 有效；不得作弊。先查候选再操作，每批简短解释目的。'};
     else if (request.method === 'tools/list') result = {tools:game.nativeCountryAIEnabled?tools.filter(t=>!['campaign','tasks','monthly_trade','colony_control','colony_upgrade_control','survey_control'].includes(t.name)):tools.filter(t=>t.name!=='strategy_contract')};
     else if (request.method === 'ping') result = {};
     else if (request.method === 'resources/list') result = {resources: []};
@@ -69,6 +70,7 @@ async function handle(request) {
         if (!ready) {startAttempted=true;await game.start({keepPaused:process.env.CYBERFISH_START_PAUSED==='1'}); ready = true;}
         const {name, arguments: args = {}} = request.params || {};
         let value = name === 'strategy_contract' ? await game.strategyControl(args) : name === 'country_ai_control' ? await game.countryAIControl(args) : name === 'colony_upgrade_control' ? await game.colonyUpgradeControl(args) : name === 'colony_control' ? await game.colonyControl(args) : name === 'monthly_trade' ? await game.monthlyTrade(args) : name === 'survey_control' ? await game.surveyControl(args) : name === 'campaign' ? await game.campaign(args) : name === 'tasks' ? await game.task(args) : name === 'observe' ? await game.observe() : name === 'inspect' ? await game.inspect(args) : name === 'apply_orders' ? await game.apply(args) : name === 'watch' ? await game.watch(args.seconds ?? 15) : (() => {throw new Error('未知游戏工具');})();
+        if(name==="inspect")await game.recordStrategyInspection(args.topic);
         if(name==="observe" || name==="watch") value=projectState(value,{full:name==="observe"});
         if(value.state)value={...value,state:projectState(value.state)};
         result = {content: [{type: 'text', text: JSON.stringify(value)}]};
@@ -90,7 +92,15 @@ const monitor=setInterval(()=>{
   if(!ready||stopping)return;
   const execution=executionStatus({sessionId:game.sessionId,state:game.lastState,runtimeStatus:game.runtimeStatus});
   void quality.tick(execution.known?{date:execution.date,paused:execution.paused}:{});
-  void work.idle(async()=>{await game.monitorDecision(Date.now()-lastToolAt);if(await game.refreshOrderTracking())await game.checkpoint();await game.serviceAudienceQueries();}).catch(error=>process.stderr.write(`本地决策监测: ${error.message}\n`));
+  void work.idle(async()=>{
+    await game.monitorDecision(Date.now()-lastToolAt);
+    if(game.nativeStrategicReviewDue){
+      const deferral=await readStrategyReviewDeferral(game.directory);
+      if(deferral)await game.applyStrategyReviewDeferral(deferral);
+    }
+    if(await game.refreshOrderTracking())await game.checkpoint();
+    await game.serviceAudienceQueries();
+  }).catch(error=>process.stderr.write(`本地决策监测: ${error.message}\n`));
 },1000);monitor.unref();
 let checkingStop=false;
 const stopMonitor=setInterval(async()=>{

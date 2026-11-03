@@ -4,7 +4,7 @@ const base=['declare_war','offer_peace','diplomacy','respond_diplomacy','resolve
 const fail=text=>{throw Object.assign(Error(text),{rejected:true});};
 export function userEconomicOrderAllowed(order,state){
  const p=state?.userEconomicPolicy;
- if(p?.version!==1||p.source!=='user-current-chat')return false;
+ if(p?.version!==1||p.source!=='user-current-chat'||p.worldTaskAuthorized!==true)return false;
  if(order.command==='build_building')return p.priority==='unity_first'&&p.preferredUnityBuildings?.includes(order.arguments.building_key)===true;
  return p.militaryPolicy==='exploration_until_threat'&&(order.command==='move_fleet'&&order.arguments.queue!==true||order.command==='set_fleet_stance'&&order.arguments.stance==='evasive');
 }

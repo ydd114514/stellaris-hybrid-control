@@ -21,6 +21,28 @@ export const ORDINARY_EDICT_KEYS=Object.freeze([
  'map_the_stars','land_of_opportunity','greater_than_ourselves'
 ]);
 const ordinaryEdicts=new Set(ORDINARY_EDICT_KEYS);
+const completeActiveEdicts=raw=>Array.isArray(raw?.active_edicts)&&Number.isSafeInteger(raw.summary?.active_edicts_count)&&
+ raw.summary.active_edicts_count===raw.active_edicts.length&&raw.active_edicts.every(row=>typeof row?.key==='string')&&
+ new Set(raw.active_edicts.map(row=>row.key)).size===raw.active_edicts.length;
+const availableEdictRows=raw=>Array.isArray(raw?.available_edicts)?raw.available_edicts:[];
+export function ordinaryEdictOptions(raw,state){
+ if(!completeActiveEdicts(raw))return {activatable:[],status:'能力缺口'};
+ const active=new Map(raw.active_edicts.map(row=>[row.key,row]));
+ const candidates=availableEdictRows(raw).filter(row=>ordinaryEdicts.has(row?.key));
+ const inactive=candidates.filter(row=>!active.has(row.key)&&row.is_active!==true);
+ const activatable=[...new Set(inactive.filter(row=>row.can_activate===true&&
+  !economicEdictActivationProblem({type:'toggle_edict',arguments:{edict_key:row.key,enabled:true}},state)).map(row=>row.key))].slice(0,6);
+ const deactivatable=[...active.values()].filter(row=>{
+  const candidate=candidates.find(candidate=>candidate.key===row.key);
+  return ordinaryEdicts.has(row.key)&&row.can_deactivate!==false&&candidate?.can_deactivate!==false&&
+   (row.can_deactivate===true||candidate?.can_deactivate===true);
+ }).map(row=>row.key).slice(0,4);
+ const legalityKnown=Array.isArray(raw.available_edicts)&&(raw.available_edicts_complete===true||
+  (inactive.length>0&&inactive.every(row=>typeof row.can_activate==='boolean')));
+ return {activatable,status:activatable.length?'ok':legalityKnown?'无合法候选':'能力缺口',
+  ...(deactivatable.length?{deactivatable}:{})};
+}
+
 const taskIdValid=value=>typeof value==='string'&&/^[a-zA-Z0-9_-]{1,100}$/.test(value);
 const nativeTargetName=row=>[row?.name,row?.title].find(x=>typeof x==='string'&&x.trim())?.replace(/[\u0000-\u001f\u007f]/g,' ').trim().slice(0,120);
 export function validateDomesticAction(action){
@@ -118,23 +140,22 @@ export async function applyDomesticEdict({action,rpc,write,policyState,checkScop
  Object.assign(receipt,{type:'toggle_edict',arguments:params,...(checked.taskId?{taskId:checked.taskId}:{}),status:'checking',confirmed:false});
  const read=async()=>{
   await checkScope();await heartbeat();const raw=await rpc('get_edicts');
-  const active=raw?.active_edicts,count=raw?.summary?.active_edicts_count;
-  if(!Array.isArray(active)||!Number.isSafeInteger(count)||count!==active.length||active.some(e=>typeof e?.key!=='string')||new Set(active.map(e=>e.key)).size!==active.length)throw Error('当前启用法令清单不完整，不能执行或确认法令调整');
-  return {raw,active:active.some(e=>e.key===params.edict_key)};
+  if(!completeActiveEdicts(raw))throw Error('当前启用法令清单不完整，不能执行或确认法令调整');
+  return {raw,active:raw.active_edicts.some(e=>e.key===params.edict_key)};
  };
  try{
   const before=await read();receipt.beforeActive=before.active;
-  const targetName=nativeTargetName(before.raw.active_edicts.find(e=>e.key===params.edict_key))??nativeTargetName(before.raw.available_edicts?.find(e=>e.key===params.edict_key));
+  const targetName=nativeTargetName(before.raw.active_edicts.find(e=>e.key===params.edict_key))??nativeTargetName(availableEdictRows(before.raw).find(e=>e?.key===params.edict_key));
   if(targetName)receipt.targetName=targetName;
   if(before.active===params.enabled){Object.assign(receipt,{status:'confirmed',confirmed:true,changed:false});return receipt;}
-  const candidate=before.raw.available_edicts?.find(e=>e.key===params.edict_key);
+  const candidate=availableEdictRows(before.raw).find(e=>e?.key===params.edict_key);
+  if(params.enabled&&candidate?.can_activate===false)throw Error('当前原生状态不允许该法令启用，未发送');
+  if(params.enabled&&candidate?.can_activate!==true)throw Error('法令启用能力缺口：原生接口未确认该法令当前可启用，未发送；旧目录不代表合法候选');
   if(params.enabled&&policyState?.userEconomicPolicy?.edictPolicy==='unity_net_gain'){
    await checkScope();await heartbeat();const status=await rpc('get_status'),wars=await rpc('get_wars');
    const problem=economicEdictActivationProblem(checked,{...policyState,resources:status?.resources,wars:wars?.wars,warGoalsWindow:wars?.warGoalsWindow});
    if(problem)throw Error(problem);
   }
-  // Legacy available_edicts is a static catalog, not an engine legality query.
-  if(params.enabled&&candidate?.can_activate!==true)throw Error('原生接口未确认该法令当前可启用，未发送；旧目录不代表合法候选');
   if(!params.enabled&&(candidate?.can_deactivate===false||before.raw.active_edicts.find(e=>e.key===params.edict_key)?.can_deactivate===false))throw Error('该法令当前不可停用，未发送');
   await checkScope();await heartbeat();attempted=true;receipt.status='submitting';
   const posted=await write('toggle_edict',params);
