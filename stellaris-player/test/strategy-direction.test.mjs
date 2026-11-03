@@ -61,7 +61,7 @@ test('model contract cannot override standing, and automatic recovery does not r
  game.sessionId='s';game.binding={pid:1};game.lastState={date:'2200.01.01',operatorStanding:{id:'o-3',economyFocus:'unity_traditions'}};
  game.refreshOperatorStanding=async()=>{};game.checkpoint=async()=>{};game.countryAI.acknowledgeReview=async()=>{};
  game.strategyReview={acknowledge:()=>{}};game.observe=async()=>game.lastState;game.apply=async()=>{decisions++;return {status:'posted'};};
- const contract={...base,oneOffActions:[{type:'declare_war',arguments:{country_id:1,goal_key:'wg_conquest'}}]};
+ const contract={...base,goals:[{metric:'research_monthly',target:120,byDate:'2210.01.01'}],oneOffActions:[{type:'declare_war',arguments:{country_id:1,goal_key:'wg_conquest'}}]};
  const result=await game.strategyControl({requestId:'strategy-1',contract});
  assert.equal(result.status,'applied');assert.equal(result.contract.economyFocus,'unity_traditions');assert.equal(decisions,1);assert.ok(active.has('cfsteer_economy_unity_traditions'));
  await game.strategyControl({requestId:'strategy-1',contract});assert.equal(decisions,1);

@@ -2,6 +2,8 @@ import {ECONOMY_FOCUSES} from './operator-standing.mjs';
 import {councilAgendaProblem} from './council-agendas.mjs';
 import {normalizeNativeOwnerPolicy} from './native-country-ai-economic-policy.mjs';
 import {economicEdictActivationProblem} from './owner-economic-policy.mjs';
+import {STEERING_EFFECTS} from './strategy-brief.mjs';
+import {surveyGameDay} from './survey-idle-policy.mjs';
 export const STRATEGY_DIMENSIONS={economyFocus:ECONOMY_FOCUSES,expansionStance:['aggressive','consolidate'],militaryStance:['peaceful','prepare_war']};
 export const RESERVED_ACTIONS={declare_war:'declare_war',offer_peace:'offer_peace',diplo_propose:'diplomacy',diplo_respond:'respond_diplomacy'};
 export const reservedOrder=command=>Object.values(RESERVED_ACTIONS).includes(command);
@@ -32,9 +34,39 @@ export function validateDomesticAction(action){
  if(!args||typeof args!=='object'||Array.isArray(args)||Object.keys(args).length!==2||Object.keys(args).some(k=>!['edict_key','enabled'].includes(k))||typeof args.enabled!=='boolean'||!ordinaryEdicts.has(args.edict_key))throw Error('国内战略法令无效；方针、系统和角色维护法令不由此入口修改');
  return {type:'toggle_edict',arguments:{edict_key:args.edict_key,enabled:args.enabled},...task};
 }
-export function validateStrategyContract(raw,validateOrder){
- if(!raw||typeof raw!=='object'||Array.isArray(raw)||Object.keys(raw).some(k=>![...Object.keys(STRATEGY_DIMENSIONS),'oneOffActions','domesticActions','nativePolicy','reason','taskIds','taskUpdates'].includes(k)))throw Error('StrategyContract字段无效');
+const GOAL_METRICS=['pops','colonies','systems','research_monthly','alloys_monthly','fleet_power','naval_used_ratio'];
+const countryIdSchema={type:'integer',minimum:0,maximum:4294967294};
+const countryId=value=>Number.isSafeInteger(value)&&value>=0&&value<=countryIdSchema.maximum;
+
+function validateGoals(goals,currentDate){
+ if(!Array.isArray(goals)||goals.length<1||goals.length>3)throw Error('战略需要1～3个可量化目标（goals）');
+ const today=surveyGameDay(currentDate);
+ if(today===null)throw Error('当前游戏日期未知，请先读取战略简报');
+ return goals.map(goal=>{
+  const deadline=surveyGameDay(goal?.byDate);
+  if(!goal||Object.keys(goal).length!==3||!GOAL_METRICS.includes(goal.metric)||!Number.isFinite(goal.target)||goal.target<0||deadline===null)
+   throw Error('战略目标需要有效指标、非负数值和 YYYY.MM.DD 截止日期');
+  if(deadline>today+20*360)throw Error('战略目标的截止日期不能超过当前游戏日期20年');
+  return {metric:goal.metric,target:goal.target,byDate:goal.byDate};
+ });
+}
+
+function validateCountryDirection(value,key){
+ if(!value||Object.keys(value).length!==1||!countryId(value[key]))throw Error('扩张方向或备战目标需要有效的已知帝国ID');
+ return {[key]:value[key]};
+}
+
+export function validateStrategyContract(raw,validateOrder,{currentDate,empireType,requireGoals=true}={}){
+ const goalFields=requireGoals?['goals','expansionDirection','warTarget']:[];
+ if(!raw||typeof raw!=='object'||Array.isArray(raw)||Object.keys(raw).some(k=>![...Object.keys(STRATEGY_DIMENSIONS),'oneOffActions','domesticActions','nativePolicy','reason','taskIds','taskUpdates',...goalFields].includes(k)))throw Error('StrategyContract字段无效');
  for(const [key,values] of Object.entries(STRATEGY_DIMENSIONS))if(!values.includes(raw[key]))throw Error('战略方针无效：'+key);
+ if(['hive','machine'].includes(empireType)&&raw.economyFocus==='consumer_stability'){
+  throw Error(STEERING_EFFECTS[empireType].economyFocus.consumer_stability+'；请改选其他方针或用 balanced');
+ }
+ const goals=requireGoals?validateGoals(raw.goals,currentDate):undefined;
+ const expansionDirection=raw.expansionDirection===undefined?undefined:validateCountryDirection(raw.expansionDirection,'towardCountryId');
+ const warTarget=raw.warTarget===undefined?undefined:validateCountryDirection(raw.warTarget,'countryId');
+ if(warTarget&&raw.militaryStance!=='prepare_war')throw Error('只有备战（prepare_war）方针才能设置战争目标');
  if(typeof raw.reason!=='string'||!raw.reason.trim()||raw.reason.length>300)throw Error('战略需要1..300字公开理由');
  if(!Array.isArray(raw.oneOffActions)||raw.oneOffActions.length>4)throw Error('战略只接受最多4项保留决定');
  const oneOffActions=raw.oneOffActions.map(a=>{
@@ -64,7 +96,8 @@ export function validateStrategyContract(raw,validateOrder){
  }
  const stoppedTasks=new Set((taskUpdates??[]).filter(row=>['blocked','superseded'].includes(row.status)).map(row=>row.taskId));
  if((domesticActions??[]).some(action=>action.taskId&&stoppedTasks.has(action.taskId)))throw Error('已标受阻或终止的任务不能在同一次战略中继续下达具体操作');
- return {...Object.fromEntries(Object.keys(STRATEGY_DIMENSIONS).map(k=>[k,raw[k]])),oneOffActions,...(raw.nativePolicy!==undefined?{nativePolicy:normalizeNativeOwnerPolicy(raw.nativePolicy)}:{}),...(domesticActions?{domesticActions}:{}),...(taskIds?{taskIds}:{}),...(taskUpdates?{taskUpdates}:{}),reason:raw.reason.trim()};
+ return {...Object.fromEntries(Object.keys(STRATEGY_DIMENSIONS).map(k=>[k,raw[k]])),oneOffActions,...(raw.nativePolicy!==undefined?{nativePolicy:normalizeNativeOwnerPolicy(raw.nativePolicy)}:{}),...(domesticActions?{domesticActions}:{}),...(taskIds?{taskIds}:{}),...(taskUpdates?{taskUpdates}:{}),reason:raw.reason.trim(),
+  ...(goals?{goals}:{}),...(expansionDirection?{expansionDirection}:{}),...(warTarget?{warTarget}:{})};
 }
 export async function applyDomesticEdict({action,rpc,write,policyState,checkScope=async()=>{},heartbeat=async()=>{},wait=ms=>new Promise(r=>setTimeout(r,ms)),attempts=20,receipt={}}){
  const checked=validateDomesticAction(action);if(checked.type!=='toggle_edict')throw Error('法令入口不接受其他国内战略设置');
@@ -164,7 +197,7 @@ export async function applySteering({contract,rpc,heartbeat=async()=>{},wait=ms=
  }
  return {confirmed:true,keys:steeringKeys(contract)};
 }
-export const strategyContractSchema={type:'object',additionalProperties:false,required:[...Object.keys(STRATEGY_DIMENSIONS),'oneOffActions','reason'],properties:{
+export const legacyStrategyContractSchema={type:'object',additionalProperties:false,required:[...Object.keys(STRATEGY_DIMENSIONS),'oneOffActions','reason'],properties:{
  ...Object.fromEntries(Object.entries(STRATEGY_DIMENSIONS).map(([k,v])=>[k,{enum:v}])),reason:{type:'string',minLength:1,maxLength:300},
  nativePolicy:{type:'object',additionalProperties:false,required:['peaceful_exploration','use_existing_science'],properties:{peaceful_exploration:{type:'boolean'},use_existing_science:{type:'boolean'}},description:'把已采纳的目标转为原生生产约束：和平探索阶段不新造军舰；复用现有科研船，失去现有船后允许补充。真实战争/和平不可确认时保留原生防务。本人明确要求优先，不能用false解除本人要求；此设置不等于舰队已经执行探索移动。'},
  taskIds:{type:'array',maxItems:12,uniqueItems:true,items:{type:'string',pattern:'^[a-zA-Z0-9_-]{1,100}$'},description:'当前任务账本中由本次战略推进的任务编号；不能猜编号或关联旧局任务'},
@@ -180,3 +213,17 @@ export const strategyContractSchema={type:'object',additionalProperties:false,re
  ]}},
  oneOffActions:{type:'array',maxItems:4,items:{type:'object',additionalProperties:false,required:['type','arguments'],properties:{type:{enum:Object.keys(RESERVED_ACTIONS)},arguments:{type:'object'}}}}
 }};
+
+export const strategyContractSchema={
+ ...legacyStrategyContractSchema,
+ required:[...legacyStrategyContractSchema.required,'goals'],
+ properties:{
+  ...legacyStrategyContractSchema.properties,
+  goals:{type:'array',minItems:1,maxItems:3,items:{type:'object',additionalProperties:false,required:['metric','target','byDate'],properties:{
+   metric:{enum:GOAL_METRICS},target:{type:'number',minimum:0,description:'期限内至少达到的数值；舰容占用用比例，例如 0.8'},
+   byDate:{type:'string',pattern:'^[0-9]{4,7}\\.[0-9]{2}\\.[0-9]{2}$',description:'游戏日期，最多从当前日期起20年'}
+  }}},
+  expansionDirection:{type:'object',additionalProperties:false,required:['towardCountryId'],properties:{towardCountryId:countryIdSchema},description:'已知帝国方向，仅用于复查和解说'},
+  warTarget:{type:'object',additionalProperties:false,required:['countryId'],properties:{countryId:countryIdSchema},description:'仅备战方针可设，仅用于复查和解说'}
+ }
+};

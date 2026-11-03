@@ -60,7 +60,7 @@ try {
     const findWorkshop=id=>[resolve(gameDirectory,'../../workshop/content/281990',id),'C:/Tools/SteamCMD/steamapps/workshop/content/281990/'+id].find(path=>existsSync(join(path,'descriptor.mod')));
     const install=command==='install-automation-compat'?installAutomationCompatibilityMod:command==='install-stellar-compat'?installStellarCompatibilityMod:command==='install-steering-mod'?installSteeringMod:installObserverMod;
     const installation = await install({gameDirectory,stellarDirectory,ultimateDirectory:argument('--ultimate-dir')||findWorkshop('2250100617'),performanceDirectory:argument('--performance-dir')||findWorkshop('2184737698'),
-      ...(argument('--energy-reserve')?{reserveEnergy:Number(argument('--energy-reserve'))}:{}),...(argument('--alloy-reserve')?{reserveAlloys:Number(argument('--alloy-reserve'))}:{}),documentsPath,dryRun:flag('--dry-run')})
+      ...(argument('--energy-reserve')?{reserveEnergy:Number(argument('--energy-reserve'))}:{}),...(argument('--alloy-reserve')?{reserveAlloys:Number(argument('--alloy-reserve'))}:{}),documentsPath,dryRun:flag('--dry-run'),updateGenerated:flag('--update-generated'),backupDirectory:argument('--backup-dir')})
     if (!installation.dryRun) { await mkdir(local, { recursive: true }); await writeFile(join(local, 'mod-installation.json'), JSON.stringify(installation, null, 2), { mode: 0o600 }) }
     console.log(JSON.stringify(installation, null, 2))
   } else if (command === 'observe') {

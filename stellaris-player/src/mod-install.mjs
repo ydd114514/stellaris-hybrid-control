@@ -1,4 +1,4 @@
-import { lstat, mkdir, readFile, writeFile, realpath, readdir } from 'node:fs/promises'
+import { lstat, mkdir, readFile, writeFile, realpath, readdir, unlink } from 'node:fs/promises'
 import { join, resolve, relative, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
@@ -12,14 +12,20 @@ export const MOD_NAME = 'cyberfish_observer_v1'
 const modSource = name => fileURLToPath(new URL(`../mod/${name}/`, import.meta.url))
 const inspect = async path => { try { return await lstat(path) } catch (error) { if (error.code === 'ENOENT') return null; throw error } }
 const digest = value => createHash('sha256').update(value).digest('hex')
-const previousSteeringFiles={'localisation/english/cfsteer_l_english.yml':'6ea827c27e4345901cb24d55b1191804d87a7b9ba74072cbffe9fe6e126d8317','localisation/simp_chinese/cfsteer_l_simp_chinese.yml':'b88b334f5f8ecc4e9f34e6ef25d3d8bdd7125aaa7055f4991467ec9c93dd8c24','common/zones/zz_cfsteer_research_weights.txt':'c33c8bca91d4146d06dfed1ef50bdcadf2c1752c090f5efff399e05e68c6329f','common/economic_plans/cfsteer_plans.txt':'4b5eb5508d6735b6581d0f06c90294afcd2b2880867844bf6eba59bfbd1f1702'}
+const previousSteeringFiles={'common/ai_budget/cfsteer_budget.txt':'0cc9ec9e801d1ce8e40627a96da5b7c0f9c63fd748ea19be235f3b4927a03350','localisation/english/cfsteer_l_english.yml':'6ea827c27e4345901cb24d55b1191804d87a7b9ba74072cbffe9fe6e126d8317','localisation/simp_chinese/cfsteer_l_simp_chinese.yml':'b88b334f5f8ecc4e9f34e6ef25d3d8bdd7125aaa7055f4991467ec9c93dd8c24','common/zones/zz_cfsteer_research_weights.txt':'c33c8bca91d4146d06dfed1ef50bdcadf2c1752c090f5efff399e05e68c6329f','common/economic_plans/cfsteer_plans.txt':'4b5eb5508d6735b6581d0f06c90294afcd2b2880867844bf6eba59bfbd1f1702'}
 const unityUpgradeFiles={
- 'common/personalities/cfsteer_personality.txt':'b1d16cf1a6c27727a66cba6062fc30d10956cc9694db0f023b5fed89038487ab',
  'common/economic_plans/cfsteer_unity_plan.txt':['be0d6118d89e5f5b577dbbc26d60baa91264e96567271cf1b5e74ae92cf25e79','9e05e1412ce4a2204dffad3ef5441c30f1c1a91683ef4f6503ed392e67ff090c'],
  'common/edicts/cfsteer_edicts.txt':'db9d22c15977aeeb1f9ae2b36e85aa3b6409279300088a806dcc5adfb3ae2e60',
  'localisation/english/cfsteer_l_english.yml':'217a8f13dfa8f19e2e6ead93889c000df8cd8cb98454e0c8957086df9772620b',
  'localisation/simp_chinese/cfsteer_l_simp_chinese.yml':'38f231e1d2d65cf14e70ba88d9cc5a594676c2fd94f7fb045680b184192853e0'
 };
+
+// Only retire an exact copy of the previously shipped steering personality.
+const retiredPersonalityPath = 'common/personalities/cfsteer_personality.txt'
+const retiredPersonalityHashes = new Set([
+  'b1d16cf1a6c27727a66cba6062fc30d10956cc9694db0f023b5fed89038487ab',
+  '4841db65213faeb9e432973df2e90a5c282268188912e0dde93e6885427e1ce7',
+])
 
 async function checkedParents(root, path) {
   const part = relative(root, path)
@@ -64,7 +70,7 @@ export async function installLocalMod({ documentsPath, dryRun = false, modName=M
   for (const file of files) plans.push({ path: resolve(target, file), content: await readFile(resolve(source, file)) })
   if(modName==='cyberfish_stellar_ai_compat_v1'){
     if(!stellarDirectory)throw Error('尚未取得Stellar AI实际文件；请先通过Steam订阅下载原版岗位产出版（3686836322）');
-    const generated=await generateStellarSteeringCompatibility({gameDirectory,stellarDirectory,steeringDirectory:modSource('cyberfish_steering_v1')});
+    const generated=await generateStellarSteeringCompatibility({gameDirectory,stellarDirectory});
     const sourceFiles=Object.fromEntries(await Promise.all(generated.sourceFiles.map(async row=>{
       const path=resolve(row.sourcePath??join(stellarDirectory,row.path));
       if(![stellarDirectory,gameDirectory].some(root=>{const part=relative(resolve(root),path);return part!== '..'&&!part.startsWith('..'+sep)&&!part.includes(':');}))throw Error('兼容输入源越出游戏或指定Mod目录');
@@ -88,11 +94,14 @@ export async function installLocalMod({ documentsPath, dryRun = false, modName=M
   }
   if(modName==='cyberfish_steering_v1'&&gameDirectory){
     const generated=await generateSteeringZoneOverrides(gameDirectory);
-    plans.push({path:resolve(target,generated.path),content:generated.content});
-    for(const file of generated.extraFiles??[])plans.push({path:resolve(target,file.path),content:file.content});
+    plans.push({path:resolve(target,generated.path),content:generated.content,generated:true});
+    for(const file of generated.extraFiles??[])plans.push({path:resolve(target,file.path),content:file.content,generated:true});
     const expansion=await generateSteeringExpansionOverrides(gameDirectory);
-    plans.push({path:resolve(target,expansion.path),content:expansion.content});
+    plans.push({path:resolve(target,expansion.path),content:expansion.content,generated:true});
     addGenerated(await generateSteeringUnityPriorityOverrides(gameDirectory));
+  }
+  if (modName === 'cyberfish_steering_v1') {
+    plans.push({path: resolve(target, retiredPersonalityPath), retire: true})
   }
   const descriptor = (await readFile(join(source, 'descriptor.mod'), 'utf8')) + `path="mod/${modName}"\n`
   plans.push({ path: join(modRoot, `${modName}.mod`), content: Buffer.from(descriptor, 'utf8') })
@@ -101,6 +110,14 @@ export async function installLocalMod({ documentsPath, dryRun = false, modName=M
     const entry = await inspect(plan.path)
     if(entry&&(!entry.isFile()||entry.isSymbolicLink()))throw new Error('同名Mod目标不是普通文件，未覆盖');
     const current=entry?await readFile(plan.path):null;
+    if (plan.retire) {
+      if (current && !retiredPersonalityHashes.has(digest(current))) {
+        throw new Error('旧引导 Mod 人格文件已被修改，未覆盖；请备份并移出 common/personalities/cfsteer_personality.txt。')
+      }
+      plan.existing = !entry
+      plan.previous = current
+      continue
+    }
     // Paradox rewrites the external descriptor to absolute paths and its own
     // formatting. Preserve it when it still points to this exact local mod.
     if(current&&plan.path===join(modRoot,`${modName}.mod`)){
@@ -120,6 +137,7 @@ export async function installLocalMod({ documentsPath, dryRun = false, modName=M
     if(current&&!current.equals(plan.content)&&!plan.upgrade)throw new Error('同名观测 Mod 文件已存在且内容不同，未覆盖；请保留它并另行核对。');
     plan.existing=!!entry&&!plan.upgrade
   }
+  const removed = []
   const created = [],backups=[]
   if(!dryRun&&updateGenerated)for(const plan of plans.filter(row=>row.previous)){
     const backupRoot=resolve(backupDirectory),backupPath=resolve(backupRoot,modName,relative(target,plan.path));
@@ -128,12 +146,18 @@ export async function installLocalMod({ documentsPath, dryRun = false, modName=M
   }
   if (!dryRun) for (const plan of plans) {
     if (plan.existing) continue
+    if (plan.retire) {
+      if (!plan.previous.equals(await readFile(plan.path))) throw new Error('旧引导 Mod 人格文件已变化，未移除。')
+      await unlink(plan.path)
+      removed.push(plan.path)
+      continue
+    }
     if(plan.previous&&!plan.previous.equals(await readFile(plan.path)))throw Error('待更新生成文件在备份后发生变化，未覆盖该文件');
     await mkdir(resolve(plan.path, '..'), { recursive: true })
     // wx handles races without ever overwriting another process's new file.
     await writeFile(plan.path, plan.content, { flag: plan.upgrade?'w':'wx' }); created.push(plan.path)
   }
-  return { ok: true, dryRun, documentsPath: realDocuments, modName, modPath: target, created,backups, files: plans.map(plan => ({ path: plan.path, sha256: digest(plan.content), existing: plan.existing })),...(integration?{integration}:{}), enabledByInstaller: false, message: dryRun ? '安装计划已检查，没有写入文件。' : integration?'兼容补丁已生成；需在对应原Mod与Cyberfish Steering之后加载。未改启用列表，尚未验证实机效果。':'观测 Mod 已就位；请在启动器的单独测试播放集中启用。未修改原播放集或启用列表。' }
+  return { ok: true, dryRun, documentsPath: realDocuments, modName, modPath: target, created,backups,removed, files: plans.filter(plan => !plan.retire).map(plan => ({ path: plan.path, sha256: digest(plan.content), existing: plan.existing })),...(integration?{integration}:{}), enabledByInstaller: false, message: dryRun ? '安装计划已检查，没有写入文件。' : integration?'兼容补丁已生成；需在对应原Mod与Cyberfish Steering之后加载。未改启用列表，尚未验证实机效果。':'观测 Mod 已就位；请在启动器的单独测试播放集中启用。未修改原播放集或启用列表。' }
 }
 
 export const installObserverMod = options => installLocalMod({...options,modName:MOD_NAME});

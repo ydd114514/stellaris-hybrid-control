@@ -31,6 +31,14 @@ export function resolveStrategyDirection({state={},standing=state.operatorStandi
   if(ownerConsolidating)reason+='；按本人要求先巩固现有疆域';
   else if(digesting)reason+='；暂缓普通扩张，'+health.reasons.slice(0,2).join('；');
  }
- return {contract:{...base,economyFocus,...(shortage||war||digesting||ownerConsolidating?{expansionStance:'consolidate'}:{}),...(war?{militaryStance:'prepare_war'}:explorationOnly?{militaryStance:'peaceful'}:{}),
-  ...(explorationOnly?{oneOffActions:(base.oneOffActions??[]).filter(a=>a.type!=='declare_war')}:{}),reason:reason.slice(0,300)},requestedFocus:requested,emergency:!!shortage||war,reason:reason.slice(0,300)};
+ if(['hive','machine'].includes(state.empireType)&&economyFocus==='consumer_stability'){
+  economyFocus='balanced';
+  reason+='；格式塔不使用消费品，维持均衡方针';
+ }
+ const effective={...base,economyFocus,
+  ...(shortage||war||digesting||ownerConsolidating?{expansionStance:'consolidate'}:{}),
+  ...(war?{militaryStance:'prepare_war'}:explorationOnly?{militaryStance:'peaceful'}:{}),
+  ...(explorationOnly?{oneOffActions:(base.oneOffActions??[]).filter(a=>a.type!=='declare_war')}:{}),reason:reason.slice(0,300)};
+ if(effective.militaryStance!=='prepare_war')delete effective.warTarget;
+ return {contract:effective,requestedFocus:requested,emergency:!!shortage||war,reason:effective.reason};
 }

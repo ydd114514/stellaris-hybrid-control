@@ -39,15 +39,62 @@ test('model rephrasing cannot erase a stalled same-resource intent and review ac
  const s=state();delete s.userEconomicPolicy;
  const a=compileNativeIntent(s,contract),b=compileNativeIntent(s,{...contract,reason:'同一科研目标换句话'});
  assert.equal(a.key,b.key);
+ const fleetPolicy=compileNativeIntent(s,{...contract,nativePolicy:{peaceful_exploration:true,use_existing_science:true}},undefined,{requireGoals:false});
+ assert.equal(a.key,fleetPolicy.key);assert.notDeepEqual(a.ownerPolicy,fleetPolicy.ownerPolicy);
  const review=new NativeStrategyReview();s.nativeIntent={status:'stalled',targetResource:'unity',requestedFocus:'unity_traditions'};
  review.acknowledge(s);assert.deepEqual(review.due(s),[]);
 });
+test('owner timestamps, standing rebinds and task replans preserve the resource baseline while a changed goal resets it',()=>{
+ const tracker=new NativeIntentExecution(),s=state(),i=compileNativeIntent(s,{...contract,taskIds:['old-task']});
+ tracker.observe(i,s,context);
+ const next=state('2200.07.01');next.userEconomicPolicy={...owner,updatedAt:999,note:'把凝聚力继续提上去，换种说法'};
+ const reworded=compileNativeIntent(next,{...contract,taskIds:['new-task']});
+ assert.equal(i.key,reworded.key);
+ const flat=tracker.observe(reworded,next,context);assert.equal(flat.status,'stalled');assert.equal(flat.baseline.date,'2200.01.01');
+ const a=state();delete a.userEconomicPolicy;a.operatorStanding={id:'session-a',text:'持续凝聚力',economyFocus:'unity_traditions'};
+ const b={...a,operatorStanding:{...a.operatorStanding,id:'session-b',text:'继续优先凝聚力'}};
+ assert.equal(compileNativeIntent(a,contract).key,compileNativeIntent(b,contract).key);
+ const changed=state('2201.01.01');changed.userEconomicPolicy={...owner,priority:'research_first',economyFocus:'research'};
+ const newIntent=compileNativeIntent(changed,contract);assert.notEqual(newIntent.key,i.key);
+});
+test('construction and staffing get bounded observation periods without claiming an economic result',()=>{
+ const tracker=new NativeIntentExecution();
+ const constructing=date=>({...state(date),colonyAudit:{known:true,date,colonies:[{planetId:0,ageDays:0,constructionCount:1,housing:2,amenities:2,unemployed:0}]}});
+ let s=constructing('2200.01.01'),i=compileNativeIntent(s,contract);tracker.observe(i,s,context);
+ const waiting=tracker.observe(i,constructing('2200.07.01'),context);
+ assert.equal(waiting.status,'applied');assert.equal(waiting.feedback.phase,'building');assert.equal(waiting.progress.netDelta,0);
+ const restored=new NativeIntentExecution();assert.equal(restored.restore(tracker.serialize(),context.binding),true);
+ const missing=state('2200.10.01');restored.observe(i,missing,context);
+ s=constructing('2201.01.01');s.colonyAudit.colonies[0].constructionCount=2;
+ const overdue=restored.observe(i,s,context);assert.equal(overdue.status,'stalled');assert.equal(overdue.feedback.wait,null);
+ assert.ok(overdue.feedback.recommendations.some(x=>x.action==='verify_target_construction'));
+ const staff=new NativeIntentExecution(),staffing=date=>({...state(date),colonyAudit:{known:true,date,colonies:[{planetId:0,ageDays:0,constructionCount:0,housing:2,amenities:2,unemployed:0}]},
+  operationalFacts:[{topic:'jobs',entityId:0,gameDate:date,observedAt:1000,economy:{workforceKnown:true,employedWorkforce:5,capacityWorkforce:10}}]});
+ s=state();staff.observe(i,s,context);staff.observe(i,staffing('2200.04.01'),context);
+ const filling=staff.observe(i,staffing('2200.07.01'),context);assert.equal(filling.status,'applied');assert.equal(filling.feedback.phase,'staffing');
+ assert.equal(staff.observe(i,staffing('2200.10.01'),context).status,'stalled');
+ const afterBuild=new NativeIntentExecution();afterBuild.observe(i,constructing('2200.01.01'),context);
+ afterBuild.observe(i,constructing('2200.07.01'),context);
+ assert.equal(afterBuild.observe(i,staffing('2201.01.01'),context).feedback.phase,'staffing');
+ assert.equal(afterBuild.observe(i,staffing('2201.07.01'),context).status,'stalled');
+});
+test('stale readings expose no stale net or tradition delta and a crisis does not consume the normal review interval',()=>{
+ const tracker=new NativeIntentExecution(),s=state(),i=compileNativeIntent(s,contract);tracker.observe(i,s,context);
+ const stale=state('2200.07.01',40);stale.traditions.unlocked_traditions_count=1;
+ const unknown=tracker.observe(i,stale,{...context,now:40000});
+ assert.equal(unknown.status,'blocked');assert.equal(unknown.current.net,null);assert.equal(unknown.progress.netDelta,null);assert.equal(unknown.progress.traditionsGained,null);
+ const war=state('2200.08.01',5);war.wars=[{player_side:'defender'}];
+ assert.equal(tracker.observe(compileNativeIntent(war,contract),war,context).status,'suspended');
+ const recovered=tracker.observe(i,state('2202.01.01',5),context);
+ assert.equal(recovered.status,'applied');assert.equal(recovered.baseline.net,20);assert.equal(recovered.progress.netDelta,-15);
+ assert.equal(tracker.observe(i,state('2202.07.01',5),context).status,'stalled');
+});
 test('a model can translate accepted advice to native constraints but cannot weaken explicit owner constraints',()=>{
- const model=validateStrategyContract({...contract,nativePolicy:{peaceful_exploration:true,use_existing_science:true}});
+ const model=validateStrategyContract({...contract,nativePolicy:{peaceful_exploration:true,use_existing_science:true}},undefined,{requireGoals:false});
  const s=state();delete s.userEconomicPolicy;
  assert.deepEqual(compileNativeIntent(s,model).ownerPolicy,{peaceful_exploration:true,use_existing_science:true});
  assert.deepEqual(compileNativeIntent(state(),{...model,nativePolicy:{peaceful_exploration:false,use_existing_science:false}}).ownerPolicy,{peaceful_exploration:true,use_existing_science:true});
- assert.throws(()=>validateStrategyContract({...contract,nativePolicy:{arbitrary_command:true}}));
+ assert.throws(()=>validateStrategyContract({...contract,nativePolicy:{arbitrary_command:true}},undefined,{requireGoals:false}));
  const tracker=new NativeIntentExecution(),view=tracker.observe(compileNativeIntent(state(),model),state(),{...context,steeringConfirmed:false,controlError:'当前方针原生回读失败'});
  assert.equal(view.status,'blocked');assert.match(view.reason,/原生回读失败/);
 });

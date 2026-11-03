@@ -5,6 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {randomUUID} from 'node:crypto';
 import {JsonlTail} from '../src/jsonl-tail.mjs';
 import {planCaption,planHistoryItem,SurveyCaptionTracker,dshPhase,audienceState} from '../src/commentary.mjs';
+import {COMMENTARY_CAPTION_PROTOCOL} from '../src/commentary-launch.mjs';
 import {audienceEvent} from '../src/audience.mjs';
 import {GameNotebook} from '../src/game-notebook.mjs';
 import {createApiBalanceMonitor} from '../src/api-balance.mjs';
@@ -28,7 +29,7 @@ try {
   for(const j of journals.sort((a,b)=>a.mtime-b.mtime).slice(-6)){
     const file=await open(j.path);
     try{const size=(await file.stat()).size,start=Math.max(0,size-4*1024*1024),buf=Buffer.alloc(size-start);await file.read(buf,0,buf.length,start);let date=null;
-      for(const line of buf.toString('utf8').split('\n'))try{const r=JSON.parse(line);if(r.type==='state')date=r.state?.date||null;if(r.type==='intent'){const item=planHistoryItem(r,date);if(item)recentPlans.push(item);}if(['state','receipt'].includes(r.type)&&r.at>notebook.lastAt)rows.push(r);}catch{}
+      for(const line of buf.toString('utf8').split('\n'))try{const r=JSON.parse(line);if(r.type==='state')date=r.state?.date||null;if(r.type==='intent'||r.type==='strategy_review'){const item=planHistoryItem(r,date);if(item)recentPlans.push(item);}if(['state','receipt'].includes(r.type)&&r.at>notebook.lastAt)rows.push(r);}catch{}
     }finally{await file.close();}
   }
   for(const row of rows.sort((a,b)=>a.at.localeCompare(b.at)))notebook.consume(row);
@@ -42,7 +43,7 @@ const balance=createApiBalanceMonitor({enabled:!testRoot,getKey:()=>loadDeepSeek
 void balance.refresh();const balanceTimer=setInterval(()=>void balance.refresh(),300000);balanceTimer.unref();
 function line(message,item) {
   if(!message?.text) return;
-  if(message.kind==='plan' && message.text===lastPlan && Date.now()-lastPlanAt<20000) return;
+  if(message.kind==='plan' && message.phase!=='战略复查' && message.text===lastPlan && Date.now()-lastPlanAt<20000) return;
   if(message.kind==='plan'){lastPlan=message.text;lastPlanAt=Date.now();state.caption=message.text;}
   state.phase=message.phase||state.phase;
   item ||= {id:randomUUID(),at:Date.now(),kind:message.kind,text:message.text,date:null};
@@ -73,7 +74,7 @@ async function poll(){
     await nativeTail.read(resolve('.local/native-bridge',`session-${checkpoint.sessionId}.jsonl`),row=>{
       notebook.consume(row);
       if(row.type==='director_scene'&&active&&!checkpoint.stopped)line({kind:'intent',phase:'星海导播',text:row.text,priority:0,speak:false});
-      if(row.type==='intent')line(planCaption(row),planHistoryItem(row,notebook.previous?.date));
+      if(row.type==='intent'||row.type==='strategy_review')line(planCaption(row),planHistoryItem(row,notebook.previous?.date));
       if(row.type==='survey_control')line(surveyCaptions.consume(row));
       if(row.type==='picture_evidence')acceptFrame(row.frame);
       if(row.type==='modal_deferred')state.phase='先处理眼前事件';
@@ -98,7 +99,7 @@ const server=http.createServer(async(req,res)=>{
   if(req.method==='GET' && url.pathname==='/preview/game.bmp'){
     try{if(!previewPath)throw 0;const info=await stat(previewPath);if(info.size>32*1024*1024)throw 0;const bytes=await readFile(previewPath);res.writeHead(200,{'content-type':'image/bmp','cache-control':'no-store'});return res.end(bytes);}catch{return json(404,{error:'No recent game preview'});}
   }
-  if(req.method==='GET' && url.pathname==='/health')return json(200,{application:'cyberfish-commentary',version:'0.3',captionProtocol:'actual-playback-director-v2',pid:process.pid});
+  if(req.method==='GET' && url.pathname==='/health')return json(200,{application:'cyberfish-commentary',version:'0.3',captionProtocol:COMMENTARY_CAPTION_PROTOCOL,pid:process.pid});
   if(req.method==='GET' && url.pathname==='/api/state')return json(200,state);
   if(req.method==='GET' && url.pathname==='/events'){
     res.writeHead(200,{'content-type':'text/event-stream; charset=utf-8','cache-control':'no-cache','connection':'keep-alive'});res.write(`data: ${JSON.stringify(state)}\n\n`);clients.add(res);req.on('close',()=>clients.delete(res));return;

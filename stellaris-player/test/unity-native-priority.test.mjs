@@ -27,6 +27,7 @@ test('node preference retains the complete effective building and only adds cond
  assert.match(result,/@node_jobs = 200/);assert.match(valuation[0].text,/unity = 60/);
  assert.match(valuation[0].text,/owner = \{ has_edict = cfsteer_economy_unity_traditions has_edict = cfsteer_military_peaceful is_at_war = no/);
  for(const guard of ['has_available_jobs = coordinator','has_forbidden_jobs = coordinator','has_building_construction = building_hive_node'])assert.ok(valuation[0].text.includes('NOT = { '+guard+' }'));
+ for(const guard of ['free_housing >= 0','free_amenities >= 0','num_unemployed > 0','has_active_tradition = tr_virtuality_4'])assert.ok(valuation[0].text.includes(guard));
  for(const resource of ['energy','minerals','food','consumer_goods','alloys'])assert.ok(valuation[0].text.includes('NOT = { has_deficit = '+resource+' }'));
  assert.equal(scriptBlocks(result).filter(row=>row.key.startsWith('building_')).length,1);
  assert.throws(()=>unityNodeBuildingPreference({key:'building_hive_node',text:'building_hive_node = { cost = 1 }'}),/定义缺失或结构改变/);
@@ -55,22 +56,26 @@ test('unity plan excludes competing surplus plans only for the player peace edic
  }
 });
 
-test('exploration personality suspends navy spending only in the unity peace branch and retains civilian development and wartime source traits',()=>{
+test('exploration personality changes military spending only in the unity peace branch',()=>{
  const original='hive = { aggressiveness = 1 military_spending = 1.3 colony_spending = 1.1 allow = { is_hive_empire = yes } weight_modifier = { weight = 20 } behaviour = { conqueror = yes crisis_fighter = yes } }';
- const fallback='cfsteer_reserved_diplomacy = { aggressiveness = 0 military_spending = 1 allow = { is_hive_empire = yes } weight_modifier = { weight = 100000 } }';
- const result=compatiblePersonalities([{key:'hive',text:original,variables:''}],fallback),blocks=scriptBlocks(result.content);
- const normal=blocks.find(row=>row.key==='cfsteer_stellar_hive').text,explore=blocks.find(row=>row.key==='cfsteer_unity_exploration_hive').text;
- assert.match(normal,/military_spending = 1.3/);assert.match(normal,/NOT = \{ has_edict = cfsteer_economy_unity_traditions has_edict = cfsteer_military_peaceful is_at_war = no \}/);
- assert.match(explore,/military_spending = 0/);assert.doesNotMatch(explore,/NOT = \{ has_edict = cfsteer_economy_unity_traditions has_edict = cfsteer_military_peaceful/);
- for(const text of [normal,explore]){assert.match(text,/colony_spending = 1.1/);assert.match(text,/is_hive_empire = yes/);assert.match(text,/crisis_fighter = yes/);}
- assert.equal(result.aliases.some(([key])=>key==='cfsteer_unity_exploration_hive'),true);
+ const result=compatiblePersonalities([{key:'hive',text:original,variables:''}]),blocks=scriptBlocks(result.content);
+ assert.equal(blocks.length,1);
+ const [explore]=blocks;
+ assert.equal(explore.key,'cfsteer_unity_exploration_hive');
+ assert.match(explore.text,/has_edict = cfsteer_economy_unity_traditions has_edict = cfsteer_military_peaceful is_at_war = no/);
+ assert.match(explore.text,/military_spending = 0/);
+ assert.match(explore.text,/aggressiveness = 1/);
+ assert.match(explore.text,/colony_spending = 1.1/);
+ assert.match(explore.text,/is_hive_empire = yes/);
+ assert.match(explore.text,/crisis_fighter = yes/);
 });
 
 test('normal steering generation wires the complete building, exclusive plan and exploration personality without disabling shared ships budgets',async t=>{
  const root=await mkdtemp(join(tmpdir(),'unity-native-priority-'));t.after(()=>{assert.ok(root.startsWith(join(tmpdir(),'unity-native-priority-')));return rm(root,{recursive:true,force:true});});
- for(const folder of ['buildings','economic_plans'])await mkdir(join(root,'common',folder),{recursive:true});
+ for(const folder of ['buildings','economic_plans','personalities'])await mkdir(join(root,'common',folder),{recursive:true});
  await writeFile(join(root,'common/buildings/08_unity_buildings.txt'),'@node_time = 360\n@node_jobs = 200\n'+node);
  await writeFile(join(root,'common/economic_plans/basic.txt'),'basic_economy_plan = { income = { alloys = 50 } ai_weight = { weight = 900 } }');
+ await writeFile(join(root,'common/personalities/00_personalities.txt'),'hive = { aggressiveness = 1 military_spending = 1 allow = { is_hive_empire = yes } weight_modifier = { weight = 20 } }');
  const files=await generateSteeringUnityPriorityOverrides(root);
  assert.ok(files.some(row=>row.path==='common/buildings/zz_cfsteer_unity_node.txt'&&row.content.includes('building_hive_node')));
  assert.ok(files.some(row=>row.path==='common/economic_plans/zz_cfsteer_unity_priority.txt'&&row.content.includes('cfsteer_unity_priority_plan')));
@@ -90,6 +95,27 @@ test('explicit generated-file update backs up the exact prior bytes and still re
  assert.equal(output.backups.length,1);assert.equal(await readFile(output.backups[0],'utf8'),prior);
  assert.notEqual(await readFile(nodePath,'utf8'),prior);
  const staticPath=join(root,'mod/cyberfish_steering_v1/common/personalities/cfsteer_personality.txt');
- await writeFile(staticPath,(await readFile(staticPath,'utf8'))+'\n# custom static personality');
- await assert.rejects(installSteeringMod({documentsPath:root,gameDirectory,updateGenerated:true,backupDirectory:join(root,'backup2')}),/内容不同/);
+ await writeFile(staticPath,'# custom static personality');
+ await assert.rejects(installSteeringMod({documentsPath:root,gameDirectory,updateGenerated:true,backupDirectory:join(root,'backup2')}),/已被修改/);
+ assert.equal(await readFile(staticPath,'utf8'),'# custom static personality');
+});
+
+// 4.5 drops zero values from income goals and diagnoses an empty base goal.
+// Focus/scaling are continuing targets; they are deliberately not tier gates.
+test('unity priority has a positive base goal and an exclusive continuing fallback without other surplus targets',()=>{
+ const rows=[
+  {key:'basic_economy_plan',text:'basic_economy_plan = { ai_weight = { weight = 900 } income = { energy = 50 } }'},
+  {key:'mature_economy_plan',text:'mature_economy_plan = { ai_weight = { weight = 300 } income = { alloys = 500 } potential = { is_nomadic = no } }'}
+ ];
+ for(const generated of [unityPriorityEconomyOverrides(rows),compatibleEconomyPlans(rows).content]){
+  const blocks=scriptBlocks(generated),priority=blocks.find(row=>row.key==='cfsteer_unity_priority_plan').text;
+  const income=own(priority,'income');assert.equal(income.length,1);
+  assert.match(income[0].text,/\bunity = 1\s*}/);
+  for(const resource of ['energy','minerals','food','consumer_goods','alloys','volatile_motes','exotic_gases','rare_crystals'])assert.match(income[0].text,new RegExp('\\b'+resource+' = 0\\b'));
+  assert.match(own(priority,'focus')[0].text,/unity = 1000/);
+  const scaling=own(priority,'subplan').find(row=>row.text.includes('"cfsteer_unity_priority_scaling"')).text;
+  assert.match(scaling,/scaling = yes income = \{ unity = 100 \}/);
+  for(const key of rows.map(row=>row.key))assert.match(blocks.find(row=>row.key===key).text,/NOT = \{ has_edict = cfsteer_economy_unity_traditions has_edict = cfsteer_military_peaceful is_at_war = no \}/);
+  assert.doesNotMatch(priority,/years_passed|unity = 600|physics_research|society_research|engineering_research/);
+ }
 });

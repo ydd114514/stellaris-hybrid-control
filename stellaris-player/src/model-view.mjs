@@ -2,7 +2,7 @@ import {isDeepStrictEqual} from 'node:util';
 
 const object=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const clone=value=>structuredClone(value);
-const currentFields=['snapshotId','date','remainingSeconds','paused','speed','decisionReview'];
+const currentFields=['snapshotId','date','remainingSeconds','paused','speed','decisionReview','strategyBrief'];
 function difference(before,after,path=[],removed=[]){
   const patch={};
   for(const [key,value] of Object.entries(after)){

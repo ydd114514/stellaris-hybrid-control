@@ -30,15 +30,16 @@ test('consolidate derives actual mod spending definitions and leaves naval or ot
  assert.doesNotMatch(result.content,/stellar_shipyards|stellar_navy/);
 });
 
-test('reserved player personality variants retain overhaul spending and traits while other countries stay unchanged',()=>{
+test('only the peaceful unity personality variant overrides overhaul spending',()=>{
  const original='stellar_peaceful = { aggressiveness = 0.3 military_spending = 0.7 colony_spending = 1.8 allow = { is_country_type = default } weight_modifier = { weight = 20 modifier = { factor = 2 has_ethic = ethic_xenophile } } behaviour = { conqueror = no crisis_fighter = yes } }';
- const fallback='cfsteer_reserved_diplomacy = { allow = { has_edict = cfsteer_economy_balanced } weight_modifier = { weight = 100000 } aggressiveness = 0 military_spending = 1 }';
- const result=compatiblePersonalities([{key:'stellar_peaceful',text:original,variables:''}],fallback);
- assert.match(result.content,/cfsteer_stellar_stellar_peaceful =/);assert.match(result.content,/military_spending = 0.7 colony_spending = 1.8/);
- assert.match(result.content,/conqueror = no crisis_fighter = yes/);assert.match(result.content,/aggressiveness = 0\b/);
- assert.match(result.content,/factor = 1000000/);assert.match(result.content,/weight = 0.001/);
- assert.deepEqual(result.aliases,[['cfsteer_stellar_stellar_peaceful','stellar_peaceful'],['cfsteer_unity_exploration_stellar_peaceful','stellar_peaceful'],['cfsteer_unity_exploration_reserved','cfsteer_reserved_diplomacy']]);
- assert.doesNotMatch(result.content,/\nstellar_peaceful =/);
+ const result=compatiblePersonalities([{key:'stellar_peaceful',text:original,variables:''}]);
+ assert.match(result.content,/cfsteer_unity_exploration_stellar_peaceful =/);
+ assert.match(result.content,/military_spending = 0 colony_spending = 1.8/);
+ assert.match(result.content,/conqueror = no crisis_fighter = yes/);
+ assert.match(result.content,/aggressiveness = 0.3/);
+ assert.match(result.content,/has_edict = cfsteer_military_peaceful is_at_war = no/);
+ assert.deepEqual(result.aliases,[['cfsteer_unity_exploration_stellar_peaceful','stellar_peaceful']]);
+ assert.doesNotMatch(result.content,/cfsteer_reserved_diplomacy|cfsteer_stellar_stellar_peaceful|\nstellar_peaceful =/);
 });
 
 test('human country service is complementary to NPC dispatch and excludes script resource or aid transactions',()=>{

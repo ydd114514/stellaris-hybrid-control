@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {applyDomesticAction,validateStrategyContract,strategyContractSchema} from '../src/strategy-contract.mjs';
+import {applyDomesticAction,validateStrategyContract as validate,strategyContractSchema} from '../src/strategy-contract.mjs';
 
 const key='agenda_open_arms';
 const action=(type='set_council_agenda',agenda_key=key)=>({type,arguments:{agenda_key},taskId:'advice-1'});
-const contract=(extra={})=>({economyFocus:'unity_traditions',expansionStance:'consolidate',militaryStance:'peaceful',oneOffActions:[],reason:'执行当前建议并核查效果',...extra});
+const validateStrategyContract=value=>validate(value,undefined,{currentDate:'2200.01.01'});
+const contract=(extra={})=>({goals:[{metric:'pops',target:120,byDate:'2210.01.01'}],economyFocus:'unity_traditions',expansionStance:'consolidate',militaryStance:'peaceful',oneOffActions:[],reason:'执行当前建议并核查效果',...extra});
 const government={ethics:[{key:'ethic_xenophile'}],available_agendas:[{key,name:'开放怀抱'}]};
 const ready=()=>({active_agenda:key,agenda_ready:true,agenda_progress:7000,agenda_cost:7000});
 

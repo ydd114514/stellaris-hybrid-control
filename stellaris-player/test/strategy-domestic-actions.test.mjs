@@ -7,16 +7,17 @@ import {validateStrategyContract,applyDomesticEdict,strategyContractSchema} from
 import {NativeGame,validateOrder} from '../src/native-game.mjs';
 
 const action=(key='nutritional_plenitude',enabled=false)=>({type:'toggle_edict',arguments:{edict_key:key,enabled}});
-const contract=domesticActions=>({economyFocus:'unity_traditions',expansionStance:'consolidate',militaryStance:'peaceful',oneOffActions:[],reason:'按当前岗位和资源结算撤销收益不足的法令',domesticActions});
+const currentDate='2250.01.01';
+const contract=domesticActions=>({goals:[{metric:'alloys_monthly',target:20,byDate:'2251.01.01'}],economyFocus:'unity_traditions',expansionStance:'consolidate',militaryStance:'peaceful',oneOffActions:[],reason:'按当前岗位和资源结算撤销收益不足的法令',domesticActions});
 const edicts=(keys,extra={})=>({summary:{active_edicts_count:keys.length},active_edicts:keys.map(key=>({key})),...extra});
 
 test('domestic settings are optional, bounded and cannot alter steering or system role edicts',()=>{
- assert.deepEqual(validateStrategyContract(contract([action()]),validateOrder).domesticActions,[action()]);
+ assert.deepEqual(validateStrategyContract(contract([action()]),validateOrder,{currentDate}).domesticActions,[action()]);
  assert.equal(strategyContractSchema.properties.domesticActions.maxItems,4);
  for(const actions of [[action('cfsteer_economy_unity_traditions')],[action('relay_network_dummy')],[action('system_role_maintenance')],
   [action(),action()],[action(),action('capacity_subsidies'),action('mining_subsidies'),action('farming_subsidies'),action('forge_subsidies')],
   [{type:'set_policy',arguments:{}}],[{...action(),extra:true}],[{type:'toggle_edict',arguments:{edict_key:'nutritional_plenitude',enabled:false,country_id:1}}]]){
-  assert.throws(()=>validateStrategyContract(contract(actions),validateOrder));
+  assert.throws(()=>validateStrategyContract(contract(actions),validateOrder,{currentDate}));
  }
 });
 
@@ -32,7 +33,7 @@ test('ordinary cancellation uses a fresh complete active list and confirms actua
 
 test('a task cannot be ended or marked blocked while issuing an action for that same task',()=>{
  for(const status of ['blocked','superseded']){
-  assert.throws(()=>validateStrategyContract({...contract([{...action(),taskId:'task-1'}]),taskUpdates:[{taskId:'task-1',status,reason:'该目标不再执行'}]},validateOrder),/不能.*继续下达/);
+  assert.throws(()=>validateStrategyContract({...contract([{...action(),taskId:'task-1'}]),taskUpdates:[{taskId:'task-1',status,reason:'该目标不再执行'}]},validateOrder,{currentDate}),/不能.*继续下达/);
  }
 });
 

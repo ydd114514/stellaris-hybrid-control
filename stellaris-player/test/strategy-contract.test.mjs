@@ -3,13 +3,14 @@ import assert from 'node:assert/strict';
 import {validateStrategyContract,applySteering,reservedOrder,reservedRPC,steeringRPC} from '../src/strategy-contract.mjs';
 import {validateOrder} from '../src/native-game.mjs';
 import {NativeStrategyReview} from '../src/native-strategy-review.mjs';
-const contract={economyFocus:'research',expansionStance:'consolidate',militaryStance:'peaceful',oneOffActions:[],reason:'优先科研并消化现有疆域'};
+const context={currentDate:'2200.01.01',empireType:'regular'};
+const contract={goals:[{metric:'pops',target:120,byDate:'2220.01.01'}],economyFocus:'research',expansionStance:'consolidate',militaryStance:'peaceful',oneOffActions:[],reason:'优先科研并消化现有疆域'};
 test('StrategyContract accepts only three dimensions and reserved decisions, not routine micro',()=>{
- assert.deepEqual(validateStrategyContract(contract,validateOrder),contract);
+ assert.deepEqual(validateStrategyContract(contract,validateOrder,context),contract);
  const valid={...contract,oneOffActions:[{type:'declare_war',arguments:{country_id:0,goal_key:'wg_conquest'}}]};
- assert.equal(validateStrategyContract(valid,validateOrder).oneOffActions[0].arguments.country_id,0);
+ assert.equal(validateStrategyContract(valid,validateOrder,context).oneOffActions[0].arguments.country_id,0);
  for(const invalid of [{...contract,economyFocus:'cheat'},{...contract,extra:1},{...contract,oneOffActions:[{type:'build_ship',arguments:{}}]},
-  {...contract,oneOffActions:[{type:'declare_war',arguments:{country_id:-1,goal_key:'wg_conquest'}}]}])assert.throws(()=>validateStrategyContract(invalid,validateOrder));
+  {...contract,oneOffActions:[{type:'declare_war',arguments:{country_id:-1,goal_key:'wg_conquest'}}]}])assert.throws(()=>validateStrategyContract(invalid,validateOrder,context));
  assert.ok(reservedOrder('offer_peace'));assert.ok(reservedRPC('diplomacy_action'));
  assert.equal(reservedOrder('build_ship'),false);assert.equal(steeringRPC('toggle_edict',{edict_key:'subsidize_research',enabled:true}),false);
 });
@@ -33,4 +34,43 @@ test('strategy review is six game months or changed strategic events, not idle t
  assert.ok(review.due({...state,date:'2200.07.01'}).includes('six_month_review'));
  assert.ok(review.due({...state,wars:[{war_id:0}]}).includes('strategic_event'));
  assert.ok(review.due({...state,resources:{energy:{stockpile:5,net:-5}}}).includes('strategic_event'));
+});
+
+test('quantified native strategy goals and directions are bounded and match the empire',()=>{
+ const {goals,...withoutGoals}=contract;
+ for(const invalid of [withoutGoals,{...contract,goals:[]},{...contract,goals:Array(4).fill(goals[0])}]){
+  assert.throws(()=>validateStrategyContract(invalid,validateOrder,context),/1～3个可量化目标/);
+ }
+ for(const byDate of ['2220.13.01','2210.02.31','2210-02-01']){
+  assert.throws(()=>validateStrategyContract({...contract,goals:[{...goals[0],byDate}]},validateOrder,context),/有效指标/);
+ }
+ assert.throws(()=>validateStrategyContract({...contract,goals:[{...goals[0],byDate:'2220.01.02'}]},validateOrder,context),/20年/);
+ assert.throws(()=>validateStrategyContract({...contract,warTarget:{countryId:0}},validateOrder,context),/只有备战/);
+ assert.throws(()=>validateStrategyContract({...contract,expansionDirection:{towardCountryId:-1}},validateOrder,context),/帝国ID/);
+ for(const empireType of ['hive','machine']){
+  assert.throws(()=>validateStrategyContract({...contract,economyFocus:'consumer_stability'},validateOrder,{...context,empireType}),/凝聚力优先.*本帝国不用消费品/);
+ }
+ const planned={...contract,expansionDirection:{towardCountryId:0},militaryStance:'prepare_war',warTarget:{countryId:1}};
+ assert.deepEqual(validateStrategyContract(planned,validateOrder,context),planned);
+ assert.deepEqual(validateStrategyContract(withoutGoals,validateOrder,{requireGoals:false}),withoutGoals);
+});
+
+test('only two acknowledged reviews with all metrics known and no goal near completion signal stagnation',()=>{
+ const review=new NativeStrategyReview();
+ const state={date:'2200.01.01',population:60,strategyContract:contract,military:{fleets:[{military_power:100}]},resources:{
+  physics_research:{net:30},society_research:{net:30},engineering_research:{net:30}
+ }};
+ review.acknowledge(state);
+ const first={...state,date:'2200.07.01'};
+ assert.deepEqual(review.due(first),['six_month_review']);
+ assert.deepEqual(review.due(first),['six_month_review']);
+ review.acknowledge(first);
+ const second={...state,date:'2201.01.01'};
+ assert.deepEqual(review.due(second),['six_month_review','stagnation']);
+ for(const improved of [{population:61},{population:96},{military:{}},{military:{fleets:[{military_power:101}]}},
+  {resources:{...state.resources,physics_research:{net:31}}}]){
+  assert.deepEqual(review.due({...second,...improved}),['six_month_review']);
+ }
+ review.acknowledge(second,{changed:true});
+ assert.deepEqual(review.due({...state,date:'2201.07.01'}),['six_month_review']);
 });

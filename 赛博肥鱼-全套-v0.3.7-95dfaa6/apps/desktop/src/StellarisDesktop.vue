@@ -140,6 +140,11 @@ onUnmounted(() => { mounted = false; clearInterval(timer) })
         <p>托管范围：{{ status.snapshot.countryAI.domains.map(d=>d==='native_country_operations'?'全部日常运营（保留外交决定）':d==='research'?'科研':'殖民地建设').join('、') || '等待委派' }}</p>
         <p v-if="status.snapshot.countryAI.steering">当前方针：{{ status.snapshot.countryAI.steering.economyFocus }} / {{ status.snapshot.countryAI.steering.expansionStance }} / {{ status.snapshot.countryAI.steering.militaryStance }}</p>
         <p v-if="status.snapshot.countryAI.lastStrategyReason">最近战略：{{ status.snapshot.countryAI.lastStrategyReason }}</p>
+        <ul v-if="status.snapshot.countryAI.goals?.length" aria-label="战略目标与进度" data-testid="strategy-goals">
+          <li v-for="(goal,index) in status.snapshot.countryAI.goals" :key="index">
+            {{ goal.label }} {{ goal.current }} / {{ goal.target }} · 截至 {{ goal.byDate }} · {{ goal.status }}{{ goal.progress ? `（${goal.progress}）` : '' }}
+          </li>
+        </ul>
         <p>保留命令拦截：{{ status.snapshot.countryAI.blockedCommands ?? 0 }}</p>
         <p v-if="status.snapshot.countryAI.reviewDue">已到战略复查点；大肥鱼可调整方针或做保留决定，原生AI继续运营。</p>
       </section>
