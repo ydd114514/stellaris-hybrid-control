@@ -119,7 +119,7 @@ DLL 放到 `stellaris-player/.local/native-bridge/runtime/cyberfish-0.6.18-count
 
 ### T3 读 4.5.2 游戏文件，定引导方案（只读，结果不超过一屏）
 
-游戏目录：HANDOFF 记录的 `D:/SteamLibrary/steamapps/common/Stellaris` 是旧机路径，当前电脑上不存在。先从 Steam 的 `libraryfolders.vdf` 找到实际安装位置，核对 EXE 版本是 4.5.2；找不到就问用户要路径，同时先做 T4 里不依赖游戏文件的部分（mod 骨架、本地化、安装器多 mod 支持）。
+游戏目录：HANDOFF 记录的是 `D:/SteamLibrary/steamapps/common/Stellaris`，先核对是否存在；不存在就从 Steam 的 `libraryfolders.vdf` 找实际安装位置，并核对 EXE 版本是 4.5.2。仍找不到就问用户要路径，同时先做 T4 里不依赖游戏文件的部分（mod 骨架、本地化、安装器多 mod 支持）。
 
 要回答 4 个问题，写进 HANDOFF.md 一个小节：
 
