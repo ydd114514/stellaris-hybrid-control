@@ -2,6 +2,7 @@ import {nativeCountryAISummary} from '../../../../stellaris-player/src/native-co
 import {directorSummary} from '../../../../stellaris-player/src/director-settings.mjs'
 import {confirmedCountryAIHandoff} from '../../../../stellaris-player/src/country-ai-handoff.mjs'
 import {loadHybridSettings,saveHybridSettings,saveNativeCountryAISettings} from '../../../../stellaris-player/src/hybrid-settings-store.mjs'
+import {FAST_STRATEGY_MODEL_NOTICE} from '../../../../stellaris-player/src/dsh-mcp-environment.mjs'
 import { spawn, execFile, type ChildProcess } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { readFile, writeFile, mkdir, stat, rename } from 'node:fs/promises'
@@ -137,6 +138,7 @@ export function createStellarisController(options: Options) {
       const fresh = checkpoint?.stopped === false && (!current.desktop?.started || checkpoint.started >= current.desktop.started)
       phase = fresh ? snapshot?.pendingEvents ? 'attention' : 'running' : 'starting'
       message = fresh ? snapshot?.pendingEvents ? '正在处理游戏中的事件。' : '大肥鱼正在控制当前游戏。' : '正在启动官方 DSH 和群星控制器。'
+      if(current.dsh?.modelNotice===FAST_STRATEGY_MODEL_NOTICE&&isAlive(current.dsh?.pid))message+=` ${FAST_STRATEGY_MODEL_NOTICE}。`
     } else if(current.startupError?.started>=current.desktop?.started&&typeof current.startupError?.message==='string') {
       phase='error';message=current.startupError.code==='country_ai_startup'?'原生国家 AI 委派失败，控制器已停止，不会自动重试；需要修复当前存档的启动兼容性。':'模型拒绝了控制工具的参数定义，控制器已停止；请更新后重新启动。'
     } else if (lastError) { phase = 'error'; message = lastError }
