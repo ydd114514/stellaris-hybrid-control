@@ -42,7 +42,7 @@ export function nativeMcpEnvironmentPatch({directory,runId,minutes,hybridSurvey,
  if(!Number.isSafeInteger(stopBaseline)||stopBaseline<=0)throw Error('DSH停止时间基线无效');
  if([nativeCountryAI,surveyPilot,colonyUpgradePilot,monthlyLifecyclePilot,localWaitPilot].some(x=>typeof x!=='boolean'))throw Error('DSH功能开关必须是明确布尔值');
  // Cordis replaces a patched config wholesale; preserve every transport field.
- const patch=[{id:'cyberfish-stellaris-mcp',config:{serverName:'stellaris',transport:'stdio',command:'C:\\Program Files\\nodejs\\node.exe',args:[fileURLToPath(new URL('./native-mcp.mjs',import.meta.url))],cwd:fileURLToPath(new URL('..',import.meta.url)),toolCallTimeoutMs:120000,failOnStartupError:true,env:{DEEPSEEK_API_KEY:'',
+ const patch=[{id:'cyberfish-stellaris-mcp',config:{serverName:'stellaris',transport:'stdio',command:'C:\\Program Files\\nodejs\\node.exe',args:[fileURLToPath(new URL('./native-mcp.mjs',import.meta.url))],cwd:fileURLToPath(new URL('..',import.meta.url)),toolCallTimeoutMs:nativeCountryAI?930000:120000,failOnStartupError:true,env:{DEEPSEEK_API_KEY:'',
   CYBERFISH_NATIVE_DIRECTORY:resolve(directory),CYBERFISH_CONTROLLER_RUN:runId,
   CYBERFISH_NATIVE_COUNTRY_AI:nativeCountryAI?'1':'0',
   CYBERFISH_MAX_GAME_SPEED:String(maximumGameSpeed),CYBERFISH_SURVEY_WATCH_SECONDS:String(surveyWatchSeconds),CYBERFISH_TEST_MINUTES:String(minutes),CYBERFISH_HYBRID_SURVEY:!nativeCountryAI&&hybridSurvey?'1':'0',

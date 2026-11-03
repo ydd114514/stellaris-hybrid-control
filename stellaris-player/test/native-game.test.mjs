@@ -1,5 +1,5 @@
 import {COUNTRY_AI_ECONOMY_CANDIDATE_VERSION,COUNTRY_AI_ECONOMY_FEATURES} from '../src/native-country-ai-economic-policy.mjs';
-import {COUNTRY_AI_P1_FEATURES} from '../src/native-country-ai.mjs';
+import {COUNTRY_AI_FULL_FEATURE,COUNTRY_AI_P1_BRIDGE_VERSION,COUNTRY_AI_P1_FEATURES} from '../src/native-country-ai.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {mkdtemp, rm, mkdir, writeFile, readFile} from 'node:fs/promises';
@@ -1486,6 +1486,44 @@ test('configuring a bound war cannot relabel its existing war goal',async t=>{
  await assert.rejects(game.campaign({operation:'start',fleetId:0,rallySystem:0,targetSystem:9,planets:[],goalKey:'wg_conquest',finishDate:'2202.01.01'}),/己方真实战争目标/);assert.equal(game.gestalt.data.campaign.execution,undefined);
 });
 
+
+test('strategy brief reaches native observe and watch only at a review',async t=>{
+ let date='2200.01.01',population=100,paused=true,on=false,phase='idle';
+ const nativeState=()=>({success:true,country_id:0,paused,single_local_human_guard:true,world_generation_tracking:true,
+  global_flags:{normal_ai:true,human_ai:on,force_human_ai:on},precondition:{world_generation:0,country_id:0,country_address:123,date}});
+ const {game,calls}=await fixture(t,{
+  ping:()=>({bridge_version:COUNTRY_AI_P1_BRIDGE_VERSION,features:[...COUNTRY_AI_P1_FEATURES,COUNTRY_AI_FULL_FEATURE,
+   'building_upgrade_candidates','building_upgrade_queue_identity','ship_design_naval_size','zone_building_membership','owned_shipyard_queues','engine_market_transaction_quotes','normal_war_actions']}),
+  get_status:()=>({in_game:true,is_paused:paused,date:{formatted:date},outliner:{sectors_summary:{capital_system:'太阳',total_pops:population,total_colonies:1}}}),
+  get_country_ai_state:nativeState,
+  get_government:()=>({authority:'auth_hive_mind'}),
+  get_contacts:()=>({empires:[]}),
+  get_military_fleets:()=>({fleets:[{military_power:100}]}),
+  set_paused:p=>{paused=p.paused;return {success:true};},
+  country_ai_lease:p=>{
+   if(p.action==='prepare')phase='prepared';
+   if(p.action==='enable'){phase='ready_paused';on=true;}
+   if(p.action==='run'){phase='running';paused=false;}
+   if(p.action==='stop'){phase='stopped';paused=true;on=false;}
+   const armed=!['idle','stopped'].includes(phase);
+   return {success:true,phase,generation:1,last_native_state:nativeState(),routine_gate:{armed,reserved_policy:'full_with_reserved',
+    protected_targets:{jobs:[],colonies:[],shipyards:[]}},observation:{armed}};
+  }
+ },{nativeCountryAI:true});
+ const initial=await game.observe();
+ assert.deepEqual(initial.strategyWakeReasons,['initial_strategy']);
+ assert.equal(initial.strategyBrief.empire.type,'蜂巢');
+ await game.countryAIControl({operation:'delegate',maxWallSeconds:30});
+ await game.countryAIControl({operation:'continue'});
+ const contactsRead=calls.filter(c=>c.method==='get_contacts').length;
+ assert.equal((await game.observe()).strategyBrief,undefined);
+ assert.equal(calls.filter(c=>c.method==='get_contacts').length,contactsRead);
+ date='2200.07.01';population=120;
+ const review=await game.watch(0);
+ assert.deepEqual(review.strategyWakeReasons,['six_month_review']);
+ assert.deepEqual(review.strategyBrief.metrics.pops,{current:120,change:20});
+ assert.equal(review.countryAIControl.owner,'native');
+});
 
 test('country AI host fences routine writes, forwards world zero, and retains key control after takeover',async t=>{
  let paused=true,on=false,world=0,phase='idle',generation=0,physicsKey='tech_old';

@@ -22,6 +22,9 @@ const nativeCountryAI=hybridSettings.nativeCountryAI===true;
 const game = new NativeGame({maximumGameSpeed:Number(process.env.CYBERFISH_MAX_GAME_SPEED??5),directory:process.env.CYBERFISH_NATIVE_DIRECTORY||'.local/native-bridge',minutes: Number(process.env.CYBERFISH_TEST_MINUTES || 10),hybridSurvey:!nativeCountryAI&&hybridSettings.survey,presentOrders:process.env.CYBERFISH_NATIVE_PRESENTATION!=='0',surveyPilot:!nativeCountryAI&&process.env.CYBERFISH_SURVEY_PILOT==='1',surveyWatchSeconds:Number(process.env.CYBERFISH_SURVEY_WATCH_SECONDS??60),colonyUpgradePilot:!nativeCountryAI&&process.env.CYBERFISH_COLONY_UPGRADE_PILOT==='1',monthlyLifecyclePilot:!nativeCountryAI&&process.env.CYBERFISH_MONTHLY_LIFECYCLE_PILOT==='1',localWaitPilot:!nativeCountryAI&&process.env.CYBERFISH_LOCAL_WAIT_PILOT==='1',nativeCountryAI});
 const quality=new BroadcastQualityMonitor({directory:game.directory,sessionId:game.sessionId});
 const modelView=new ModelView();
+const projectState=(state,options)=>modelView.project({...state,decisionReview:game.nativeCountryAIEnabled
+  ?{mode:'native_strategy',reviewEveryGameDays:180,wakeReasons:state.strategyWakeReasons??[],instruction:'复查先读strategyBrief，方针和保留决定用strategy_contract，日常经营交原生AI'}
+  :decisionReview(state,{sessionId:game.sessionId,observedAt:game.snapshotAt})},options);
 let ready = false, stopping = false,startAttempted=false;
 const tools = [
   countryAIControlTool(),
@@ -63,8 +66,8 @@ async function handle(request) {
         if (!ready) {startAttempted=true;await game.start({keepPaused:process.env.CYBERFISH_START_PAUSED==='1'}); ready = true;}
         const {name, arguments: args = {}} = request.params || {};
         let value = name === 'strategy_contract' ? await game.strategyControl(args) : name === 'country_ai_control' ? await game.countryAIControl(args) : name === 'colony_upgrade_control' ? await game.colonyUpgradeControl(args) : name === 'colony_control' ? await game.colonyControl(args) : name === 'monthly_trade' ? await game.monthlyTrade(args) : name === 'survey_control' ? await game.surveyControl(args) : name === 'campaign' ? await game.campaign(args) : name === 'tasks' ? await game.task(args) : name === 'observe' ? await game.observe() : name === 'inspect' ? await game.inspect(args) : name === 'apply_orders' ? await game.apply(args) : name === 'watch' ? await game.watch(args.seconds ?? 15) : (() => {throw new Error('未知游戏工具');})();
-        if(name==="observe" || name==="watch") value=modelView.project({...value,decisionReview:game.nativeCountryAIEnabled?{mode:'native_strategy',reviewEveryGameDays:180,wakeReasons:value.strategyWakeReasons??[],instruction:'方针和保留决定用strategy_contract；日常经营交原生AI'}:decisionReview(value,{sessionId:game.sessionId,observedAt:game.snapshotAt})},{full:name==="observe"});
-        if(value.state)value={...value,state:modelView.project({...value.state,decisionReview:decisionReview(value.state,{sessionId:game.sessionId,observedAt:game.snapshotAt})})};
+        if(name==="observe" || name==="watch") value=projectState(value,{full:name==="observe"});
+        if(value.state)value={...value,state:projectState(value.state)};
         result = {content: [{type: 'text', text: JSON.stringify(value)}]};
       } catch (error) {
         const call=request.params;

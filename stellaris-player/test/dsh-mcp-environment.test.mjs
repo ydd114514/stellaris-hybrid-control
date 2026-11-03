@@ -92,9 +92,11 @@ test('missing reasoning models and custom API routes fall back without a generat
 test('native country mode explicitly suppresses competing local actors across a restricted MCP transport',async()=>{
  const config=nativeMcpEnvironmentPatch({directory:'fixture-only/native',runId:'native-country',minutes:5,hybridSurvey:true,nativeCountryAI:true,
   surveyPilot:true,colonyUpgradePilot:true,monthlyLifecyclePilot:true,localWaitPilot:true})[0].config;
+ assert.equal(config.toolCallTimeoutMs,930000);
  const env=config.env;
  const system=nativeMcpEnvironmentPatch({directory:'fixture',runId:'native-system',minutes:5,hybridSurvey:false,nativeCountryAI:true}).find(x=>x.id==='system-prompt');
  assert.match(system.config.personaPrefix,/v1\.5/);assert.match(system.config.personaPrefix,/strategy_contract/);
+ assert.match(system.config.personaPrefix,/strategyBrief/);
  assert.equal(system.config.personaPrefix.includes('只有 current.is_researching=false'),false);
  assert.equal(env.CYBERFISH_NATIVE_COUNTRY_AI,'1');assert.equal(env.CYBERFISH_START_PAUSED,'1');
  for(const k of ['CYBERFISH_HYBRID_SURVEY','CYBERFISH_SURVEY_PILOT','CYBERFISH_COLONY_UPGRADE_PILOT','CYBERFISH_MONTHLY_LIFECYCLE_PILOT','CYBERFISH_LOCAL_WAIT_PILOT'])assert.equal(env[k],'0',k);

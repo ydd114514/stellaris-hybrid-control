@@ -1,4 +1,5 @@
 import {NativeStrategyReview} from './native-strategy-review.mjs';
+import {readStrategyNeighbors,strategyBrief} from './strategy-brief.mjs';
 import {validateStrategyContract,applySteering,reservedOrder,reservedRPC,steeringRPC,RESERVED_ACTIONS} from './strategy-contract.mjs';
 import {COUNTRY_AI_POLICIES,normalizeCountryAIProtection} from './native-country-ai-economic-policy.mjs';
 import {constructionInspectionScope,inspectConstruction} from './construction-inspection.mjs';
@@ -303,7 +304,7 @@ export class NativeGame {
       if(this.uncertain||this.applyBusy)throw Error('先核对未确认的关键干预，再更新保护');
       const control=await this.countryAI.protect({protectedTargets,reason});return {control:{enabled:true,...control},state:await this.observe()};
     }
-    if(operation==='continue'){this.strategyReview.acknowledge(this.lastState??{});await this.countryAI.acknowledgeReview();this.nativeStrategicReviewDue=false;this.needsDecisionRefresh=false;return {control:{enabled:true,...this.countryAI.view()},state:await this.observe()};}
+    if(operation==='continue'){await this.countryAI.acknowledgeReview();this.strategyReview.acknowledge(this.lastState??{});this.nativeStrategicReviewDue=false;this.needsDecisionRefresh=false;return {control:{enabled:true,...this.countryAI.view()},state:await this.observe()};}
     if(['delegate','resume'].includes(operation)){
       if(this.countryAI.active)throw Error('当前已经委派或控制权未确认；先查询或接管后调整，不重复开启');
       if(!Number.isFinite(maxWallSeconds)||maxWallSeconds<1||maxWallSeconds>3600||!Number.isInteger(maxGameDays)||maxGameDays<1||maxGameDays>720||(!Object.hasOwn(COUNTRY_AI_POLICIES,policy)))throw Error('国家 AI 范围与复查参数无效');
@@ -493,7 +494,7 @@ export class NativeGame {
       snapshotId: this.snapshotId, remainingSeconds: Math.max(0, Math.round((this.ends - this.now()) / 1000)),
       date: status.date.formatted, paused: status.is_paused, speed: status.speed,
       controlCapabilities:{surveyDelegationAvailable:this.hybridSurvey,colonyHousingAvailable:!this.nativeRoutineSuppressed&&!this.surveyPilot,colonyUpgradeAvailable:this.colonyUpgradePilot,monthlyConditionsAvailable:this.monthlyLifecyclePilot,trustedWaitMaximumSeconds:this.nativeCountryAIEnabled?900:this.hybridSurvey?this.surveyWatchSeconds:this.localWaitPilot?60:20,note:'可用能力不是已启用的对象控制权；委派须显式申请并核对实际条件。'},
-      player: world.player, resources: Object.fromEntries(Object.entries(status.resources || {}).filter(([key]) => ['energy', 'minerals', 'alloys', 'consumer_goods', 'food', 'influence', 'unity', 'trade', 'physics_research', 'society_research', 'engineering_research', 'volatile_motes', 'exotic_gases', 'rare_crystals', 'living_metal', 'zro', 'dark_matter', 'nanites', 'astral_threads'].includes(key)).map(([key, value]) => [key, fields(value, ['stockpile', 'net', 'capped','max'])])),
+      player: world.player, resources: Object.fromEntries(Object.entries(status.resources || {}).filter(([key]) => ['energy', 'minerals', 'alloys', 'consumer_goods', 'food', 'influence', 'unity', 'trade', 'physics_research', 'society_research', 'engineering_research', 'volatile_motes', 'exotic_gases', 'rare_crystals', 'living_metal', 'zro', 'dark_matter', 'nanites', 'astral_threads'].includes(key)).map(([key, value]) => [key, fields(value, ['stockpile', 'net', 'capped','max',...(this.nativeCountryAIEnabled?['stockpile_known','net_known']:[])])])),
       civilian, military, research, colonies: status.outliner?.sectors_summary?.sectors,
       capacities: status.stats, picture: this.picture,
       pendingDiplomacy: diplomacy.pending,
@@ -522,7 +523,17 @@ export class NativeGame {
     }
     state.operationalFacts=this.operationalContext.view({ownedPlanetIds:(state.colonies||[]).flatMap(s=>(s.colonies_summary||[]).map(p=>p.planet_id))});
     state.capabilities=executionCapabilities(Object.keys(ORDER_FIELDS));
-    if(this.nativeCountryAIEnabled){state.strategyContract=this.strategyContract??null;state.nativeWorldGeneration=this.boundNativeWorld?.world_generation;state.countryAIControl={enabled:true,...this.countryAI.view()};}
+    if(this.nativeCountryAIEnabled){
+      state.strategyContract=this.strategyContract??null;
+      state.nativeWorldGeneration=this.boundNativeWorld?.world_generation;
+      state.countryAIControl={enabled:true,...this.countryAI.view()};
+      state.empireType=empireRoute(this.government);
+      state.population=status.outliner?.sectors_summary?.total_pops??null;
+      state.colonyCount=status.outliner?.sectors_summary?.total_colonies??null;
+      state.strategyWakeReasons=this.strategyWakeReasons(state);
+      this.nativeStrategicReviewDue=state.countryAIControl.owner==='native'&&state.strategyWakeReasons.length>0;
+      if(state.strategyWakeReasons.length)state.strategyBrief=await this.readStrategyBrief(state);
+    }
     if(!this.continuityLoaded){
       this.continuityLoaded=true;
       const saved=await this.continuity.load(this.binding,state);
@@ -547,6 +558,25 @@ export class NativeGame {
     if(this.localWaitPilot)state.localWorkWait={enabled:true,...await this.confirmedLocalWork(status)};
     await this.log({type: 'state', state}); await this.checkpoint();
     return state;
+  }
+  strategyWakeReasons(state){
+    const reasons=this.strategyReview.due(state);
+    if(state.countryAIControl?.reviewDue&&reasons.length===0)reasons.push('native_country_ai_review_due');
+    return reasons;
+  }
+  async readStrategyBrief(state){
+    let heartbeatAt=-Infinity,readFailed=false;
+    const neighbors=await readStrategyNeighbors(state,async(method,params)=>{
+      if(readFailed||this.stoppingRequested||this.stopped)return null;
+      if(this.countryAI.active&&this.now()-heartbeatAt>=4000){
+        await this.countryAI.heartbeat();
+        heartbeatAt=this.now();
+      }
+      try{return await this.rpc(method,params);}
+      catch{readFailed=true;return null;}
+    });
+    await this.assertNativeWorld();
+    return strategyBrief(state,{government:this.government,previousMetrics:this.strategyReview.lastMetrics,neighbors});
   }
   reviewStrategy(state=this.lastState) {
     if(this.nativeCountryAIEnabled)return {mode:'native_strategy',focus:'原生AI持续运营；仅通过StrategyContract调方针和保留决定',currentContract:this.strategyContract??null,reviewEveryGameDays:180};
@@ -1608,8 +1638,8 @@ export class NativeGame {
             const advice=await readStrategyAdvice(resolve(this.directory,'../commentary/strategy-directive.json'),this.sessionId,this.now());
             if(advice)this.lastState.operationalGoal=advice.goal;
           }
-          const due=this.strategyReview.due(this.lastState);
-          if(control.reviewDue||due.length){this.nativeStrategicReviewDue=true;this.lastState.strategyWakeReasons=due;}
+          const due=this.strategyWakeReasons(this.lastState);
+          if(due.length){this.nativeStrategicReviewDue=true;this.lastState.strategyWakeReasons=due;}
           try{
             const path=resolve(this.directory,'director-settings.json'),settings=await loadDirectorSettings(path);
             await this.nativeDirector.tick({rpc:async(m,p)=>{
