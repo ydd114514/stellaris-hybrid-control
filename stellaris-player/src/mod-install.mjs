@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
 import { generateSteeringZoneOverrides } from './steering-zone-overrides.mjs'
 import { generateSteeringExpansionOverrides } from './steering-expansion-overrides.mjs'
-import { generateStellarSteeringCompatibility,generateSteeringUnityPriorityOverrides } from './stellar-steering-compat.mjs'
+import { generateStellarSteeringCompatibility,generateSteeringUnityPriorityOverrides,retiredUnityPersonalityFiles } from './stellar-steering-compat.mjs'
 import { assertAiModCompatibility } from './ai-mod-conflicts.mjs'
 import { generateAutomationCompatibility } from './automation-mod-compat.mjs'
 
@@ -12,7 +12,7 @@ export const MOD_NAME = 'cyberfish_observer_v1'
 const modSource = name => fileURLToPath(new URL(`../mod/${name}/`, import.meta.url))
 const inspect = async path => { try { return await lstat(path) } catch (error) { if (error.code === 'ENOENT') return null; throw error } }
 const digest = value => createHash('sha256').update(value).digest('hex')
-const previousSteeringFiles={'common/ai_budget/cfsteer_budget.txt':'0cc9ec9e801d1ce8e40627a96da5b7c0f9c63fd748ea19be235f3b4927a03350','localisation/english/cfsteer_l_english.yml':'6ea827c27e4345901cb24d55b1191804d87a7b9ba74072cbffe9fe6e126d8317','localisation/simp_chinese/cfsteer_l_simp_chinese.yml':'b88b334f5f8ecc4e9f34e6ef25d3d8bdd7125aaa7055f4991467ec9c93dd8c24','common/zones/zz_cfsteer_research_weights.txt':'c33c8bca91d4146d06dfed1ef50bdcadf2c1752c090f5efff399e05e68c6329f','common/economic_plans/cfsteer_plans.txt':'4b5eb5508d6735b6581d0f06c90294afcd2b2880867844bf6eba59bfbd1f1702'}
+const previousSteeringFiles={'common/ai_budget/cfsteer_budget.txt':['0cc9ec9e801d1ce8e40627a96da5b7c0f9c63fd748ea19be235f3b4927a03350','79a76a74541ef36c6b20cbc121aaa494cdf08dd022912b38b13d400999688e01','19f7d2dce61a1e568ee463b8424757b78cd15077b834f6154917d8c17e857e00'],'localisation/english/cfsteer_l_english.yml':'6ea827c27e4345901cb24d55b1191804d87a7b9ba74072cbffe9fe6e126d8317','localisation/simp_chinese/cfsteer_l_simp_chinese.yml':'b88b334f5f8ecc4e9f34e6ef25d3d8bdd7125aaa7055f4991467ec9c93dd8c24','common/zones/zz_cfsteer_research_weights.txt':'c33c8bca91d4146d06dfed1ef50bdcadf2c1752c090f5efff399e05e68c6329f','common/economic_plans/cfsteer_plans.txt':'4b5eb5508d6735b6581d0f06c90294afcd2b2880867844bf6eba59bfbd1f1702'}
 const unityUpgradeFiles={
  'common/economic_plans/cfsteer_unity_plan.txt':['be0d6118d89e5f5b577dbbc26d60baa91264e96567271cf1b5e74ae92cf25e79','9e05e1412ce4a2204dffad3ef5441c30f1c1a91683ef4f6503ed392e67ff090c'],
  'common/edicts/cfsteer_edicts.txt':'db9d22c15977aeeb1f9ae2b36e85aa3b6409279300088a806dcc5adfb3ae2e60',
@@ -101,6 +101,7 @@ export async function installLocalMod({ documentsPath, dryRun = false, modName=M
     addGenerated(await generateSteeringUnityPriorityOverrides(gameDirectory));
   }
   if (modName === 'cyberfish_steering_v1') {
+    addGenerated(retiredUnityPersonalityFiles())
     plans.push({path: resolve(target, retiredPersonalityPath), retire: true})
   }
   const descriptor = (await readFile(join(source, 'descriptor.mod'), 'utf8')) + `path="mod/${modName}"\n`

@@ -1,9 +1,10 @@
 import {readFile} from 'node:fs/promises';
 import {join} from 'node:path';
+import {boostExpansionAlloys} from './stellar-steering-compat.mjs';
 
 // These are the installed 4.5.2 colony-ship budget variants, not new budgets.
 // Reusing their keys replaces their definitions instead of adding a second
-// share of spending. All original eligibility, weights and reserves survive.
+// share of spending. All original eligibility, modifiers and reserves survive.
 const budgets={
  '00_energy_budget.txt':{energy_expenditure_colonies_infernal_hive:'energy',energy_expenditure_colonies_machine:'energy'},
  '00_minerals_budget.txt':{minerals_expenditure_colonies_lithoid_expand:'minerals'},
@@ -14,6 +15,7 @@ const budgets={
  '04_influence_budget.txt':{influence_expenditure_stations:'influence'}
 };
 const restriction='\n\t\tNOT = { has_edict = cfsteer_expansion_consolidate }';
+const starbaseBudgets=['alloys_expenditure_starbases','alloys_expenditure_starbases_fallen_empires','alloys_expenditure_starbases_expand'];
 
 function closingBrace(text,start){
  let depth=0,quoted=false,escaped=false,comment=false;
@@ -29,7 +31,8 @@ function closingBrace(text,start){
 
 export function expansionBudgetOverrides(sources){
  const entries=[],variables=new Map();
- for(const [file,definitions] of Object.entries(budgets)){
+ for(const [file,baseDefinitions] of Object.entries(budgets)){
+  const definitions=file==='01_alloys_budget.txt'?{...baseDefinitions,...Object.fromEntries(starbaseBudgets.map(key=>[key,'alloys']))}:baseDefinitions;
   const source=sources[file];
   if(typeof source!=='string'||source.length>4_000_000)throw Error('4.5.2扩张预算文件缺失或过大：'+file);
   for(const match of source.matchAll(/^\s*(@\w+)\s*=\s*([^\r\n#]+)/gm)){
@@ -42,18 +45,19 @@ export function expansionBudgetOverrides(sources){
    if(!match)throw Error('4.5.2扩张预算定义缺失：'+name);
    const open=source.indexOf('{',match.index),close=closingBrace(source,open);
    let entry=source.slice(match.index,close+1);
-   const category=resource==='influence'?'stations':'colonies';
+   const category=starbaseBudgets.includes(name)?'starbases':resource==='influence'?'stations':'colonies';
    for(const [field,value] of Object.entries({resource,type:'expenditure',category})){
     if(!new RegExp('\\b'+field+'\\s*=\\s*'+value+'\\b').test(entry))throw Error('4.5.2扩张预算类型不符：'+name);
    }
    const potential=/\bpotential\s*=\s*\{/.exec(entry);
    if(!potential)throw Error('4.5.2扩张预算缺少potential：'+name);
    const at=entry.indexOf('{',potential.index)+1;
-   entry=entry.slice(0,at)+restriction+entry.slice(at);
+   if(category!=='starbases')entry=entry.slice(0,at)+restriction+entry.slice(at);
+   if(resource==='alloys')entry=boostExpansionAlloys(entry);
    entries.push(entry);
   }
  }
- return '# Generated from installed 4.5.2. Tighten new colony/outpost budgets only while the country has consolidate.\n'+
+ return '# Generated from installed 4.5.2. Consolidate restricts colony and outpost influence budgets; aggressive scales both alloy categories.\n'+
   '# Existing orders and saved budget balances are not cancelled; other countries and stances retain vanilla rules.\n'+
   [...variables].map(([key,value])=>key+' = '+value).join('\n')+'\n'+entries.join('\n\n')+'\n';
 }

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {scriptBlocks,includeSteeredPlayer,compatibleEconomyPlans,compatibleExpansionBudgets,compatiblePersonalities,compatiblePlayerServices,compatibleZoneTriggers,compatibleZoneCountWeights} from '../src/stellar-steering-compat.mjs';
+import {scriptBlocks,includeSteeredPlayer,compatibleEconomyPlans,compatibleExpansionBudgets,retiredUnityPersonalityFiles,compatiblePlayerServices,compatibleZoneTriggers,compatibleZoneCountWeights} from '../src/stellar-steering-compat.mjs';
 
 test('source reader ignores comments and quoted braces without flattening nested rules',()=>{
  const rows=scriptBlocks('# ignored = {\n@cost = 10\nfirst = { title = "brace } # literal" nested = { x = yes } }\nsecond = { # } comment\n foo = no }');
@@ -22,24 +22,21 @@ test('economy integration retains actual tier identities and does not replace th
  assert.match(nested,/owner = \{ is_ai = yes \}/);
 });
 
-test('consolidate derives actual mod spending definitions and leaves naval or other station budgets alone',()=>{
+test('Stellar expansion preserves effective conditions and scales only colony and outpost alloy weights',()=>{
  const row=(key,resource,category)=>({key,text:`${key} = { resource = ${resource} type = expenditure category = ${category} potential = { always = yes } weight = { weight = 7 modifier = { factor = 3 is_at_war = yes } } }`,variables:'@keep = 42'});
- const result=compatibleExpansionBudgets([row('stellar_colonies','alloys','colonies'),row('stellar_outposts','influence','stations'),row('stellar_shipyards','alloys','stations'),row('stellar_navy','alloys','ships')]);
- assert.deepEqual(result.keys,['stellar_colonies','stellar_outposts']);assert.match(result.content,/weight = 7 modifier = \{ factor = 3/);
+ const result=compatibleExpansionBudgets([row('stellar_colonies','alloys','colonies'),row('stellar_outposts','influence','stations'),row('stellar_starbases','alloys','starbases'),row('stellar_shipyards','alloys','stations'),row('stellar_navy','alloys','ships')]);
+ assert.deepEqual(result.keys,['stellar_colonies','stellar_outposts','stellar_starbases']);assert.match(result.content,/weight = 7 modifier = \{ factor = 3/);
  assert.equal((result.content.match(/NOT = \{ has_edict = cfsteer_expansion_consolidate/g)??[]).length,2);
+ assert.equal((result.content.match(/factor = 2\s+has_edict = cfsteer_expansion_aggressive/g)??[]).length,2);
  assert.doesNotMatch(result.content,/stellar_shipyards|stellar_navy/);
 });
 
-test('only the peaceful unity personality variant overrides overhaul spending',()=>{
- const original='stellar_peaceful = { aggressiveness = 0.3 military_spending = 0.7 colony_spending = 1.8 allow = { is_country_type = default } weight_modifier = { weight = 20 modifier = { factor = 2 has_ethic = ethic_xenophile } } behaviour = { conqueror = no crisis_fighter = yes } }';
- const result=compatiblePersonalities([{key:'stellar_peaceful',text:original,variables:''}]);
- assert.match(result.content,/cfsteer_unity_exploration_stellar_peaceful =/);
- assert.match(result.content,/military_spending = 0 colony_spending = 1.8/);
- assert.match(result.content,/conqueror = no crisis_fighter = yes/);
- assert.match(result.content,/aggressiveness = 0.3/);
- assert.match(result.content,/has_edict = cfsteer_military_peaceful is_at_war = no/);
- assert.deepEqual(result.aliases,[['cfsteer_unity_exploration_stellar_peaceful','stellar_peaceful']]);
- assert.doesNotMatch(result.content,/cfsteer_reserved_diplomacy|cfsteer_stellar_stellar_peaceful|\nstellar_peaceful =/);
+test('Stellar compatibility retires its old peaceful personality with inert migration files',()=>{
+ const files=retiredUnityPersonalityFiles();
+ assert.equal(files.length,3);
+ const personality=files.find(row=>row.path==='common/personalities/zz_cfsteer_unity_exploration.txt');
+ assert.deepEqual(scriptBlocks(personality.content.toString()),[]);
+ for(const {content} of files)assert.doesNotMatch(content.toString(),/military_spending|weapon_preferences|cfsteer_unity_exploration_\w+\s*:/);
 });
 
 test('human country service is complementary to NPC dispatch and excludes script resource or aid transactions',()=>{

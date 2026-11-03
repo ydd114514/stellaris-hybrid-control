@@ -188,47 +188,46 @@ export function unityNodeBuildingPreference(row){
 }
 export async function generateSteeringUnityPriorityOverrides(gameDirectory){
  const buildings=await effectiveCategory(gameDirectory,null,'buildings',[]),plans=await effectiveCategory(gameDirectory,null,'economic_plans',[]);
- const personalities=await effectiveCategory(gameDirectory,null,'personalities',[]);
  return [file('common/buildings/zz_cfsteer_unity_node.txt',unityNodeBuildingPreference(buildings.definitions.get('building_hive_node'))),
-  file('common/economic_plans/zz_cfsteer_unity_priority.txt',unityPriorityEconomyOverrides(plans.all)),
-  ...unityPersonalityFiles(compatiblePersonalities([...personalities.definitions.values()]))];
+  file('common/economic_plans/zz_cfsteer_unity_priority.txt',unityPriorityEconomyOverrides(plans.all))];
 }
 
 export function compatibleExpansionBudgets(rows){
  const restricted=[];
  for(const row of rows){
   const body=row.text.slice(row.text.indexOf('{')+1,-1),category=/\bcategory\s*=\s*(\w+)/.exec(body)?.[1],resource=/\bresource\s*=\s*(\w+)/.exec(body)?.[1];
-  if(!/\btype\s*=\s*expenditure\b/.test(body)||category!=='colonies'&&!(category==='stations'&&resource==='influence'))continue;
-  let text=replaceOwn(row.text,'potential',original=>'NOT = { has_edict = cfsteer_expansion_consolidate }\n'+original);
+  if(!/\btype\s*=\s*expenditure\b/.test(body))continue;
+  const restrictedInConsolidate=category==='colonies'||(category==='stations'&&resource==='influence');
+  const boostedInAggressive=resource==='alloys'&&['starbases','colonies'].includes(category);
+  if(!restrictedInConsolidate&&!boostedInAggressive)continue;
+  let text=row.text;
+  if(restrictedInConsolidate)text=replaceOwn(text,'potential',original=>'NOT = { has_edict = cfsteer_expansion_consolidate }\n'+original);
+  if(boostedInAggressive)text=boostExpansionAlloys(text);
   restricted.push({...row,text});
  }
  if(!restricted.some(row=>/category\s*=\s*colonies/.test(row.text))||!restricted.some(row=>/resource\s*=\s*influence/.test(row.text)))throw Error('实际Mod殖民/前哨预算不完整，不能保留巩固控制');
- return {content:'# Generated from effective AI budget definitions; original recovery, reserve and weight rules remain intact.\n'+joined(restricted)+'\n',keys:restricted.map(row=>row.key)};
+ return {content:'# Generated from effective AI budgets. Expansion scales both alloy categories and retains original budget modifiers.\n'+joined(restricted)+'\n',keys:restricted.map(row=>row.key)};
 }
 
-export function compatiblePersonalities(rows){
- const clones=[],aliases=[];
- for(const row of rows){
-  if(row.key.startsWith('cfsteer_')||!ownBlock(row.text,'allow')||!ownBlock(row.text,'weight_modifier'))continue;
-  const key='cfsteer_unity_exploration_'+row.key;
-  let text=key+row.text.slice(row.key.length);
-  text=replaceOwn(text,'allow',body=>body+'\n'+UNITY_PRIORITY_CONDITION);
-  text=replaceOwn(text,'weight_modifier',body=>body+'\nmodifier = { factor = 1000000 }');
-  // Leave the source personality's disposition and ship preferences intact.
-  // Only the peaceful unity policy suspends navy and army expansion spending.
-  text=/\bmilitary_spending\s*=\s*[-+@\w.]+/.test(text)?text.replace(/\bmilitary_spending\s*=\s*[-+@\w.]+/,'military_spending = 0'):text.slice(0,-1)+'\nmilitary_spending = 0\n}';
-  clones.push({...row,text});aliases.push([key,row.key]);
- }
- if(!clones.length)throw Error('实际Mod人格定义为空，不能保留和平凝聚力方针');
- return {content:'# Peaceful unity variants preserve the source personalities outside their military budget.\n'+joined(clones)+'\n',aliases};
+// In 4.5.2 each entry gets its share of total weight. Scaling all eligible
+// colony and starbase entries equally preserves or increases both shares.
+export function boostExpansionAlloys(entry){
+ if(!ownBlock(entry,'weight'))throw Error('4.5.2扩张合金预算缺少weight');
+ return replaceOwn(entry,'weight',body=>body+`
+  modifier = {
+   factor = 2
+   has_edict = cfsteer_expansion_aggressive
+   OR = { has_ai_expansion_plan = yes ai_colonize_plans > 0 }
+  }
+ `);
 }
 
-function unityPersonalityFiles(personalities){
- const languages=['english','simp_chinese'];
- // The compatibility mod loads after steering and replaces these same paths.
- return [file('common/personalities/zz_cfsteer_unity_exploration.txt',personalities.content),
-  ...languages.map(language=>file('localisation/'+language+'/zz_cfsteer_unity_exploration_l_'+language+'.yml',
-   '\ufeffl_'+language+':\n'+personalities.aliases.map(([key,source])=>' '+key+':0 "$'+source+'$"').join('\n')+'\n'))];
+export function retiredUnityPersonalityFiles(){
+ // Replace the old generated outputs on upgrade. Explicit owner restrictions
+ // remain in the bridge, which checks current war state on each production order.
+ return [file('common/personalities/zz_cfsteer_unity_exploration.txt','# Retired. Native personality selection is unchanged.\n'),
+  ...['english','simp_chinese'].map(language=>file('localisation/'+language+'/zz_cfsteer_unity_exploration_l_'+language+'.yml',
+   '\ufeffl_'+language+':\n'))];
 }
 
 const bodyOf=row=>row.text.slice(row.text.indexOf('{')+1,-1);
@@ -312,11 +311,10 @@ export async function generateStellarSteeringCompatibility({gameDirectory,stella
  if(!/supported_version\s*=\s*"v?4\.5(?:\.[2*]|\*)/.test(descriptor))throw Error('实际Stellar AI版本未声明4.5兼容');
  if((await filesAt(stellarDirectory,'pop_jobs')).length)throw Error('实际Stellar AI含岗位文件，未按原版岗位产出版生成适配');
  const manifest=[],categories={};
- for(const category of ['ai_budget','economic_plans','buildings','zones','technology','scripted_triggers','scripted_effects','tradition_categories','personalities'])categories[category]=await effectiveCategory(gameDirectory,stellarDirectory,category,manifest);
+ for(const category of ['ai_budget','economic_plans','buildings','zones','technology','scripted_triggers','scripted_effects','tradition_categories'])categories[category]=await effectiveCategory(gameDirectory,stellarDirectory,category,manifest);
  if(!manifest.some(row=>row.path.startsWith('common/economic_plans/')))throw Error('真实Stellar AI未包含经济计划文件，不能只用简介生成补丁');
  const economy=compatibleEconomyPlans(categories.economic_plans.all);
  const expansion=compatibleExpansionBudgets([...categories.ai_budget.definitions.values()]);
- const personality=compatiblePersonalities([...categories.personalities.definitions.values()]);
  const node=required(categories.buildings,'building_hive_node'),nodeSource=await readFile(node.origin,'utf8');
  manifest.push({path:'common/buildings/'+node.origin.replace(/^.*[\\/]/,''),sourcePath:node.origin,sha256:hash(nodeSource)});
  const research=selected(categories.zones,researchZones),unity=selected(categories.zones,unityZones);
@@ -329,7 +327,7 @@ export async function generateStellarSteeringCompatibility({gameDirectory,stella
  const files=[
   file('common/economic_plans/zzzz_cfsteer_stellar_plans.txt',economy.content),
   file('common/ai_budget/zzzz_cfsteer_stellar_expansion.txt',expansion.content),
-  ...unityPersonalityFiles(personality),
+  ...retiredUnityPersonalityFiles(),
   file('common/personalities/zzzz_cfsteer_stellar_personalities.txt','# Retired during the steering personality upgrade.\n'),
   file('common/buildings/zzzz_cfsteer_stellar_unity_node.txt',unityNodeBuildingPreference(node)),
   file('common/zones/zzzz_cfsteer_stellar_research.txt',researchZoneOverrides(research,{inlineScripts})),
@@ -350,6 +348,6 @@ export async function generateStellarSteeringCompatibility({gameDirectory,stella
   files.push(file('localisation/'+language+'/zzzz_cfsteer_stellar_l_'+language+'.yml','\ufeffl_'+language+':\n'));
  }
  return {workshopId:STELLAR_VANILLA_JOBS_ID,identityConfirmed:workshop===STELLAR_VANILLA_JOBS_ID,files,economyPlans:economy.plans,restrictedExpansionBudgets:expansion.keys,sourceFiles:manifest,sourceFingerprint:hash(JSON.stringify(manifest)),jobOutputsChanged:false,
-  unityPriority:{condition:UNITY_PRIORITY_CONDITION,building:'building_hive_node',valuationOnly:true,preserveSupply:true,militarySpending:'peaceful_unity_only_zero',civilianShipBudgetsUnchanged:true,runtimeTested:false},
+  unityPriority:{condition:UNITY_PRIORITY_CONDITION,building:'building_hive_node',valuationOnly:true,preserveSupply:true,militarySpending:'unchanged',civilianShipBudgetsUnchanged:true,runtimeTested:false},
   requiresLoadAfter:[/\bname\s*=\s*"([^"\r\n]+)"/.exec(descriptor)?.[1]??'Stellar AI Vanilla Job Levels'],humanAIConditions:'Steered country trigger covers human_ai regardless of is_ai; mutually exclusive monthly dispatch preserves NPC service and suppresses scripted market/aid effects for controlled countries.'};
 }

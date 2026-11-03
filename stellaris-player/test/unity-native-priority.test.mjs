@@ -4,7 +4,7 @@ import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises';
 import {existsSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {scriptBlocks,unityNodeBuildingPreference,unityPriorityEconomyOverrides,compatibleEconomyPlans,compatiblePersonalities,generateSteeringUnityPriorityOverrides} from '../src/stellar-steering-compat.mjs';
+import {scriptBlocks,unityNodeBuildingPreference,unityPriorityEconomyOverrides,compatibleEconomyPlans,generateSteeringUnityPriorityOverrides} from '../src/stellar-steering-compat.mjs';
 import {installSteeringMod} from '../src/mod-install.mjs';
 
 const node=`building_hive_node = {
@@ -56,21 +56,7 @@ test('unity plan excludes competing surplus plans only for the player peace edic
  }
 });
 
-test('exploration personality changes military spending only in the unity peace branch',()=>{
- const original='hive = { aggressiveness = 1 military_spending = 1.3 colony_spending = 1.1 allow = { is_hive_empire = yes } weight_modifier = { weight = 20 } behaviour = { conqueror = yes crisis_fighter = yes } }';
- const result=compatiblePersonalities([{key:'hive',text:original,variables:''}]),blocks=scriptBlocks(result.content);
- assert.equal(blocks.length,1);
- const [explore]=blocks;
- assert.equal(explore.key,'cfsteer_unity_exploration_hive');
- assert.match(explore.text,/has_edict = cfsteer_economy_unity_traditions has_edict = cfsteer_military_peaceful is_at_war = no/);
- assert.match(explore.text,/military_spending = 0/);
- assert.match(explore.text,/aggressiveness = 1/);
- assert.match(explore.text,/colony_spending = 1.1/);
- assert.match(explore.text,/is_hive_empire = yes/);
- assert.match(explore.text,/crisis_fighter = yes/);
-});
-
-test('normal steering generation wires the complete building, exclusive plan and exploration personality without disabling shared ships budgets',async t=>{
+test('normal steering keeps peaceful unity planning without changing personalities or shared ship budgets',async t=>{
  const root=await mkdtemp(join(tmpdir(),'unity-native-priority-'));t.after(()=>{assert.ok(root.startsWith(join(tmpdir(),'unity-native-priority-')));return rm(root,{recursive:true,force:true});});
  for(const folder of ['buildings','economic_plans','personalities'])await mkdir(join(root,'common',folder),{recursive:true});
  await writeFile(join(root,'common/buildings/08_unity_buildings.txt'),'@node_time = 360\n@node_jobs = 200\n'+node);
@@ -79,7 +65,7 @@ test('normal steering generation wires the complete building, exclusive plan and
  const files=await generateSteeringUnityPriorityOverrides(root);
  assert.ok(files.some(row=>row.path==='common/buildings/zz_cfsteer_unity_node.txt'&&row.content.includes('building_hive_node')));
  assert.ok(files.some(row=>row.path==='common/economic_plans/zz_cfsteer_unity_priority.txt'&&row.content.includes('cfsteer_unity_priority_plan')));
- assert.ok(files.some(row=>row.path==='common/personalities/zz_cfsteer_unity_exploration.txt'&&row.content.includes('military_spending = 0')));
+ assert.equal(files.some(row=>row.path.startsWith('common/personalities/')),false);
  assert.equal(files.some(row=>row.path.startsWith('common/ai_budget/')),false);
 });
 

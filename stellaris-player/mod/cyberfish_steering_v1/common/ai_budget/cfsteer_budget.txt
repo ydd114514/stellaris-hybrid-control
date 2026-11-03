@@ -22,40 +22,14 @@ cfsteer_budget_industry_planets = {
  weight = { weight = 1.2 }
 }
 
-# Outpost alloys use the starbase budget in 4.5.2. Reserve this bonus for
-# expansion plans without competing colony plans, as in the vanilla entry.
-cfsteer_budget_expand_stations = {
- resource = alloys
- type = expenditure
- category = starbases
- potential = {
-  has_edict = cfsteer_expansion_aggressive
-  has_ai_expansion_plan = yes
-  NOT = { ai_colonize_plans > 0 }
- }
- weight = { weight = 0.8 }
-}
-
+# 4.5.2 uses the stations category for outpost influence. The installed
+# expansion overrides scale both colony and starbase alloy weights together.
 cfsteer_budget_expand_influence = {
  resource = influence
  type = expenditure
  category = stations
- potential = { has_edict = cfsteer_expansion_aggressive has_ai_expansion_plan = yes }
+ potential = { has_edict = cfsteer_expansion_aggressive has_ai_expansion_plan = yes is_nomadic = no }
  weight = { weight = 1.5 }
-}
-
-# Entries add relative budget weight. This bonus applies when there is
-# a colony plan; outposts still receive the separate influence bonus.
-cfsteer_budget_expand_colonies = {
- resource = alloys
- type = expenditure
- category = colonies
- potential = {
-  has_edict = cfsteer_expansion_aggressive
-  is_nomadic = no
-  ai_colonize_plans > 0
- }
- weight = { weight = 0.9 }
 }
 
 cfsteer_budget_consolidate_planets = {
