@@ -49,3 +49,59 @@ test('dry run describes real UTF8 files without installing or enabling', async t
     assert.match(script, new RegExp(`clear_variable = cfobs_stock_${key}`))
   }
 })
+
+
+const steeringPath = '../mod/cyberfish_steering_v1/common/'
+const personalityPath = 'personalities/cfsteer_personality.txt'
+const budgetPath = 'ai_budget/cfsteer_budget.txt'
+const budgetSource = () => readFile(new URL(steeringPath + budgetPath, import.meta.url), 'utf8')
+
+test('aggressive expansion raises the appropriate 4.5.2 spending weights', async () => {
+  await assert.rejects(readFile(new URL(steeringPath + personalityPath, import.meta.url)), { code: 'ENOENT' })
+  const budget = await budgetSource()
+  function expansionWeight(key, resource, category, balancedWeight, eligibility) {
+    const entry = budget.split('cfsteer_budget_expand_' + key + ' = {')[1]?.split(/\r?\n}/)[0]
+    assert.ok(entry, key)
+    assert.ok(entry.split(/\r?\n/).includes(' resource = ' + resource))
+    assert.ok(entry.split(/\r?\n/).includes(' category = ' + category))
+    assert.match(entry, /has_edict = cfsteer_expansion_aggressive/)
+    assert.match(entry, eligibility)
+    assert.ok(Number(entry.match(/weight = \{ weight = ([0-9.]+)/)[1]) > balancedWeight)
+  }
+  expansionWeight('stations', 'alloys', 'starbases', 0.4 + 0.2, /has_ai_expansion_plan = yes[\s\S]+NOT = \{ ai_colonize_plans > 0 \}/)
+  expansionWeight('colonies', 'alloys', 'colonies', 0.8, /ai_colonize_plans > 0/)
+  expansionWeight('influence', 'influence', 'stations', 0.5, /has_ai_expansion_plan = yes/)
+})
+
+test('steering update retires the shipped personality and preserves edited files', async t => {
+  const folder = await fixture(t)
+  const target = join(folder, 'mod', 'cyberfish_steering_v1', 'common')
+  const path = join(target, personalityPath)
+  await installSteeringMod({ documentsPath: folder })
+  await mkdir(join(target, 'personalities'))
+  const old = [
+    'cfsteer_reserved_diplomacy = {',
+    ' aggressiveness = 0',
+    ' bravery = 1',
+    ' trade_willingness = 1',
+    ' military_spending = 1',
+    ' colony_spending = 1',
+    ' weapon_preferences = weapon_type_energy',
+    ' armor_ratio = 0.4',
+    ' shields_ratio = 0.4',
+    ' hull_ratio = 0.2',
+    ' allow = { OR = { has_edict = cfsteer_economy_balanced has_edict = cfsteer_economy_consumer_stability has_edict = cfsteer_economy_alloys_military has_edict = cfsteer_economy_research } }',
+    ' weight_modifier = { weight = 100000 }',
+    ' behaviour = { conqueror = yes opportunist = no crisis_fighter = yes }',
+    '}',
+    '',
+  ].join('\r\n')
+  await writeFile(path, old)
+  await installSteeringMod({ documentsPath: folder, dryRun: true })
+  assert.equal(await readFile(path, 'utf8'), old)
+  assert.deepEqual((await installSteeringMod({ documentsPath: folder })).removed, [path])
+  await assert.rejects(readFile(path), { code: 'ENOENT' })
+  await writeFile(path, old + '# customized')
+  await assert.rejects(installSteeringMod({ documentsPath: folder }), /已被修改/)
+  assert.equal(await readFile(path, 'utf8'), old + '# customized')
+})

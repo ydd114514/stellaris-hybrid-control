@@ -15,7 +15,7 @@ const regular={
     research:'优先三线科研，增加星球建设矿物预算',
   },
   expansionStance:{
-    aggressive:'为前哨和殖民增加专项预算条目',
+    aggressive:'提高殖民计划的合金预算和前哨的影响力预算；无殖民计划时额外提高前哨合金预算',
     consolidate:'增加星球建设矿物预算',
   },
   militaryStance:{
