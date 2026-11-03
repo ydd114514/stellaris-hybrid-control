@@ -10,7 +10,7 @@ import {runtimeContinuation} from '../../src/runtime-continuation.mjs';
 import {createStrategyTurnRecovery,latestStrategyModelRequest,requestStrategyReviewDeferral,waitForDifferentStrategyReview} from '../../src/strategy-turn-recovery.mjs';
 
 const nativeDirectory=resolve(process.env.CYBERFISH_NATIVE_DIRECTORY||'.local/native-bridge');
-const nativeReasoning=process.env.CYBERFISH_NATIVE_COUNTRY_AI==='1'&&process.env.CYBERFISH_NATIVE_REASONING_MODEL==='1';
+const nativeThinking=process.env.CYBERFISH_NATIVE_COUNTRY_AI==='1'&&process.env.CYBERFISH_NATIVE_THINKING==='1';
 const require=createRequire('C:/Users/YDD/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/package.json');
 const {BasicCompactionEngine}=await import(pathToFileURL(require.resolve('@deepseek-ai/dsh-compaction-basic')).href);
 const {createUserMessage}=await import(pathToFileURL(require.resolve('@deepseek-ai/dsh-llm')).href);
@@ -23,7 +23,7 @@ export default class GameCompaction extends BasicCompactionEngine {
       headroomTokens:config.headroomTokens??4096,maxTokens:1600,compactionRetries:0,auto:true};
     delete effective.retainRatio;
     super(ctx,effective);
-    appendFileSync(resolve(nativeDirectory,'local-compaction.jsonl'),JSON.stringify({at:Date.now(),stage:'ready',thresholdRatio:this.config.thresholdRatio,retainTokens:this.config.retainTokens,...(nativeReasoning?{pressureMinTokens:NATIVE_REASONING_COMPACTION_TOKENS}:{})})+'\n');
+    appendFileSync(resolve(nativeDirectory,'local-compaction.jsonl'),JSON.stringify({at:Date.now(),stage:'ready',thresholdRatio:this.config.thresholdRatio,retainTokens:this.config.retainTokens,...(nativeThinking?{pressureMinTokens:NATIVE_REASONING_COMPACTION_TOKENS}:{})})+'\n');
     let hadAgentError=false,hostStopping=false;
     ctx.on('agent/error',()=>{hadAgentError=true;});
     const onStop=async message=>{
@@ -88,7 +88,7 @@ export default class GameCompaction extends BasicCompactionEngine {
   }
   async compactIfNeeded(agent,trigger,signal) {
     const before=this.ctx.tokenMeter.measure(agent.session).totalTokens;
-    if(!shouldCheckGameCompaction({nativeReasoning,trigger,totalTokens:before}))return null;
+    if(!shouldCheckGameCompaction({nativeThinking,trigger,totalTokens:before}))return null;
     const result=await super.compactIfNeeded(agent,trigger,signal);
     if(result)appendFileSync(resolve(nativeDirectory,'local-compaction.jsonl'),JSON.stringify({at:Date.now(),stage:'compacted',trigger,beforeTokens:before,afterTokens:this.ctx.tokenMeter.measure(agent.session).totalTokens,modelCalls:0})+'\n');
     return result;

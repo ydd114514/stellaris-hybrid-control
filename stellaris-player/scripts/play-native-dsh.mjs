@@ -6,7 +6,7 @@ import {randomUUID} from 'node:crypto';
 import {createWriteStream} from 'node:fs';
 import {mkdir, writeFile, stat} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
-import {discoverNativeStrategyModel,FAST_STRATEGY_MODEL_NOTICE,nativeMcpEnvironmentPatch} from '../src/dsh-mcp-environment.mjs';
+import {discoverNativeStrategyModel,dshNativeThinkingEnv,FAST_STRATEGY_MODEL_NOTICE,nativeMcpEnvironmentPatch} from '../src/dsh-mcp-environment.mjs';
 import {writeStopRequest,readStopCompletion,stopControlledChild} from '../src/cooperative-stop.mjs';
 import {loadDeepSeekKey} from '../src/credentials.mjs';
 import {NativePipe} from '../src/native-pipe.mjs';
@@ -74,11 +74,13 @@ const modelBudget=nativeCountryAI?await createNativeModelBudget({
   void publishStatus({modelBudgetPaused,modelBudgetLimit});
  }
 }):undefined;
+let environmentPatch;
 try{
- await writeFile(runtimePatch,JSON.stringify(nativeMcpEnvironmentPatch({nativeCountryAI,strategyModel,modelRelayBaseURL:modelBudget?.baseURL,maximumGameSpeed:Number(process.env.CYBERFISH_MAX_GAME_SPEED??5),directory:nativeDirectory,runId:controllerRunId,minutes,hybridSurvey:hybridSettings.survey,presentOrders:process.env.CYBERFISH_NATIVE_PRESENTATION!=='0',startPaused:process.env.CYBERFISH_START_PAUSED==='1',surveyPilot:process.env.CYBERFISH_SURVEY_PILOT==='1',colonyUpgradePilot:process.env.CYBERFISH_COLONY_UPGRADE_PILOT==='1',monthlyLifecyclePilot:process.env.CYBERFISH_MONTHLY_LIFECYCLE_PILOT==='1',localWaitPilot:process.env.CYBERFISH_LOCAL_WAIT_PILOT==='1',surveyWatchSeconds:nativeWatchSeconds,stopBaseline:bootstrapAt}),null,2));
+ environmentPatch=nativeMcpEnvironmentPatch({nativeCountryAI,strategyModel,modelRelayBaseURL:modelBudget?.baseURL,maximumGameSpeed:Number(process.env.CYBERFISH_MAX_GAME_SPEED??5),directory:nativeDirectory,runId:controllerRunId,minutes,hybridSurvey:hybridSettings.survey,presentOrders:process.env.CYBERFISH_NATIVE_PRESENTATION!=='0',startPaused:process.env.CYBERFISH_START_PAUSED==='1',surveyPilot:process.env.CYBERFISH_SURVEY_PILOT==='1',colonyUpgradePilot:process.env.CYBERFISH_COLONY_UPGRADE_PILOT==='1',monthlyLifecyclePilot:process.env.CYBERFISH_MONTHLY_LIFECYCLE_PILOT==='1',localWaitPilot:process.env.CYBERFISH_LOCAL_WAIT_PILOT==='1',surveyWatchSeconds:nativeWatchSeconds,stopBaseline:bootstrapAt});
+ await writeFile(runtimePatch,JSON.stringify(environmentPatch,null,2));
 }catch(error){await modelBudget?.close();throw error;}
 const args = ['C:/Users/YDD/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/lib/bin.js', '--profile', 'headless', '--patch', resolve(process.env.CYBERFISH_DSH_PATCH || 'plugins/stellaris-dsh/cordis.patch.yml'),'--patch',runtimePatch, '--json', '-'];
-const child = spawn(process.execPath, args, {cwd: process.cwd(), env: {...process.env,...(modelBudget?{DEEPSEEK_BASE_URL:modelBudget.baseURL}:{}), CYBERFISH_NATIVE_COUNTRY_AI:nativeCountryAI?'1':'0', CYBERFISH_HYBRID_SURVEY:!nativeCountryAI&&hybridSettings.survey?'1':'0', CYBERFISH_CONTROLLER_RUN:controllerRunId,CYBERFISH_NATIVE_REASONING_MODEL:nativeCountryAI&&strategyModel?'1':'0',DSH_HOME: process.env.CYBERFISH_DSH_HOME || 'C:/Users/YDD/AppData/Local/Cyberfish/dsh', DEEPSEEK_API_KEY: key, CYBERFISH_TEST_MINUTES: String(minutes)}, windowsHide: true, stdio: ['pipe', 'pipe', 'pipe', 'ipc']});
+const child = spawn(process.execPath, args, {cwd: process.cwd(), env: {...process.env,...(modelBudget?{DEEPSEEK_BASE_URL:modelBudget.baseURL}:{}), CYBERFISH_NATIVE_COUNTRY_AI:nativeCountryAI?'1':'0', CYBERFISH_HYBRID_SURVEY:!nativeCountryAI&&hybridSettings.survey?'1':'0', CYBERFISH_CONTROLLER_RUN:controllerRunId,...dshNativeThinkingEnv(environmentPatch),DSH_HOME: process.env.CYBERFISH_DSH_HOME || 'C:/Users/YDD/AppData/Local/Cyberfish/dsh', DEEPSEEK_API_KEY: key, CYBERFISH_TEST_MINUTES: String(minutes)}, windowsHide: true, stdio: ['pipe', 'pipe', 'pipe', 'ipc']});
 const exited=new Promise((resolveExit,reject)=>{child.once('error',reject);child.once('exit',resolveExit);});
 void exited.catch(()=>{});
 dshStatus.pid=child.pid;

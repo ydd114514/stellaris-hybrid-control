@@ -1,4 +1,6 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {resolve} from 'node:path';
+import test from 'node:test';import assert from 'node:assert/strict';import {isAbsolute,resolve} from 'node:path';
+import {readFile,stat} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
 import {discoverNativeStrategyModel,nativeMcpEnvironmentPatch} from '../src/dsh-mcp-environment.mjs';
 import {spawn} from 'node:child_process';
 test('run metadata reaches the MCP explicitly and includes no model credential',()=>{
@@ -10,6 +12,22 @@ test('run metadata reaches the MCP explicitly and includes no model credential',
  assert.equal(env.CYBERFISH_CONTROLLER_RUN,'run-one');assert.equal(env.CYBERFISH_HYBRID_SURVEY,'1');assert.equal(env.CYBERFISH_TEST_MINUTES,'10');
  assert.equal(env.CYBERFISH_START_PAUSED,'1');assert.equal(env.CYBERFISH_NATIVE_PRESENTATION,'0');assert.equal(env.DEEPSEEK_API_KEY,'');
  assert.equal(env.CYBERFISH_STOP_BASELINE,'12345');assert.equal(env.CYBERFISH_SURVEY_WATCH_SECONDS,'60');
+});
+
+test('the runtime patch registers one existing absolute game memory plugin in both modes',async()=>{
+ const basePatch=await readFile(new URL('../plugins/stellaris-dsh/cordis.patch.yml',import.meta.url),'utf8');
+ assert.doesNotMatch(basePatch,/cyberfish-game-memory/);
+ assert.match(basePatch,/- id: compaction-basic\s+disabled: true/);
+ const options={directory:'some-other-directory/dsh',runId:'memory-path',minutes:5,hybridSurvey:false};
+ for(const nativeCountryAI of [false,true]){
+  const rows=nativeMcpEnvironmentPatch({...options,nativeCountryAI})
+   .flatMap(row=>row.insert??[]).filter(row=>row.id==='cyberfish-game-memory');
+  assert.equal(rows.length,1);
+  const path=rows[0].name;
+  assert.ok(isAbsolute(path));
+  assert.equal(path,fileURLToPath(new URL('../plugins/stellaris-dsh/game-compaction.mjs',import.meta.url)));
+  assert.ok((await stat(path)).isFile());
+ }
 });
 
 test('feature delivery is explicit even with the SDK environment allowlist and survey comparison suppresses it',()=>{
@@ -75,7 +93,7 @@ test('native strategy uses the strongest compatible model in the account listing
  const patch=nativeMcpEnvironmentPatch({...options,nativeCountryAI:true});
  assert.deepEqual(patch.find(x=>x.id==='agent-default-model').config,{provider:'deepseek-official',model,reasoningEffort:'high'});
  assert.deepEqual(patch.find(x=>x.id==='llm-deepseek').config,{thinking:'enabled',maxTokens:32768});
- assert.deepEqual(nativeMcpEnvironmentPatch(options).map(x=>x.id),['cyberfish-stellaris-mcp']);
+ assert.deepEqual(nativeMcpEnvironmentPatch(options).flatMap(x=>x.id?[x.id]:[]),['cyberfish-stellaris-mcp']);
 });
 
 test('missing reasoning models and custom API routes fall back without a generation probe',async()=>{

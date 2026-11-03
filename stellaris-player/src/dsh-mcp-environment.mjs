@@ -49,6 +49,11 @@ export function nativeMcpEnvironmentPatch({directory,runId,minutes,hybridSurvey,
   CYBERFISH_MAX_GAME_SPEED:String(maximumGameSpeed),CYBERFISH_SURVEY_WATCH_SECONDS:String(surveyWatchSeconds),CYBERFISH_TEST_MINUTES:String(minutes),CYBERFISH_HYBRID_SURVEY:!nativeCountryAI&&hybridSurvey?'1':'0',
   CYBERFISH_COLONY_UPGRADE_PILOT:!nativeCountryAI&&!surveyPilot&&colonyUpgradePilot?'1':'0',CYBERFISH_MONTHLY_LIFECYCLE_PILOT:!nativeCountryAI&&!surveyPilot&&monthlyLifecyclePilot?'1':'0',CYBERFISH_LOCAL_WAIT_PILOT:!nativeCountryAI&&!surveyPilot&&localWaitPilot?'1':'0',
   CYBERFISH_NATIVE_PRESENTATION:presentOrders?'1':'0',CYBERFISH_START_PAUSED:nativeCountryAI||startPaused?'1':'0',CYBERFISH_SURVEY_PILOT:!nativeCountryAI&&surveyPilot?'1':'0',CYBERFISH_STOP_BASELINE:String(stopBaseline)}}}];
+ patch.push({insert:[{
+  id:'cyberfish-game-memory',
+  name:fileURLToPath(new URL('../plugins/stellaris-dsh/game-compaction.mjs',import.meta.url)),
+  config:{thresholdRatio:0.032,retainTokens:4000,headroomTokens:4096,maxTokens:1600,compactionRetries:0},
+ }]});
  if(nativeCountryAI){
   const model=modelId(strategyModel)?strategyModel:FAST_STRATEGY_MODEL;
   const modelNotice=model===FAST_STRATEGY_MODEL?FAST_STRATEGY_MODEL_NOTICE+'。':'';
@@ -58,4 +63,9 @@ export function nativeMcpEnvironmentPatch({directory,runId,minutes,hybridSurvey,
    {id:'system-prompt',config:{personaPrefix:'你是正在玩《群星》的大肥鱼。'+modelNotice+'只使用群星 MCP 工具，不使用文件、终端、网页、子代理、控制台或桌面输入。'+nativeCountryAIBrief(minutes)}});
  }
  return patch;
+}
+
+export function dshNativeThinkingEnv(patch){
+ const thinking=patch.find(row=>row.id==='llm-deepseek')?.config?.thinking;
+ return {CYBERFISH_NATIVE_THINKING:thinking==='enabled'?'1':'0'};
 }

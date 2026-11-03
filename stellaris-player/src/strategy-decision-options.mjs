@@ -1,4 +1,5 @@
 import {councilAgendaCandidates} from './council-agendas.mjs';
+import {evaluateStrategyGoals,extractStrategyMetrics,isUnfinishedStrategyGoal} from './strategy-brief.mjs';
 import {ordinaryEdictOptions,STRATEGY_DIMENSIONS} from './strategy-contract.mjs';
 
 export function strategyDecisionOptions(state,{government,edicts,lockedDimensions,contract}={}){
@@ -22,10 +23,14 @@ export function strategyDecisionOptions(state,{government,edicts,lockedDimension
   ];
   const options={steering,edicts:edictOptions,agendas,allowed};
   if(allowed.length===2){
-    const actual=state.strategyContract?.steeringConfirmed===true?state.strategyContract:contract;
+    const confirmed=state.strategyContract?.steeringConfirmed===true?state.strategyContract:null;
+    const actual=confirmed??contract;
     const values=Object.fromEntries(dimensions.map(dimension=>[dimension,actual?.[dimension]??lockedDimensions[dimension].value]));
-    options.contractTemplate={...values,goals:[],reason:'',domesticActions:[],oneOffActions:[]};
-    options.instruction='本次只能修改目标或说明维持理由。国内设置无可执行候选。沿用模板方针，填写目标与理由并留空操作。若维持，理由以「维持理由：」开头并说明具体依据。';
+    const goals=evaluateStrategyGoals(confirmed?.goals,extractStrategyMetrics(state),state.date,state.strategyGoalProgress)
+      .filter(isUnfinishedStrategyGoal).slice(0,3).map(({metric,target,byDate})=>({metric,target,byDate}));
+    options.contractTemplate={...values,goals,reason:'',domesticActions:[],oneOffActions:[]};
+    options.instruction='本次只能修改目标或说明维持理由。国内设置无可执行候选。沿用模板方针并留空操作。'+
+      (goals.length?'若维持，保留模板目标，只填写以「维持理由：」开头的具体依据。':'没有未完成的有效目标，请填写1～3个新目标与理由。');
   }
   return options;
 }

@@ -201,12 +201,12 @@ test('all effective owner locks yield an actual steering template and accept a s
  assert.deepEqual(options.allowed,['修改目标','维持理由']);
  assert.deepEqual(options.contractTemplate,{
   economyFocus:'unity_traditions',expansionStance:'consolidate',militaryStance:'peaceful',
-  goals:[],reason:'',domesticActions:[],oneOffActions:[],
+  goals:contract.goals,reason:'',domesticActions:[],oneOffActions:[],
  });
  assert.ok(Buffer.byteLength(JSON.stringify(brief))<=3500);
  game.pendingStrategyReview={...game.lastState,strategyBrief:brief,strategyWakeReasons:['six_month_review','stagnation']};
  const reason='维持理由：现有岗位未填满，先观察人口增长能否释放已建产能';
- const result=await game.strategyControl({requestId:'maintain',contract:{...options.contractTemplate,goals:contract.goals,reason}});
+ const result=await game.strategyControl({requestId:'maintain',contract:{...options.contractTemplate,reason}});
  assert.equal(result.status,'applied',result.error);
  assert.equal(writes.length,0);
  assert.equal(rows.find(row=>row.type==='strategy_review')?.reason,reason);

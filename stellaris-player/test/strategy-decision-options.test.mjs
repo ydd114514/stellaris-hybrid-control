@@ -62,3 +62,24 @@ test('edict options freeze new activation in early or unknown stages while prese
  assert.equal(gap.status,'能力缺口');
  assert.match(gap.activationBlock,/维护费或净产未核实/);
 });
+
+test('the all-locked template excludes achieved, overdue and proposed goals',()=>{
+ const steering={economyFocus:'unity_traditions',expansionStance:'consolidate',militaryStance:'peaceful'};
+ const lockedDimensions=Object.fromEntries(Object.entries(steering).map(([key,value])=>[key,{value,by:'本人要求'}]));
+ const achieved={metric:'pops',target:100,byDate:'2210.01.01'};
+ const overdue={metric:'colonies',target:4,byDate:'2201.01.01'};
+ const unfinished={metric:'research_monthly',target:120,byDate:'2210.01.01'};
+ const state={date:'2202.01.01',population:90,colonyCount:2,
+  strategyContract:{...steering,steeringConfirmed:true,goals:[achieved,overdue,unfinished]},
+  strategyGoalProgress:[{...achieved,achievedOn:'2201.10.01',status:'achieved'}]};
+ const proposed={...steering,goals:[{metric:'systems',target:6,byDate:'2210.01.01'}]};
+ const options={lockedDimensions,contract:proposed,edicts:readback([])};
+ const {contractTemplate,instruction}=strategyDecisionOptions(state,options);
+ assert.deepEqual(contractTemplate.goals,[unfinished]);
+ assert.match(instruction,/保留模板目标，只填写/);
+ const withoutGoals=strategyDecisionOptions({...state,date:'2210.01.02'},options);
+ assert.deepEqual(withoutGoals.contractTemplate.goals,[]);
+ assert.match(withoutGoals.instruction,/新目标/);
+ const withoutEffectiveContract=strategyDecisionOptions({...state,strategyContract:null},options);
+ assert.deepEqual(withoutEffectiveContract.contractTemplate.goals,[]);
+});

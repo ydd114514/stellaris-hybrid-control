@@ -104,14 +104,6 @@
 - id: tool-web
   disabled: true
 - insert:
-    - id: cyberfish-game-memory
-      name: './game-compaction.mjs'
-      config:
-        thresholdRatio: 0.032
-        retainTokens: 4000
-        headroomTokens: 4096
-        maxTokens: 1600
-        compactionRetries: 0
     - id: cyberfish-stellaris-mcp
       name: '@deepseek-ai/dsh-mcp-client'
       config:
