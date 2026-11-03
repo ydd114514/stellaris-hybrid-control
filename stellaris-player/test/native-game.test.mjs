@@ -223,7 +223,10 @@ test('foreign or unlisted capital upgrades never reach the native mutation',asyn
 
 test('building commands accept actual large zone IDs and refuse guessed zone sequence numbers before posting',async t=>{
   const zoneId=33554590;
-  const {game,calls}=await fixture(t,{get_buildable_buildings:()=>({success:true,zones:[{zone_id:zoneId,district:'district_city',buildings:0,max_buildings:3,buildable:[{key:'building_factory_1'}]}]})});
+  const {game,calls}=await fixture(t,{
+    get_status:()=>({in_game:true,is_paused:true,date:{formatted:'2200.01.01'},
+      outliner:{sectors_summary:{capital_system:'太阳',sectors:[{colonies_summary:[{planet_id:0}]}]}}}),
+    get_buildable_buildings:()=>({success:true,planet_id:0,zones:[{zone_id:zoneId,district:'district_city',buildings:0,max_buildings:3,buildable:[{key:'building_factory_1'}]}]})});
   const order={command:'build_building',arguments:{planet_id:0,building_key:'building_factory_1',district_type:'district_city',slot_index:zoneId}};
   assert.equal(validateOrder(order).arguments.slot_index,zoneId);
   const accepted=await game.apply({requestId:'full-zone',snapshotId:game.snapshotId,orders:[order]});assert.equal(accepted.orders[0].status,'posted');

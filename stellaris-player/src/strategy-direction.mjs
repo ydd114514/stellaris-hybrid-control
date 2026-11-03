@@ -14,7 +14,10 @@ export function resolveStrategyDirection({state={},standing=state.operatorStandi
  const base=contract??{economyFocus:'balanced',expansionStance:'consolidate',militaryStance:'peaceful',oneOffActions:[],reason:'维持均衡经营'};
  const stage=ascensionEconomyStage(state);
  const unityFirst=state.userEconomicPolicy?.priority==='unity_first';
- const requested=unityFirst?'unity_traditions':stage?.focus??(ECONOMY_FOCUSES.includes(standing?.economyFocus)?standing.economyFocus:resourceFocus[state.operationalGoal?.targetResource]??base.economyFocus);
+ const standingFocus=ECONOMY_FOCUSES.includes(standing?.economyFocus)?standing.economyFocus:undefined;
+ const adviceResource=state.operationalGoal?.targetResource;
+ const adviceFocus=Object.hasOwn(resourceFocus,adviceResource)?resourceFocus[adviceResource]:undefined;
+ const requested=unityFirst?'unity_traditions':stage?.focus??standingFocus??adviceFocus??base.economyFocus;
  const shortage=Object.entries(state.resources??{}).find(([key,r])=>['energy','minerals','alloys','food','consumer_goods'].includes(key)&&Number.isFinite(r?.stockpile)&&Number.isFinite(r?.net)&&r.net<0&&Math.max(0,r.stockpile)/-r.net<=6);
  const war=(state.wars??[]).length>0;
  const explorationOnly=state.userEconomicPolicy?.militaryPolicy==='exploration_until_threat'&&!war&&!state.warGoalsWindow;
@@ -40,5 +43,14 @@ export function resolveStrategyDirection({state={},standing=state.operatorStandi
   ...(war?{militaryStance:'prepare_war'}:explorationOnly?{militaryStance:'peaceful'}:{}),
   ...(explorationOnly?{oneOffActions:(base.oneOffActions??[]).filter(a=>a.type!=='declare_war')}:{}),reason:reason.slice(0,300)};
  if(effective.militaryStance!=='prepare_war')delete effective.warTarget;
- return {contract:effective,requestedFocus:requested,emergency:!!shortage||war,reason:effective.reason};
+ const lockSources={
+  economyFocus:shortage?'紧急保供':war?'战争':unityFirst||stage||standingFocus?'本人要求':adviceFocus?'参谋目标':null,
+  expansionStance:shortage?'紧急保供':war?'战争':ownerConsolidating?'本人要求':digesting?'建设消化':null,
+  militaryStance:war?'战争':explorationOnly?'本人要求':null,
+ };
+ const lockedDimensions={};
+ for(const [dimension,by] of Object.entries(lockSources)){
+  if(by)lockedDimensions[dimension]={value:effective[dimension],by};
+ }
+ return {contract:effective,requestedFocus:requested,emergency:!!shortage||war,reason:effective.reason,lockedDimensions};
 }

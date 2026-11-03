@@ -2,7 +2,7 @@ import {ECONOMY_FOCUSES} from './operator-standing.mjs';
 import {councilAgendaProblem} from './council-agendas.mjs';
 import {normalizeNativeOwnerPolicy} from './native-country-ai-economic-policy.mjs';
 import {economicEdictActivationProblem} from './owner-economic-policy.mjs';
-import {STEERING_EFFECTS} from './strategy-brief.mjs';
+import {sameStrategyGoal,STEERING_EFFECTS} from './strategy-brief.mjs';
 import {surveyGameDay} from './survey-idle-policy.mjs';
 export const STRATEGY_DIMENSIONS={economyFocus:ECONOMY_FOCUSES,expansionStance:['aggressive','consolidate'],militaryStance:['peaceful','prepare_war']};
 export const RESERVED_ACTIONS={declare_war:'declare_war',offer_peace:'offer_peace',diplo_propose:'diplomacy',diplo_respond:'respond_diplomacy'};
@@ -44,11 +44,24 @@ function validateGoals(goals,currentDate){
  if(today===null)throw Error('当前游戏日期未知，请先读取战略简报');
  return goals.map(goal=>{
   const deadline=surveyGameDay(goal?.byDate);
-  if(!goal||Object.keys(goal).length!==3||!GOAL_METRICS.includes(goal.metric)||!Number.isFinite(goal.target)||goal.target<0||deadline===null)
-   throw Error('战略目标需要有效指标、非负数值和 YYYY.MM.DD 截止日期');
+  if(!goal||Object.keys(goal).length!==3||!GOAL_METRICS.includes(goal.metric)||!Number.isFinite(goal.target)||deadline===null)
+   throw Error('战略目标需要有效指标、数值和 YYYY.MM.DD 截止日期');
+  if(goal.target<=0)throw Error('战略目标值必须大于 0');
+  if(goal.metric==='naval_used_ratio'&&goal.target>1)throw Error('舰容占用率目标不能超过 1，请用 0～1 的比例');
   if(deadline>today+20*360)throw Error('战略目标的截止日期不能超过当前游戏日期20年');
   return {metric:goal.metric,target:goal.target,byDate:goal.byDate};
  });
+}
+
+// Check only new or modified targets. Same-request receipts must be resolved
+// before checking live metrics, since the world can advance during a retry.
+export function validateStrategyGoalTargets(goals,metrics,previousGoals=[]){
+ for(const goal of goals){
+  const current=metrics?.[goal.metric];
+  if(Number.isFinite(current)&&goal.target<=current&&!previousGoals.some(previous=>sameStrategyGoal(previous,goal))){
+   throw Error(`新设或修改的战略目标 ${goal.metric} 必须高于当前值 ${current}`);
+  }
+ }
 }
 
 function validateCountryDirection(value,key){
@@ -188,14 +201,18 @@ export async function applySteering({contract,rpc,heartbeat=async()=>{},wait=ms=
  const read=async()=>{const raw=await rpc('get_edicts');if(!Array.isArray(raw?.active_edicts))throw Error('方针法令状态不可读');return new Set(raw.active_edicts.map(e=>e.key));};
  const confirmed=async(key,on)=>{for(let i=0;i<attempts;i++){await heartbeat();const active=await read();if(active.has(key)===on)return;if(i+1<attempts)await wait(100);}throw Error('方针切换尚未确认；不重放命令，请检查mod已启用');};
  let active=await read();
- for(const [dimension,key] of Object.entries(steeringKeys(contract))){
+ const keys=steeringKeys(contract),dimensions=Object.entries(keys);
+ if(dimensions.every(([dimension,key])=>active.has(key)&&![...active].some(value=>value.startsWith(prefixes[dimension])&&value!==key))){
+  return {confirmed:true,keys};
+ }
+ for(const [dimension,key] of dimensions){
   for(const old of active)if(old.startsWith(prefixes[dimension])&&old!==key){
    const r=await rpc('toggle_edict',{edict_key:old,enabled:false});if(r?.success!==true)throw Error('旧方针未撤销');await confirmed(old,false);
   }
   active=await read();if(!active.has(key)){const r=await rpc('toggle_edict',{edict_key:key,enabled:true});if(r?.success!==true)throw Error('新方针未提交');await confirmed(key,true);}
   active=await read();
  }
- return {confirmed:true,keys:steeringKeys(contract)};
+ return {confirmed:true,keys};
 }
 export const legacyStrategyContractSchema={type:'object',additionalProperties:false,required:[...Object.keys(STRATEGY_DIMENSIONS),'oneOffActions','reason'],properties:{
  ...Object.fromEntries(Object.entries(STRATEGY_DIMENSIONS).map(([k,v])=>[k,{enum:v}])),reason:{type:'string',minLength:1,maxLength:300},
@@ -220,7 +237,7 @@ export const strategyContractSchema={
  properties:{
   ...legacyStrategyContractSchema.properties,
   goals:{type:'array',minItems:1,maxItems:3,items:{type:'object',additionalProperties:false,required:['metric','target','byDate'],properties:{
-   metric:{enum:GOAL_METRICS},target:{type:'number',minimum:0,description:'期限内至少达到的数值；舰容占用用比例，例如 0.8'},
+   metric:{enum:GOAL_METRICS},target:{type:'number',exclusiveMinimum:0,description:'期限内至少达到的正数；新设或修改时须高于已知当前值。舰容占用率须在 0～1 之间，例如 0.8'},
    byDate:{type:'string',pattern:'^[0-9]{4,7}\\.[0-9]{2}\\.[0-9]{2}$',description:'游戏日期，最多从当前日期起20年'}
   }}},
   expansionDirection:{type:'object',additionalProperties:false,required:['towardCountryId'],properties:{towardCountryId:countryIdSchema},description:'已知帝国方向，仅用于复查和解说'},

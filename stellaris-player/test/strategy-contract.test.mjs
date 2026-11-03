@@ -28,9 +28,11 @@ test('unconfirmed steering does not replay a posted toggle or execute unrelated 
  }}),/尚未确认/);assert.equal(writes.length,1);
 });
 test('strategy review is six game months or changed strategic events, not idle time or routine queues',()=>{
- const review=new NativeStrategyReview(),state={date:'2200.01.01',wars:[],pendingEvents:[],resources:{energy:{stockpile:1000,net:10}}};
+ let now=0;
+ const review=new NativeStrategyReview({now:()=>now}),state={date:'2200.01.01',wars:[],pendingEvents:[],resources:{energy:{stockpile:1000,net:10}}};
  assert.deepEqual(review.due(state),['initial_strategy']);review.acknowledge(state);
  assert.deepEqual(review.due({...state,date:'2200.06.30',construction_queue:[1]}),[]);
+ now=180000;
  assert.ok(review.due({...state,date:'2200.07.01'}).includes('six_month_review'));
  assert.ok(review.due({...state,wars:[{war_id:0}]}).includes('strategic_event'));
  assert.ok(review.due({...state,resources:{energy:{stockpile:5,net:-5}}}).includes('strategic_event'));
@@ -56,21 +58,24 @@ test('quantified native strategy goals and directions are bounded and match the 
 });
 
 test('only two acknowledged reviews with all metrics known and no goal near completion signal stagnation',()=>{
- const review=new NativeStrategyReview();
+ let now=0;
+ const review=new NativeStrategyReview({now:()=>now});
  const state={date:'2200.01.01',population:60,strategyContract:contract,military:{fleets:[{military_power:100}]},resources:{
   physics_research:{net:30},society_research:{net:30},engineering_research:{net:30}
  }};
  review.acknowledge(state);
+ now+=180000;
  const first={...state,date:'2200.07.01'};
  assert.deepEqual(review.due(first),['six_month_review']);
  assert.deepEqual(review.due(first),['six_month_review']);
  review.acknowledge(first);
+ now+=180000;
  const second={...state,date:'2201.01.01'};
  assert.deepEqual(review.due(second),['six_month_review','stagnation']);
  for(const improved of [{population:61},{population:96},{military:{}},{military:{fleets:[{military_power:101}]}},
   {resources:{...state.resources,physics_research:{net:31}}}]){
   assert.deepEqual(review.due({...second,...improved}),['six_month_review']);
  }
- review.acknowledge(second,{changed:true});
+ review.acknowledge(second,{changed:true});now+=180000;
  assert.deepEqual(review.due({...state,date:'2201.07.01'}),['six_month_review']);
 });

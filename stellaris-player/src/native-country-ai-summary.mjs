@@ -1,9 +1,9 @@
 import {confirmedCountryAIHandoff} from './country-ai-handoff.mjs';
-import {evaluateStrategyGoals,extractStrategyMetrics} from './strategy-brief.mjs';
+import {evaluateStrategyGoals,extractStrategyMetrics,sameStrategyGoal} from './strategy-brief.mjs';
 
 const goalLabels={pops:'人口',colonies:'殖民地',systems:'星系',research_monthly:'科研月产',
  alloys_monthly:'合金月产',fleet_power:'舰队战力',naval_used_ratio:'舰容占用率'};
-const goalStates={achieved:'已达成',near:'接近达成',pending:'未达成',overdue:'逾期未达成',unknown:'进度未知'};
+const goalStates={achieved:'已达成',achieved_late:'逾期达成',near:'接近达成',pending:'未达成',overdue:'逾期未确认达成',unknown:'进度未知'};
 
 export function strategyGoalLabel(metric){
  return typeof metric==='string'&&Object.hasOwn(goalLabels,metric)?goalLabels[metric]:null;
@@ -37,7 +37,9 @@ export function nativeCountryAISummary(checkpoint,{actorActive=false}={}){
  const contract=checkpoint.strategyContract??checkpoint.state?.strategyContract;
  const goals=Array.isArray(contract?.goals)?contract.goals.filter(goal=>strategyGoalLabel(goal?.metric)&&
   Number.isFinite(goal?.target)&&typeof goal?.byDate==='string'&&/^\d{4}\.\d{2}\.\d{2}$/.test(goal.byDate)).slice(0,3):[];
- const goalProgress=evaluateStrategyGoals(goals,goals.length?extractStrategyMetrics(checkpoint.state??{}):{},checkpoint.state?.date).map(goal=>({
+ const observed=checkpoint.state?.strategyGoalProgress;
+ const fallback=evaluateStrategyGoals(goals,goals.length?extractStrategyMetrics(checkpoint.state??{}):{},checkpoint.state?.date);
+ const goalProgress=fallback.map(goal=>Array.isArray(observed)?observed.find(row=>sameStrategyGoal(row,goal))??goal:goal).map(goal=>({
   label:strategyGoalLabel(goal.metric)??'',target:strategyGoalValue(goal.metric,goal.target),
   current:strategyGoalValue(goal.metric,goal.current),byDate:goal.byDate,
   progress:goal.progress===null?null:strategyGoalValue('naval_used_ratio',Math.max(0,goal.progress)),
@@ -45,5 +47,5 @@ export function nativeCountryAISummary(checkpoint,{actorActive=false}={}){
  }));
  const counts=raw.commandCounts??{};
  const blocked=Object.values(counts).reduce((n,x)=>n+(Number(x?.blocked)||0),0);
- return {owner,historical,domains,message,steering:contract?{economyFocus:contract.economyFocus,expansionStance:contract.expansionStance,militaryStance:contract.militaryStance}:null,lastStrategyReason:typeof contract?.reason==='string'?contract.reason.slice(0,300):'',blockedCommands:blocked,reviewDue:!historical&&control?.reviewDue===true,goals:goalProgress};
+ return {owner,historical,domains,message,steering:contract?{economyFocus:contract.economyFocus,expansionStance:contract.expansionStance,militaryStance:contract.militaryStance}:null,lastStrategyReason:typeof contract?.reason==='string'?contract.reason.slice(0,300):'',blockedCommands:blocked,reviewDue:!historical&&(checkpoint.state?.strategyWakeReasons?.length??Number(control?.reviewDue===true))>0,goals:goalProgress};
 }

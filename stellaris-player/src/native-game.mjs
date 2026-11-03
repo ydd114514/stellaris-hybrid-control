@@ -1,5 +1,5 @@
 import {NativeStrategyReview,strategyPlanChanged} from './native-strategy-review.mjs';
-import {evaluateStrategyGoals,extractStrategyMetrics,readStrategyNeighbors,strategyBrief} from './strategy-brief.mjs';
+import {evaluateStrategyGoals,extractStrategyMetrics,isUnfinishedStrategyGoal,readStrategyNeighbors,strategyBrief} from './strategy-brief.mjs';
 import {NativeColonyAudit} from './native-colony-audit.mjs';
 import {AdviceExecution} from './advice-execution.mjs';
 import {compileNativeIntent,NativeIntentExecution} from './native-intent.mjs';
@@ -7,7 +7,7 @@ import {nativeIntentAdjustments} from './native-intent-adjustments.mjs';
 import {PersistentExplorationExecution} from './persistent-exploration-execution.mjs';
 import {dispatchNativeExploration} from './native-exploration-dispatch.mjs';
 import {ownerEconomicPolicyReview} from './owner-economic-policy.mjs';
-import {validateStrategyContract,applySteering,applyDomesticAction,reservedOrder,reservedRPC,steeringRPC,RESERVED_ACTIONS} from './strategy-contract.mjs';
+import {validateStrategyContract,validateStrategyGoalTargets,applySteering,applyDomesticAction,reservedOrder,reservedRPC,steeringRPC,RESERVED_ACTIONS} from './strategy-contract.mjs';
 import {COUNTRY_AI_POLICIES,normalizeCountryAIProtection,assertProtectedShipyardRefs,nativeOwnerPolicy} from './native-country-ai-economic-policy.mjs';
 import {constructionInspectionScope,buildingInspectionScope,inspectBuildingQuote,inspectConstruction} from './construction-inspection.mjs';
 import {withConstructionCoverage} from './construction-coverage.mjs';
@@ -47,7 +47,6 @@ import {councilAgendaCandidates,councilAgendaProblem} from './council-agendas.mj
 import {readStrategyAdvice} from './strategy-advice.mjs';
 import {readOperatorStanding,writeControllerReceipt} from './operator-standing.mjs';
 import {readGameplayPreferences} from './gameplay-preferences.mjs';
-import {resolveStrategyDirection} from './strategy-direction.mjs';
 import {routineSalePlan} from './market-maintenance.mjs';
 import {empireRoute,strategicReview,colonyReview,expansionCandidates,createGrowthTracker} from './strategic-review.mjs';
 import {OperationalContext,executionCapabilities} from './operational-context.mjs';
@@ -186,7 +185,7 @@ export class NativeGame {
     this.stationFailures = new Map();
     this.knownShipyards = new Set();
     this.operationalContext=new OperationalContext({now:this.now});
-    this.growthTracker=createGrowthTracker();this.strategyReview=new NativeStrategyReview();
+    this.growthTracker=createGrowthTracker();this.strategyReview=new NativeStrategyReview({now});
     this.adviceTasks=new AdviceExecution({now:this.now});
     this.audienceQueries=new AudienceQueryBridge({directory:resolve(this.directory,'../commentary'),now:this.now});
     this.continuity=new ControllerContinuity({directory:this.directory,now:this.now});
@@ -359,6 +358,8 @@ export class NativeGame {
       const reviewed=this.pendingStrategyReview;
       if(this.nativeStrategicReviewDue&&!reviewed)throw Error('请先从 observe 或 watch 读取本次战略简报');
       if(reviewed?.strategyWakeReasons.includes('stagnation'))throw Error('连续两次复查停滞，请用 strategy_contract 调整方针或目标，或说明维持理由');
+      const progress=evaluateStrategyGoals(this.strategyContract.goals,{},this.lastState?.date,this.strategyGoalProgress);
+      if(progress.length&&!progress.some(isUnfinishedStrategyGoal))throw Error('当前目标都已达成或逾期，请用 strategy_contract 设置新目标');
       await this.completeStrategyReview(reviewed??this.lastState,this.strategyContract,{reason});
       this.needsDecisionRefresh=false;
       return {control:{enabled:true,...this.countryAI.view()},state:await this.observe()};
@@ -467,29 +468,45 @@ export class NativeGame {
     if(old){if(old.fingerprint!==fingerprint)throw Error('同一战略请求内容不能改变');return old.result;}
     const reviewed=this.pendingStrategyReview;
     if(this.nativeStrategicReviewDue&&!reviewed)throw Error('请先从 observe 或 watch 读取本次战略简报');
-    const previous=this.modelStrategyContract??this.strategyContract;
-    const changed=strategyPlanChanged(previous,requested);
-    if(reviewed?.strategyWakeReasons.includes('stagnation')&&!changed&&
-      (requested.reason===previous?.reason||!/^维持理由[：:]\s*\S.{3}/u.test(requested.reason))){
-      throw Error('连续两次复查停滞，请调整至少一个方针或目标；维持时用「维持理由：」开头并说明依据');
-    }
     const result={requestId,status:'applying',contract:requested,actions:[]};
+    if(this.strategyBusy)throw Error('战略合同正在执行');
     this.strategyReceipts.set(requestId,{fingerprint,result,bindingKey:receiptBinding});this.strategyBusy=true;
+    let tasksFinished=false;
+    const finishTasks=()=>{
+      const explicitStopped=new Set((requested.taskUpdates??[]).filter(x=>['blocked','superseded'].includes(x.status)).map(x=>x.taskId));
+      this.adviceTasks?.finish((result.taskIds??[]).filter(id=>!explicitStopped.has(id)),result,this.lastState??{});
+      if(this.adviceTasks&&this.lastState)this.lastState.adviceExecution=this.adviceTasks.view();
+    };
     try{
       await this.commandScope();await this.countryAI.heartbeat();
       const bindingKey=strategyExecutionBinding(this);
       if(bindingKey)this.strategyExecutionRecord={bindingKey,result,date:this.lastGameDate??this.lastState?.date??null};
       await this.refreshOperatorStanding(this.lastState);
+      const previous=this.strategyContract;
+      const metrics=extractStrategyMetrics(this.lastState);
+      validateStrategyGoalTargets(requested.goals,metrics,previous?.goals);
+      const goalProgress=evaluateStrategyGoals(requested.goals,{},this.lastState?.date,this.strategyGoalProgress);
+      if(!goalProgress.some(isUnfinishedStrategyGoal))throw Error('当前目标都已达成或逾期，请设置至少一个新目标');
+      const plan=this.strategyDirectionPlan(this.lastState,requested),checked=plan.contract;
+      const changed=strategyPlanChanged(previous,checked);
+      if(reviewed?.strategyWakeReasons.includes('stagnation')&&!changed&&
+        (requested.reason===(this.modelStrategyContract??previous)?.reason||!/^维持理由[：:]\s*\S.{3}/u.test(requested.reason))){
+        const locked=Object.entries(plan.lockedDimensions).filter(([key,lock])=>requested[key]!==lock.value)
+          .map(([key,lock])=>key+'已被'+lock.by+'锁定');
+        throw Error('连续两次复查停滞。'+(locked.length?locked.join('、')+'。':'')+'请调整未锁定的方针或目标；维持时用「维持理由：」开头并说明依据');
+      }
       const taskIds=[...new Set([...(requested.taskIds??[]),...(requested.domesticActions??[]).map(a=>a.taskId).filter(Boolean)])];
       this.adviceTasks?.require([...taskIds,...(requested.taskUpdates??[]).map(x=>x.taskId)]);
       this.adviceTasks?.start(taskIds,this.lastState);
       this.adviceTasks?.update(requested.taskUpdates??[],this.lastState);
       result.taskIds=taskIds;
       this.modelStrategyContract=requested;
-      const checked=resolveStrategyDirection({state:this.lastState,contract:requested}).contract;
       result.contract=checked;
-      result.steering=await this.syncStrategyDirection(this.lastState,{force:true});
-      if(!result.steering?.confirmed)throw Error('方针未确认，未执行保留决定');
+      result.steering=await this.syncStrategyDirection(this.lastState,{force:true,plan,requestId});
+      if(!result.steering?.confirmed){
+        result.nextCall={name:'inspect',arguments:{topic:'strategy'}};
+        throw Error('方针回读未确认，未执行保留决定。请先核对当前方针'+(result.steering?.error?'：'+result.steering.error:''));
+      }
       await this.checkpoint();
       for(const action of checked.domesticActions??[]){
         const receipt={};(result.domesticActions??=[]).push(receipt);
@@ -501,26 +518,35 @@ export class NativeGame {
         result.actions.push(await this.apply({requestId:requestId.slice(0,70)+'-s'+index,snapshotId:state.snapshotId,explanation:checked.reason,
           orders:[{command:RESERVED_ACTIONS[action.type],arguments:action.arguments}]}));
       }
-      await this.completeStrategyReview(reviewed??this.lastState,this.strategyContract??checked,{changed,reason:requested.reason});
       result.status='applied';
+      finishTasks();tasksFinished=true;
+      await this.completeStrategyReview(reviewed??this.lastState,this.strategyContract??checked,{changed,reason:requested.reason});
     }catch(error){result.status='attention';result.error=error.message;}
     finally{
       if(this.strategyExecutionRecord?.result===result)this.strategyExecutionRecord.date=this.lastGameDate??this.lastState?.date??null;
-      const explicitStopped=new Set((requested.taskUpdates??[]).filter(x=>['blocked','superseded'].includes(x.status)).map(x=>x.taskId));
-      this.adviceTasks?.finish((result.taskIds??[]).filter(id=>!explicitStopped.has(id)),result,this.lastState??{});
+      if(!tasksFinished)finishTasks();
       this.strategyBusy=false;await this.checkpoint();
     }
     return {...result,control:this.countryAI.view(),adviceExecution:this.adviceTasks?.view()};
   }
   async completeStrategyReview(state,contract,{changed=false,reason=contract.reason}={}){
     await this.countryAI.acknowledgeReview();
-    this.strategyReview.acknowledge(state,{changed});
+    const ackDate=this.countryAI.last?.last_native_state?.precondition?.date;
+    const current={...this.lastState,date:day(ackDate)!==null?ackDate:this.lastState?.date??state.date};
+    this.strategyReview.acknowledge(state,{current,changed});
+    const sample=this.strategyMetricSample??{date:state.date,metrics:extractStrategyMetrics(state)};
+    const progress=evaluateStrategyGoals(contract.goals,sample.metrics,sample.date,this.strategyGoalProgress);
+    this.strategyGoalProgress=progress;
+    if(this.lastState){
+      this.lastState={...this.lastState,strategyGoalProgress:progress,strategyWakeReasons:[]};
+      delete this.lastState.strategyBrief;
+    }
     this.nativeStrategicReviewDue=false;
     this.pendingStrategyReview=null;
     if(state.strategyBrief){
       await this.log({type:'strategy_review',date:state.date,reason,
         previousGoals:state.strategyBrief.previousGoals,neighbors:state.strategyBrief.neighbors,
-        goals:evaluateStrategyGoals(contract.goals,extractStrategyMetrics(state),state.date),
+        goals:progress,
         expansionDirection:contract.expansionDirection,warTarget:contract.warTarget});
     }
   }
@@ -735,6 +761,9 @@ export class NativeGame {
       state.strategy.adviceExecution=state.adviceExecution;
       state.population=status.outliner?.sectors_summary?.total_pops??null;
       state.colonyCount=status.outliner?.sectors_summary?.total_colonies??null;
+      this.strategyMetricSample={date:state.date,metrics:extractStrategyMetrics(state)};
+      state.strategyGoalProgress=evaluateStrategyGoals(state.strategyContract?.goals,this.strategyMetricSample.metrics,state.date,this.strategyGoalProgress);
+      this.strategyGoalProgress=state.strategyGoalProgress;
       state.strategyWakeReasons=this.strategyReview.due(state);
       this.nativeStrategicReviewDue=state.countryAIControl.owner==='native'&&state.strategyWakeReasons.length>0;
       if(state.strategyWakeReasons.length)state.strategyBrief=await this.readStrategyBrief(state);
@@ -760,7 +789,8 @@ export class NativeGame {
     });
     await this.assertNativeWorld();
     const government={...this.government,authority:this.government?.authority||this.government?.authority_key};
-    return strategyBrief(state,{government,phase:state.strategy.focus,previousMetrics:this.strategyReview.lastMetrics,neighbors});
+    const {lockedDimensions}=this.strategyDirectionPlan(state,this.modelStrategyContract);
+    return strategyBrief(state,{government,phase:state.strategy.focus,previousMetrics:this.strategyReview.lastMetrics,neighbors,lockedDimensions});
   }
   async refreshNativeColonyAudit(state){
     this.nativeColonyAudit??=new NativeColonyAudit();
@@ -913,22 +943,31 @@ export class NativeGame {
     const preferences=await readGameplayPreferences(resolve(this.directory,'../gameplay-preferences.json'),{standing,now:this.now()});
     if(preferences){state.userEconomicPolicy=preferences;state.operatorMessages.unshift(preferences.note);}else delete state.userEconomicPolicy;
   }
-  async syncStrategyDirection(state,{force=false}={}){
+  strategyDirectionPlan(state,contract){
+    const intent=compileNativeIntent(state,contract);
+    const adjustment=nativeIntentAdjustments({intent,state,record:this.nativeIntentExecution?.record,now:this.now()});
+    return {intent,adjustment,contract:adjustment.contract,lockedDimensions:{...intent.lockedDimensions,...adjustment.lockedDimensions}};
+  }
+  async syncStrategyDirection(state,{force=false,plan,requestId}={}){
     const standing=state.operatorStanding,active=this.nativeCountryAIEnabled&&this.countryAI.view().owner==='native'&&!this.stoppingRequested&&!this.stopped;
     if(!standing&&!state.userEconomicPolicy&&!this.directionManaged&&!force&&!state.operationalGoal?.targetResource)return;
-    const intent=compileNativeIntent(state,this.modelStrategyContract);
-    const adjustment=nativeIntentAdjustments({intent,state,record:this.nativeIntentExecution?.record,now:this.now()});
-    const direction={contract:adjustment.contract,reason:adjustment.contract.reason},effective={...direction.contract,oneOffActions:[]};
+    const {intent,adjustment,contract}=plan??this.strategyDirectionPlan(state,this.modelStrategyContract);
+    const direction={contract,reason:contract.reason},effective={...contract,oneOffActions:[]};
     const ownerPolicy=intent.ownerPolicy;
     const key=stableJson([effective.economyFocus,effective.expansionStance,effective.militaryStance,ownerPolicy,this.countryAI.view().generation]);
     let confirmed=false,reason=direction.reason;
     const hasDirection=!!standing?.economyFocus||!!state.userEconomicPolicy||!!state.operationalGoal?.targetResource||!!this.modelStrategyContract||this.directionManaged||force;
     if(active&&hasDirection&&!this.directionApplying){
       this.directionManaged=true;
-      if(this.directionAttempt?.key!==key||force&&this.directionAttempt?.confirmed===true){
-        this.directionApplying=true;this.directionAttempt={key,confirmed:false};
+      if(this.directionAttempt?.key!==key||force&&(this.directionAttempt.confirmed||requestId!==undefined)){
+        const retry=force&&this.directionAttempt?.key===key&&!this.directionAttempt.confirmed;
+        const attempt=this.directionAttemptSequence=(this.directionAttemptSequence??0)+1;
+        this.directionApplying=true;this.directionAttempt={key,attempt,confirmed:false};
         try{
           await this.commandScope();await this.countryAI.heartbeat();
+          if(retry)await this.log({type:'strategy_steering_retry',attempt,requestId});
+          // applySteering reads current edicts before writing. A lost reply may
+          // already have applied the previous attempt.
           await applySteering({contract:effective,rpc:(m,p)=>this.rpc(m,p),heartbeat:async()=>{
             if(this.stoppingRequested||this.stopped)throw Error('会话已停止');
             await this.countryAI.heartbeat();if(this.countryAI.view().owner!=='native')throw Error('原生持权已结束');
@@ -957,7 +996,7 @@ export class NativeGame {
     const correction=active&&confirmed?await this.correctNativeIntent(state,{intentKey:intent.key,feedback:adjustment.feedback}):this.nativeIntentCorrection;
     state.nativeIntent=this.nativeIntentExecution.observe(intent,state,{binding:strategyExecutionBinding(this),steeringConfirmed:active&&confirmed,ownerPolicyConfirmed,correction,controlError:this.directionAttempt?.key===key?this.directionAttempt.error:null,now:this.now()});
     if(state.nativeIntent.feedback)state.nativeIntent.feedback.adjustment={...adjustment.feedback.adjustment,confirmed:active&&confirmed};
-    return {confirmed};
+    return {confirmed,...(!confirmed?{error:reason}:{}),attempt:this.directionAttempt?.attempt};
   }
   reviewStrategy(state=this.lastState) {
     const owned=(state.colonies||[]).flatMap(x=>x.colonies_summary||[]),own=new Set(owned.map(x=>x.planet_id));

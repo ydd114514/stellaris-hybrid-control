@@ -64,7 +64,7 @@ test('an explicitly legal activation is read back; a posted unconfirmed removal 
 function fixture({writeError,scopeError}={}){
  const keys=new Set(['nutritional_plenitude','cfsteer_economy_unity_traditions','relay_network_dummy']),calls=[];
  let scopes=0;const game=Object.create(NativeGame.prototype);
- Object.assign(game,{nativeCountryAIEnabled:true,nativeCountryAIFence:true,lastState:{date:'2250.01.01'},
+ Object.assign(game,{nativeCountryAIEnabled:true,nativeCountryAIFence:true,now:()=>1,lastState:{date:'2250.01.01'},
   countryAI:{view:()=>({owner:'native'}),heartbeat:async()=>{},acknowledgeReview:async()=>{}},
   commandScope:async()=>{scopes++;if(scopeError&&scopes>1)throw Error('发送前玩家或首都身份改变');},
   refreshOperatorStanding:async()=>{},syncStrategyDirection:async()=>({confirmed:true}),checkpoint:async()=>{},strategyReview:{acknowledge(){}},

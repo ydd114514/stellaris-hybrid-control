@@ -50,7 +50,7 @@ function strategyGoalsText(goals,previous){
     const target=strategyGoalValue(goal.metric,goal.target),current=strategyGoalValue(goal.metric,goal.current);
     const deadline=gameDate(goal.byDate);
     return previous
-      ?[label+current+'/'+target+'（'+strategyGoalStatus(Number.isFinite(goal.current)?goal.status:'unknown')+'）']
+      ?[label+current+'/'+target+'（'+strategyGoalStatus(goal.status)+'）']
       :[label+target+'（当前'+current+(deadline?'，'+deadline+'前':'')+'）'];
   }).join('、');
 }

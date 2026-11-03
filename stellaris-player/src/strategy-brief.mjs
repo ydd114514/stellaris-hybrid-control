@@ -16,7 +16,7 @@ const regular={
     research:'优先三线科研，增加星球建设矿物预算',
   },
   expansionStance:{
-    aggressive:'提高殖民计划的合金预算和前哨的影响力预算；无殖民计划时额外提高前哨合金预算',
+    aggressive:'有扩张或殖民计划时同步提高殖民与星基的合金预算权重，有前哨计划时提高前哨影响力预算',
     consolidate:'增加星球建设矿物预算',
   },
   militaryStance:{
@@ -62,15 +62,30 @@ export function extractStrategyMetrics(state={}){
   return metrics;
 }
 
-export function evaluateStrategyGoals(goals,metrics,date){
+export const sameStrategyGoal=(a,b)=>a?.metric===b?.metric&&a?.target===b?.target&&a?.byDate===b?.byDate;
+
+const closedGoalStates=new Set(['achieved','achieved_late','overdue']);
+export const isUnfinishedStrategyGoal=goal=>!closedGoalStates.has(goal?.status);
+
+export function evaluateStrategyGoals(goals,metrics,date,previousProgress=[]){
   const today=surveyGameDay(date);
-  return (goals??[]).map(({metric,target,byDate})=>{
+  return (goals??[]).map(goal=>{
+    const {metric,target,byDate}=goal;
     const current=number(metrics?.[metric]);
     const deadline=surveyGameDay(byDate);
     const progress=current===null?null:target>0?number(current/target):Number(current>=target);
-    const status=current===null?'unknown':current>=target?'achieved':
-      today!==null&&deadline!==null&&today>deadline?'overdue':progress>=.8?'near':'pending';
-    return {metric,target,byDate,current,progress,status};
+    const previous=previousProgress.find(row=>sameStrategyGoal(row,goal));
+    const previousDay=surveyGameDay(previous?.achievedOn);
+    const reached=current!==null&&current>=target;
+    // A readback is the earliest date we can confirm, even when observation
+    // resumes after the deadline. Retain earlier confirmed achievements.
+    const achievedOn=previousDay!==null&&(today===null||previousDay<=today)?previous.achievedOn:
+      reached&&today!==null&&deadline!==null?date:null;
+    const overdue=today!==null&&deadline!==null&&today>deadline;
+    const status=achievedOn!==null
+      ?surveyGameDay(achievedOn)>deadline?'achieved_late':'achieved'
+      :overdue?'overdue':current===null||reached?'unknown':progress>=.8?'near':'pending';
+    return {metric,target,byDate,current,progress,status,...(achievedOn===null?{}:{achievedOn})};
   });
 }
 
@@ -140,7 +155,14 @@ export async function readStrategyNeighbors(state,read){
 const showNumber=value=>Number.isFinite(value)?Number(value.toPrecision(6)):UNKNOWN;
 const governmentNames=rows=>Array.isArray(rows)?rows.slice(0,4).map(row=>cleanText(row?.name||row?.key)):UNKNOWN;
 
-export function strategyBrief(state,{government,previousMetrics,neighbors,phase}={}){
+export function strategyBrief(state,{government,previousMetrics,neighbors,phase,lockedDimensions=state.lockedDimensions}={}){
+  const locks={};
+  for(const dimension of ['economyFocus','expansionStance','militaryStance']){
+    const lock=lockedDimensions?.[dimension];
+    if(typeof lock?.value==='string'&&typeof lock?.by==='string'){
+      locks[dimension]={value:cleanText(lock.value,32),by:cleanText(lock.by)};
+    }
+  }
   const resources=Object.fromEntries(Object.entries(state.resources??{}).map(([key,resource])=>
     [key,{...resource,net:net(resource),stockpile:stockpile(resource)}]));
   const type=empireRoute(government);
@@ -157,7 +179,7 @@ export function strategyBrief(state,{government,previousMetrics,neighbors,phase}
       return [key,{current:noDrain?'无净消耗':showNumber(value),
         change:value===null||previous===null?UNKNOWN:showNumber(value-previous)}];
     })),
-    previousGoals:evaluateStrategyGoals(state.strategyContract?.goals,metrics,state.date).slice(0,3)
+    previousGoals:evaluateStrategyGoals(state.strategyContract?.goals,metrics,state.date,state.strategyGoalProgress).slice(0,3)
       .map(goal=>({...goal,current:showNumber(goal.current),progress:showNumber(goal.progress)})),
     ...(state.strategyContract?.expansionDirection?{expansionDirection:state.strategyContract.expansionDirection}:{}),
     ...(state.strategyContract?.warTarget?{warTarget:state.strategyContract.warTarget}:{}),
@@ -165,6 +187,7 @@ export function strategyBrief(state,{government,previousMetrics,neighbors,phase}
     neighbors:neighbors?.rows.slice()??UNKNOWN,
     omittedNeighbors:neighbors?.omitted??UNKNOWN,
     steeringEffects:STEERING_EFFECTS[type],
+    lockedDimensions:locks,
   };
   if(Array.isArray(brief.neighbors)){
     while(brief.neighbors.length&&Buffer.byteLength(JSON.stringify(brief))>STRATEGY_BRIEF_MAX_BYTES){
