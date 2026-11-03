@@ -2,7 +2,7 @@
 
 ## 当前最高优先级（2026-10-31，用户最新要求）
 
-先读 [STELLARIS_HYBRID_CONTROL_PLAN.md](STELLARIS_HYBRID_CONTROL_PLAN.md) v1.5 第〇节。用户原话：“别再一直验证验证了，codex拖了我两天了一点进度没有，我人快疯了。”
+先读 [STELLARIS_HYBRID_CONTROL_PLAN.md](STELLARIS_HYBRID_CONTROL_PLAN.md) v1.5 第〇节。v1.5 已完成，当前任务按 [CODEX_TASK_STRATEGY_QUALITY.md](CODEX_TASK_STRATEGY_QUALITY.md) 的 S1→S5 推进战略质量。用户原话：“别再一直验证验证了，codex拖了我两天了一点进度没有，我人快疯了。”
 
 - 进度只看原生 AI 在游戏里实际能干的事是否变多；文档、证据文件、测试数、报告不算进度。
 - 离线只给新逻辑写必要单测，跑通就继续；不为小改写证据、补充报告或回读脚本。
