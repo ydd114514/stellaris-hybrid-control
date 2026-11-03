@@ -1,5 +1,5 @@
-import {NativeStrategyReview} from './native-strategy-review.mjs';
-import {readStrategyNeighbors,strategyBrief} from './strategy-brief.mjs';
+import {NativeStrategyReview,strategyPlanChanged} from './native-strategy-review.mjs';
+import {evaluateStrategyGoals,extractStrategyMetrics,readStrategyNeighbors,strategyBrief} from './strategy-brief.mjs';
 import {validateStrategyContract,applySteering,reservedOrder,reservedRPC,steeringRPC,RESERVED_ACTIONS} from './strategy-contract.mjs';
 import {COUNTRY_AI_POLICIES,normalizeCountryAIProtection} from './native-country-ai-economic-policy.mjs';
 import {constructionInspectionScope,inspectConstruction} from './construction-inspection.mjs';
@@ -304,7 +304,15 @@ export class NativeGame {
       if(this.uncertain||this.applyBusy)throw Error('先核对未确认的关键干预，再更新保护');
       const control=await this.countryAI.protect({protectedTargets,reason});return {control:{enabled:true,...control},state:await this.observe()};
     }
-    if(operation==='continue'){await this.countryAI.acknowledgeReview();this.strategyReview.acknowledge(this.lastState??{});this.nativeStrategicReviewDue=false;this.needsDecisionRefresh=false;return {control:{enabled:true,...this.countryAI.view()},state:await this.observe()};}
+    if(operation==='continue'){
+      if(!this.strategyContract?.goals?.length)throw Error('请先提交包含1～3个目标的 strategy_contract');
+      const reviewed=this.pendingStrategyReview;
+      if(this.nativeStrategicReviewDue&&!reviewed)throw Error('请先从 observe 或 watch 读取本次战略简报');
+      if(reviewed?.strategyWakeReasons.includes('stagnation'))throw Error('连续两次复查停滞，请用 strategy_contract 调整方针或目标，或说明维持理由');
+      await this.completeStrategyReview(reviewed??this.lastState,this.strategyContract,{reason});
+      this.needsDecisionRefresh=false;
+      return {control:{enabled:true,...this.countryAI.view()},state:await this.observe()};
+    }
     if(['delegate','resume'].includes(operation)){
       if(this.countryAI.active)throw Error('当前已经委派或控制权未确认；先查询或接管后调整，不重复开启');
       if(!Number.isFinite(maxWallSeconds)||maxWallSeconds<1||maxWallSeconds>3600||!Number.isInteger(maxGameDays)||maxGameDays<1||maxGameDays>720||(!Object.hasOwn(COUNTRY_AI_POLICIES,policy)))throw Error('国家 AI 范围与复查参数无效');
@@ -323,9 +331,19 @@ export class NativeGame {
     if(!this.nativeCountryAIEnabled||this.countryAI.view().owner!=='native'||this.stoppingRequested||this.stopped)throw Error('战略合同需要本国原生AI正在运营');
     if(this.strategyBusy)throw Error('战略合同正在执行');
     if(typeof requestId!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(requestId))throw Error('战略requestId无效');
-    const checked=validateStrategyContract(contract,validateOrder),fingerprint=stableJson(checked);
+    const checked=validateStrategyContract(contract,validateOrder,{
+      currentDate:this.lastState?.date,empireType:this.lastState?.empireType
+    }),fingerprint=stableJson(checked);
     this.strategyReceipts??=new Map();const old=this.strategyReceipts.get(requestId);
     if(old){if(old.fingerprint!==fingerprint)throw Error('同一战略请求内容不能改变');return old.result;}
+    const reviewed=this.pendingStrategyReview;
+    if(this.nativeStrategicReviewDue&&!reviewed)throw Error('请先从 observe 或 watch 读取本次战略简报');
+    const previous=this.strategyContract;
+    const changed=strategyPlanChanged(previous,checked);
+    if(reviewed?.strategyWakeReasons.includes('stagnation')&&!changed&&
+      (checked.reason===previous?.reason||!/^维持理由[：:]\s*\S.{3}/u.test(checked.reason))){
+      throw Error('连续两次复查停滞，请调整至少一个方针或目标；维持时用「维持理由：」开头并说明依据');
+    }
     const result={requestId,status:'applying',contract:checked,actions:[]};
     this.strategyReceipts.set(requestId,{fingerprint,result});this.strategyBusy=true;
     try{
@@ -338,10 +356,23 @@ export class NativeGame {
         result.actions.push(await this.apply({requestId:requestId.slice(0,70)+'-s'+index,snapshotId:state.snapshotId,explanation:checked.reason,
           orders:[{command:RESERVED_ACTIONS[action.type],arguments:action.arguments}]}));
       }
-      result.status='applied';await this.countryAI.acknowledgeReview();this.strategyReview.acknowledge(this.lastState);this.nativeStrategicReviewDue=false;
+      await this.completeStrategyReview(reviewed??this.lastState,checked,{changed});
+      result.status='applied';
     }catch(error){result.status='attention';result.error=error.message;}
     finally{this.strategyBusy=false;await this.checkpoint();}
     return {...result,control:this.countryAI.view()};
+  }
+  async completeStrategyReview(state,contract,{changed=false,reason=contract.reason}={}){
+    await this.countryAI.acknowledgeReview();
+    this.strategyReview.acknowledge(state,{changed});
+    this.nativeStrategicReviewDue=false;
+    this.pendingStrategyReview=null;
+    if(state.strategyBrief){
+      await this.log({type:'strategy_review',date:state.date,reason,
+        previousGoals:state.strategyBrief.previousGoals,neighbors:state.strategyBrief.neighbors,
+        goals:evaluateStrategyGoals(contract.goals,extractStrategyMetrics(state),state.date),
+        expansionDirection:contract.expansionDirection,warTarget:contract.warTarget});
+    }
   }
   queueEvidence(event) {
     if(!this.journal)return;
@@ -530,9 +561,10 @@ export class NativeGame {
       state.empireType=empireRoute(this.government);
       state.population=status.outliner?.sectors_summary?.total_pops??null;
       state.colonyCount=status.outliner?.sectors_summary?.total_colonies??null;
-      state.strategyWakeReasons=this.strategyWakeReasons(state);
+      state.strategyWakeReasons=this.strategyReview.due(state);
       this.nativeStrategicReviewDue=state.countryAIControl.owner==='native'&&state.strategyWakeReasons.length>0;
       if(state.strategyWakeReasons.length)state.strategyBrief=await this.readStrategyBrief(state);
+      this.pendingStrategyReview=this.nativeStrategicReviewDue?state:null;
     }
     if(!this.continuityLoaded){
       this.continuityLoaded=true;
@@ -558,11 +590,6 @@ export class NativeGame {
     if(this.localWaitPilot)state.localWorkWait={enabled:true,...await this.confirmedLocalWork(status)};
     await this.log({type: 'state', state}); await this.checkpoint();
     return state;
-  }
-  strategyWakeReasons(state){
-    const reasons=this.strategyReview.due(state);
-    if(state.countryAIControl?.reviewDue&&reasons.length===0)reasons.push('native_country_ai_review_due');
-    return reasons;
   }
   async readStrategyBrief(state){
     let heartbeatAt=-Infinity,readFailed=false;
@@ -1638,8 +1665,11 @@ export class NativeGame {
             const advice=await readStrategyAdvice(resolve(this.directory,'../commentary/strategy-directive.json'),this.sessionId,this.now());
             if(advice)this.lastState.operationalGoal=advice.goal;
           }
-          const due=this.strategyWakeReasons(this.lastState);
-          if(due.length){this.nativeStrategicReviewDue=true;this.lastState.strategyWakeReasons=due;}
+          const due=this.strategyReview.due(this.lastState,{fresh:false});
+          if(due.length){
+            this.nativeStrategicReviewDue=true;
+            this.lastState.strategyWakeReasons=this.pendingStrategyReview?.strategyWakeReasons??due;
+          }
           try{
             const path=resolve(this.directory,'director-settings.json'),settings=await loadDirectorSettings(path);
             await this.nativeDirector.tick({rpc:async(m,p)=>{

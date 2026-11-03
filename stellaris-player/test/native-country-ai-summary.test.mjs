@@ -16,3 +16,17 @@ test('stopped reports stay historical and need full handoff evidence',()=>{
  cp.cleanup.countryAI.confirmed=false;assert.equal(nativeCountryAISummary(cp).owner,'unconfirmed');
  assert.equal(nativeCountryAISummary({state:{}}),undefined);
 });
+test('the panel compares current observations to the latest contract goals',()=>{
+ const state={date:'2230.01.01',population:96,capacities:{naval_capacity:{used:40,capacity:50}}};
+ const strategyContract={goals:[
+  {metric:'pops',target:100,byDate:'2232.01.01'},
+  {metric:'research_monthly',target:120,byDate:'2233.01.01'},
+  {metric:'naval_used_ratio',target:0.8,byDate:'2232.01.01'},
+ ]};
+ const panel=nativeCountryAISummary({countryAIControl:native(),strategyContract,state},{actorActive:true});
+ assert.deepEqual(panel.goals,[
+  {label:'人口',current:'96',target:'100',byDate:'2232.01.01',progress:'96%',status:'接近达成'},
+  {label:'科研月产',current:'未知',target:'120',byDate:'2233.01.01',progress:null,status:'进度未知'},
+  {label:'舰容占用率',current:'80%',target:'80%',byDate:'2232.01.01',progress:'100%',status:'已达成'},
+ ]);
+});

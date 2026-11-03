@@ -158,6 +158,8 @@ export function strategyBrief(state,{government,previousMetrics,neighbors}={}){
     })),
     previousGoals:evaluateStrategyGoals(state.strategyContract?.goals,metrics,state.date).slice(0,3)
       .map(goal=>({...goal,current:showNumber(goal.current),progress:showNumber(goal.progress)})),
+    ...(state.strategyContract?.expansionDirection?{expansionDirection:state.strategyContract.expansionDirection}:{}),
+    ...(state.strategyContract?.warTarget?{warTarget:state.strategyContract.warTarget}:{}),
     neighborColumns:['国家ID','帝国','相对实力','态度','接壤','交战','可宣战'],
     neighbors:neighbors?.rows.slice()??UNKNOWN,
     omittedNeighbors:neighbors?.omitted??UNKNOWN,

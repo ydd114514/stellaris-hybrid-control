@@ -1,4 +1,4 @@
-import {strategyContractSchema,validateStrategyContract} from './strategy-contract.mjs';
+import {legacyStrategyContractSchema,validateStrategyContract} from './strategy-contract.mjs';
 import{performance}from'node:perf_hooks'
 
 /** Slow-changing strategy from player-owned facts. No screen coordinates or
@@ -8,7 +8,7 @@ export async function planStrategy({apiKey,context,goal,model='deepseek-v4-pro',
   const started=performance.now(),controller=new AbortController(),cancel=()=>controller.abort()
   signal?.addEventListener('abort',cancel,{once:true});if(signal?.aborted)cancel()
   const timer=setTimeout(cancel,timeoutMs)
-  const parameters=strategyContractSchema
+  const parameters=legacyStrategyContractSchema
 
   try{
     const payload={
@@ -29,7 +29,7 @@ export async function planStrategy({apiKey,context,goal,model='deepseek-v4-pro',
     const calls=data.choices?.[0]?.message?.tool_calls
     if(data.choices?.[0]?.finish_reason!=='tool_calls'||calls?.length!==1||calls[0].function?.name!=='set_strategy')throw new Error()
     const value=JSON.parse(calls[0].function.arguments)
-    const contract=validateStrategyContract(value)
+    const contract=validateStrategyContract(value,undefined,{requireGoals:false})
     if(JSON.stringify(value).includes(apiKey))throw new Error()
     return{ok:true,...contract,usage:data.usage,elapsedMs:Math.round(performance.now()-started)}
   }catch{return{ok:false,error:controller.signal.aborted?'战略请求超时或取消，保持现有目标。':'战略响应无效，保持现有目标。'}}

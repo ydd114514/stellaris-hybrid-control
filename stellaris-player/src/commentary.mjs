@@ -1,7 +1,8 @@
 import {surveySummary} from './survey-summary.mjs';
 import {executionStatus} from './execution-status.mjs';
+import {strategyGoalLabel,strategyGoalStatus,strategyGoalValue} from './native-country-ai-summary.mjs';
 // Audience-facing summaries only. Never consume DSH text/thinking messages.
-const labels={observe:'看局势',inspect:'看局势',apply_orders:'正在操作',watch:'等待结果',survey_control:'分配调查工作'};
+const labels={observe:'看局势',inspect:'看局势',apply_orders:'正在操作',watch:'等待结果',survey_control:'分配调查工作',strategy_contract:'战略复查'};
 const fallback={
   set_district_zone:'我先补上工业，军舰也得有稳定的后勤。',
   set_job_priority:'先把人手安排到最缺的岗位，别让关键生产断掉。',
@@ -38,7 +39,59 @@ export function publicSummary(value) {
   if(!text || text.length>100 || !/[\u3400-\u9fff]/.test(text) || /sk-[a-z0-9]{8,}|[A-Z]:[\\/]|[{}]|\b\w+_id\b|\d{7,}|snapshotId|requestId|tool_call|actual_naval_size|template_size|command_limit|capacity_check|chain.of.thought|思维链|内部推理/i.test(text)) return '';
   return text.slice(0,70);
 }
+
+const gameDate=value=>typeof value==='string'&&/^\d{4}\.\d{2}\.\d{2}$/.test(value)?value:null;
+
+function strategyGoalsText(goals,previous){
+  if(!Array.isArray(goals))return '';
+  return goals.slice(0,3).flatMap(goal=>{
+    const label=strategyGoalLabel(goal?.metric);
+    if(!label||!Number.isFinite(goal.target))return [];
+    const target=strategyGoalValue(goal.metric,goal.target),current=strategyGoalValue(goal.metric,goal.current);
+    const deadline=gameDate(goal.byDate);
+    return previous
+      ?[label+current+'/'+target+'（'+strategyGoalStatus(Number.isFinite(goal.current)?goal.status:'unknown')+'）']
+      :[label+target+'（当前'+current+(deadline?'，'+deadline+'前':'')+'）'];
+  }).join('、');
+}
+
+function publicEmpireName(value){
+  if(typeof value!=='string')return '';
+  const name=value.replace(/\s+/gu,' ').trim();
+  return name!=='未知'&&/^[\p{L}\p{N} ·'’().-]{1,32}$/u.test(name)&&!/sk-[a-z0-9]{8,}|\d{7,}/i.test(name)?name:'';
+}
+
+const relativePower={
+  pathetic:'ahead',inferior:'ahead',equivalent:'equal',superior:'behind',overwhelming:'behind',
+  '不堪一击':'ahead','低于我方':'ahead','势均力敌':'equal','高于我方':'behind','压倒性':'behind',
+};
+
+function strategyReviewText(row){
+  const previous=strategyGoalsText(row.previousGoals,true),goals=strategyGoalsText(row.goals,false);
+  const neighbors=Array.isArray(row.neighbors)?row.neighbors.slice(0,12).filter(Array.isArray):[];
+  const names={};
+  for(const [,label,power,,border] of neighbors){
+    if(typeof power!=='string')continue;
+    const key=power.trim().toLowerCase().replace(/^(?:relative_)?power_/,'');
+    const result=Object.hasOwn(relativePower,key)?relativePower[key]:null;
+    const name=publicEmpireName(label);
+    if(result&&name&&(!names[result]||border===true))names[result]=name;
+  }
+  const comparison=[names.ahead&&'强于'+names.ahead,names.behind&&'弱于'+names.behind,names.equal&&'与'+names.equal+'相当'].filter(Boolean).join('，');
+  const direction=publicEmpireName(neighbors.find(([id])=>id===row.expansionDirection?.towardCountryId)?.[1]);
+  const target=publicEmpireName(neighbors.find(([id])=>id===row.warTarget?.countryId)?.[1]);
+  const reason=publicSummary(row.reason);
+  return [previous?'上次目标 '+previous:'上次目标尚无可比较记录',
+    comparison?'已知帝国实力对比，'+comparison:'已知帝国实力暂时无法比较',
+    goals?'当前目标 '+goals:'当前尚未设定目标',
+    row.expansionDirection?(direction?'向'+direction+'方向扩张':'扩张方向的帝国名称未知'):'',
+    row.warTarget?(target?'备战对象是'+target:'备战对象的帝国名称未知'):'',
+    reason&&!/https?:\/\/|www\.|[<>]/i.test(reason)?reason:'',
+  ].filter(Boolean).join('。')+'。';
+}
+
 export function planCaption(row) {
+  if(row.type==='strategy_review')return {kind:'plan',phase:'战略复查',text:strategyReviewText(row),priority:1};
   const orders=row.orders||[];
   const command=orders.find(o=>!['set_speed','open_alert','open_notification','close_war_goals','set_fleet_stance'].includes(o.command));
   if(!command) return null;
@@ -51,7 +104,7 @@ export function planHistoryItem(row,date) {
   const message=planCaption(row),at=Date.parse(row.at);
   if(!message||!Number.isFinite(at))return null;
   return {id:`plan:${row.at}:${message.text}`,at,kind:'plan',text:message.text,
-    date:/^\d{4}\.\d{2}\.\d{2}$/.test(date||'')?date:null};
+    date:gameDate(row.type==='strategy_review'?row.date:date)};
 }
 export function receiptCaption(row) {
   if(row.type==='survey_control'){

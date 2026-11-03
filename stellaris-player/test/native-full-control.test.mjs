@@ -50,12 +50,23 @@ test('watch renews native supervision even when a strategy review is already pen
 test('StrategyContract changes direction and issues a reserved action while native AI stays on; request IDs do not replay',async()=>{
  const f=make();await f.c.delegate();const active=new Set(),orders=[];
  const host={countryAI:f.c,nativeCountryAIEnabled:true,strategyReceipts:new Map(),now:()=>1,
-  lastState:{date:'2200.01.01'},commandScope:async()=>{},checkpoint:async()=>{},strategyReview:{acknowledge(){}},
+  lastState:{date:'2200.01.01',empireType:'hive'},completeStrategyReview:NativeGame.prototype.completeStrategyReview,commandScope:async()=>{},checkpoint:async()=>{},strategyReview:{acknowledge(){}},
   rpc:async(m,p)=>{assert.equal(f.state().global_flags.human_ai,true);if(m==='get_edicts')return {active_edicts:[...active].map(key=>({key}))};assert.equal(m,'toggle_edict');p.enabled?active.add(p.edict_key):active.delete(p.edict_key);return {success:true};},
   observe:async()=>({snapshotId:'current'}),apply:async input=>{assert.equal(f.c.view().owner,'native');orders.push(input);return {orders:[{status:'posted'}]};}};
- const input={requestId:'strategy-1',contract:{economyFocus:'research',expansionStance:'consolidate',militaryStance:'peaceful',reason:'以科研为主并改善关系',oneOffActions:[{type:'diplo_propose',arguments:{country_id:0,action:'improve_relations'}}]}};
+ const input={requestId:'strategy-1',contract:{goals:[{metric:'research_monthly',target:120,byDate:'2210.01.01'}],economyFocus:'research',expansionStance:'consolidate',militaryStance:'peaceful',reason:'以科研为主并改善关系',oneOffActions:[{type:'diplo_propose',arguments:{country_id:0,action:'improve_relations'}}]}};
  assert.equal((await NativeGame.prototype.strategyControl.call(host,input)).status,'applied');
  await NativeGame.prototype.strategyControl.call(host,input);assert.equal(orders.length,1);
  assert.equal(f.calls.some(x=>x.p.action==='stop'),false);assert.equal(f.c.view().owner,'native');
  assert.equal(host.strategyContract.steeringConfirmed,true);
+ const previous=host.strategyContract,reviewed={date:'2200.07.01',strategyWakeReasons:['six_month_review','stagnation']};
+ host.pendingStrategyReview=reviewed;host.nativeStrategicReviewDue=true;
+ await assert.rejects(NativeGame.prototype.countryAIControl.call(host,{operation:'continue'}),/连续两次复查停滞/);
+ await assert.rejects(NativeGame.prototype.strategyControl.call(host,{...input,requestId:'unchanged'}),/连续两次复查停滞/);
+ const revised={...input.contract,economyFocus:'alloys_military',oneOffActions:[]};
+ assert.equal((await NativeGame.prototype.strategyControl.call(host,{requestId:'revised',contract:revised})).status,'applied');
+ assert.equal(host.strategyContract.economyFocus,'alloys_military');
+ assert.deepEqual(host.strategyContract.goals,previous.goals);
+ host.pendingStrategyReview=reviewed;host.nativeStrategicReviewDue=true;
+ const keep={...revised,reason:'维持理由：船坞在建，完工后才有实际产出'};
+ assert.equal((await NativeGame.prototype.strategyControl.call(host,{requestId:'keep',contract:keep})).status,'applied');
 });

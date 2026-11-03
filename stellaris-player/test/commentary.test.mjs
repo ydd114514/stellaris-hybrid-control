@@ -39,6 +39,23 @@ test('timeline keeps actual observation dates and public intent, without fabrica
   assert.equal(planHistoryItem({...row,at:'invalid'},'2219.01.22'),null);
   assert.equal(planHistoryItem({...row,orders:[]},'2219.01.22'),null);
 });
+test('strategy review history describes measured progress and comparisons without raw game IDs',()=>{
+  const row={type:'strategy_review',at:'2026-11-03T01:00:00Z',date:'2230.01.01',
+    previousGoals:[{metric:'pops',current:100,target:100,status:'achieved'},{metric:'systems',current:'未知',target:20,status:'achieved'}],
+    goals:[{metric:'research_monthly',current:125,target:150,byDate:'2235.01.01'}],
+    neighbors:[[12345678,'苍蓝联盟','relative_power_inferior','未知',true],[98765432,'赤潮帝国','superior','未知',true],[19,'未核实帝国',3]],
+    expansionDirection:{towardCountryId:12345678},warTarget:{countryId:98765432},
+    reason:'内部推理 sk-abcdefghijk'};
+  const message=planCaption(row),item=planHistoryItem(row,'2229.01.01');
+  assert.equal(message.phase,'战略复查');
+  assert.equal(item.date,row.date);
+  assert.match(item.text,/人口100\/100（已达成）/);
+  assert.match(item.text,/星系未知\/20（进度未知）/);
+  assert.match(item.text,/强于苍蓝联盟，弱于赤潮帝国/);
+  assert.match(item.text,/科研月产150（当前125，2235\.01\.01前）/);
+  assert.match(item.text,/向苍蓝联盟方向扩张.*备战对象是赤潮帝国/);
+  assert.doesNotMatch(item.text,/12345678|98765432|未核实帝国|abcdefghijk/);
+});
 test('delegation captions separate assignment, uncertainty and returned control',()=>{
  assert.match(receiptCaption({type:'survey_control',control:{owner:'native'}}).text,/交给自动/);
  assert.match(receiptCaption({type:'survey_control',control:{owner:'native',pending:true}}).text,/还没确认/);

@@ -1489,6 +1489,7 @@ test('configuring a bound war cannot relabel its existing war goal',async t=>{
 
 test('strategy brief reaches native observe and watch only at a review',async t=>{
  let date='2200.01.01',population=100,paused=true,on=false,phase='idle';
+ const edicts=new Set();
  const nativeState=()=>({success:true,country_id:0,paused,single_local_human_guard:true,world_generation_tracking:true,
   global_flags:{normal_ai:true,human_ai:on,force_human_ai:on},precondition:{world_generation:0,country_id:0,country_address:123,date}});
  const {game,calls}=await fixture(t,{
@@ -1498,6 +1499,8 @@ test('strategy brief reaches native observe and watch only at a review',async t=
   get_country_ai_state:nativeState,
   get_government:()=>({authority:'auth_hive_mind'}),
   get_contacts:()=>({empires:[]}),
+  get_edicts:()=>({active_edicts:[...edicts].map(key=>({key}))}),
+  toggle_edict:p=>{p.enabled?edicts.add(p.edict_key):edicts.delete(p.edict_key);return {success:true};},
   get_military_fleets:()=>({fleets:[{military_power:100}]}),
   set_paused:p=>{paused=p.paused;return {success:true};},
   country_ai_lease:p=>{
@@ -1514,7 +1517,10 @@ test('strategy brief reaches native observe and watch only at a review',async t=
  assert.deepEqual(initial.strategyWakeReasons,['initial_strategy']);
  assert.equal(initial.strategyBrief.empire.type,'蜂巢');
  await game.countryAIControl({operation:'delegate',maxWallSeconds:30});
- await game.countryAIControl({operation:'continue'});
+ const contract={goals:[{metric:'pops',target:120,byDate:'2201.01.01'}],economyFocus:'research',expansionStance:'consolidate',
+  militaryStance:'peaceful',oneOffActions:[],reason:'先消化领土再拉科研'};
+ const submitted=await game.strategyControl({requestId:'initial',contract});
+ assert.equal(submitted.status,'applied',submitted.error);
  const contactsRead=calls.filter(c=>c.method==='get_contacts').length;
  assert.equal((await game.observe()).strategyBrief,undefined);
  assert.equal(calls.filter(c=>c.method==='get_contacts').length,contactsRead);
@@ -1523,6 +1529,12 @@ test('strategy brief reaches native observe and watch only at a review',async t=
  assert.deepEqual(review.strategyWakeReasons,['six_month_review']);
  assert.deepEqual(review.strategyBrief.metrics.pops,{current:120,change:20});
  assert.equal(review.countryAIControl.owner,'native');
+ assert.equal(review.strategyBrief.previousGoals[0].status,'achieved');
+ await game.countryAIControl({operation:'continue',reason:'人口目标已经达到，当前建设仍需时间'});
+ const rows=(await readFile(game.journal,'utf8')).trim().split('\n').map(JSON.parse);
+ const caption=rows.filter(row=>row.type==='strategy_review').at(-1);
+ assert.equal(caption.previousGoals[0].status,'achieved');
+ assert.equal(caption.goals[0].current,120);
 });
 
 test('country AI host fences routine writes, forwards world zero, and retains key control after takeover',async t=>{
