@@ -1,6 +1,8 @@
 import {NativeStrategyReview,strategyPlanChanged} from './native-strategy-review.mjs';
 import {strategyDecisionOptions} from './strategy-decision-options.mjs';
+import {strategyGamePhase} from './strategy-phase.mjs';
 import {evaluateStrategyGoals,extractStrategyMetrics,isUnfinishedStrategyGoal,readStrategyNeighbors,strategyBrief} from './strategy-brief.mjs';
+import {behemothSituationBrief,hasBehemothPerk,readBehemothGuide} from './behemoth-guide.mjs';
 import {NativeColonyAudit} from './native-colony-audit.mjs';
 import {AdviceExecution} from './advice-execution.mjs';
 import {compileNativeIntent,NativeIntentExecution} from './native-intent.mjs';
@@ -82,7 +84,10 @@ const COUNTRY_AI_AUTHORITY=Symbol('native country AI ownership');
 // Only strategyControl can authorize one exact, validated ordinary setting RPC.
 // No public RPC flag or apply_orders command can open this dispatch fence.
 const strategyDomesticWrites=new WeakMap();
-const authorizedDomesticRPC=(game,method,params)=>strategyDomesticWrites.get(game)?.method===method&&strategyDomesticWrites.get(game)?.params===params;
+const authorizedDomesticRPC=(game,method,params)=>{
+  const approval=strategyDomesticWrites.get(game);
+  return approval?.method===method&&(approval.params===params||approval.wireParams===params);
+};
 const strategyExecutionBinding=game=>game.nativeCountryAIEnabled&&game.boundNativeWorld&&Number.isSafeInteger(game.binding?.pid)&&typeof game.binding?.creationTime==='string'?stableJson([game.binding.pid,game.binding.creationTime,game.boundNativeWorld]):null;
 const strategyExecutionError=message=>!message?null:/世界|代次|玩家|首都|身份|绑定/.test(message)?'本国世界或进程绑定未确认，已停止执行':/timeout|超时|尚未确认|pipe/i.test(message)?'执行结果尚未确认，先核查当前状态，不重发命令':/不可停用|未确认.*可启用|清单不完整/.test(message)?'法令状态或当前合法性未确认，未完成调整':'战略执行未完成，请核查当前状态和执行回执';
 const publicStrategyExecution=(result,date)=>({requestId:result.requestId,status:result.status,date:typeof date==='string'?date:null,steeringConfirmed:result.steering?.confirmed===true,
@@ -283,6 +288,7 @@ export class NativeGame {
     }
     }catch(error){error.nativeWriteAttempted=false;this.runtimeStatus={sessionId:this.sessionId,observedAt:this.now(),paused:null,date:null,scopeUnknown:true};throw error;}
     const wireParams=this.nativeCountryAIEnabled&&rpcEvidenceCategory(method,params)!=='read'&&this.boundNativeWorld?{...params,_expected_world_generation:this.boundNativeWorld.world_generation,_expected_game_pid:this.binding.pid,_expected_game_creation:this.binding.creationTime}:params;
+    if(authorizedDomesticRPC(this,method,params))strategyDomesticWrites.get(this).wireParams=wireParams;
     this.metrics.calls++;const result=await this.pipe.request(method, wireParams,context);
     if(method==='get_status')this.runtimeStatus={sessionId:this.sessionId,observedAt:this.now(),paused:typeof result?.is_paused==='boolean'?result.is_paused:null,date:result?.date?.formatted??null};
     if(method==='get_status'&&this.journal&&(this.lastEvidenceSampleAt===undefined||this.now()-this.lastEvidenceSampleAt>=1000||this.lastEvidencePaused!==result?.is_paused)){
@@ -707,6 +713,7 @@ export class NativeGame {
     let events = await this.rpc('get_active_events');
     const warState = await this.rpc('get_wars');
     const ascensionPerks=this.nativeCountryAIEnabled?(await this.rpc('get_traditions')).ascension_perks:undefined;
+    const behemothActive=hasBehemothPerk(ascensionPerks);
     // First-contact stage decisions live behind a HUD alert, not the ordinary
     // central event queue. Surface the actual pending choice before planning.
     const contactAlert=Array.isArray(alerts)&&alerts.find(row=>row.type==='alert_first_contact_stage_done');
@@ -740,7 +747,7 @@ export class NativeGame {
       date: status.date.formatted, paused: status.is_paused, speed: status.speed,
       ...(status.resources&&typeof status.resources==='object'&&!Array.isArray(status.resources)&&Object.keys(status.resources).length?{economyObservedAt}:{}),
       controlCapabilities:{surveyDelegationAvailable:this.hybridSurvey,colonyHousingAvailable:!this.nativeRoutineSuppressed&&!this.surveyPilot,colonyUpgradeAvailable:this.colonyUpgradePilot,monthlyConditionsAvailable:this.monthlyLifecyclePilot,trustedWaitMaximumSeconds:this.nativeCountryAIEnabled?900:this.hybridSurvey?this.surveyWatchSeconds:this.localWaitPilot?60:20,note:'可用能力不是已启用的对象控制权；委派须显式申请并核对实际条件。'},
-      player: world.player, resources: Object.fromEntries(Object.entries(status.resources || {}).filter(([key]) => ['energy', 'minerals', 'alloys', 'consumer_goods', 'food', 'influence', 'unity', 'trade', 'physics_research', 'society_research', 'engineering_research', 'volatile_motes', 'exotic_gases', 'rare_crystals', 'living_metal', 'zro', 'dark_matter', 'nanites', 'astral_threads'].includes(key)).map(([key, value]) => [key, fields(value, ['stockpile', 'net', 'capped','max','income','expense','net_known','income_known','expense_known',...(this.nativeCountryAIEnabled?['stockpile_known']:[])])])),
+      player: world.player, resources: Object.fromEntries(Object.entries(status.resources || {}).filter(([key]) => ['energy', 'minerals', 'alloys', 'consumer_goods', 'food', 'influence', 'unity', 'trade', 'physics_research', 'society_research', 'engineering_research', 'volatile_motes', 'exotic_gases', 'rare_crystals', 'living_metal', 'zro', 'dark_matter', 'nanites', 'astral_threads'].includes(key) || behemothActive&&key==='sr_living_metal').map(([key, value]) => [key, fields(value, ['stockpile', 'net', 'capped','max','income','expense','net_known','income_known','expense_known',...(this.nativeCountryAIEnabled?['stockpile_known']:[])])])),
       civilian, military, research, colonies: status.outliner?.sectors_summary?.sectors,
       capacities: status.stats, picture: this.picture,
       pendingDiplomacy: diplomacy.pending,
@@ -832,11 +839,12 @@ export class NativeGame {
       try{return await read(method,params);}
       catch{readFailed=true;return null;}
     });
+    const behemothLog=hasBehemothPerk(state.ascensionPerks)?await read('get_situation_log',{player_only:true}).catch(()=>null):null;
     await this.assertNativeWorld();
     const government={...this.government,authority:this.government?.authority||this.government?.authority_key};
     const {lockedDimensions,contract}=this.strategyDirectionPlan(state,this.modelStrategyContract);
     const decisionOptions=strategyDecisionOptions(state,{government:currentGovernment,edicts,lockedDimensions,contract});
-    return strategyBrief(state,{government,phase:state.strategy.focus,previousMetrics:this.strategyReview.lastMetrics,neighbors,lockedDimensions,decisionOptions});
+    return strategyBrief(state,{government,phase:state.strategy.focus,previousMetrics:this.strategyReview.lastMetrics,neighbors,lockedDimensions,decisionOptions,behemoth:behemothSituationBrief(state,behemothLog)});
   }
   async refreshNativeColonyAudit(state){
     this.nativeColonyAudit??=new NativeColonyAudit();
@@ -1004,13 +1012,14 @@ export class NativeGame {
   }
   async syncStrategyDirection(state,{force=false,plan,requestId}={}){
     const standing=state.operatorStanding,active=this.nativeCountryAIEnabled&&this.countryAI.view().owner==='native'&&!this.stoppingRequested&&!this.stopped;
-    if(!standing&&!state.userEconomicPolicy&&!this.directionManaged&&!force&&!state.operationalGoal?.targetResource)return;
+    const earlyUnity=this.nativeCountryAIEnabled&&strategyGamePhase(state.date)==='early';
+    if(!earlyUnity&&!standing&&!state.userEconomicPolicy&&!this.directionManaged&&!force&&!state.operationalGoal?.targetResource)return;
     const {intent,adjustment,contract}=plan??this.strategyDirectionPlan(state,this.modelStrategyContract);
     const direction={contract,reason:contract.reason},effective={...contract,oneOffActions:[]};
     const ownerPolicy=intent.ownerPolicy;
     const key=stableJson([effective.economyFocus,effective.expansionStance,effective.militaryStance,ownerPolicy,this.countryAI.view().generation]);
     let confirmed=false,reason=direction.reason;
-    const hasDirection=!!standing?.economyFocus||!!state.userEconomicPolicy||!!state.operationalGoal?.targetResource||!!this.modelStrategyContract||this.directionManaged||force;
+    const hasDirection=earlyUnity||!!standing?.economyFocus||!!state.userEconomicPolicy||!!state.operationalGoal?.targetResource||!!this.modelStrategyContract||this.directionManaged||force;
     if(active&&hasDirection&&!this.directionApplying){
       this.directionManaged=true;
       if(this.directionAttempt?.key!==key||force&&(this.directionAttempt.confirmed||requestId!==undefined)){
@@ -1062,7 +1071,9 @@ export class NativeGame {
       note:review.note+' 原生AI继续承担日常运营；这些诊断用于调整StrategyContract、保留决定和必要的只读检查，不开放普通经营派单。'};
     return review;
   }
-  async inspect({topic, id: entityId, fleet_id, purpose, system_id,district_type,jumps=4,resource,action,units,sections,goal_key,building_key,zone_id} = {}) {
+  async inspect({topic, id: entityId, fleet_id, purpose, system_id,district_type,jumps=4,resource,action,units,sections,goal_key,building_key,zone_id,section,page} = {}) {
+    if(topic==='behemoth')return readBehemothGuide({section,page});
+    if(section!==undefined||page!==undefined)throw Error('section和page仅用于兽灾攻略');
     if(goal_key!==undefined&&(topic!=='attack_options'||typeof goal_key!=='string'||!/^wg_[a-zA-Z0-9_]{1,100}$/.test(goal_key)))throw Error('goal_key仅用于attack_options的当前战争目标');
     const constructionScope=constructionInspectionScope({topic,sections,district_type,building_key,zone_id});
     const buildingTarget=buildingInspectionScope({topic,sections,building_key,zone_id});
@@ -1189,15 +1200,17 @@ export class NativeGame {
     else if (topic === 'edicts') {
       const raw=await this.rpc('get_edicts');
       if(!Array.isArray(raw?.active_edicts))throw Error('当前法令清单不可读，不能当作没有开启法令');
-      const candidates=ordinaryEdictOptions(raw,this.lastState);
+      const candidates=ordinaryEdictOptions(raw,{...this.lastState,date:status.date?.formatted??this.lastState?.date,
+        resources:status.resources??this.lastState?.resources});
       const summary=raw.summary??{},fundKnown=summary.edict_fund_known===true&&Number.isFinite(summary.edict_fund)&&summary.edict_fund>=0,listComplete=Number.isSafeInteger(summary.active_edicts_count)&&summary.active_edicts_count===raw.active_edicts.length;
       result={summary:{active_edicts_count:Number.isSafeInteger(summary.active_edicts_count)&&summary.active_edicts_count>=0?summary.active_edicts_count:raw.active_edicts.length,
         edict_fund:fundKnown?summary.edict_fund:null,edict_fund_known:fundKnown},
         active_edicts:raw.active_edicts.map(row=>{const upkeepKnown=row.upkeep_known===true&&row.upkeep!==undefined&&row.upkeep!==null;return {...fields(row,['key','name']),upkeep:upkeepKnown?row.upkeep:null,upkeep_known:upkeepKnown};}),
         available_edicts:candidates.activatable.map(key=>({key,...fields(raw.available_edicts.find(row=>row?.key===key&&row.can_activate===true),['name']),can_activate:true})),
-        edict_activation_status:candidates.status,
+        edict_activation_status:candidates.status,activation_block:candidates.activationBlock??null,
+        deactivatable_edicts:candidates.deactivatable??[],
         active_edicts_complete:listComplete,maintenance_details_known:listComplete&&raw.active_edicts.every(row=>row.upkeep_known===true&&row.upkeep!==undefined&&row.upkeep!==null),
-        note:'这是当前启用法令及已确认可启用的普通法令只读清单。能力缺口表示原生接口未提供当前启用合法性，旧目录不能作为候选。未由原生接口确认的法令经费和逐项维护均标未知，不能把旧桥默认0当实际免费；凝聚力总支出仍看资源结算。普通法令经strategy_contract.domesticActions的受限入口调整；只有实际回读确认才能称已关闭，系统和角色维护法令不可修改。'};
+        note:'这是当前启用法令和通过现行条件的普通法令候选。能力缺口表示原生合法性或维护预算未核实，暂缓新增。未由原生接口确认的法令经费和逐项维护均标未知，不能把旧桥默认0当实际免费；凝聚力总支出仍看资源结算。普通法令经strategy_contract.domesticActions的受限入口调整；只有实际回读确认才能称已关闭，系统和角色维护法令不可修改。'};
     }
     else if (topic === 'government') {
       const government=await this.rpc('get_government'),council=(await this.rpc('get_status')).council;

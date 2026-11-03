@@ -9,10 +9,13 @@
 #include "command_builder.hpp"
 #include <algorithm>
 #include "galaxy_camera_layout.hpp"
+#include "event_manager.hpp"
+#include "cyberfish_war.hpp"
+#include "galaxy_manager.hpp"
 
 namespace bridge::cyberfish {
 using Microsoft::WRL::ComPtr;
-namespace {IDXGISwapChain* current = nullptr; uint64_t frames=0; void* managed_view=nullptr;}
+namespace {IDXGISwapChain* current = nullptr; uint64_t frames=0; void* managed_view=nullptr; void* managed_idler=nullptr;}
 void OnPresent(IDXGISwapChain* chain) {current=chain; ++frames;}
 nlohmann::json PictureState() {
     DXGI_SWAP_CHAIN_DESC desc{};
@@ -77,6 +80,38 @@ nlohmann::json CaptureFrame() {
 }
 namespace {
 template<class T> bool CameraRead(uintptr_t at,T& value){SIZE_T n=0;return at>=0x10000&&ReadProcessMemory(GetCurrentProcess(),(void*)at,&value,sizeof value,&n)&&n==sizeof value;}
+// These are presentation methods from the pinned Windows 4.5.2 executable, not
+// game commands. The normal planet/starbase selection paths bind these same views.
+constexpr uintptr_t kPlanetViewMember=0xB30, kPlanetViewVtable=0x24221F0;
+constexpr uintptr_t kOpenPlanetView=0x9247E0, kPlanetViewObject=0xA0, kPlanetViewSubview=0xE068;
+constexpr uintptr_t kStarbaseViewMember=0xB70, kStarbaseViewVtable=0x2413808;
+constexpr uintptr_t kBindStarbaseView=0x11572B0, kStarbaseViewObject=0xA8;
+bool ViewVisible(uintptr_t view) {
+ uintptr_t ui=0;uint8_t visible=0;
+ return CameraRead(view+0x78,ui)&&ui&&CameraRead(ui+0x41,visible)&&visible!=0;
+}
+bool DirectorWindowsClear() {
+ const auto events=EventManager::Get().GetActiveEventsJson();
+ const auto wars=Wars();
+ return events.is_array()&&events.empty()&&wars.contains("warGoalsWindow")&&!wars.value("warGoalsWindow",true);
+}
+bool NativeView(uintptr_t idler,uintptr_t member,uintptr_t expected,uintptr_t& view) {
+ uintptr_t vtable=0;
+ return CameraRead(idler+member,view)&&view&&CameraRead(view,vtable)&&vtable==expected;
+}
+template<size_t N> bool NativePrefix(uintptr_t address,const uint8_t (&expected)[N]) {
+ uint8_t actual[N]{};return CameraRead(address,actual)&&memcmp(actual,expected,N)==0;
+}
+nlohmann::json DirectorFailure(const char* error) {
+ return {{"success",false},{"shown",false},{"error",error}};
+}
+uintptr_t ViewObject(uintptr_t base,uintptr_t database,uint32_t id,uintptr_t id_field) {
+ uintptr_t db=0,slots=0,object=0;uint32_t capacity=0,actual=0xFFFFFFFFu;
+ if(id==0xFFFFFFFFu||!CameraRead(base+database,db)||!db||!CameraRead(db+0x18,slots)||!slots||
+    !CameraRead(db+0x20,capacity)||capacity>1048576u||(id&0xFFFFFFu)>=capacity||
+    !CameraRead(slots+(id&0xFFFFFFu)*16+8,object)||!object||!CameraRead(object+id_field,actual)||actual!=id)return 0;
+ return object;
+}
 bool GalaxyRadius(double& radius){
  const auto base=CommandBuilder::Get().Base();uintptr_t db=0,slots=0;uint32_t capacity=0;float scale=0;unsigned count=0;radius=0;
  if(!CameraRead(base+sdk::db::CGalacticObject,db)||!CameraRead(db+0x18,slots)||!CameraRead(db+0x20,capacity)||capacity>65536||!CameraRead(base+0x3114f00,scale)||!std::isfinite(scale)||scale<=0||scale>100)return false;
@@ -169,6 +204,72 @@ nlohmann::json FocusPlanet(uint32_t planet_id) {
     const uint32_t target=*(uint32_t*)(idler+0x4A4);
     return {{"success",target==planet_id},{"planet_id",planet_id},{"camera_target_id",target},{"camera_target_type",*(uint32_t*)(idler+0x4A0)}};
 }
+nlohmann::json ShowPlanetView(uint32_t planet_id,const std::string& tab) {
+    if(tab!="construction")return DirectorFailure("Only the construction planet tab is supported");
+    auto& builder=CommandBuilder::Get();const auto base=builder.Base();
+    const auto idler=(uintptr_t)GameState::Get().GetInGameIdler();uintptr_t view=0;
+    // CInGameIdler::OpenPlanetView, called with CPlanet's +0x20 celestial
+    // interface. Subview 1 is the ordinary main planet/construction page; 0
+    // restores the previous subview and could leave the director on armies.
+    const uint8_t prefix[]{0x48,0x89,0x5c,0x24,0x18,0x55,0x56,0x41,0x56,0x48,0x83,0xec,0x20};
+    if(!idler||!builder.SdkMatchesExe()||!NativePrefix(base+kOpenPlanetView,prefix)||
+       !NativeView(idler,kPlanetViewMember,base+kPlanetViewVtable,view))return DirectorFailure("Verified planet view unavailable");
+    const auto planet=ViewObject(base,sdk::db::CPlanet,planet_id,0x18);
+    uint32_t owner=0xFFFFFFFFu;
+    if(!planet||!CameraRead(planet+sdk::ent::CPlanet::owner,owner)||owner==0xFFFFFFFFu||owner!=GameState::Get().GetPlayerCountryId())
+        return DirectorFailure("Owned planet required");
+    if(!DirectorWindowsClear())return DirectorFailure("Handle the active event or war-goals window first");
+    struct Context {uintptr_t base,idler,planet,view;uint32_t selected=0xFFFFFFFFu;int subview=0;bool shown=false;};
+    Context ctx{base,idler,planet,view};
+    auto run=[](void* p,void*) {
+        auto& x=*(Context*)p;auto target=(void*)(x.planet+0x20);auto** vt=*(void***)target;
+        if(((int(*)(void*))vt[5])(target)!=2)return;
+        ((void(*)(void*,void*,int))(x.base+kOpenPlanetView))((void*)x.idler,target,1);
+        x.selected=*(uint32_t*)(x.view+kPlanetViewObject);
+        x.subview=*(int*)(x.view+kPlanetViewSubview);
+        x.shown=ViewVisible(x.view);
+    };
+    if(!ShowPanel("game").value("success",false))return DirectorFailure("Cannot close the managed panel");
+    managed_view=(void*)view;managed_idler=(void*)idler;
+    if(!builder.CallGuarded(run,&ctx)){ShowPanel("game");return DirectorFailure("Planet view call failed");}
+    const bool shown=ctx.shown&&ctx.selected==planet_id&&ctx.subview==1;
+    if(!shown)ShowPanel("game");
+    return {{"success",shown},{"shown",shown},{"panel","planet"},{"tab","construction"},{"planet_id",planet_id},
+        {"selected_planet_id",ctx.selected},{"native_subview",ctx.subview}};
+}
+nlohmann::json ShowStarbaseView(uint32_t system_id,uint32_t starbase_id) {
+    auto& builder=CommandBuilder::Get();const auto base=builder.Base();
+    const auto idler=(uintptr_t)GameState::Get().GetInGameIdler();uintptr_t view=0;
+    // Normal owned-starbase selection at 0xC5CDEE calls this binder with
+    // idler+0xB70. It sets +0xA8, shows the real window and refreshes its queue.
+    const uint8_t prefix[]{0x48,0x89,0x5c,0x24,0x08,0x57,0x48,0x83,0xec,0x20,0x8b,0x42,0x08};
+    if(!idler||!builder.SdkMatchesExe()||!NativePrefix(base+kBindStarbaseView,prefix)||
+       !NativeView(idler,kStarbaseViewMember,base+kStarbaseViewVtable,view))return DirectorFailure("Verified starbase view unavailable");
+    if(system_id==0xFFFFFFFFu&&starbase_id==0xFFFFFFFFu)return DirectorFailure("System or starbase ID required");
+    const auto targets=GalaxyManager::Get().GetStarbaseViewsJson();uint32_t chosen=0xFFFFFFFFu,system=0xFFFFFFFFu;
+    if(targets.value("success",false)&&targets.contains("starbases")&&targets["starbases"].is_array()) {
+        for(const auto& row:targets["starbases"]) {
+            const auto sid=row.value("system_id",0xFFFFFFFFu),bid=row.value("starbase_id",0xFFFFFFFFu);
+            if((system_id==0xFFFFFFFFu||sid==system_id)&&(starbase_id==0xFFFFFFFFu||bid==starbase_id)) {chosen=bid;system=sid;break;}
+        }
+    }
+    const auto starbase=ViewObject(base,sdk::db::CStarbase,chosen,sdk::rt::CStarbase_id);
+    if(!starbase)return DirectorFailure("Starbase in an owned system required");
+    if(!DirectorWindowsClear())return DirectorFailure("Handle the active event or war-goals window first");
+    struct Context {uintptr_t base,view,starbase;uint32_t selected=0xFFFFFFFFu;bool shown=false;};
+    Context ctx{base,view,starbase};
+    auto run=[](void* p,void*) {
+        auto& x=*(Context*)p;
+        ((void(*)(void*,void*))(x.base+kBindStarbaseView))((void*)x.view,(void*)x.starbase);
+        x.selected=*(uint32_t*)(x.view+kStarbaseViewObject);x.shown=ViewVisible(x.view);
+    };
+    if(!ShowPanel("game").value("success",false))return DirectorFailure("Cannot close the managed panel");
+    managed_view=(void*)view;managed_idler=(void*)idler;
+    if(!builder.CallGuarded(run,&ctx)){ShowPanel("game");return DirectorFailure("Starbase view call failed");}
+    const bool shown=ctx.shown&&ctx.selected==chosen;
+    if(!shown)ShowPanel("game");
+    return {{"success",shown},{"shown",shown},{"panel","starbase"},{"system_id",system},{"starbase_id",chosen},{"selected_starbase_id",ctx.selected}};
+}
 nlohmann::json ShowPanel(const std::string& panel) {
     struct Panel {const char* key; size_t member; uintptr_t vtable;};
     static constexpr Panel panels[]={
@@ -180,6 +281,9 @@ nlohmann::json ShowPanel(const std::string& panel) {
     auto& builder=CommandBuilder::Get();
     auto* idler=(uint8_t*)GameState::Get().GetInGameIdler();
     if(!idler || !builder.SdkMatchesExe()) return {{"success",false},{"error","Game not ready"}};
+    // A managed view belongs to its idler. Never reuse its pointer after a world
+    // change; the former world may already have destroyed all of its windows.
+    if(managed_idler!=idler){managed_view=nullptr;managed_idler=idler;}
     struct Context {void* view; bool show; bool shown;};
     auto call=[](void* p,void*) {
         auto* x=(Context*)p; auto vt=*(void***)x->view;

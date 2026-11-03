@@ -155,7 +155,7 @@ export async function readStrategyNeighbors(state,read){
 const showNumber=value=>Number.isFinite(value)?Number(value.toPrecision(6)):UNKNOWN;
 const governmentNames=rows=>Array.isArray(rows)?rows.slice(0,4).map(row=>cleanText(row?.name||row?.key)):UNKNOWN;
 
-export function strategyBrief(state,{government,previousMetrics,neighbors,phase,decisionOptions,lockedDimensions=state.lockedDimensions}={}){
+export function strategyBrief(state,{government,previousMetrics,neighbors,phase,decisionOptions,lockedDimensions=state.lockedDimensions,behemoth}={}){
   const locks={};
   for(const dimension of ['economyFocus','expansionStance','militaryStance']){
     const lock=lockedDimensions?.[dimension];
@@ -171,6 +171,7 @@ export function strategyBrief(state,{government,previousMetrics,neighbors,phase,
     empire:{type:{regular:'普通',hive:'蜂巢',machine:'机械',unknown:UNKNOWN}[type],
       ethics:governmentNames(government?.ethics),civics:governmentNames(government?.civics),
       phase:phase??strategicReview({...state,resources},{government}).focus},
+    ...(behemoth?{behemoth}:{}),
     metrics:Object.fromEntries(Object.entries(metrics).map(([key,value])=>{
       const previous=number(previousMetrics?.[key]);
       const resource=key.endsWith('_reserve_months')?key.split('_')[0]:null;

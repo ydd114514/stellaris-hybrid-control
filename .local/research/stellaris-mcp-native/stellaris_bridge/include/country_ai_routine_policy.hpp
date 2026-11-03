@@ -41,8 +41,10 @@ inline bool AllowNativeRoutine(const NativeRoutineRequest& request,uint32_t own,
     if(request.actor!=own)return true;
     if(policy==ReservedPolicy::Suspended||request.targetProtected||request.ownerPolicyBlocked)return false;
     const auto name=request.name;
-    if(IsReservedNativeDecision(name))return false;
-    if(request.steeringSetting&&(name=="add_policy_command"||name=="add_edict_command"||name=="remove_edict_command"))return false;
+    // Activating an edict spends the player's budget and needs an explicit
+    // strategic decision. The native AI may still remove ordinary edicts.
+    if(IsReservedNativeDecision(name)||name=="add_edict_command")return false;
+    if(request.steeringSetting&&(name=="add_policy_command"||name=="remove_edict_command"))return false;
     return true; // Unknown commands and native internal maintenance run normally.
 }
 }

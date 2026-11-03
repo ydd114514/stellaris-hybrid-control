@@ -27,7 +27,7 @@ test('emergency, war, accepted advice and expansion health report their effectiv
   expansionStance:{value:'consolidate',by:'紧急保供'},
   militaryStance:{value:'prepare_war',by:'战争'},
  });
- const date='2200.01.01';
+ const date='2300.01.01';
  const planning={date,operationalGoal:{targetResource:'research'},
   strategy:{expansionHealth:{date,consolidate:true,reasons:['空岗较多']}}};
  assert.deepEqual(resolveStrategyDirection({state:planning,contract}).lockedDimensions,{
@@ -43,4 +43,15 @@ test('the brief retains active dimension locks while bounding neighbor data',()=
  assert.deepEqual(brief.lockedDimensions,lockedDimensions);
  assert.ok(brief.omittedNeighbors>0);
  assert.ok(Buffer.byteLength(JSON.stringify(brief))<=STRATEGY_BRIEF_MAX_BYTES);
+});
+
+test('early unity is applied at any size and new territory is locked at the scale threshold',()=>{
+ const wanted={...contract,economyFocus:'research',expansionStance:'aggressive'};
+ const resolve=(date,empire_size)=>resolveStrategyDirection({state:{date,capacities:{empire_size}},contract:wanted});
+ assert.equal(resolve('2299.12.30',99).contract.economyFocus,'unity_traditions');
+ assert.equal(resolve('2299.12.30',99).contract.expansionStance,'aggressive');
+ const atLimit=resolve('2299.12.30',100);
+ assert.equal(atLimit.contract.expansionStance,'consolidate');
+ assert.equal(atLimit.lockedDimensions.expansionStance.by,'前期帝国规模');
+ assert.equal(resolve('2300.01.01',101).contract.expansionStance,'aggressive');
 });

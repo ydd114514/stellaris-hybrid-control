@@ -28,9 +28,13 @@ public:
     // Bounded own-territory scan; foreign ships require native intel >= 3.
     nlohmann::json GetDefenseScanJson();
     nlohmann::json GetShipyardsJson();
+    // Presentation candidates from every owned system, including bases with no shipyard.
+    nlohmann::json GetStarbaseViewsJson();
 
     // L3: fleet orders
     nlohmann::json MoveFleet(uint32_t fleet_id, uint32_t system_id, bool queue);
+    // Lease-only narrow route; no generic command admission bypass.
+    nlohmann::json MoveOwnerExplorationFleet(uint32_t fleet_id,uint32_t system_id,uint32_t expected_from);
     // planet_id != 0xFFFFFFFF surveys one planet, otherwise the whole system
     nlohmann::json Survey(uint32_t fleet_id, uint32_t system_id, uint32_t planet_id, bool queue);
     // a construction ship builds an outpost (starbase) in the system

@@ -8,7 +8,7 @@ export const CLAIM_BUDGET_BRIDGE_VERSION='cyberfish-0.6.14-claim-budget-r1';
 const required=['building_upgrade_candidates','building_upgrade_queue_identity','ship_design_naval_size','zone_building_membership','owned_shipyard_queues','engine_market_transaction_quotes','normal_war_actions'];
 export function assertBridgeCapabilities(ping,{hybridSurvey=false,upgradePaths=false,tradeBudget=false,claimBudget=false,nativeCountryAI=false}={}){
  if(nativeCountryAI){
-  if(ping?.bridge_version!==COUNTRY_AI_P1_BRIDGE_VERSION||!Array.isArray(ping.features)||[...required,...COUNTRY_AI_P1_FEATURES,'country_ai_full_with_reserved'].some(f=>!ping.features.includes(f)))throw Error('国家 AI 需要 v1.5 默认放行和保留决定门控桥；请手动重启后加载新桥');
+  if(!isCountryAIBridgeCompatible(ping)||required.some(f=>!ping.features.includes(f)))throw Error('国家 AI 需要 v1.5 默认放行和保留决定门控桥；请手动重启后加载新桥');
   return true;
  }
  if([MONTHLY_QUOTE_BRIDGE_VERSION,UPGRADE_PATH_BRIDGE_VERSION,TRADE_BUDGET_BRIDGE_VERSION,CLAIM_BUDGET_BRIDGE_VERSION].includes(ping?.bridge_version)&&(!Array.isArray(ping.features)||!ping.features.includes('engine_monthly_trade_quotes')||!ping.features.includes('monthly_trade_read_coverage_candidate')))throw Error('月度报价桥缺少对应功能标记，拒绝降级为未核对的接口');
@@ -19,4 +19,4 @@ export function assertBridgeCapabilities(ping,{hybridSurvey=false,upgradePaths=f
  if((hybridSurvey?!survey:ping?.bridge_version!==BRIDGE_VERSION&&!survey)||!Array.isArray(ping.features)||required.some(key=>!ping.features.includes(key)))throw new Error('当前已加载的原生桥版本或功能不匹配；请结束控制后按正常流程重启游戏加载新版，不继续下单');
  return true;
 }
-import {COUNTRY_AI_P1_BRIDGE_VERSION,COUNTRY_AI_P1_FEATURES} from './native-country-ai.mjs';
+import {isCountryAIBridgeCompatible} from './native-country-ai.mjs';

@@ -381,8 +381,18 @@ nlohmann::json SocietyManager::GetTraditionsJson() {
     };
 }
 
+static NativeCommand BuildEdictCommand(const std::string& edict_key, bool enabled, uint32_t country_id) {
+    namespace add = sdk::cmd::add_edict_command;
+    namespace remove = sdk::cmd::remove_edict_command;
+    static_assert(add::name == remove::name && add::country == remove::country,
+                  "add/remove edict commands are expected to share one payload layout");
+    auto cmd = CommandBuilder::Get().Create(enabled ? add::kSpec : remove::kSpec);
+    cmd.SetString(add::name, edict_key)
+       .Set<uint32_t>(add::country, country_id);
+    return cmd;
+}
+
 nlohmann::json SocietyManager::GetEdictsJson() {
-    SocietySummary summary = GetSummary();
     void* country = GetPlayerCountry();
     if (!country) {
         return {
@@ -399,9 +409,12 @@ nlohmann::json SocietyManager::GetEdictsJson() {
 
     void* edict_entries = nullptr;
     uint32_t edict_cnt = 0;
+    uint32_t country_id = 0xFFFFFFFFu;
     constexpr std::ptrdiff_t kEdicts = sdk::ent::CCountry::edicts;
-    if (SafeReadPtr((const void*)((uintptr_t)country + kEdicts), &edict_entries) && edict_entries &&
-        SafeReadU32((const void*)((uintptr_t)country + kEdicts + 0xC), &edict_cnt)) {
+    if (!SafeReadU32((const void*)((uintptr_t)country + kEdicts + 0xC), &edict_cnt)) {
+        return {{"error", {{"code", -32083}, {"message", "Active edict count is unavailable"}}}};
+    }
+    if (SafeReadPtr((const void*)((uintptr_t)country + kEdicts), &edict_entries) && edict_entries) {
         for (uint32_t i = 0; i < edict_cnt && i < 64; ++i) {
             void* edict_p = nullptr;
             if (!SafeReadPtr((const void*)((uintptr_t)edict_entries + i * 0x20 + sdk::ent::SCountryActiveEdict::edict),
@@ -411,8 +424,7 @@ nlohmann::json SocietyManager::GetEdictsJson() {
 
             std::string edict_k;
             SafeReadPdxString((const void*)((uintptr_t)edict_p + 0x20), edict_k);
-            if (!edict_k.empty()) {
-                active_map[edict_k] = true;
+            if (!edict_k.empty() && active_map.emplace(edict_k, true).second) {
                 active_edicts_json.push_back({
                     {"key", edict_k},
                     {"name", LocalizeKey(edict_k)}
@@ -421,41 +433,51 @@ nlohmann::json SocietyManager::GetEdictsJson() {
         }
     }
 
-    // 2. Standard Edicts Catalog
-    static const std::vector<std::string> kKnownEdicts = {
-        "map_the_stars",
-        "subsidize_farming",
-        "subsidize_mining",
-        "subsidize_energy",
-        "subsidize_research",
-        "extended_shifts",
-        "peace_festivals",
-        "information_quarantine",
-        "fortify_the_border",
-        "diplomatic_grants",
-        "tracking_implants",
-        "land_appropriation",
-        "enhanced_surveillance",
-        "evacuation_protocols"
+    // Mirror the reviewed ordinary toggle keys in strategy-contract.mjs.
+    // Scripted availability is evaluated by the engine for this country.
+    static constexpr const char* kOrdinaryEdicts[] = {
+        "evacuation_protocols", "fortify_the_border", "nutritional_plenitude",
+        "nutritional_plenitude_hive", "expanded_breeding_program_servitor", "fleet_supremacy",
+        "diplomatic_grants", "enhanced_surveillance", "bureau_of_espionage",
+        "observation_instinct", "covert_analysis_algorithm", "tracking_implants",
+        "thought_enforcement", "thought_enforcement_gestalt", "extended_shifts",
+        "synaptic_reinforcement", "industrial_maintenance", "drone_overdrive",
+        "drone_overdrive_wilderness", "capacity_subsidies", "capacity_subsidies_wilderness",
+        "mining_subsidies", "mining_subsidies_wilderness", "mining_subsidies_nomadic",
+        "farming_subsidies", "farming_subsidies_wilderness", "industrial_subsidies",
+        "forge_subsidies", "forge_subsidies_wilderness", "research_subsidies",
+        "research_subsidies_wilderness", "veneration_of_saints", "peace_festivals",
+        "information_quarantine", "encourage_free_thought", "map_the_stars",
+        "land_of_opportunity", "greater_than_ourselves",
     };
 
+    const bool can_check = active_edicts_json.size() == edict_cnt &&
+        SafeReadU32((const void*)((uintptr_t)country + 0x20), &country_id) &&
+        country_id != 0xFFFFFFFFu && CommandBuilder::Get().SdkMatchesExe();
+    bool legality_complete = can_check;
     nlohmann::json all_edicts_json = nlohmann::json::array();
-    for (const auto& ek : kKnownEdicts) {
-        bool active = (active_map.find(ek) != active_map.end());
-        all_edicts_json.push_back({
-            {"key", ek},
-            {"name", LocalizeKey(ek)},
-            {"is_active", active}
-        });
+    for (const auto* key : kOrdinaryEdicts) {
+        const bool active = active_map.count(key) != 0;
+        nlohmann::json row = {{"key", key}, {"name", LocalizeKey(key)}, {"is_active", active}};
+        if (can_check) {
+            auto command = BuildEdictCommand(key, !active, country_id);
+            bool checked = false;
+            const bool allowed = command.IsValid(nullptr, &checked);
+            if (checked) row[active ? "can_deactivate" : "can_activate"] = allowed;
+            else legality_complete = false;
+        }
+        all_edicts_json.push_back(std::move(row));
     }
 
     return {
         {"summary", {
-            {"active_edicts_count", summary.active_edicts_count},
-            {"edict_fund", summary.edict_fund}
+            {"active_edicts_count", edict_cnt},
+            {"edict_fund", nullptr},
+            {"edict_fund_known", false}
         }},
         {"active_edicts", active_edicts_json},
-        {"available_edicts", all_edicts_json}
+        {"available_edicts", all_edicts_json},
+        {"available_edicts_complete", legality_complete}
     };
 }
 
@@ -554,13 +576,7 @@ nlohmann::json SocietyManager::ToggleEdict(const std::string& edict_key, bool en
     LOGF("[SOCIETY] Posting %s for edict '%s', tick %u...",
         enabled ? "CAddEdictCommand" : "CRemoveEdictCommand", edict_key.c_str(), tick_timestamp);
 
-    namespace add = sdk::cmd::add_edict_command;
-    namespace remove = sdk::cmd::remove_edict_command;
-    static_assert(add::name == remove::name && add::country == remove::country,
-                  "add/remove edict commands are expected to share one payload layout");
-    auto cmd = CommandBuilder::Get().Create(enabled ? add::kSpec : remove::kSpec);
-    cmd.SetString(add::name, edict_key)
-       .Set<uint32_t>(add::country, country_id);
+    auto cmd = BuildEdictCommand(edict_key, enabled, country_id);
     if (!cmd.Post()) {
         return {
             {"error", {

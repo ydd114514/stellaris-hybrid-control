@@ -40,8 +40,9 @@ public:
     NativeCommand& SetString(std::ptrdiff_t off, const std::string& value);
 
     // Runs the command's own IsValid(CString* reason) (vtable slot 8) without dispatching it.
-    // On failure *reason receives the engine's explanation when it provides one. Main thread only.
-    bool IsValid(std::string* reason = nullptr);
+    // On failure *reason receives the engine's explanation when it provides one.
+    // *checked distinguishes a native rejection from a command/engine check failure. Main thread only.
+    bool IsValid(std::string* reason = nullptr, bool* checked = nullptr);
 
     // Hands the command to the engine (PostCommand takes ownership). Main thread only.
     enum class Check {

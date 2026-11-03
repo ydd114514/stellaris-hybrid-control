@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {nativeBridgePath,compatibleLoadedBridgePaths} from '../src/native-bootstrap.mjs';
+import {COUNTRY_AI_P1_BRIDGE_VERSION} from '../src/native-country-ai.mjs';
 import {BRIDGE_VERSION,SURVEY_BRIDGE_VERSION,MONTHLY_BRIDGE_VERSION,MONTHLY_QUOTE_BRIDGE_VERSION,UPGRADE_PATH_BRIDGE_VERSION,TRADE_BUDGET_BRIDGE_VERSION,CLAIM_BUDGET_BRIDGE_VERSION} from '../src/bridge-capabilities.mjs';
 test('startup selects the exact bridge for the selected mode',()=>{
  assert.ok(nativeBridgePath().includes(CLAIM_BUDGET_BRIDGE_VERSION));
@@ -25,4 +26,7 @@ test('startup selects the exact bridge for the selected mode',()=>{
 
 test('the prior dynamic-trade bridge remains selectable explicitly for rollback',()=>{assert.ok(nativeBridgePath({claimBudget:false}).includes(TRADE_BUDGET_BRIDGE_VERSION));});
 
-test('country AI explicitly selects its own bridge and never reuses a legacy superset',()=>{assert.ok(nativeBridgePath({nativeCountryAI:true}).includes('cyberfish-0.6.16-country-ai-p1-r2'));assert.deepEqual(compatibleLoadedBridgePaths({nativeCountryAI:true,claimBudget:false,monthlyTrade:false}),[]);});
+test('country AI selects the edict approval bridge without accepting a loaded bypass version',()=>{
+ assert.ok(nativeBridgePath({nativeCountryAI:true}).includes(COUNTRY_AI_P1_BRIDGE_VERSION));
+ assert.deepEqual(compatibleLoadedBridgePaths({nativeCountryAI:true}),[]);
+});

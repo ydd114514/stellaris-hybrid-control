@@ -1,4 +1,4 @@
-import {COUNTRY_AI_P1_BRIDGE_VERSION} from './native-country-ai.mjs';
+import {COUNTRY_AI_P1_BRIDGE_VERSION,COUNTRY_AI_EDICT_APPROVAL_FEATURE} from './native-country-ai.mjs';
 import {spawn} from 'node:child_process';
 import {readFile, stat} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
@@ -19,7 +19,8 @@ export function compatibleLoadedBridgePaths({nativeCountryAI=false,hybridSurvey=
   // Lower capability modes may reuse any reviewed, already loaded superset.
   // Keep both quote generations explicit; monthlyQuotes now defaults to the
   // corrected upgrade bridge and would otherwise silently omit 0.6.10.
-  if(nativeCountryAI||claimBudget)return [];
+  if(nativeCountryAI)return [];
+  if(claimBudget)return [];
   return monthlyTrade||monthlyQuotes||upgradePaths||tradeBudget?[]:[nativeBridgePath({claimBudget:true}),nativeBridgePath({tradeBudget:true,claimBudget:false}),nativeBridgePath({upgradePaths:true,tradeBudget:false}),nativeBridgePath({monthlyQuotes:true,upgradePaths:false}),nativeBridgePath({monthlyTrade:true,monthlyQuotes:false}),...hybridSurvey?[]:[nativeBridgePath({hybridSurvey:true,monthlyTrade:false})]];
 }
 const loader = fileURLToPath(new URL('../native/research/load_native_bridge.py', import.meta.url));
@@ -68,6 +69,8 @@ export async function ensureNativeGame({nativeCountryAI,hybridSurvey,monthlyTrad
     try {
       ping = await pipe.request('ping');
       assertBridgeCapabilities(ping,{nativeCountryAI,claimBudget,hybridSurvey,upgradePaths,tradeBudget});
+      if(nativeCountryAI&&(ping.bridge_version!==COUNTRY_AI_P1_BRIDGE_VERSION||!ping.features.includes(COUNTRY_AI_EDICT_APPROVAL_FEATURE)))
+        throw Error('当前桥无法拦截原生 AI 自行开法令，拒绝启用国家 AI');
       const status = await pipe.request('get_status');
       if (status.in_game && status.date?.formatted && status.outliner?.sectors_summary?.capital_system) {
         log({stage: 'game_ready', pid: game.pid, date: status.date.formatted});

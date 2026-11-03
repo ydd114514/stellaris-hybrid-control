@@ -8,6 +8,7 @@
 #include "species_manager.hpp"
 #include "ship_designer.hpp"
 #include "sdk/stellaris_sdk.hpp"
+#include "country_ai_routine_gate.hpp"
 #include <algorithm>
 #include <cmath>
 #include <map>
@@ -496,6 +497,48 @@ nlohmann::json GalaxyManager::GetShipyardsJson() {
         {"shipyards",yards},{"errors",errors}};
 }
 
+nlohmann::json GalaxyManager::GetStarbaseViewsJson() {
+    nlohmann::json bases=nlohmann::json::array(),errors=nlohmann::json::array();
+    auto failure=[&](const std::string& why){return nlohmann::json{{"success",false},{"coverage_complete",false},
+        {"coverage_scope","owned_system_starbases"},{"error",why},{"starbases",bases}};};
+    if(!CommandBuilder::Get().SdkMatchesExe())return failure("SDK does not match game executable");
+    void* country=GameState::Get().GetPlayerCountry();uint32_t player=kInvalidId;
+    if(!country||!Read((void*)((uintptr_t)country+sdk::rt::CCountry_id),&player)||player==kInvalidId)return failure("Player country is unknown");
+    void* db=nullptr;void* slots=nullptr;uint32_t cap=0;
+    if(!Read((void*)(base_address_+sdk::db::CGalacticObject),&db)||!db||
+       !Read((void*)((uintptr_t)db+0x18),&slots)||!slots||!Read((void*)((uintptr_t)db+0x20),&cap)||cap==0||cap>65536)
+        return failure("Full system database is unreadable or outside bounded scan");
+    std::unordered_set<uint32_t> seen;uint32_t owned=0,scanned=0;
+    for(uint32_t slot=0;slot<cap;++slot) {
+        void* sys=nullptr;
+        if(!Read((void*)((uintptr_t)slots+slot*16+8),&sys)){errors.push_back({{"system_slot",slot},{"error","System slot unreadable"}});continue;}
+        if(!sys)continue;
+        uint32_t sid=kInvalidId,owner=kInvalidId;
+        if(!Read((void*)((uintptr_t)sys+sdk::rt::CGalacticObject_id),&sid)||sid==kInvalidId||(sid&0xFFFFFFu)!=slot||
+           !Read((void*)((uintptr_t)sys+sdk::rt::CGalacticObject_owner),&owner)) {
+            errors.push_back({{"system_slot",slot},{"error","System identity or ownership unreadable"}});continue;
+        }
+        ++scanned;if(owner!=player)continue;++owned;
+        const auto array=(uintptr_t)sys+sdk::ent::CGalacticObject::starbases;
+        void* refs=nullptr;int32_t count=0;
+        if(!Read((void*)(array+kArrData),&refs)||!Read((void*)(array+kArrSize),&count)||count<0||count>1024||(count&&!refs)) {
+            errors.push_back({{"system_id",sid},{"error","Owned system starbase refs unreadable"}});continue;
+        }
+        for(int32_t i=0;i<count;++i) {
+            uint32_t sbid=kInvalidId;
+            if(!Read((void*)((uintptr_t)refs+i*4),&sbid)){errors.push_back({{"system_id",sid},{"error","Starbase ref unreadable"}});continue;}
+            if(sbid==kInvalidId||!seen.insert(sbid).second)continue;
+            void* base=RefLookup(base_address_,sdk::db::CStarbase,sbid);uint32_t actual=kInvalidId;
+            if(!base||!Read((void*)((uintptr_t)base+sdk::rt::CStarbase_id),&actual)||actual!=sbid) {
+                errors.push_back({{"system_id",sid},{"starbase_id",sbid},{"error","Stale or unreadable starbase identity"}});continue;
+            }
+            bases.push_back({{"system_id",sid},{"starbase_id",sbid},{"name",SystemName(sid,sys)},{"owner_id",player}});
+        }
+    }
+    return {{"success",true},{"coverage_complete",errors.empty()},{"coverage_scope","owned_system_starbases"},
+        {"scanned_systems",scanned},{"scanned_owned_systems",owned},{"starbases",bases},{"errors",errors}};
+}
+
 // CStarbaseLevelType is script data (no serializer, so no SDK layout): its ship_size is the one
 // pointer field that, in every starbase level type, points at an entry of the ship size database.
 std::ptrdiff_t GalaxyManager::LevelShipSizeField() {
@@ -981,6 +1024,69 @@ nlohmann::json GalaxyManager::GetSystemJson(uint32_t system_id) {
     return out;
 }
 
+nlohmann::json GalaxyManager::MoveOwnerExplorationFleet(uint32_t fleet_id,uint32_t system_id,uint32_t expected_from) {
+    auto reject=[](const char* error){return nlohmann::json{{"success",false},{"accepted",false},{"phase","rejected"},{"error",error}};};
+    if(!CommandBuilder::Get().SdkMatchesExe()||!cyberfish::CountryAIExplorationFleetProtected(fleet_id))return reject("owner_exploration_fleet_not_protected");
+    const auto s=Take();
+    if(!s.player||!OwnFleet(s,fleet_id))return reject("owner_exploration_fleet_not_owned");
+    auto* fleet=fleets::Find(base_address_,fleet_id);
+    if(!fleet||fleets::ClassOf(fleet)!=fleets::ShipClass::Military||fleets::ShipIds(fleet).empty())return reject("owner_exploration_requires_existing_military_fleet");
+    // CFleet::BuildOrdersString C755AD/C75A47: current order +2C8,
+    // pending order count +2E4; the current order's slot 7 is the native
+    // active-order predicate. Unknown reads/calls reject rather than mean idle.
+    void* order=nullptr;int32_t pending=-1;uint32_t flags=0;
+    if(!Read((void*)((uintptr_t)fleet+0x2c8),&order)||!order||
+        !Read((void*)((uintptr_t)fleet+0x2e4),&pending)||pending!=0||
+        !Read((void*)((uintptr_t)fleet+sdk::ent::TFleetFlags::mia),&flags))return reject("owner_exploration_fleet_state_unknown");
+    // TFleetFlags::WriteMembers C57A4A: token 3075 is (flags >> 5)&1,
+    // not a standalone bool (the SDK fields share a bitfield address).
+    if(flags&((1u<<5)|(1u<<3)))return reject("owner_exploration_fleet_mia_or_event_locked");
+    struct Idle {void* order;bool active=true;};Idle idle{order,true};
+    if(!CommandBuilder::Get().CallGuarded([](void* p,void*){auto* x=(Idle*)p;
+        x->active=(*(bool(**)(void*))(*(uintptr_t*)x->order+0x38))(x->order);},&idle)||idle.active)
+        return reject("owner_exploration_fleet_has_orders");
+    const auto* coordinate=FleetCoordinate(base_address_,fleet);uint32_t from=kInvalidId;
+    if(!coordinate||!Read((void*)((uintptr_t)coordinate+sdk::ent::CCelestialCoordinate::origin),&from)||
+        from!=expected_from||from==system_id||!s.index.count(from)||!s.index.count(system_id))return reject("owner_exploration_position_changed_or_unknown");
+    const auto& origin=s.systems[s.index.at(from)];const auto& target=s.systems[s.index.at(system_id)];
+    if(std::none_of(origin.lanes.begin(),origin.lanes.end(),[&](const auto& lane){return lane.first==system_id;}))return reject("owner_exploration_requires_adjacent_hyperlane");
+    // Full, stable native ref-array read. The normal detail UI can omit unknown
+    // fleets, so unknown intel is never treated as an empty safe frontier.
+    auto refs=[&](uintptr_t array,std::vector<uint32_t>& result){
+        uintptr_t data=0,after=0;uint32_t size=0,capacity=0,afterSize=0,afterCapacity=0;
+        if(!Read((void*)(array+8),&data)||!Read((void*)(array+0x10),&capacity)||!Read((void*)(array+0x14),&size)||
+            size>4096||size>capacity||(size&&!data))return false;
+        for(uint32_t i=0;i<size;++i){uint32_t id=kInvalidId;if(!Read((void*)(data+i*4),&id)||id==kInvalidId)return false;result.push_back(id);}
+        return Read((void*)(array+8),&after)&&Read((void*)(array+0x10),&afterCapacity)&&Read((void*)(array+0x14),&afterSize)&&
+            data==after&&size==afterSize&&capacity==afterCapacity;
+    };
+    for(const auto* sys:{&origin,&target}) {
+        uint32_t owner=kInvalidId,actual=kInvalidId;
+        if(!Read((void*)((uintptr_t)sys->obj+sdk::rt::CGalacticObject_id),&actual)||actual!=sys->id||
+            !Read((void*)((uintptr_t)sys->obj+sdk::rt::CGalacticObject_owner),&owner))return reject("owner_exploration_system_state_unknown");
+        if(Intel(s,sys->obj)<3)return reject("owner_exploration_safe_intel_required");
+        if(owner!=kInvalidId&&owner!=s.player_id)return reject("owner_exploration_foreign_territory");
+        std::vector<uint32_t> present,bases;
+        if(!refs((uintptr_t)sys->obj+sdk::ent::CGalacticObject::fleet_presence,present)||
+            !refs((uintptr_t)sys->obj+sdk::ent::CGalacticObject::starbases,bases))return reject("owner_exploration_threat_coverage_unknown");
+        if(sys->id==from&&std::find(present.begin(),present.end(),fleet_id)==present.end())return reject("owner_exploration_origin_presence_inconsistent");
+        if(owner!=s.player_id&&!bases.empty())return reject("owner_exploration_unowned_starbase");
+        for(const auto id:present){auto* other=fleets::Find(base_address_,id);uint32_t otherOwner=kInvalidId;
+            if(!other||!Read((void*)((uintptr_t)other+0x448),&otherOwner)||otherOwner!=s.player_id)
+                return reject("owner_exploration_foreign_or_unknown_fleet_present");}
+    }
+    const auto path=FindPath(fleet_id,system_id);
+    if(!path.value("reachable",false)||path.value("jumps",-1)!=1||!path.contains("systems")||path["systems"].size()!=2||
+        path["systems"][0].value("id",kInvalidId)!=from||path["systems"][1].value("id",kInvalidId)!=system_id||
+        path["systems"][1].value("via",std::string())!="hyperlane")return reject("owner_exploration_native_route_rejected");
+    // Ordinary move creation, IsValid and EngineGate Post. No force flag,
+    // cancellation, stance change, route bypass or AI flag transition.
+    auto result=MoveFleet(fleet_id,system_id,false);result["safety_scope"]="high_intel_own_or_empty_adjacent_systems";
+    result["native_safety"]={{"minimum_native_intel",3},{"fleet_idle_verified",true},{"mia",false},
+        {"fleet_presence_complete",true},{"foreign_fleets_present",false},{"adjacent_hyperlane",true},{"native_path_reachable",true}};
+    result["from_system_id"]=from;return result;
+}
+
 nlohmann::json GalaxyManager::MoveFleet(uint32_t fleet_id, uint32_t system_id, bool queue) {
     Snapshot s = Take();
     if (!s.player) return { {"error", "No player country (not in game?)"} };
@@ -1005,8 +1111,9 @@ nlohmann::json GalaxyManager::MoveFleet(uint32_t fleet_id, uint32_t system_id, b
     if (!cmd.IsValid(&why)) {
         return { {"success", false}, {"error", why.empty() ? "The fleet cannot move (a station or immobile)" : why} };
     }
-    if (!cmd.Post(NativeCommand::Check::EngineGate)) return { {"success", false}, {"error", cmd.error()} };
+    if (!cmd.Post(NativeCommand::Check::EngineGate)) return { {"success", false}, {"accepted", nullptr}, {"phase", "post_unconfirmed"}, {"error", cmd.error()} };
     return { {"success", true}, {"fleet_id", fleet_id}, {"target_system_id", system_id},
+             {"accepted",true},{"phase","posted"},
              {"target_system", SystemName(system_id, s.systems[s.index[system_id]].obj)}, {"queued", queue},
              {"message", "Move order posted; read the fleet's orders on a later call"} };
 }

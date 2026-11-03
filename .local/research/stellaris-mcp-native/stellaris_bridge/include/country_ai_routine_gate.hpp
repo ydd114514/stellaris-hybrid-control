@@ -8,4 +8,9 @@ void SuspendCountryAIRoutineGate();
 // normal session Post boundary. Rejection consumes the object exactly once.
 bool AdmitCountryAIRoutinePost(void* command, uint32_t sourceCountry);
 bool CountryAIRoutineGateArmed();
+// Lease-only, main-thread deltas. Baseline protected_targets are never replaced.
+nlohmann::json UpdateCountryAIExplorationProtection(uint32_t fleet, bool protect,
+    const nlohmann::json& expected, const nlohmann::json& expectedProtectedTargets);
+bool CountryAIExplorationFleetProtected(uint32_t fleet);
+bool CountryAIExplorationPeaceConfirmed();
 }

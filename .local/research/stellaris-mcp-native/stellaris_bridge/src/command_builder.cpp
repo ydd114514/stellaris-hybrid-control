@@ -475,7 +475,8 @@ bool CommandBuilder::CallPredicate(uintptr_t fn_rva, void* self, void* a, void* 
     return result;
 }
 
-bool NativeCommand::IsValid(std::string* reason) {
+bool NativeCommand::IsValid(std::string* reason, bool* checked) {
+    if (checked) *checked = false;
     if (!obj_ || !error_.empty()) {
         if (reason) *reason = error_.empty() ? "command was not created" : error_;
         return false;
@@ -489,6 +490,7 @@ bool NativeCommand::IsValid(std::string* reason) {
         LOGF("[CMD_BUILDER] %s", what.c_str());
         return false;
     }
+    if (checked) *checked = true;
     TakeReasonText(text, ok ? nullptr : reason);
     return ok;
 }

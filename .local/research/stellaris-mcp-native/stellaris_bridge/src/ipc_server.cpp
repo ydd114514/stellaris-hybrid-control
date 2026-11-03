@@ -1,4 +1,5 @@
 #include "ipc_server.hpp"
+#include "plugin.hpp"
 #include "command_builder.hpp"
 #include "task_queue.hpp"
 #include "game_state.hpp"
@@ -147,6 +148,15 @@ static std::future<nlohmann::json> EnqueueCyberfishRequest(const std::string& me
     } else if (method == "show_panel") {
         const std::string panel=params.value("panel",std::string());
         fut=TaskQueue::Get().Enqueue([panel]() {return cyberfish::ShowPanel(panel);});
+    } else if (method == "show_planet_view") {
+        const uint32_t planet=params.value("planet_id",0xFFFFFFFFu);
+        const std::string tab=params.value("tab",std::string("construction"));
+        fut=TaskQueue::Get().Enqueue([planet,tab]() {return cyberfish::ShowPlanetView(planet,tab);});
+    } else if (method == "show_starbase_view") {
+        const uint32_t system=params.value("system_id",0xFFFFFFFFu),starbase=params.value("starbase_id",0xFFFFFFFFu);
+        fut=TaskQueue::Get().Enqueue([system,starbase]() {return cyberfish::ShowStarbaseView(system,starbase);});
+    } else if (method == "get_starbase_targets") {
+        fut=TaskQueue::Get().Enqueue([]() {return GalaxyManager::Get().GetStarbaseViewsJson();});
     } else if (method == "focus_planet") {
         const uint32_t planet=params.value("planet_id",0xFFFFFFFFu);
         fut=TaskQueue::Get().Enqueue([planet]() {return cyberfish::FocusPlanet(planet);});
@@ -199,8 +209,8 @@ nlohmann::json IPCServer::ProcessRequest(const nlohmann::json& req) {
     if (method == "ping") {
         return {
             {"jsonrpc", "2.0"},
-            {"result", {{"status", "pong"},{"bridge_version","cyberfish-0.6.25-owner-intent"},
-                {"features",{"country_ai_owner_intent","country_ai_full_with_reserved","country_ai_economic_administration_candidate","country_ai_ship_production_candidate","country_ai_ship_queue_effect_readback","country_ai_protected_economic_targets","country_ai_administration_effect_readback","country_ai_own_session_post_gate","country_ai_command_clone_lifetime","country_ai_native_queue_gate","country_ai_game_update_lease","country_ai_world_generation","country_ai_paused_research_candidate","country_ai_serialized_execution_receipts","country_ai_producer_observation_candidate","building_upgrade_candidates","building_upgrade_queue_identity","building_upgrade_string_paths","actual_market_upkeep_budget","ship_design_naval_size","zone_building_membership","owned_shipyard_queues","engine_market_transaction_quotes","normal_war_actions","native_survey_automation_candidate","native_colony_automation_read_candidate","monthly_trade_read_coverage_candidate","engine_monthly_trade_quotes","engine_claim_cost_quotes","capped_claim_spending"}}}},
+            {"result", {{"status", "pong"},{"bridge_version",plugin::kBridgeVersion},
+                {"features",{"country_ai_edict_approval","country_ai_owner_leader_budget","country_ai_owner_exploration","native_director_object_views","native_director_starbase_targets","country_ai_owner_intent","country_ai_full_with_reserved","country_ai_economic_administration_candidate","country_ai_ship_production_candidate","country_ai_ship_queue_effect_readback","country_ai_protected_economic_targets","country_ai_administration_effect_readback","country_ai_own_session_post_gate","country_ai_command_clone_lifetime","country_ai_native_queue_gate","country_ai_game_update_lease","country_ai_world_generation","country_ai_paused_research_candidate","country_ai_serialized_execution_receipts","country_ai_producer_observation_candidate","building_upgrade_candidates","building_upgrade_queue_identity","building_upgrade_string_paths","actual_market_upkeep_budget","ship_design_naval_size","zone_building_membership","owned_shipyard_queues","engine_market_transaction_quotes","normal_war_actions","native_survey_automation_candidate","native_colony_automation_read_candidate","monthly_trade_read_coverage_candidate","engine_monthly_trade_quotes","engine_claim_cost_quotes","capped_claim_spending"}}}},
             {"id", id}
         };
     }

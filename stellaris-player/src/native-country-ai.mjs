@@ -1,7 +1,21 @@
 import {COUNTRY_AI_POLICIES,normalizeCountryAIProtection,normalizeNativeOwnerPolicy} from './native-country-ai-economic-policy.mjs';
-export const COUNTRY_AI_P1_BRIDGE_VERSION='cyberfish-0.6.25-owner-intent';
+export const COUNTRY_AI_EDICT_APPROVAL_FEATURE='country_ai_edict_approval';
+export const COUNTRY_AI_P1_BRIDGE_VERSION='cyberfish-0.6.29-edict-approval';
+export const COUNTRY_AI_LEADER_BUDGET_BRIDGE_VERSION='cyberfish-0.6.28-owner-leader-budget';
+export const COUNTRY_AI_EXPLORATION_BRIDGE_VERSION='cyberfish-0.6.27-owner-exploration';
+export const COUNTRY_AI_DIRECTOR_BRIDGE_VERSION='cyberfish-0.6.26-director-views';
+export const COUNTRY_AI_PREVIOUS_BRIDGE_VERSION='cyberfish-0.6.25-owner-intent';
+export const COUNTRY_AI_SUPPORTED_BRIDGE_VERSIONS=Object.freeze([COUNTRY_AI_P1_BRIDGE_VERSION,COUNTRY_AI_LEADER_BUDGET_BRIDGE_VERSION,COUNTRY_AI_EXPLORATION_BRIDGE_VERSION,COUNTRY_AI_DIRECTOR_BRIDGE_VERSION,COUNTRY_AI_PREVIOUS_BRIDGE_VERSION]);
+export const DIRECTOR_BRIDGE_FEATURES=Object.freeze(['native_director_object_views','native_director_starbase_targets']);
 export const COUNTRY_AI_FULL_FEATURE='country_ai_full_with_reserved';
 export const COUNTRY_AI_P1_FEATURES=['country_ai_own_session_post_gate','country_ai_command_clone_lifetime','country_ai_native_queue_gate','country_ai_game_update_lease','country_ai_world_generation','country_ai_serialized_execution_receipts','country_ai_owner_intent'];
+export function isCountryAIBridgeCompatible(ping){
+  if(!COUNTRY_AI_SUPPORTED_BRIDGE_VERSIONS.includes(ping?.bridge_version)||!Array.isArray(ping.features))return false;
+  // Presentation extensions never gate the native AI's existing lease/owner safeguards.
+  // Their individual support flags control only whether the new views are requested.
+  const required=[COUNTRY_AI_FULL_FEATURE,...COUNTRY_AI_P1_FEATURES];
+  return required.every(feature=>ping.features.includes(feature));
+}
 const off=s=>s?.global_flags?.human_ai===false&&s?.global_flags?.force_human_ai===false;
 const stopped=s=>s?.phase==='stopped'&&s.last_native_state?.paused===true&&off(s.last_native_state)&&s.routine_gate?.armed===false&&s.observation?.armed===false;
 export const nativeCountryScope=s=>Object.fromEntries(Object.entries(s?.precondition||{}).filter(([k])=>!['date','sequence','global_flags'].includes(k)).sort(([a],[b])=>a.localeCompare(b)));
@@ -24,11 +38,15 @@ export class NativeCountryAI {
   async capabilities() {
     if(this.capabilityVerified)return;
     const ping=await this.call('ping');
-    const economy=ping?.bridge_version===COUNTRY_AI_P1_BRIDGE_VERSION&&ping.features?.includes(COUNTRY_AI_FULL_FEATURE);
-    if(!economy||COUNTRY_AI_P1_FEATURES.some(f=>!ping.features?.includes(f)))
+    const economy=isCountryAIBridgeCompatible(ping);
+    if(!economy)
       throw Error('当前桥不具备国家 AI 提交限制、失联收权和世界代次接口');
     this.fullGateVerified=economy;
     this.ownerIntentSupported=ping.features.includes('country_ai_owner_intent');
+    this.explorationSupported=[COUNTRY_AI_P1_BRIDGE_VERSION,COUNTRY_AI_LEADER_BUDGET_BRIDGE_VERSION,COUNTRY_AI_EXPLORATION_BRIDGE_VERSION].includes(ping.bridge_version)&&ping.features.includes('country_ai_owner_exploration');
+    this.ownerLeaderBudgetSupported=ping.features.includes('country_ai_owner_leader_budget');
+    this.directorObjectViewsSupported=ping.features.includes('native_director_object_views');
+    this.directorStarbaseTargetsSupported=ping.features.includes('native_director_starbase_targets');
     this.capabilityVerified=true;
   }
   async state() {
@@ -52,7 +70,9 @@ export class NativeCountryAI {
       ordinaryOrdersBlocked:this.active,generation:this.generation??null,
       domains:[...(COUNTRY_AI_POLICIES[this.saved?.policy]??[])],
       protectedTargets:structuredClone(this.saved?.protectedTargets??{}),
-      ownerPolicy:structuredClone(raw?.routine_gate?.owner_policy??{}),ownerIntentSupported:this.ownerIntentSupported===true,
+      ownerPolicy:structuredClone(raw?.routine_gate?.owner_policy??{}),ownerIntentSupported:this.ownerIntentSupported===true,ownerLeaderBudgetSupported:this.ownerLeaderBudgetSupported===true,explorationSupported:this.explorationSupported===true,
+      explorationProtectedFleets:[...(raw?.routine_gate?.exploration_protected_fleets??[])],
+      directorObjectViewsSupported:this.directorObjectViewsSupported===true,directorStarbaseTargetsSupported:this.directorStarbaseTargetsSupported===true,
       supportedPolicies:this.capabilityVerified?Object.keys(COUNTRY_AI_POLICIES):[],
       commandCounts:raw?.routine_gate?.command_counts??{},reservedPolicy:raw?.routine_gate?.reserved_policy??null,
       protectionStatus:this.saved?.protectionStatus==='pending_native_revalidation'?'pending_native_revalidation':
@@ -195,6 +215,35 @@ export class NativeCountryAI {
     const result=await this.call('country_ai_lease',{action:'update_owner_policy',generation:this.generation,owner_policy:policy});
     if(result?.success!==true||result.generation!==this.generation||!same(scope(result.last_native_state),this.saved?.scope)||!same(normalizeNativeOwnerPolicy(result.routine_gate?.owner_policy),policy))throw Error('原生经营约束更新未确认，不把目标记作已落实');
     this.last=result;this.saved.ownerPolicy=policy;return this.view();
+  }
+  async explorationState(generation=this.generation,{allowPaused=false}={}){
+    if(!this.explorationSupported||!this.active||this.operation||this.cancelRequested||generation!==this.generation)throw Error('持续探索需要当前支持逐舰探索的原生委派');
+    const state=await this.state();
+    if(!this.active||this.cancelRequested||this.operation||this.generation!==generation||state.phase!=='running'||state.generation!==generation||!same(scope(state.last_native_state),this.saved?.scope)||!allowPaused&&state.last_native_state?.paused!==false)throw Error('持续探索缺少同世界运行中的真实原生回读');
+    const refs=state.routine_gate?.exploration_protected_fleets;
+    if(!Array.isArray(refs)||refs.some(n=>!Number.isSafeInteger(n)||n<0||n>=0xffffffff))throw Error('探索舰队保护列表不可读');
+    return state;
+  }
+  async setExplorationProtection({fleetId,enabled,generation=this.generation}={}){
+    if(!Number.isSafeInteger(fleetId)||fleetId<0||fleetId>=0xffffffff||typeof enabled!=='boolean')throw Error('逐舰探索保护需要完整舰队引用和明确开关');
+    const before=await this.explorationState(generation,{allowPaused:!enabled}),refs=before.routine_gate.exploration_protected_fleets;
+    const added=enabled&&!refs.includes(fleetId),expected=[...new Set(enabled?[...refs,fleetId]:refs.filter(n=>n!==fleetId))].sort((a,b)=>a-b);
+    if(!added&&enabled||!enabled&&!refs.includes(fleetId))return {confirmed:true,added:false,generation};
+    const result=await this.call('country_ai_lease',{action:'update_exploration_protection',generation,fleet_id:fleetId,protected:enabled,expected_protected_targets:before.routine_gate.protected_targets});
+    if(result?.success!==true||result.phase!=='running'||this.cancelRequested||!this.active||result.generation!==generation||!same(scope(result.last_native_state),this.saved?.scope)||!same([...(result.routine_gate?.exploration_protected_fleets??[])].sort((a,b)=>a-b),expected))throw Error(result?.error||'探索逐舰保护未真实回读确认');
+    const previous=normalizeCountryAIProtection(before.routine_gate.protected_targets),actual=normalizeCountryAIProtection(result.routine_gate?.protected_targets);
+    if(['jobs','colonies','shipyards'].some(key=>!same(previous[key],actual[key]))||(this.saved?.protectedTargets?.fleets??[]).some(ref=>!actual.fleets?.includes(ref)))throw Error('原有关键目标保护发生变化，停止探索');
+    this.last=result;return {confirmed:true,added,generation};
+  }
+  async moveExplorationFleet({fleetId,systemId,fromSystemId,requestId,generation=this.generation}={}){
+    if([fleetId,systemId,fromSystemId].some(n=>!Number.isSafeInteger(n)||n<0||n>=0xffffffff))throw Object.assign(Error('探索移动缺少完整舰队/星系引用'),{nativeWriteAttempted:false});
+    if(typeof requestId!=='string'||!requestId||requestId.length>128)throw Object.assign(Error('探索移动缺少唯一请求编号'),{nativeWriteAttempted:false});
+    const before=await this.explorationState(generation);
+    if(!before.routine_gate.exploration_protected_fleets.includes(fleetId))throw Object.assign(Error('当前舰队未取得探索保护'),{nativeWriteAttempted:false});
+    const result=await this.call('country_ai_lease',{action:'owner_exploration_move',generation,fleet_id:fleetId,system_id:systemId,expected_from_system_id:fromSystemId,request_id:requestId});
+    if(result?.generation!==generation||!same(scope(result?.last_native_state),this.saved?.scope))throw Error('探索移动派发后世界或委派回读不符，结果未知且不重发');
+    if(result?.success===true)this.last=result;
+    return result;
   }
   async acknowledgeReview(){
     if(!this.active||this.generation===undefined)throw Error('没有可继续的国家 AI 委派');

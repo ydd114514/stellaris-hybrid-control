@@ -194,7 +194,9 @@ test('all effective owner locks yield an actual steering template and accept a s
  assert.deepEqual(options.steering,{
   economyFocus:{locked:'本人要求'},expansionStance:{locked:'本人要求'},militaryStance:{locked:'本人要求'},
  });
- assert.deepEqual(options.edicts,{activatable:[],status:'能力缺口'});
+ assert.deepEqual(options.edicts.activatable,[]);
+ assert.equal(options.edicts.status,'无合法候选');
+ assert.match(options.edicts.activationBlock,/前期凝聚力优先/);
  assert.deepEqual(options.agendas,{available:[],status:'无合法候选'});
  assert.deepEqual(options.allowed,['修改目标','维持理由']);
  assert.deepEqual(options.contractTemplate,{

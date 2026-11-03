@@ -4,6 +4,7 @@ import {normalizeNativeOwnerPolicy} from './native-country-ai-economic-policy.mj
 import {economicEdictActivationProblem} from './owner-economic-policy.mjs';
 import {sameStrategyGoal,STEERING_EFFECTS} from './strategy-brief.mjs';
 import {surveyGameDay} from './survey-idle-policy.mjs';
+import {STRATEGY_MIDGAME_START,strategyGamePhase} from './strategy-phase.mjs';
 export const STRATEGY_DIMENSIONS={economyFocus:ECONOMY_FOCUSES,expansionStance:['aggressive','consolidate'],militaryStance:['peaceful','prepare_war']};
 export const RESERVED_ACTIONS={declare_war:'declare_war',offer_peace:'offer_peace',diplo_propose:'diplomacy',diplo_respond:'respond_diplomacy'};
 export const reservedOrder=command=>Object.values(RESERVED_ACTIONS).includes(command);
@@ -25,21 +26,45 @@ const completeActiveEdicts=raw=>Array.isArray(raw?.active_edicts)&&Number.isSafe
  raw.summary.active_edicts_count===raw.active_edicts.length&&raw.active_edicts.every(row=>typeof row?.key==='string')&&
  new Set(raw.active_edicts.map(row=>row.key)).size===raw.active_edicts.length;
 const availableEdictRows=raw=>Array.isArray(raw?.available_edicts)?raw.available_edicts:[];
+function ordinaryEdictPhaseProblem(date){
+ const phase=strategyGamePhase(date);
+ if(phase==='unknown')return '当前游戏日期未知，暂不批准新增普通法令';
+ return phase==='early'?'前期凝聚力优先，禁止新增普通法令。普通法令从 '+STRATEGY_MIDGAME_START+' 起进入战略审核':null;
+}
+const knownEdictBudget=(candidate,state)=>candidate?.upkeep_known===true&&Number.isFinite(candidate.upkeep?.unity)&&candidate.upkeep.unity>=0&&
+ state?.resources?.unity?.net_known===true&&Number.isFinite(state.resources.unity.net);
+function ordinaryEdictBudgetProblem(candidate,state){
+ if(!knownEdictBudget(candidate,state))return '当前法令凝聚力维护费或净产未核实，暂不批准新增';
+ return state.resources.unity.net-candidate.upkeep.unity<=0?'新增法令后无法保持凝聚力正净产，暂不批准':null;
+}
+function ordinaryEdictBenefitProblem(action,state){
+ const policy={...state?.userEconomicPolicy,source:'user-current-chat',priority:'unity_first',resourcePolicy:'deficit_only',edictPolicy:'unity_net_gain'};
+ return economicEdictActivationProblem(action,{...state,userEconomicPolicy:policy});
+}
 export function ordinaryEdictOptions(raw,state){
- if(!completeActiveEdicts(raw))return {activatable:[],status:'能力缺口'};
+ const phaseProblem=ordinaryEdictPhaseProblem(state?.date);
+ const phaseFields=phaseProblem?{activationBlock:phaseProblem}:{};
+ if(!completeActiveEdicts(raw))return {activatable:[],status:phaseProblem?'无合法候选':'能力缺口',...phaseFields};
  const active=new Map(raw.active_edicts.map(row=>[row.key,row]));
  const candidates=availableEdictRows(raw).filter(row=>ordinaryEdicts.has(row?.key));
  const inactive=candidates.filter(row=>!active.has(row.key)&&row.is_active!==true);
- const activatable=[...new Set(inactive.filter(row=>row.can_activate===true&&
-  !economicEdictActivationProblem({type:'toggle_edict',arguments:{edict_key:row.key,enabled:true}},state)).map(row=>row.key))].slice(0,6);
- const deactivatable=[...active.values()].filter(row=>{
+ const legal=inactive.filter(row=>row.can_activate===true);
+ const activatable=phaseProblem?[]:[...new Set(legal.filter(row=>
+  !ordinaryEdictBudgetProblem(row,state)&&
+  !ordinaryEdictBenefitProblem({type:'toggle_edict',arguments:{edict_key:row.key,enabled:true}},state)).map(row=>row.key))].slice(0,6);
+ const activeOrdinary=[...active.values()].filter(row=>ordinaryEdicts.has(row.key));
+ const deactivatable=activeOrdinary.filter(row=>{
   const candidate=candidates.find(candidate=>candidate.key===row.key);
-  return ordinaryEdicts.has(row.key)&&row.can_deactivate!==false&&candidate?.can_deactivate!==false&&
+  return row.can_deactivate!==false&&candidate?.can_deactivate!==false&&
    (row.can_deactivate===true||candidate?.can_deactivate===true);
  }).map(row=>row.key).slice(0,4);
  const legalityKnown=Array.isArray(raw.available_edicts)&&(raw.available_edicts_complete===true||
   (inactive.length>0&&inactive.every(row=>typeof row.can_activate==='boolean')));
- return {activatable,status:activatable.length?'ok':legalityKnown?'无合法候选':'能力缺口',
+ const budgetUnknown=legal.some(row=>!knownEdictBudget(row,state));
+ const status=activatable.length?'ok':phaseProblem||legalityKnown&&!budgetUnknown?'无合法候选':'能力缺口';
+ return {activatable,status,...phaseFields,
+  ...(!phaseProblem&&!activatable.length&&budgetUnknown?{activationBlock:'当前法令凝聚力维护费或净产未核实，暂不批准新增'}:{}),
+  ...(activeOrdinary.length?{active:activeOrdinary.map(row=>row.key).slice(0,6)}:{}),
   ...(deactivatable.length?{deactivatable}:{})};
 }
 
@@ -114,6 +139,7 @@ export function validateStrategyContract(raw,validateOrder,{currentDate,empireTy
  if(raw.domesticActions!==undefined){
   if(!Array.isArray(raw.domesticActions)||raw.domesticActions.length>4)throw Error('国内战略设置每次最多4项');
   domesticActions=raw.domesticActions.map(validateDomesticAction);
+  if(domesticActions.filter(a=>a.type==='toggle_edict'&&a.arguments.enabled).length>1)throw Error('每次战略审核最多批准开启一条普通法令');
   if(new Set(domesticActions.map(a=>a.type==='toggle_edict'?`${a.type}:${a.arguments.edict_key}`:a.type)).size!==domesticActions.length)throw Error('同一次战略不能重复调整同一法令或重复设置/发动议程');
  }
  let taskIds,taskUpdates;
@@ -151,10 +177,15 @@ export async function applyDomesticEdict({action,rpc,write,policyState,checkScop
   const candidate=availableEdictRows(before.raw).find(e=>e?.key===params.edict_key);
   if(params.enabled&&candidate?.can_activate===false)throw Error('当前原生状态不允许该法令启用，未发送');
   if(params.enabled&&candidate?.can_activate!==true)throw Error('法令启用能力缺口：原生接口未确认该法令当前可启用，未发送；旧目录不代表合法候选');
-  if(params.enabled&&policyState?.userEconomicPolicy?.edictPolicy==='unity_net_gain'){
-   await checkScope();await heartbeat();const status=await rpc('get_status'),wars=await rpc('get_wars');
-   const problem=economicEdictActivationProblem(checked,{...policyState,resources:status?.resources,wars:wars?.wars,warGoalsWindow:wars?.warGoalsWindow});
+  if(params.enabled){
+   await checkScope();await heartbeat();
+   const status=await rpc('get_status');
+   const current={...policyState,resources:status?.resources};
+   const problem=ordinaryEdictPhaseProblem(status?.date?.formatted)??ordinaryEdictBudgetProblem(candidate,current);
    if(problem)throw Error(problem);
+   const wars=await rpc('get_wars');
+   const benefitProblem=ordinaryEdictBenefitProblem(checked,{...current,wars:wars?.wars,warGoalsWindow:wars?.warGoalsWindow});
+   if(benefitProblem)throw Error(benefitProblem);
   }
   if(!params.enabled&&(candidate?.can_deactivate===false||before.raw.active_edicts.find(e=>e.key===params.edict_key)?.can_deactivate===false))throw Error('该法令当前不可停用，未发送');
   await checkScope();await heartbeat();attempted=true;receipt.status='submitting';

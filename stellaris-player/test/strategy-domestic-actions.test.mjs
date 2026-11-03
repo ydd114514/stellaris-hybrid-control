@@ -52,7 +52,8 @@ test('partial state, explicit removal refusal and unverified activation never di
 test('an explicitly legal activation is read back; a posted unconfirmed removal is never replayed',async()=>{
  const keys=new Set();let writes=0;
  const result=await applyDomesticEdict({action:action('capacity_subsidies',true),
-  rpc:async()=>edicts([...keys],{available_edicts:[{key:'capacity_subsidies',can_activate:true}]}),
+  rpc:async method=>method==='get_status'?{date:{formatted:'2300.01.01'},resources:{unity:{net:10,net_known:true},energy:{net:-1,stockpile:20}}}:
+   method==='get_wars'?{wars:[]}:edicts([...keys],{available_edicts:[{key:'capacity_subsidies',can_activate:true,upkeep_known:true,upkeep:{unity:3}}]}),
   write:async(_method,params)=>{writes++;keys.add(params.edict_key);return {success:true};}});
  assert.equal(result.confirmed,true);assert.equal(writes,1);
  const receipt={};writes=0;
@@ -64,7 +65,7 @@ test('an explicitly legal activation is read back; a posted unconfirmed removal 
 function fixture({writeError,scopeError}={}){
  const keys=new Set(['nutritional_plenitude','cfsteer_economy_unity_traditions','relay_network_dummy']),calls=[];
  let scopes=0;const game=Object.create(NativeGame.prototype);
- Object.assign(game,{nativeCountryAIEnabled:true,nativeCountryAIFence:true,now:()=>1,lastState:{date:'2250.01.01'},
+ Object.assign(game,{nativeCountryAIEnabled:true,nativeCountryAIFence:true,now:Date.now,lastState:{date:'2250.01.01'},
   countryAI:{view:()=>({owner:'native'}),heartbeat:async()=>{},acknowledgeReview:async()=>{}},
   commandScope:async()=>{scopes++;if(scopeError&&scopes>1)throw Error('发送前玩家或首都身份改变');},
   refreshOperatorStanding:async()=>{},syncStrategyDirection:async()=>({confirmed:true}),checkpoint:async()=>{},strategyReview:{acknowledge(){}},
@@ -82,7 +83,7 @@ test('StrategyContract alone authorizes the exact edict write while native AI an
  const {game,keys,calls}=fixture(),input={requestId:'ordinary-1',contract:contract([action()])};
  assert.throws(()=>game.assertRpcAllowed('toggle_edict',action().arguments),/封口/);
  const result=await game.strategyControl(input);
- assert.equal(result.status,'applied');assert.equal(result.domesticActions[0].confirmed,true);assert.equal(game.countryAI.view().owner,'native');
+ assert.equal(result.status,'applied',result.error);assert.equal(result.domesticActions[0].confirmed,true);assert.equal(game.countryAI.view().owner,'native');
  assert.equal(keys.has('nutritional_plenitude'),false);assert.equal(keys.has('relay_network_dummy'),true);
  assert.throws(()=>game.assertRpcAllowed('toggle_edict',action().arguments),/封口/);
  await game.strategyControl(input);assert.equal(calls.filter(c=>c.method==='toggle_edict').length,1);
@@ -91,7 +92,7 @@ test('StrategyContract alone authorizes the exact edict write while native AI an
 test('world changes block domestic writes and a timeout receipt cannot replay the same request',async()=>{
  const changed=fixture({scopeError:true});
  const blocked=await changed.game.strategyControl({requestId:'changed',contract:contract([action()])});
- assert.equal(blocked.status,'attention');assert.equal(blocked.domesticActions[0].status,'rejected');
+ assert.equal(blocked.status,'attention');assert.equal(blocked.domesticActions?.[0]?.status,'rejected',blocked.error);
  assert.equal(changed.calls.some(c=>c.method==='toggle_edict'),false);
  const {game,calls}=fixture({writeError:true}),input={requestId:'unknown',contract:contract([action(),action('capacity_subsidies')])};
  const result=await game.strategyControl(input);assert.equal(result.status,'attention');assert.equal(result.domesticActions[0].status,'unknown');
@@ -104,7 +105,7 @@ test('public strategy execution is persisted with a fixed execution date and cle
  const directory=await mkdtemp(join(tmpdir(),'strategy-execution-'));t.after(()=>rm(directory,{recursive:true,force:true}));
  const {game}=fixture();Object.assign(game,{directory,binding:{pid:17,creationTime:'process-17'},boundNativeWorld:{country_id:7,world_generation:1},
   gestalt:{file:'tasks.json'},continuity:{save:async()=>{}},growthTracker:{serialize:()=>({})},stationFailures:new Map()});
- await game.strategyControl({requestId:'receipt-1',contract:contract([action()])});
+ const initial=await game.strategyControl({requestId:'receipt-1',contract:contract([action()])});assert.equal(initial.status,'applied',initial.error);
  const receipt=game.strategyExecutionView();assert.equal(receipt.requestId,'receipt-1');assert.equal(receipt.status,'applied');assert.equal(receipt.steeringConfirmed,true);
  assert.deepEqual(receipt.domesticActions,[{type:'toggle_edict',edictKey:'nutritional_plenitude',enabled:false,status:'confirmed',confirmed:true,changed:true,error:null}]);
  game.lastGameDate='2251.01.01';assert.equal(game.strategyExecutionView().date,'2250.01.01');
@@ -121,4 +122,30 @@ test('public strategy execution is persisted with a fixed execution date and cle
  const safe=failed.strategyExecutionView();assert.equal(safe.status,'attention');assert.equal(safe.domesticActions[0].status,'unknown');
  assert.match(safe.error,/未确认/);assert.doesNotMatch(JSON.stringify(safe),/private-transport-detail|arguments|binding|world_generation/);
  failed.binding={pid:18,creationTime:'process-18'};assert.equal(failed.strategyExecutionView(),null);
+});
+
+test('ordinary edict activation requires verified midgame date, known costs, positive net and genuine necessity',async()=>{
+ const requested=action('mining_subsidies',true);
+ for(const [date,upkeep,unityNet,mineralsNet,message] of [
+  ['2299.12.30',4,10,-1,/前期凝聚力优先/],
+  [null,4,10,-1,/当前游戏日期未知/],
+  ['2300.01.01',null,10,-1,/维护费或净产未核实/],
+  ['2300.01.01',4,4,-1,/无法保持凝聚力正净产/],
+  ['2300.01.01',4,10,1,/没有该补贴对应的真实缺口/],
+ ]){
+  const receipt={};
+  await assert.rejects(applyDomesticEdict({action:requested,policyState:{date:'2350.01.01'},receipt,
+   rpc:async method=>method==='get_status'?{date:{formatted:date},resources:{unity:{net:unityNet,net_known:true},minerals:{net:mineralsNet,stockpile:20}}}:
+    method==='get_wars'?{wars:[]}:edicts([],{available_edicts:[{key:'mining_subsidies',can_activate:true,upkeep_known:upkeep!==null,upkeep:{unity:upkeep}}]}),
+   write:async()=>assert.fail('approval must not be sent')}),message);
+  assert.equal(receipt.status,'rejected');
+ }
+});
+
+test('each strategy contract may approve at most one new ordinary edict',()=>{
+ const currentDate='2300.01.01';
+ const approval={...contract([action('mining_subsidies',true)]),goals:[{metric:'alloys_monthly',target:20,byDate:'2301.01.01'}]};
+ assert.deepEqual(validateStrategyContract(approval,validateOrder,{currentDate}).domesticActions,approval.domesticActions);
+ assert.throws(()=>validateStrategyContract({...approval,domesticActions:[...approval.domesticActions,action('capacity_subsidies',true)]},
+  validateOrder,{currentDate}),/最多批准开启一条/);
 });

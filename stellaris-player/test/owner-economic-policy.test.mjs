@@ -65,8 +65,8 @@ test('current-owner policy blocks pointless new upkeep but retains real shortage
 
 test('the existing domestic executor re-reads policy facts and never writes a wasteful activation',async()=>{
  let writes=0;const s=state();s.resources.minerals.net=-10;
- const rpc=async method=>method==='get_edicts'?{...active([]),available_edicts:[{key:'mining_subsidies',can_activate:true}]}:
-  method==='get_status'?{resources:state().resources}:method==='get_wars'?{wars:[]}:assert.fail(method);
+ const rpc=async method=>method==='get_edicts'?{...active([]),available_edicts:[{key:'mining_subsidies',can_activate:true,upkeep_known:true,upkeep:{unity:2}}]}:
+  method==='get_status'?{date:{formatted:'2300.01.01'},resources:{...state().resources,unity:{net:10,net_known:true}}}:method==='get_wars'?{wars:[]}:assert.fail(method);
  await assert.rejects(applyDomesticEdict({action:activation('mining_subsidies'),policyState:s,rpc,write:async()=>{writes++;return {success:true};}}),/没有.*真实缺口/);
  assert.equal(writes,0);
 });

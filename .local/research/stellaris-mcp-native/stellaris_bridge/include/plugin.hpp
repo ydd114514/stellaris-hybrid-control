@@ -6,6 +6,8 @@
 
 namespace bridge::plugin {
 
+inline constexpr const char* kBridgeVersion = "cyberfish-0.6.29-edict-approval";
+
 // The folder this DLL was loaded from (with a trailing backslash): the plugin folder when the
 // launcher loaded it, the build folder when injected by hand during development.
 const std::wstring& Dir();

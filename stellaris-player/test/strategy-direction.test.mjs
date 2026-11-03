@@ -40,7 +40,7 @@ async function fixture(t){
 }
 test('controller applies unity without model requests, publishes confirmed receipt, recovers after war and withdraws on deletion',async t=>{
  const {game,active,calls,receipt}=await fixture(t);
- const state={date:'2200.01.01',operatorStanding:{id:'o-1',economyFocus:'unity_traditions'},resources:{},wars:[]};
+ const state={date:'2300.01.01',operatorStanding:{id:'o-1',economyFocus:'unity_traditions'},resources:{},wars:[]};
  await game.syncStrategyDirection(state);assert.ok(active.has('cfsteer_economy_unity_traditions'));assert.equal((await receipt()).steeringApplied,true);assert.equal((await receipt()).operatorStandingId,'o-1');
  const n=calls.length;await game.syncStrategyDirection(state);assert.equal(calls.length,n);
  state.wars=[{war_id:1}];await game.syncStrategyDirection(state);assert.ok(active.has('cfsteer_economy_alloys_military'));assert.match((await receipt()).reason,/战争/);

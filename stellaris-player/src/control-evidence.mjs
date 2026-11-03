@@ -1,12 +1,13 @@
 const read=method=>method==='ping'||/^(get_|find_)/.test(method);
 export function rpcEvidenceCategory(method,params={}) {
  if(['country_ai_lease','country_ai_observation','country_ai_routine_gate'].includes(method)&&params.action==='status')return 'read';
+ if(method==='country_ai_lease'&&params.action==='owner_exploration_move')return 'work';
  if(method==='country_ai_lease')return params.action==='stop'||params.action==='reclaim_changed_world'?'cleanup':'control';
  if(read(method))return 'read';
  if(method==='set_survey_automation'&&params.execute!==true)return 'validation';
  if(method==='set_monthly_trade'&&params.cancel===true)return 'cleanup';
  if(method==='set_paused'&&params.paused===true||method==='set_survey_automation'&&params.enabled===false)return 'cleanup';
- if(['focus_fleet','focus_planet','show_panel','show_galaxy_map','capture_game_frame'].includes(method))return 'presentation';
+ if(['focus_fleet','focus_planet','show_panel','show_planet_view','show_starbase_view','show_galaxy_map','capture_game_frame'].includes(method))return 'presentation';
  if(method==='set_paused'||method==='set_speed')return 'control';
  return 'work';
 }

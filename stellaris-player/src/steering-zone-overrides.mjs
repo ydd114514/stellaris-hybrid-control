@@ -1,10 +1,19 @@
 import {readFile,readdir} from 'node:fs/promises';
 import {join} from 'node:path';
+import {productiveCapacityConditions,sustainableSupplyConditions} from './steering-economic-conditions.mjs';
 
 // Generate derived candidates only in the user's mod, never in the game files
 // or repository. Costs, jobs and building sets remain those of the base zone.
 const names=['zone_research','zone_research_physics','zone_research_society','zone_research_engineering'];
 const unityNames=['zone_unity','zone_unity_spiritualist','zone_unity_bio_trophy','zone_research_unity'];
+// Names come from the installed jobs/zone_*_add scripts, including gestalt variants.
+const unityJobs=['bureaucrat','coordinator','bio_trophy'];
+const researchJobs=['physicist','biologist','engineer','calculator_physicist','calculator_biologist','calculator_engineer','fe_archivist'];
+const zoneJobs={zone_unity:unityJobs,zone_unity_spiritualist:unityJobs,zone_unity_bio_trophy:unityJobs,
+ zone_research_unity:[...unityJobs,...researchJobs],zone_research:researchJobs,
+ zone_research_physics:['physicist','calculator_physicist','fe_archivist'],
+ zone_research_society:['biologist','calculator_biologist','fe_archivist'],
+ zone_research_engineering:['engineer','calculator_engineer','fe_archivist']};
 const unityTechs=['tech_cultural_heritage','tech_heritage_site','tech_hypercomms_forum','tech_autocurating_vault','tech_holographic_rituals','tech_consecration_fields'];
 function closingBrace(text,start){
  let depth=0,quoted=false,escaped=false,comment=false;
@@ -96,6 +105,14 @@ function zoneOverrides(text,zoneNames,focus,inlineScripts){
   // their conjunction in one database potential instead of adding a duplicate.
   for(const field of [...potentials].reverse())body=body.slice(0,field.start)+body.slice(field.end);
   body+='\n\tpotential = {'+condition+original.map(value=>'\n\t\tAND = {'+value+'\n\t\t}').join('')+'\n\t}\n';
+  // Temporary workforce/maintenance constraints belong in unlock, not potential:
+  // a filled or struggling colony must not convert/destroy an existing zone.
+  // 4.5.2 documents multiple unlock blocks as a conjunction, preserving originals.
+  body+='\n\tunlock = {\n'+productiveCapacityConditions(zoneJobs[name])+'\nowner = {\n'+sustainableSupplyConditions()+'\n}\n\t}\n';
+  const estimates=rootFields(body).filter(row=>row.key==='ai_estimate_without_unemployment');
+  if(estimates.length>1)throw Error('实际区域有重复就业估值开关，未生成');
+  if(estimates.length){const field=estimates[0];body=body.slice(0,field.valueStart)+'no'+body.slice(field.end);}
+  else body+='\n\tai_estimate_without_unemployment = no\n';
   let entry='cfsteer_'+name+' = {'+body+'}';
   // The actual 4.5.2 parser requires a scalar additional_ai_weight. A separate
   // candidate's potential supplies the edict condition without altering NPCs.

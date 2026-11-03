@@ -8,6 +8,7 @@
 #include "country_ai_owner_policy.hpp"
 #include "country_ai_fleet_protection.hpp"
 #include "fleet_access.hpp"
+#include "game_state.hpp"
 #include <MinHook.h>
 #include <map>
 #include <set>
@@ -39,11 +40,17 @@ void Count(uintptr_t vt,bool allowed){std::lock_guard<std::mutex> lock(countMute
 Json boundSnapshot=nullptr;
 bool installed=false;
 uint64_t generation=0;
-struct ProtectedTargets {std::set<uint32_t> jobs,colonies,shipyards,fleets;};
+struct ProtectedTargets {std::set<uint32_t> jobs,colonies,shipyards,fleets,explorationFleets;};
 std::shared_ptr<const ProtectedTargets> protections=std::make_shared<const ProtectedTargets>();
 std::shared_ptr<const OwnerProductionPolicy> ownerProduction=std::make_shared<const OwnerProductionPolicy>();
 
 std::atomic<uint64_t> boundWorld{0};
+std::set<uint32_t> AllProtectedFleets(const ProtectedTargets& targets) {
+    auto result=targets.fleets;result.insert(targets.explorationFleets.begin(),targets.explorationFleets.end());return result;
+}
+Json ProtectedTargetsJson(const ProtectedTargets& targets) {
+    return {{"jobs",targets.jobs},{"colonies",targets.colonies},{"shipyards",targets.shipyards},{"fleets",AllProtectedFleets(targets)}};
+}
 template<class T> bool Read(uintptr_t p,T& v){SIZE_T n=0;
     return p>=0x10000&&ReadProcessMemory(GetCurrentProcess(),(void*)p,&v,sizeof v,&n)&&n==sizeof v;
 }
@@ -102,6 +109,126 @@ bool ExistingScienceConfirmed(uintptr_t country,uintptr_t base) {
     }
     return false;
 }
+bool ExistingMilitaryConfirmed(uintptr_t country,uintptr_t base) {
+    for(const auto id:fleets::Owned((void*)country)) {
+        const auto fleet=fleets::Find(base,id);
+        if(fleets::ClassOf(fleet)==fleets::ShipClass::Military&&!fleets::ShipIds(fleet).empty())return true;
+    }
+    return false;
+}
+bool LeaderClass(uintptr_t base,uint32_t id,std::string& key) {
+    const auto leader=FullRef(base,sdk::db::CLeader,id,sdk::rt::CLeader_id);
+    uintptr_t type=0;
+    return leader&&Read(leader+sdk::ent::CLeader::class_,type)&&type>=0x10000&&
+        SafeReadPdxString((void*)(type+0x20),key)&&!key.empty();
+}
+bool OwnedLeaderRefs(uintptr_t country,std::vector<uint32_t>& ids) {
+    // CCountry::owned_leaders is the serialized full-ref hired roster used by
+    // GetLeadersJson. The separate candidate-pool/manager layout is not guessed.
+    const auto array=country+sdk::ent::CCountry::owned_leaders;
+    uintptr_t data=0,after=0;uint32_t size=0,capacity=0,afterSize=0,afterCapacity=0;
+    if(!Read(array+8,data)||!Read(array+0x10,capacity)||!Read(array+0x14,size)||
+        size>4096||size>capacity||(size&&!data))return false;
+    for(uint32_t i=0;i<size;++i){uint32_t id=0xffffffffu;
+        if(!Read(data+i*4,id)||id==0xffffffffu)return false;ids.push_back(id);}
+    return Read(array+8,after)&&Read(array+0x10,afterCapacity)&&Read(array+0x14,afterSize)&&
+        data==after&&size==afterSize&&capacity==afterCapacity;
+}
+bool LeaderRecruitmentBlocked(uintptr_t command,uintptr_t base) {
+    const auto policy=std::atomic_load(&ownerProduction);
+    const auto country=gatedCountryObject.load();const auto own=gatedCountry.load();
+    if((!policy->useExistingScience&&!policy->peacefulExploration)||!PeaceConfirmed(country))return false;
+    // CHireLeaderCommand and CHireAndAssignLeaderCommand share these two
+    // pinned SDK fields. Plain CAssignLeaderCommand never enters this branch.
+    uint32_t actor=0xffffffffu,candidate=0xffffffffu;
+    if(!Read(command+sdk::cmd::hire_and_assign_leader::country,actor)||actor!=own||
+        !Read(command+sdk::cmd::hire_and_assign_leader::leader,candidate))return false;
+    std::string candidateClass;if(!LeaderClass(base,candidate,candidateClass))return false;
+    const bool scientist=candidateClass=="scientist",commander=candidateClass=="commander";
+    if(!scientist&&!commander)return false;
+    const bool sciencePresent=scientist&&policy->useExistingScience&&ExistingScienceConfirmed(country,base);
+    const bool militaryPresent=commander&&policy->peacefulExploration&&ExistingMilitaryConfirmed(country,base);
+    if(!sciencePresent&&!militaryPresent)return false;
+    std::vector<uint32_t> owned;
+    if(!OwnedLeaderRefs(country,owned))return false;
+    bool alreadyOwned=false,sameClassPresent=false;
+    for(const auto id:owned){
+        if(id==candidate)alreadyOwned=true;
+        const auto leader=FullRef(base,sdk::db::CLeader,id,sdk::rt::CLeader_id);
+        uint32_t owner=0xffffffffu;std::string key;
+        if(!leader||!Read(leader+sdk::ent::CLeader::country,owner)||owner!=own||!LeaderClass(base,id,key))return false;
+        if(key==candidateClass)sameClassPresent=true;
+    }
+    return scientist?OwnerScientistRecruitmentBlocked(*policy,true,sciencePresent,true,alreadyOwned,sameClassPresent):
+        OwnerCommanderRecruitmentBlocked(*policy,true,militaryPresent,true,alreadyOwned,sameClassPresent);
+}
+bool EarlyOutpostBlocked(uintptr_t command,uintptr_t base) {
+    namespace orbital=sdk::cmd::build_orbital_station_order;
+    uint8_t shipClass=0xff;
+    uint32_t target=0xffffffffu;
+    if(!Read(command+orbital::class_,shipClass)||shipClass!=static_cast<uint8_t>(fleets::ShipClass::Starbase)||
+        !Read(command+orbital::galactic_object,target))return false;
+    const auto system=FullRef(base,sdk::db::CGalacticObject,target,sdk::rt::CGalacticObject_id);
+    uint32_t owner=0;
+    if(!system||!Read(system+sdk::rt::CGalacticObject_owner,owner)||owner!=0xffffffffu)return false;
+    int32_t empireSize=0;
+    if(!Read(gatedCountryObject.load()+sdk::ent::CCountry::empire_size,empireSize))return false;
+    return OwnerEarlyOutpostBlocked(GameState::Get().ReadDate().year,empireSize,true);
+}
+struct NewBuildingTarget {
+    uintptr_t definition=0;
+    uint32_t colony=0xffffffffu,zone=0xffffffffu;
+};
+bool ReadNewBuildingTarget(uintptr_t buildable,NewBuildingTarget& target) {
+    // CBuildableBuilding payload shared with OutlinerManager::FillBuildable.
+    uint32_t existing=0;
+    return Read(buildable+8,target.definition)&&target.definition>=0x10000&&
+        Read(buildable+0x10,target.colony)&&Read(buildable+0x14,target.zone)&&
+        Read(buildable+0x18,existing)&&existing==0xffffffffu;
+}
+bool ZoneHasBuilding(uintptr_t zone,uintptr_t definition,uintptr_t base) {
+    const auto members=zone+sdk::ent::CZone::buildings;
+    uintptr_t refs=0;uint32_t count=0;
+    if(!Read(members+8,refs)||!refs||!Read(members+0x14,count)||count>256)return false;
+    for(uint32_t i=0;i<count;++i) {
+        uint32_t id=0xffffffffu;uintptr_t type=0;
+        if(!Read(refs+i*4,id))continue;
+        const auto building=FullRef(base,sdk::db::CBuilding,id,sdk::rt::CBuilding_id);
+        if(building&&Read(building+sdk::ent::CBuilding::type,type)&&type==definition)return true;
+    }
+    return false;
+}
+bool QueueHasNewBuilding(const NativeRoutineRequest& request,const NewBuildingTarget& target,uintptr_t base) {
+    const auto queue=FullRef(base,sdk::db::CConstructionQueue,request.queue,sdk::rt::CConstructionQueue_id);
+    uint32_t owner=0xffffffffu,count=0;uintptr_t refs=0;
+    const auto items=queue+sdk::ent::CConstructionQueue::items;
+    if(!queue||!Read(queue+sdk::ent::CConstructionQueue::owner,owner)||owner!=request.actor||
+        !Read(items+8,refs)||!refs||!Read(items+0x14,count)||count>200)return false;
+    for(uint32_t i=0;i<count;++i) {
+        uint32_t id=0xffffffffu,actualQueue=0xffffffffu;uintptr_t action=0,vt=0;
+        if(!Read(refs+i*4,id))continue;
+        const auto item=FullRef(base,sdk::db::CConstructionQueueItem,id,sdk::rt::CConstructionQueueItem_id);
+        NewBuildingTarget queued;
+        if(item&&Read(item+sdk::ent::CConstructionQueueItem::queue,actualQueue)&&actualQueue==request.queue&&
+            Read(item+sdk::ent::CConstructionQueueItem::back,action)&&Read(action,vt)&&
+            vt==base+sdk::vt::CBuildableBuilding&&ReadNewBuildingTarget(action,queued)&&
+            queued.definition==target.definition&&queued.colony==target.colony&&queued.zone==target.zone)return true;
+    }
+    return false;
+}
+bool DuplicateSentinelBlocked(const NativeRoutineRequest& request,uintptr_t buildable,uintptr_t base) {
+    if(request.actor!=gatedCountry.load())return false;
+    NewBuildingTarget target;std::string key;
+    if(!ReadNewBuildingTarget(buildable,target)||!SafeReadPdxString((void*)(target.definition+0x20),key)||
+        !OwnerSentinelDuplicateLimitApplies(GameState::Get().ReadDate().year,PeaceConfirmed(gatedCountryObject.load()),key)||
+        !OwnedColony(base,request.actor,target.colony))return false;
+    const auto colony=FullRef(base,sdk::db::CColony,target.colony,sdk::rt::CColony_id);
+    const auto zone=FullRef(base,sdk::db::CZone,target.zone,sdk::rt::CZone_id);
+    uintptr_t district=0,districtColony=0;
+    // Same zone/district/colony backlinks used in OutlinerManager::ColonyZones.
+    if(!zone||!colony||!Read(zone+0x18,district)||!Read(district+0x18,districtColony)||districtColony!=colony)return false;
+    return ZoneHasBuilding(zone,target.definition,base)||QueueHasNewBuilding(request,target,base);
+}
 void DescribeShipTarget(NativeRoutineRequest& request,uintptr_t buildable,uintptr_t base) {
     uint32_t starbaseId=0xffffffffu,designId=0xffffffffu,owner=0xffffffffu,queueId=0xffffffffu,ownerType=0xffffffffu;
     uint8_t type=0,extra=1;
@@ -129,6 +256,11 @@ NativeRoutineRequest Describe(uintptr_t command,uintptr_t vt,uintptr_t base) {
     } else if(request.name=="add_edict_command"||request.name=="remove_edict_command") {
         std::string key;if(SafeReadPdxString((void*)(command+0x30),key))request.steeringSetting=key.rfind("cfsteer_",0)==0;
     }
+    if(vt==base+sdk::cmd::hire_leader::kVtableRva||vt==base+sdk::cmd::hire_and_assign_leader::kVtableRva) {
+        request.ownerPolicyBlocked=LeaderRecruitmentBlocked(command,base);
+    } else if(vt==base+sdk::cmd::build_orbital_station_order::kVtableRva) {
+        request.ownerPolicyBlocked=EarlyOutpostBlocked(command,base);
+    }
     if(vt==base+sdk::cmd::research_technology_command::kVtableRva) {
         uintptr_t technology=0;
         request.command=NativeRoutineCommand::ResearchTechnology;
@@ -145,7 +277,9 @@ NativeRoutineRequest Describe(uintptr_t command,uintptr_t vt,uintptr_t base) {
         else if(buildableVt==base+sdk::vt::CBuildableZone)request.buildable=NativeRoutineBuildable::Zone;
         else if(buildableVt==base+ship_layout::shipVtable)request.buildable=NativeRoutineBuildable::Ship;
         else if(buildableVt==base+sdk::vt::CBuildableColonyShip)request.buildable=NativeRoutineBuildable::ColonyShip;
-        if(request.buildable==NativeRoutineBuildable::Ship||request.buildable==NativeRoutineBuildable::ColonyShip) {
+        if(request.buildable==NativeRoutineBuildable::Building) {
+            request.ownerPolicyBlocked=DuplicateSentinelBlocked(request,buildable,base);
+        } else if(request.buildable==NativeRoutineBuildable::Ship||request.buildable==NativeRoutineBuildable::ColonyShip) {
             DescribeShipTarget(request,buildable,base);
             // The real embedded implementation is present in every ordinary
             // buildable, independent of which static/mobile queue produced it.
@@ -174,8 +308,11 @@ NativeRoutineRequest Describe(uintptr_t command,uintptr_t vt,uintptr_t base) {
         request.definitionPresent=Read(designation,definitionVt)&&definitionVt>=base;
     }
     const auto protectedRefs=std::atomic_load(&protections);
-    const auto fleetMatch=MatchProtectedFleetCommand(request.name,command,protectedRefs->fleets,[](auto at,auto& value){return Read(at,value);});
-    request.targetProtected=request.targetProtected||(fleetMatch.recognized&&(!fleetMatch.known||fleetMatch.targetProtected));
+    const auto protectedFleetCommand=[&](const auto& refs){
+        const auto match=MatchProtectedFleetCommand(request.name,command,refs,[](auto at,auto& value){return Read(at,value);});
+        return match.recognized&&(!match.known||match.targetProtected);
+    };
+    request.targetProtected=request.targetProtected||protectedFleetCommand(protectedRefs->fleets)||protectedFleetCommand(protectedRefs->explorationFleets);
     return request;
 }
 void Reject(void* command,uintptr_t vt,bool beforeQueue=true) {
@@ -230,6 +367,39 @@ bool Install() {
 }
 void SuspendCountryAIRoutineGate(){reservedPolicy=ReservedPolicy::Suspended;}
 bool CountryAIRoutineGateArmed(){return gatedCountry.load()!=0xffffffffu;}
+bool CountryAIExplorationFleetProtected(uint32_t fleet) {
+    return gatedCountry.load()!=0xffffffffu&&reservedPolicy.load()!=ReservedPolicy::Suspended&&
+        CountryAIWorldGeneration()==boundWorld.load()&&OwnIdentity(CommandBuilder::Get().Base(),gatedCountry.load())&&
+        std::atomic_load(&protections)->explorationFleets.count(fleet)!=0;
+}
+bool CountryAIExplorationPeaceConfirmed() {
+    return gatedCountry.load()!=0xffffffffu&&CountryAIWorldGeneration()==boundWorld.load()&&
+        OwnIdentity(CommandBuilder::Get().Base(),gatedCountry.load())&&PeaceConfirmed(gatedCountryObject.load());
+}
+Json UpdateCountryAIExplorationProtection(uint32_t fleet,bool protect,const Json& expected,const Json& expectedProtectedTargets) {
+    const auto state=CountryAIState();
+    if(gatedCountry.load()==0xffffffffu||reservedPolicy.load()==ReservedPolicy::Suspended||
+        CountryAIWorldGeneration()!=boundWorld.load()||!state.value("success",false)||
+        !state.value("single_local_human_guard",false)||state["country_id"]!=gatedCountry.load()||
+        expected!=state["precondition"]||state["precondition"]["country_address"]!=gatedCountryObject.load())
+        return {{"success",false},{"error","exploration_protection_requires_owned_live_binding"}};
+    const auto prior=std::atomic_load(&protections);
+    if(expectedProtectedTargets!=ProtectedTargetsJson(*prior))return {{"success",false},{"error","exploration_protection_compare_failed"}};
+    if(protect) {
+        const auto base=CommandBuilder::Get().Base(),object=gatedCountryObject.load();
+        const auto candidate=fleets::Find(base,fleet);
+        if(!PeaceConfirmed(object)||!IsOwnedProtectedFleetRef(fleet,fleets::Owned((void*)object),[&](uint32_t ref){return fleets::Find(base,ref)!=nullptr;})||
+            fleets::ClassOf(candidate)!=fleets::ShipClass::Military||fleets::ShipIds(candidate).empty())
+            return {{"success",false},{"error","exploration_protection_requires_peace_owned_military_fleet"}};
+    }
+    // Remove only this feature's extra ref, including after war/destruction.
+    // In particular an original protected fleet stays protected on release.
+    auto next=std::make_shared<ProtectedTargets>(*prior);
+    if(protect){if(next->explorationFleets.size()>=16&&!next->explorationFleets.count(fleet))return {{"success",false},{"error","exploration_fleet_limit"}};next->explorationFleets.insert(fleet);}
+    else next->explorationFleets.erase(fleet);
+    std::atomic_store(&protections,std::shared_ptr<const ProtectedTargets>(next));
+    return {{"success",true},{"protected_targets",ProtectedTargetsJson(*next)},{"exploration_protected_fleets",next->explorationFleets}};
+}
 bool AdmitCountryAIRoutinePost(void* command,uint32_t sourceCountry) {
     // Starting a passive observer must never enable command filtering.
     const auto own=gatedCountry.load();if(own==0xffffffffu||sourceCountry!=own)return true;
@@ -332,7 +502,7 @@ Json CountryAIRoutineGate(const Json& params) {
     }
     const auto protectedRefs=std::atomic_load(&protections);
     const auto ownerPolicy=std::atomic_load(&ownerProduction);
-    return {{"success",true},{"protected_targets",{{"jobs",protectedRefs->jobs},{"colonies",protectedRefs->colonies},{"shipyards",protectedRefs->shipyards},{"fleets",protectedRefs->fleets}}},{"armed",gatedCountry.load()!=0xffffffffu},{"generation",generation},
+    return {{"success",true},{"protected_targets",ProtectedTargetsJson(*protectedRefs)},{"exploration_protected_fleets",protectedRefs->explorationFleets},{"armed",gatedCountry.load()!=0xffffffffu},{"generation",generation},
         {"owner_policy",{{"peaceful_exploration",ownerPolicy->peacefulExploration},{"use_existing_science",ownerPolicy->useExistingScience}}},
         {"binding",boundSnapshot},{"reserved_policy","full_with_reserved"},{"suspended",reservedPolicy.load()==ReservedPolicy::Suspended},{"command_counts",named},
         {"admitted_to_native_validation",admitted.load()},

@@ -20,6 +20,8 @@ REVIEWED_DLL_HASHES = {DLL_SHA256, "4a54662dd9c9555ccdf5eedaf6ef611f30d139dfc345
 
 
 REVIEWED_DLL_HASHES.add(FIRST_CONTACT_DLL_SHA256)
+# 0.6.29: offline gate tests and Release build. Live scope checked separately.
+REVIEWED_DLL_HASHES.add("ce595b7f5cbb2e24d2da3ef6478093f009ef66ae10d8f75f14f24d384293927e")
 # cyberfish-0.6.4-shipyards: construction-20261029 manifest and runtime verified.
 REVIEWED_DLL_HASHES.add(SHIPYARDS_DLL_SHA256)
 
@@ -90,6 +92,12 @@ REVIEWED_DLL_HASHES.add("7c4fdde71611edf922c4a9ae4bf7e6185c82475bc844a859e18add7
 # Owner-intent constraints and full-ref fleet protection; source reviewed and
 # compiled locally, no live acceptance or hot replacement is implied.
 REVIEWED_DLL_HASHES.add("d7dd17dc91f5d3c190e325333c2befb05044f653fc82139157cc5b941a150287")
+
+# Director object views and all-owned starbase targets; locally compiled.
+# Admission does not load or replace the game bridge; manual restart only.
+REVIEWED_DLL_HASHES.add("2648781f3d4a08205da898343bb21d607bf8cf78f9d40c3dd917fa76db04a42c")
+REVIEWED_DLL_HASHES.add("05898cea48d2ed25f6a55f508fec1b83ff6008086ed921092fe6d181ebd852f5")
+REVIEWED_DLL_HASHES.add("3a7838e9a50df6c546d9fabbe8f9433702aa4a7f9b6947e8332a610608c15723")
 
 def find_module(kernel, pid, name):
     kernel.Module32FirstW.argtypes = [C.c_void_p, C.POINTER(Module)]

@@ -4,7 +4,7 @@ import {NativeGame} from '../src/native-game.mjs';
 
 async function inspect(raw){
  const calls=[],recorded=[];
- const game={lastState:{date:'2250.01.01'},guard:async()=>({}),rpc:async method=>{calls.push(method);assert.equal(method,'get_edicts');return raw;},operationalContext:{record(){}},log:async row=>recorded.push(row)};
+ const game={lastState:{date:'2300.01.01',resources:{unity:{net:20,net_known:true},physics_research:{net:-1,stockpile:0}}},guard:async()=>({}),rpc:async method=>{calls.push(method);assert.equal(method,'get_edicts');return raw;},operationalContext:{record(){}},log:async row=>recorded.push(row)};
  const result=await NativeGame.prototype.inspect.call(game,{topic:'edicts'});
  return {result,calls,recorded};
 }
@@ -32,7 +32,7 @@ test('a partial returned list cannot claim complete maintenance detail',async()=
 
 test('edict inspection returns only native-confirmed ordinary activation candidates',async()=>{
  const {result}=await inspect({summary:{active_edicts_count:1},active_edicts:[{key:'fortify_the_border'}],available_edicts:[
-  {key:'research_subsidies',name:'科研补贴',can_activate:true},{key:'capacity_subsidies',can_activate:false},
+  {key:'research_subsidies',name:'科研补贴',can_activate:true,upkeep_known:true,upkeep:{unity:10}},{key:'capacity_subsidies',can_activate:false},
   {key:'mining_subsidies',is_active:false},{key:'cfsteer_economy_research',can_activate:true},
   {key:'fortify_the_border',can_activate:true},
  ]});
