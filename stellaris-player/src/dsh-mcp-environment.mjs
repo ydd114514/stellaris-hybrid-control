@@ -35,7 +35,7 @@ export async function discoverNativeStrategyModel({apiKey,baseURL=DEEPSEEK_ORIGI
 // Deliver run metadata explicitly instead of depending on a client's environment
 // inheritance policy. The installed DSH client currently merges a scrubbed parent
 // environment; other SDK transports can inherit only a smaller allowlist.
-export function nativeMcpEnvironmentPatch({directory,runId,minutes,hybridSurvey,nativeCountryAI=false,strategyModel,presentOrders=true,startPaused=false,surveyPilot=false,colonyUpgradePilot=false,monthlyLifecyclePilot=false,localWaitPilot=false,maximumGameSpeed=5,surveyWatchSeconds=60,stopBaseline=Date.now()}) {
+export function nativeMcpEnvironmentPatch({directory,runId,minutes,hybridSurvey,nativeCountryAI=false,strategyModel,modelRelayBaseURL,presentOrders=true,startPaused=false,surveyPilot=false,colonyUpgradePilot=false,monthlyLifecyclePilot=false,localWaitPilot=false,maximumGameSpeed=5,surveyWatchSeconds=60,stopBaseline=Date.now()}) {
  if(typeof directory!=='string'||!directory||typeof runId!=='string'||!/^[a-zA-Z0-9-]{1,100}$/.test(runId)||!Number.isFinite(minutes)||minutes<=0||minutes>60||typeof hybridSurvey!=='boolean')throw Error('DSH原生会话配置无效');
  if(!Number.isInteger(maximumGameSpeed)||maximumGameSpeed<1||maximumGameSpeed>5)throw Error('DSH游戏速度上限需要1..5整数');
  surveyWatchWindow(surveyWatchSeconds);
@@ -53,7 +53,7 @@ export function nativeMcpEnvironmentPatch({directory,runId,minutes,hybridSurvey,
   const modelNotice=model===FAST_STRATEGY_MODEL?FAST_STRATEGY_MODEL_NOTICE+'。':'';
   patch.push(
    {id:'agent-default-model',config:{provider:'deepseek-official',model,reasoningEffort:'high'}},
-   {id:'llm-deepseek',config:{thinking:'enabled',maxTokens:8192}},
+   {id:'llm-deepseek',config:{thinking:'enabled',maxTokens:8192,...(modelRelayBaseURL?{baseURL:modelRelayBaseURL}:{})}},
    {id:'system-prompt',config:{personaPrefix:'你是正在玩《群星》的大肥鱼。'+modelNotice+'只使用群星 MCP 工具，不使用文件、终端、网页、子代理、控制台或桌面输入。'+nativeCountryAIBrief(minutes)}});
  }
  return patch;

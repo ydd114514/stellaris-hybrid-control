@@ -24,3 +24,16 @@ test('native country mode persists separately and reaches explicit environment o
  await assert.rejects(loadHybridSettings({path,environment:{CYBERFISH_NATIVE_COUNTRY_AI:'yes'}}),/0或1/);
  await writeFile(path,JSON.stringify({version:1,survey:false,nativeCountryAI:'true'}));await assert.rejects(loadHybridSettings({path,environment:{}}),/布尔值/);
 });
+
+test('hourly request cap defaults to 60 and survives desktop mode overrides and saves',async t=>{
+ const dir=await mkdtemp(join(tmpdir(),'fish-model-settings-'));t.after(()=>rm(dir,{recursive:true,force:true}));const path=join(dir,'settings.json');
+ const environment={CYBERFISH_HYBRID_SURVEY:'0',CYBERFISH_NATIVE_COUNTRY_AI:'1'};
+ assert.equal((await loadHybridSettings({path,environment})).nativeModelRequestsPerHour,60);
+ await writeFile(path,JSON.stringify({version:1,survey:true,nativeModelRequestsPerHour:12}));
+ assert.equal((await loadHybridSettings({path,environment})).nativeModelRequestsPerHour,12);
+ await saveHybridSettings(false,{path});
+ await saveNativeCountryAISettings(true,{path});
+ assert.equal((await loadHybridSettings({path,environment})).nativeModelRequestsPerHour,12);
+ await writeFile(path,JSON.stringify({version:1,survey:true,nativeModelRequestsPerHour:0}));
+ await assert.rejects(loadHybridSettings({path,environment}),/每小时模型请求上限/);
+});

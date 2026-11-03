@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {resolve} from 'node:path';
-import {nativeMcpEnvironmentPatch} from '../src/dsh-mcp-environment.mjs';
+import {discoverNativeStrategyModel,nativeMcpEnvironmentPatch} from '../src/dsh-mcp-environment.mjs';
 import {spawn} from 'node:child_process';
 test('run metadata reaches the MCP explicitly and includes no model credential',()=>{
  const patch=nativeMcpEnvironmentPatch({directory:'fixture-only/native',runId:'run-one',minutes:10,hybridSurvey:true,presentOrders:false,startPaused:true,stopBaseline:12345});
@@ -57,12 +57,46 @@ test('bounded game speed is delivered explicitly and invalid ceilings are reject
  for(const maximumGameSpeed of [0,6,NaN,'2'])assert.throws(()=>nativeMcpEnvironmentPatch({...base,maximumGameSpeed}),/速度上限/);
 });
 
+test('native strategy uses the strongest compatible model in the account listing',async()=>{
+ const model=await discoverNativeStrategyModel({apiKey:'fixture',fetcher:async(url,options)=>{
+  assert.equal(url,'https://api.deepseek.com/models');
+  assert.equal(options.method,'GET');
+  assert.equal(options.headers.Authorization,'Bearer fixture');
+  assert.equal(options.redirect,'error');
+  assert.ok(options.signal instanceof AbortSignal);
+  return {ok:true,json:async()=>({data:[
+   {id:'deepseek-flash'},{id:'deepseek-reasoner'},{id:'deepseek-v4-pro'},{id:'deepseek-v5-pro'},
+   {id:'deepseek-v6-pro',max_output_tokens:2048},
+   {id:'deepseek-v7-pro',api_capabilities:{chat_completions:{}}},
+  ]})};
+ }});
+ assert.equal(model,'deepseek-v5-pro');
+ const options={directory:'fixture',runId:'r',minutes:5,hybridSurvey:false,strategyModel:model};
+ const patch=nativeMcpEnvironmentPatch({...options,nativeCountryAI:true});
+ assert.deepEqual(patch.find(x=>x.id==='agent-default-model').config,{provider:'deepseek-official',model,reasoningEffort:'high'});
+ assert.deepEqual(patch.find(x=>x.id==='llm-deepseek').config,{thinking:'enabled',maxTokens:8192});
+ assert.deepEqual(nativeMcpEnvironmentPatch(options).map(x=>x.id),['cyberfish-stellaris-mcp']);
+});
+
+test('missing reasoning models and custom API routes fall back without a generation probe',async()=>{
+ let discoveries=0;
+ const fetcher=async()=>{discoveries++;throw Error('unavailable');};
+ assert.equal(await discoverNativeStrategyModel({apiKey:'fixture',baseURL:'http://127.0.0.1:1033',fetcher}),undefined);
+ const strategyModel=await discoverNativeStrategyModel({apiKey:'fixture',fetcher});
+ assert.equal(discoveries,1);
+ const patch=nativeMcpEnvironmentPatch({directory:'fixture',runId:'r',minutes:5,hybridSurvey:false,nativeCountryAI:true,strategyModel});
+ assert.equal(patch.find(x=>x.id==='agent-default-model').config.model,'deepseek-flash');
+ assert.match(patch.find(x=>x.id==='system-prompt').config.personaPrefix,/使用快速模型/);
+});
+
 test('native country mode explicitly suppresses competing local actors across a restricted MCP transport',async()=>{
  const config=nativeMcpEnvironmentPatch({directory:'fixture-only/native',runId:'native-country',minutes:5,hybridSurvey:true,nativeCountryAI:true,
   surveyPilot:true,colonyUpgradePilot:true,monthlyLifecyclePilot:true,localWaitPilot:true})[0].config;
+ assert.equal(config.toolCallTimeoutMs,930000);
  const env=config.env;
  const system=nativeMcpEnvironmentPatch({directory:'fixture',runId:'native-system',minutes:5,hybridSurvey:false,nativeCountryAI:true}).find(x=>x.id==='system-prompt');
- assert.match(system.config.personaPrefix,/v1.4/);assert.match(system.config.personaPrefix,/strategicResearchOverride=true/);
+ assert.match(system.config.personaPrefix,/v1\.5/);assert.match(system.config.personaPrefix,/strategy_contract/);
+ assert.match(system.config.personaPrefix,/strategyBrief/);
  assert.equal(system.config.personaPrefix.includes('只有 current.is_researching=false'),false);
  assert.equal(env.CYBERFISH_NATIVE_COUNTRY_AI,'1');assert.equal(env.CYBERFISH_START_PAUSED,'1');
  for(const k of ['CYBERFISH_HYBRID_SURVEY','CYBERFISH_SURVEY_PILOT','CYBERFISH_COLONY_UPGRADE_PILOT','CYBERFISH_MONTHLY_LIFECYCLE_PILOT','CYBERFISH_LOCAL_WAIT_PILOT'])assert.equal(env[k],'0',k);
@@ -72,10 +106,20 @@ test('native country mode explicitly suppresses competing local actors across a 
   child.on('error',fail);child.on('exit',code=>code===0?done(output.trim().split('\n').map(JSON.parse)):fail(Error(errors)));
   child.stdin.end(JSON.stringify({jsonrpc:'2.0',id:1,method:'initialize'})+'\n'+JSON.stringify({jsonrpc:'2.0',id:2,method:'tools/list'})+'\n');
  });
- assert.match(messages.find(x=>x.id===1).result.instructions,/原生国家 AI/);
+ assert.match(messages.find(x=>x.id===1).result.instructions,/原生国家 ?AI/);
  const tools=messages.find(x=>x.id===2).result.tools;
- assert.equal(tools.find(x=>x.name==='watch').inputSchema.properties.seconds.maximum,90);
- assert.equal(tools.find(x=>x.name==='apply_orders').inputSchema.properties.strategicResearchOverride.type,'boolean');
+ assert.equal(tools.find(x=>x.name==='watch').inputSchema.properties.seconds.maximum,900);
+ assert.equal(tools.find(x=>x.name==='apply_orders').inputSchema.properties.strategicResearchOverride,undefined);
+ assert.ok(tools.some(x=>x.name==='strategy_contract'));
  assert.equal(tools.some(x=>x.name==='colony_upgrade_control'),false);
  assert.throws(()=>nativeMcpEnvironmentPatch({directory:'fixture',runId:'r',minutes:5,hybridSurvey:false,nativeCountryAI:'1'}),/布尔值/);
+});
+
+test('normal native DSH patches the configured model provider to the budget relay',()=>{
+ const options={directory:'fixture',runId:'budget-patch',minutes:5,hybridSurvey:false,modelRelayBaseURL:'http://127.0.0.1:1234/fixture'};
+ const patch=nativeMcpEnvironmentPatch({...options,nativeCountryAI:true});
+ assert.deepEqual(patch.find(x=>x.id==='llm-deepseek').config,{
+  thinking:'enabled',maxTokens:8192,baseURL:options.modelRelayBaseURL
+ });
+ assert.ok(!nativeMcpEnvironmentPatch(options).some(x=>x.id==='llm-deepseek'));
 });

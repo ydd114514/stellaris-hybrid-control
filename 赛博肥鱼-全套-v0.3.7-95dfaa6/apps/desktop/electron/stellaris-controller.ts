@@ -138,7 +138,10 @@ export function createStellarisController(options: Options) {
       const fresh = checkpoint?.stopped === false && (!current.desktop?.started || checkpoint.started >= current.desktop.started)
       phase = fresh ? snapshot?.pendingEvents ? 'attention' : 'running' : 'starting'
       message = fresh ? snapshot?.pendingEvents ? '正在处理游戏中的事件。' : '大肥鱼正在控制当前游戏。' : '正在启动官方 DSH 和群星控制器。'
-      if(current.dsh?.modelNotice===FAST_STRATEGY_MODEL_NOTICE&&isAlive(current.dsh?.pid))message+=` ${FAST_STRATEGY_MODEL_NOTICE}。`
+      if(current.dsh?.modelNotice===FAST_STRATEGY_MODEL_NOTICE&&isAlive(current.dsh?.pid))message+=` ${FAST_STRATEGY_MODEL_NOTICE}，思考已开启。`
+      if(current.dsh?.modelBudgetPaused===true&&Number.isSafeInteger(current.dsh.modelBudgetLimit)&&isAlive(current.dsh?.pid)){
+        message+=` 已达每小时 ${current.dsh.modelBudgetLimit} 次模型请求上限，战略复查等待额度，已委派的原生 AI 继续运营。`
+      }
     } else if(current.startupError?.started>=current.desktop?.started&&typeof current.startupError?.message==='string') {
       phase='error';message=current.startupError.code==='country_ai_startup'?'原生国家 AI 委派失败，控制器已停止，不会自动重试；需要修复当前存档的启动兼容性。':'模型拒绝了控制工具的参数定义，控制器已停止；请更新后重新启动。'
     } else if (lastError) { phase = 'error'; message = lastError }
